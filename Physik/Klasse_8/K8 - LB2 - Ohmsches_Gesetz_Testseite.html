@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 8 · LB2 · Das Ohmsche Gesetz</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .teachbar,.hilfe-trigger{display:none !important;}
+  /* Lösungen nur drucken, wenn der Lehrermodus aktiv ist — sonst wäre der Druck
+     ein zweiter Weg an den Hilfestellungen vorbei. */
+  body:not(.lehrermodus-aktiv) .hilfe-box,
+  body:not(.lehrermodus-aktiv) .lehrer-only{display:none !important;}
+  body.lehrermodus-aktiv .hilfe-box,
+  body.lehrermodus-aktiv .hilfe-text,
+  body.lehrermodus-aktiv .lehrer-only{display:block !important;}
+  .hilfe-timer{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:pointer;user-select:none;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.m-chip.dragging{opacity:.35;cursor:grabbing;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{opacity:.35;cursor:grabbing;}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;max-width:420px;}
+.memcard{position:relative;height:58px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-h2);display:flex;align-items:center;justify-content:center;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* ── 9 Hilfestellungen mit Zeitschaltung (2 / 4 / 6 Min. Tipps, 10 Min. Musterlösung) ── */
+.hilfe-trigger{margin-top:16px;}
+.hilfe-box{display:none;margin-top:12px;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;background:var(--surface-2);}
+.hilfe-box.on{display:block;}
+.hilfe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--text-3);margin-bottom:10px;}
+.hilfe-item{margin-bottom:8px;} .hilfe-item:last-child{margin-bottom:0;}
+.hilfe-btn{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;font-family:var(--font);font-size:var(--fs-base);font-weight:600;
+  color:var(--text);cursor:pointer;}
+.hilfe-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.hilfe-btn:disabled{cursor:not-allowed;color:var(--text-3);}
+.hilfe-timer{font-weight:400;color:var(--text-3);font-size:var(--fs-sm);}
+.hilfe-text{display:none;margin-top:8px;padding:10px 14px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:8px;color:var(--text-2);font-size:var(--fs-base);}
+.hilfe-text.on{display:block;}
+.hilfe-text code{font-family:var(--mono);font-size:inherit;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:5px;padding:1px 6px;}
+.hilfe-text .code{background:var(--color-bg-code);color:#E4E1F0;font-family:var(--mono);font-size:var(--fs-base);
+  border-radius:var(--radius);padding:14px 18px;overflow-x:auto;white-space:pre;}
+body.lehrermodus-aktiv .hilfe-trigger{display:none;}
+
+
+/* ── Seitenspezifisch: Schritt-Navigation, Messwerttabelle ── */
+.step-nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px;}
+.step-btn{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);background:var(--surface);
+  font-family:var(--font);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.step-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent-hover);}
+.step-content{display:none;} .step-content.on{display:block;}
+.tbl{border-collapse:collapse;margin:12px 0;}
+.tbl th,.tbl td{border:1.5px solid var(--border);padding:6px 12px;text-align:center;}
+.tbl th{background:var(--surface-2);text-align:left;}
+@media print{ .step-content{display:block !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="InfoIstCool">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 8 · LB2</div>
+    <h1>Das Ohmsche Gesetz</h1>
+    <div class="goal">🎯 Die Lernenden bestimmen den Widerstand eines Bauteils, indem sie eine Messreihe aufnehmen und R = U / I berechnen.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Die Glühlampe</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Messreihe</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Rechnen mit R = U / I</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Sicherung</span>Wiederholung &amp; Exit-Ticket</button>
+  </nav>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Die Glühlampe</h2>
+    <p>Du schaltest eine alte Glühlampe ein. Im ersten Moment ist sie kalt, eine
+    Sekunde später glüht der Draht mit über 2000&nbsp;°C. Fließt dabei die ganze Zeit
+    gleich viel Strom?</p>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Vermuten</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Auflösen</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <div class="poe-box" id="poe-lampe">
+        <div class="poe-label">🤔 Was passiert wohl mit der Stromstärke, während der Draht heiß wird?</div>
+        <textarea id="poe-lampe-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-lampe')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-lampe-out" hidden></div>
+      </div>
+      <p class="connector-text">Halte deine Vermutung fest — gleich siehst du, was ein
+      Messgerät dazu sagt.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Zur Messung ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <p>Die Messung zeigt: Direkt nach dem Einschalten fließt ein kurzer, großer
+      Stromstoß. Sobald der Draht glüht, sinkt die Stromstärke auf einen deutlich
+      kleineren Wert. Der heiße Draht behindert den Strom also stärker — er hat einen
+      größeren <span class="tt" data-tip="Größe, die angibt, wie stark ein Bauteil den Stromfluss behindert">Widerstand</span>.</p>
+
+      <p><strong>Aufgabe 1</strong> Vergleiche das Messergebnis mit deiner Vermutung.
+      Formuliere in deinem Heft in einem Satz, wie sich der Widerstand des Drahts beim
+      Erwärmen ändert, und begründe mit der Messung.</p>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph0-a1">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Schau auf die zwei Zeitpunkte: kalter Draht und glühender Draht. Wann fließt mehr Strom?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Weniger Strom bei gleicher Spannung bedeutet: Der Draht behindert den Strom <em>stärker</em>.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Satzanfang: „Wenn der Draht heißer wird, wird sein Widerstand …, denn die Stromstärke …“</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Wenn der Draht heißer wird, wird sein Widerstand größer, denn bei gleicher Spannung sinkt die Stromstärke vom Einschaltstoß auf einen kleineren Wert.</div>
+          </div>
+        </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Warum steigt der Widerstand der Glühlampe beim Einschalten?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('gl1', this, 'w')">Weil mehr Strom fließt.</button>
+          <button class="quiz-btn" onclick="quizCheck('gl1', this, 'c')">Weil der Draht heißer wird.</button>
+          <button class="quiz-btn" onclick="quizCheck('gl1', this, 'w')">Weil die Spannung den Draht dünner macht.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-gl1"></div>
+      </div>
+
+      <p><strong>Aufgabe 2</strong> Markiere alle Angaben, die physikalisch korrekt geschrieben sind.</p>
+      <div class="baustein" data-type="mark" id="mark-einheiten">
+        <p class="mark-text">
+          <span class="mw" data-correct="1" onclick="markToggle(this)">12&nbsp;V</span> ·
+          <span class="mw" data-correct="0" onclick="markToggle(this)">12&nbsp;Volt/s</span> ·
+          <span class="mw" data-correct="1" onclick="markToggle(this)">0,5&nbsp;A</span> ·
+          <span class="mw" data-correct="0" onclick="markToggle(this)">15&nbsp;Ohm/A</span> ·
+          <span class="mw" data-correct="1" onclick="markToggle(this)">220&nbsp;Ω</span> ·
+          <span class="mw" data-correct="0" onclick="markToggle(this)">3&nbsp;Ampere·V</span>
+        </p>
+        <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph0-a2">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Jede Größe hat genau eine Einheit. Überlege für jede Angabe: Welche Größe ist gemeint?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Spannung → Volt (V), Stromstärke → Ampere (A), Widerstand → Ohm (Ω).</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Drei Angaben sind richtig. Die falschen kombinieren zwei Einheiten, die hier nicht zusammengehören.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Richtig: <strong>12&nbsp;V</strong>, <strong>0,5&nbsp;A</strong>, <strong>220&nbsp;Ω</strong>. Falsch: 12&nbsp;Volt/s, 15&nbsp;Ohm/A, 3&nbsp;Ampere·V.</div>
+          </div>
+        </div>
+
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Wie misst man einen Widerstand genau? →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Messreihe</h2>
+    <p>Bei der Glühlampe ändert sich der Widerstand mit der Temperatur. Ein Draht aus
+    <span class="tt" data-tip="Legierung aus Kupfer und Nickel, deren Widerstand sich beim Erwärmen kaum ändert">Konstantan</span>
+    bleibt dagegen fast gleich — perfekt, um den Zusammenhang zwischen Spannung und
+    Stromstärke sauber zu messen.</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Versuch planen</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Auswerten</button>
+      <button class="substep-all" onclick="revealSub(1,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <div class="callout callout-warn">⚠️ <span>Nur mit dem Schulnetzgerät arbeiten, nie an der Steckdose. Spannung erst nach dem Aufbau langsam hochdrehen.</span></div>
+
+      <p><strong>Aufgabe 3</strong> Bringe die Versuchsschritte in die richtige Reihenfolge
+      (Pfeile oder ziehen).</p>
+      <div class="baustein" data-type="sort" id="sort-messung">
+        <div class="sort-list">
+        <div class="sort-item" data-v="3"><span>Spannung in Schritten von 1,5&nbsp;V erhöhen</span>
+          <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        <div class="sort-item" data-v="1"><span>Schaltung aufbauen, Netzgerät auf 0&nbsp;V</span>
+          <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        <div class="sort-item" data-v="5"><span>Widerstand aus den Messwerten berechnen</span>
+          <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        <div class="sort-item" data-v="2"><span>Spannungsmesser parallel, Strommesser in Reihe schalten</span>
+          <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        <div class="sort-item" data-v="4"><span>Zu jeder Spannung die Stromstärke ablesen und notieren</span>
+          <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph1-a3">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Was muss erledigt sein, bevor überhaupt Strom fließen darf?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Erst aufbauen, dann die Messgeräte richtig einbauen, dann messen, zuletzt auswerten.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Der Schritt mit „0&nbsp;V“ kommt zuerst, das Berechnen ganz zum Schluss.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">1. Schaltung aufbauen, Netzgerät auf 0&nbsp;V<br>2. Spannungsmesser parallel, Strommesser in Reihe schalten<br>3. Spannung in Schritten von 1,5&nbsp;V erhöhen<br>4. Zu jeder Spannung die Stromstärke ablesen und notieren<br>5. Widerstand aus den Messwerten berechnen</div>
+          </div>
+        </div>
+
+      <p class="connector-text">Der Versuch ist geplant — eine Gruppe hat ihn schon durchgeführt. Was verraten ihre Messwerte?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Zu den Messwerten ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <table class="tbl">
+        <tr><th><i>U</i> in V</th><td>0</td><td>1,5</td><td>3,0</td><td>4,5</td><td>6,0</td></tr>
+        <tr><th><i>I</i> in A</th><td>0</td><td>0,10</td><td>0,20</td><td>0,30</td><td>0,40</td></tr>
+      </table>
+
+      <figure style="margin:14px 0;">
+        <svg viewBox="0 0 360 240" role="img" aria-label="U-I-Diagramm: Die Messpunkte des Konstantandrahts liegen auf einer Ursprungsgeraden" style="max-width:420px;width:100%;height:auto;">
+          <rect x="0" y="0" width="360" height="240" fill="#FFFFFF"/>
+          <g stroke="#E5DED0" stroke-width="1">
+            <line x1="50" y1="30" x2="50" y2="200"/><line x1="110" y1="30" x2="110" y2="200"/><line x1="170" y1="30" x2="170" y2="200"/>
+            <line x1="230" y1="30" x2="230" y2="200"/><line x1="290" y1="30" x2="290" y2="200"/>
+            <line x1="50" y1="160" x2="330" y2="160"/><line x1="50" y1="120" x2="330" y2="120"/><line x1="50" y1="80" x2="330" y2="80"/><line x1="50" y1="40" x2="330" y2="40"/>
+          </g>
+          <line x1="50" y1="200" x2="335" y2="200" stroke="#2B2B2B" stroke-width="1.5"/>
+          <line x1="50" y1="200" x2="50" y2="25" stroke="#2B2B2B" stroke-width="1.5"/>
+          <g font-family="sans-serif" font-size="12" fill="#2B2B2B">
+            <text x="50" y="216" text-anchor="middle">0</text><text x="110" y="216" text-anchor="middle">1,5</text>
+            <text x="170" y="216" text-anchor="middle">3,0</text><text x="230" y="216" text-anchor="middle">4,5</text>
+            <text x="290" y="216" text-anchor="middle">6,0</text>
+            <text x="42" y="164" text-anchor="end">0,1</text><text x="42" y="124" text-anchor="end">0,2</text>
+            <text x="42" y="84" text-anchor="end">0,3</text><text x="42" y="44" text-anchor="end">0,4</text>
+            <text x="330" y="234" text-anchor="end" font-style="italic">U in V</text>
+            <text x="14" y="22" font-style="italic">I in A</text>
+          </g>
+          <g fill="#3F5E8C">
+            <circle cx="50" cy="200" r="4.5"/><circle cx="110" cy="160" r="4.5"/><circle cx="170" cy="120" r="4.5"/>
+            <circle cx="230" cy="80" r="4.5"/><circle cx="290" cy="40" r="4.5"/>
+          </g>
+        </svg>
+        <figcaption class="caption">Messpunkte des Konstantandrahts (nicht verbunden).</figcaption>
+      </figure>
+      <p>Verdoppelt sich die Spannung, verdoppelt sich auch die Stromstärke. <i>U</i> und
+      <i>I</i> sind <span class="tt" data-tip="Zwei Größen ändern sich im gleichen Verhältnis; im Diagramm eine Ursprungsgerade">proportional</span>.</p>
+
+      <p><strong>Aufgabe 4</strong> Ordne jeder Größe die passende Beschreibung zu (klicken oder ziehen).</p>
+      <div class="baustein" data-type="match" id="match-groessen">
+        <div class="m-pool">
+          <span class="m-chip" data-id="u" onclick="matchSelect(this)">Spannung</span>
+          <span class="m-chip" data-id="i" onclick="matchSelect(this)">Stromstärke</span>
+          <span class="m-chip" data-id="r" onclick="matchSelect(this)">Widerstand</span>
+        </div>
+        <div class="m-zone" data-correct="i" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">Wird in Ampere gemessen; Ladung, die pro Sekunde durch den Leiter fließt.</span></div>
+        <div class="m-zone" data-correct="r" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">Wird in Ohm angegeben; behindert den Stromfluss.</span></div>
+        <div class="m-zone" data-correct="u" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">Wird in Volt gemessen; der „Antrieb“ für den Strom.</span></div>
+        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph1-a4">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Achte in jeder Beschreibung zuerst auf die Einheit.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Volt gehört zur Spannung, Ampere zur Stromstärke, Ohm zum Widerstand.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Die erste Beschreibung nennt Ampere, die zweite Ohm, die dritte Volt.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Ampere → <strong>Stromstärke</strong> · Ohm → <strong>Widerstand</strong> · Volt → <strong>Spannung</strong></div>
+          </div>
+        </div>
+
+      <p><strong>Aufgabe 5</strong> Vervollständige den Merksatz.</p>
+      <div class="baustein" data-type="dtw" id="dtw-ohm">
+        <div class="dtw-pool">
+          <span class="dtw-word" data-w="Temperatur" onclick="dtwSelect(this)">Temperatur</span>
+          <span class="dtw-word" data-w="proportional" onclick="dtwSelect(this)">proportional</span>
+          <span class="dtw-word" data-w="konstant" onclick="dtwSelect(this)">konstant</span>
+          <span class="dtw-word" data-w="Ursprungsgerade" onclick="dtwSelect(this)">Ursprungsgerade</span>
+        </div>
+        <p class="dtw-text">Bei gleichbleibender
+          <span class="dtw-gap" data-answer="Temperatur" onclick="dtwPlace(this)">______</span> sind Spannung und Stromstärke
+          <span class="dtw-gap" data-answer="proportional" onclick="dtwPlace(this)">______</span>. Der Widerstand ist dann
+          <span class="dtw-gap" data-answer="konstant" onclick="dtwPlace(this)">______</span>, und im <i>U</i>-<i>I</i>-Diagramm liegen die Messpunkte auf einer
+          <span class="dtw-gap" data-answer="Ursprungsgerade" onclick="dtwPlace(this)">______</span>.</p>
+        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph1-a5">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Denk an die Glühlampe: Unter welcher Bedingung gilt das Gesetz <em>nicht</em>?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">„Doppelt so viel Spannung → doppelt so viel Strom“ heißt in der Fachsprache …?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Die Form im Diagramm siehst du oben: eine Gerade, die durch den Nullpunkt geht.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Bei gleichbleibender <strong>Temperatur</strong> sind Spannung und Stromstärke <strong>proportional</strong>. Der Widerstand ist dann <strong>konstant</strong>, und im <i>U</i>-<i>I</i>-Diagramm liegen die Messpunkte auf einer <strong>Ursprungsgeraden</strong>.</div>
+          </div>
+        </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Ohmsches Gesetz</div>
+        <p><strong>Ohmsches Gesetz:</strong> Bei konstanter Temperatur gilt <i>U</i> ~ <i>I</i>.</p>
+        <p><strong>Widerstand:</strong> <i>R</i> = <i>U</i> / <i>I</i></p>
+        <table>
+          <tr><td><i>R</i></td><td>Widerstand</td><td>Ohm (Ω)</td></tr>
+          <tr><td><i>U</i></td><td>Spannung</td><td>Volt (V)</td></tr>
+          <tr><td><i>I</i></td><td>Stromstärke</td><td>Ampere (A)</td></tr>
+        </table>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Und wie rechnet man damit? →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Rechnen mit <i>R</i> = <i>U</i> / <i>I</i></h2>
+    <p>Mit einer einzigen Formel kannst du jede der drei Größen berechnen — wenn du sie
+    richtig umstellst.</p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Umstellen & rechnen</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Knobeln</button>
+      <button class="substep-all" onclick="revealSub(2,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <div class="step-nav">
+        <button class="step-btn active" onclick="showStep('um',1,this)">1 · Ausgangsformel</button>
+        <button class="step-btn" onclick="showStep('um',2,this)">2 · nach <i>U</i></button>
+        <button class="step-btn" onclick="showStep('um',3,this)">3 · nach <i>I</i></button>
+      </div>
+      <div class="step-content on" id="um-step-1"><div class="formula"><i>R</i> = <i>U</i> / <i>I</i></div></div>
+      <div class="step-content" id="um-step-2"><p>Beide Seiten mal <i>I</i>:</p><div class="formula"><i>U</i> = <i>R</i> &middot; <i>I</i></div></div>
+      <div class="step-content" id="um-step-3"><p>Dann beide Seiten durch <i>R</i>:</p><div class="formula"><i>I</i> = <i>U</i> / <i>R</i></div></div>
+
+      <p><strong>Aufgabe 6</strong></p>
+      <p>a) Ein Bauteil liegt an <i>U</i> = 4,5&nbsp;V, es fließen <i>I</i> = 0,30&nbsp;A.
+         <i>R</i> = <input class="inp" id="r1" aria-label="Widerstand in Ohm"> <span class="unit">Ω</span></p>
+      <p>b) Ein Widerstand mit <i>R</i> = 40&nbsp;Ω liegt an <i>U</i> = 12&nbsp;V.
+         <i>I</i> = <input class="inp" id="i1" aria-label="Stromstärke in Ampere"> <span class="unit">A</span></p>
+      <div>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['r1', 15, 0.3], ['i1', 0.3, 0.01]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph2-a6">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Schreib zuerst auf, was gegeben und was gesucht ist — mit Einheit.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Für a) brauchst du <i>R</i> = <i>U</i> / <i>I</i>, für b) die umgestellte Formel <i>I</i> = <i>U</i> / <i>R</i>.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">a) 4,5&nbsp;V geteilt durch 0,30&nbsp;A · b) 12&nbsp;V geteilt durch 40&nbsp;Ω. Volt durch Ohm ergibt Ampere.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">a) <i>R</i> = <i>U</i> / <i>I</i> = 4,5&nbsp;V / 0,30&nbsp;A = <strong>15&nbsp;Ω</strong><br>b) <i>I</i> = <i>U</i> / <i>R</i> = 12&nbsp;V / 40&nbsp;Ω = <strong>0,30&nbsp;A</strong></div>
+          </div>
+        </div>
+
+      <p class="connector-text">Die Formel sitzt. Aber gilt sie für jedes Bauteil gleich gut?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Zur Knobelaufgabe ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <div class="quiz-item">
+        <div class="quiz-q">Die Spannung an einem Konstantandraht wird verdreifacht. Was passiert mit der Stromstärke?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('ohm2', this, 'w')">Sie bleibt gleich, weil der Widerstand gleich bleibt.</button>
+          <button class="quiz-btn" onclick="quizCheck('ohm2', this, 'w')">Sie wird ein Drittel so groß.</button>
+          <button class="quiz-btn" onclick="quizCheck('ohm2', this, 'c')">Sie wird dreimal so groß.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-ohm2"></div>
+      </div>
+
+      <p><strong>Aufgabe 7 ★</strong> An einer Glühlampe misst du: bei 2,0&nbsp;V fließen
+      0,20&nbsp;A, bei 6,0&nbsp;V fließen 0,40&nbsp;A. Berechne jeweils den Widerstand und
+      erkläre im Heft, warum die Werte verschieden sind.</p>
+      <p><i>R</i><sub>1</sub> = <input class="inp" id="rg1" aria-label="Widerstand bei 2 Volt"> <span class="unit">Ω</span> &nbsp;
+         <i>R</i><sub>2</sub> = <input class="inp" id="rg2" aria-label="Widerstand bei 6 Volt"> <span class="unit">Ω</span></p>
+      <div>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['rg1', 10, 0.2], ['rg2', 15, 0.3]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph2-a7">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Rechne beide Messungen getrennt aus — jede mit <i>R</i> = <i>U</i> / <i>I</i>.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text"><i>R</i><sub>1</sub> = 2,0&nbsp;V / 0,20&nbsp;A und <i>R</i><sub>2</sub> = 6,0&nbsp;V / 0,40&nbsp;A.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Der Widerstand wird größer. Erinnere dich an den Einstieg: Was ändert sich am Draht bei höherer Spannung?</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text"><i>R</i><sub>1</sub> = 2,0&nbsp;V / 0,20&nbsp;A = <strong>10&nbsp;Ω</strong> · <i>R</i><sub>2</sub> = 6,0&nbsp;V / 0,40&nbsp;A = <strong>15&nbsp;Ω</strong><br>Bei höherer Spannung wird der Draht heißer, und ein heißer Draht hat einen größeren Widerstand. Die Temperatur ist nicht konstant — deshalb gilt das Ohmsche Gesetz für die Glühlampe nicht.</div>
+          </div>
+        </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Formel umstellen</div>
+        <p><i>R</i> = <i>U</i> / <i>I</i> &nbsp;·&nbsp; <i>U</i> = <i>R</i> &middot; <i>I</i> &nbsp;·&nbsp; <i>I</i> = <i>U</i> / <i>R</i></p>
+        <p>Das Ohmsche Gesetz gilt nur bei konstanter Temperatur (z.&nbsp;B. Konstantandraht, nicht Glühlampe).</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Bereit für die Wiederholung? →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Wiederholung &amp; Exit-Ticket</h2>
+    <p>Größen, Einheiten, Formeln — schaffst du es, alles ohne Nachschauen zu verknüpfen?</p>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Üben</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Rätseln & Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(3,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <p><strong>Aufgabe 8</strong> Finde die Paare aus Größe und Einheit.</p>
+      <div class="baustein" data-type="memory" id="mem-einheiten"
+           data-pairs='[["Spannung","Volt"],["Stromstärke","Ampere"],["Widerstand","Ohm"],["U","V"]]'>
+        <div class="mem-grid"></div>
+        <button class="btn btn-ghost btn-sm" onclick="memShuffle(this)">🔀 Neu mischen</button>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph3-a8">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Decke zuerst mehrere Karten auf und merke dir, wo sie liegen.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Zu jeder Größe gehört eine Einheit — und auch ein Formelzeichen passt zu seiner Einheit.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Ein Paar besteht aus zwei Buchstaben: Formelzeichen und Einheitenzeichen.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Spannung – Volt · Stromstärke – Ampere · Widerstand – Ohm · <i>U</i> – V</div>
+          </div>
+        </div>
+
+      <p>🗂️ <strong>Lernkarten</strong> zum Wiederholen der Formeln (Karte anklicken zum Umdrehen):</p>
+      <div class="baustein" data-type="flashcards" id="fc-formeln"
+           data-cards='[["R = ?","U / I"],["U = ?","R · I"],["I = ?","U / R"],["Einheit von R?","Ohm (Ω)"]]'>
+        <div class="fc-card" onclick="fcFlip(this)"><span class="fc-face">R = ?</span></div>
+        <div class="fc-controls">
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
+          <span class="caption fc-count">1 / 4</span>
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)">weiter →</button>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Zum Rätsel ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <p><strong>Aufgabe 9</strong> Löse das Kreuzworträtsel.</p>
+      <div class="baustein" data-type="crossword" id="cw-strom"
+           data-rows=".O..../.H.L../AMPERE/...I../VOLT../...E../...R..">
+        <div class="cw-grid"></div>
+        <div class="cw-clues">
+          <strong>Waagerecht:</strong> 3 Einheit der Stromstärke · 4 Einheit der Spannung<br>
+          <strong>Senkrecht:</strong> 1 Einheit des Widerstands · 2 Bauteil, durch das Strom gut fließt (z.&nbsp;B. ein Kupferdraht)
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="cwCheck(this)">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph3-a9">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Beginne mit den Einheiten — die kennst du aus dem Heftereintrag.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">3 hat sechs Buchstaben, 4 hat vier, 1 hat drei.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">1 und 3 teilen sich das M, 2 und 3 teilen sich ein E, 2 und 4 teilen sich das T.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Waagerecht: 3 AMPERE · 4 VOLT<br>Senkrecht: 1 OHM · 2 LEITER</div>
+          </div>
+        </div>
+
+      <p><strong>Aufgabe 10 ★</strong> Finde die fünf Fachbegriffe im Buchstabengitter
+      (erstes und letztes Feld anklicken).</p>
+      <div class="baustein" data-type="wordsearch" id="ws-strom"
+           data-words="OHM,VOLT,AMPERE,STROM,SPANNUNG" data-size="11">
+        <div class="ws-grid"></div>
+        <div class="ws-words"></div>
+        <button class="btn btn-ghost btn-sm" onclick="wsShuffle(this)">🔀 Neues Rätsel</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+        <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+        <div class="hilfe-box" data-aufgabe="ph3-a10">
+          <div class="hilfe-label">Hilfestellung</div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Suche zuerst nach seltenen Buchstaben wie V oder P.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Die Wörter stehen nur waagerecht oder senkrecht.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Das längste Wort hat acht Buchstaben und beginnt mit SP.</div>
+          </div>
+          <div class="hilfe-item">
+            <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+            <div class="hilfe-text">Gesucht sind: OHM, VOLT, AMPERE, STROM, SPANNUNG. Die Lage ändert sich bei jedem neuen Rätsel.</div>
+          </div>
+        </div>
+
+      <div class="callout callout-info">🎟️ <span><strong>Exit-Ticket:</strong> Beantworte die letzte Frage ohne Nachschauen.</span></div>
+      <div class="quiz-item">
+        <div class="quiz-q">Durch einen Widerstand von 20&nbsp;Ω fließen 0,5&nbsp;A. Welche Spannung liegt an?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'w')">40&nbsp;V</button>
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'c')">10&nbsp;V</button>
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'w')">0,025&nbsp;V</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit1"></div>
+      </div>
+
+      <div class="lehrer-only" hidden>
+        <div class="callout callout-info">🧑‍🏫 <span>Hinweis für die Lehrkraft: Häufigster Fehler im Exit-Ticket ist 40&nbsp;V (<i>R</i> / <i>I</i> statt <i>R</i> &middot; <i>I</i>) — im Plenum kurz über das Umstellen sichern.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Ohmsches Gesetz</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Bei konstanter Temperatur sind Spannung und Stromstärke proportional; der Widerstand <i>R</i> = <i>U</i> / <i>I</i> ist dann konstant.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Formel umstellen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner"><i>U</i> = <i>R</i> &middot; <i>I</i> und <i>I</i> = <i>U</i> / <i>R</i> — immer mit Einheiten rechnen.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt aus einer Messreihe den Widerstand bestimmen und die Formel nach jeder Größe umstellen.</span></div>
+    <p class="connector-text">Nächste Stunde schalten wir zwei Widerstände hintereinander. Wird der Gesamtwiderstand größer, kleiner — oder bleibt er gleich?</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  return ok===spec.length;
+}
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Aktiv = alle Hilfestellungen sofort frei
+   (Trigger-Buttons verschwinden); Deaktivieren setzt alle Hilfestellungen zurück.
+   Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.body.classList.toggle('lehrermodus-aktiv',active);
+  if(active && typeof hilfeAlleFreischalten==='function') hilfeAlleFreischalten();
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){
+  try{ sessionStorage.removeItem('teachmode'); }catch(e){}
+  teachSetUI(false);
+  if(typeof resetHilfeBoxen==='function') resetHilfeBoxen();
+}
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel||zone.classList.contains('filled'))return; zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.add('filled'); sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement; if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').textContent = s._back?cards[i][1]:cards[i][0]; s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  host.querySelectorAll('.ws-cell').forEach(cell=>cell.addEventListener('click',function(){ wsClick(cell); }));
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsClick(cell){ const s=bs(cell); if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const sr=+s._start.dataset.r,sc=+s._start.dataset.c,er=+cell.dataset.r,ec=+cell.dataset.c; s._start.classList.remove('ws-start'); s._start=null;
+  const straight=(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc)); if(!straight)return;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),steps=Math.max(Math.abs(er-sr),Math.abs(ec-sc)); let letters='',cells=[];
+  for(let i=0;i<=steps;i++){ const rr=sr+dr*i,cc=sc+dc*i; letters+=s._grid[rr][cc]; cells.push([rr,cc]); }
+  const rev=letters.split('').reverse().join(''); const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word); cells.forEach(rc=>{ const el=s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); if(el)el.classList.add('ws-found'); }); wsWordList(s); if(s._found.length===s._words.length){ setFb(s,'🎉 Alle Wörter gefunden!',true); } } }
+
+/* 2b Zuordnung per Drag & Drop (zusätzlich zum Klicken; Klick bleibt die
+   barrierearme Grundbedienung, Drag & Drop ist eine reine Zusatzoption) */
+function initMatchDnD(s){
+  const pool=s.querySelector('.m-pool'); if(!pool||pool.dataset.dnd)return; pool.dataset.dnd='1';
+  pool.querySelectorAll('.m-chip').forEach(chip=>{
+    chip.setAttribute('draggable','true');
+    chip.addEventListener('dragstart',function(e){ if(chip.classList.contains('used')){e.preventDefault();return;}
+      s._dragChip=chip; chip.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
+    chip.addEventListener('dragend',function(){ chip.classList.remove('dragging'); s._dragChip=null; });
+  });
+  s.querySelectorAll('.m-zone').forEach(zone=>{
+    zone.addEventListener('dragover',function(e){ if(!s._dragChip)return; e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave',function(){ zone.classList.remove('dragover'); });
+    zone.addEventListener('drop',function(e){ e.preventDefault(); zone.classList.remove('dragover');
+      const chip=s._dragChip; if(!chip)return; s._sel=chip; matchPlace(zone); s._dragChip=null; });
+  });
+}
+
+/* 3b Sortieren per Drag & Drop (zusätzlich zu den ▲▼-Tasten, die als
+   barrierearme/tastaturbedienbare Grundbedienung erhalten bleiben) */
+function sortDragAfter(list,y){
+  const els=[...list.querySelectorAll('.sort-item:not(.dragging)')];
+  return els.reduce(function(best,child){
+    const box=child.getBoundingClientRect(), offset=y-box.top-box.height/2;
+    return (offset<0 && offset>best.offset) ? {offset:offset,element:child} : best;
+  }, {offset:-Infinity,element:null}).element;
+}
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd)return; list.dataset.dnd='1';
+  list.querySelectorAll('.sort-item').forEach(item=>{
+    item.setAttribute('draggable','true');
+    item.addEventListener('dragstart',function(e){ item.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
+    item.addEventListener('dragend',function(){ item.classList.remove('dragging'); });
+  });
+  list.addEventListener('dragover',function(e){
+    const dragging=list.querySelector('.sort-item.dragging'); if(!dragging)return; e.preventDefault();
+    const after=sortDragAfter(list,e.clientY);
+    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging,after);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+/* ---------- 9 Hilfestellungen: ein Button „Hilfestellungen" pro Aufgabe.
+   Klick öffnet die Box und startet den Timer; Tipp 1/2/3 werden nach 2/4/6 Minuten,
+   die Musterlösung nach 10 Minuten anklickbar (Countdown im Button). Der Timer läuft
+   pro Box nur einmal und beginnt beim Neuladen der Seite von vorn. Einziger Weg für
+   Lernende, innerhalb der Seite an Lösungen zu kommen. Lehrermodus schaltet alles frei. ---------- */
+function zeigeHilfe(btn){
+  const box = btn.nextElementSibling;
+  box.classList.add('on');
+  btn.disabled = true;
+  startHilfeTimer(box);
+}
+function startHilfeTimer(box){
+  if(box.dataset.started) return;
+  box.dataset.started='1';
+  box.dataset.startTime=Date.now();
+  updateHilfe(box);
+  box._hilfeInterval=setInterval(()=>updateHilfe(box),1000);
+}
+function updateHilfe(box){
+  const elapsedMin=(Date.now()-parseInt(box.dataset.startTime,10))/60000;
+  let alleFrei=true;
+  box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+    const need=parseFloat(btn.dataset.min);
+    const timer=btn.querySelector('.hilfe-timer');
+    if(elapsedMin>=need){
+      btn.disabled=false; timer.textContent='';
+    } else {
+      alleFrei=false;
+      const restSek=Math.ceil((need-elapsedMin)*60);
+      const mm=Math.floor(restSek/60), ss=restSek%60;
+      timer.textContent=' (in '+mm+':'+String(ss).padStart(2,'0')+')';
+    }
+  });
+  if(alleFrei && box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+}
+function toggleHilfe(btn){
+  if(btn.disabled) return;
+  const text=btn.nextElementSibling.classList.contains('hilfe-text') ? btn.nextElementSibling : btn.parentElement.querySelector('.hilfe-text');
+  const open=text.classList.toggle('on');
+  btn.setAttribute('aria-expanded', open);
+}
+/* Lehrermodus an: alle Boxen offen, alle Stufen sofort anklickbar, Timer gestoppt. */
+function hilfeAlleFreischalten(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    box.classList.add('on');
+    if(box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+    box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+      btn.disabled=false;
+      const t=btn.querySelector('.hilfe-timer'); if(t) t.textContent='';
+    });
+  });
+}
+/* Lehrermodus aus: alles zurück in den Ausgangszustand, Timer beginnen beim nächsten Klick neu. */
+function resetHilfeBoxen(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    box.classList.remove('on');
+    delete box.dataset.started;
+    delete box.dataset.startTime;
+    if(box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+    box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+      btn.disabled=true;
+      const t=btn.querySelector('.hilfe-timer'); if(t) t.textContent='';
+    });
+    const trigger = box.previousElementSibling;
+    if(trigger && trigger.classList.contains('hilfe-trigger')){
+      trigger.disabled=false;
+      trigger.textContent='Hilfestellungen';
+    }
+  });
+}
+
+
+/* ---------- Seitenspezifisch ---------- */
+function showStep(prefix,n,btn){
+  document.querySelectorAll('[id^="'+prefix+'-step-"]').forEach(el=>el.classList.remove('on'));
+  btn.parentElement.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(prefix+'-step-'+n).classList.add('on'); btn.classList.add('active');
+}
+quizFeedback['gl1'] = {
+  ok:'✅ <strong>Richtig!</strong> Der heiße Draht behindert die Elektronen stärker — sein Widerstand steigt.',
+  ng:'❌ <strong>Nicht ganz.</strong> Die Stromstärke ist Folge, nicht Ursache — entscheidend ist die Temperatur des Drahts.',
+  hint:'Fass eine brennende Glühlampe (gedanklich!) an — was hat sich am Draht verändert?'
+};
+quizFeedback['ohm2'] = {
+  ok:'✅ <strong>Richtig!</strong> Bei konstantem Widerstand gilt <i>I</i> = <i>U</i> / <i>R</i>: dreifache Spannung, dreifache Stromstärke.',
+  ng:'❌ <strong>Nicht ganz.</strong> Gleicher Widerstand heißt nicht gleicher Strom — die Spannung „treibt“ ja stärker an.',
+  hint:'Schau in die Messtabelle: Was passiert mit <i>I</i>, wenn <i>U</i> von 1,5&nbsp;V auf 4,5&nbsp;V steigt?'
+};
+quizFeedback['exit1'] = {
+  ok:'✅ <strong>Richtig!</strong> <i>U</i> = <i>R</i> &middot; <i>I</i> = 20&nbsp;Ω &middot; 0,5&nbsp;A = 10&nbsp;V.',
+  ng:'❌ <strong>Nicht ganz.</strong> Gesucht ist <i>U</i> — also <i>U</i> = <i>R</i> &middot; <i>I</i>, nicht geteilt.',
+  hint:'Welche umgestellte Formel hat <i>U</i> allein auf einer Seite?'
+};
+</script>
+</body>
+</html>
