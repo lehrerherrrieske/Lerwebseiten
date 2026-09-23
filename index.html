@@ -248,36 +248,42 @@
 
 // Verfügbare Klassenstufen je Fach (id = wird auch für "klasse" in
 // SEITEN benutzt; label = Anzeige auf dem Button)
+// "ordner" = relativer Pfad im Repo zu dem Ordner, in dem die Lernseiten
+// dieser Klassenstufe liegen. Wird automatisch vor "datei" aus SEITEN
+// gehängt — dort also nur noch der reine Dateiname eintragen.
 const KLASSEN = {
   physik: [
-    {id:"6",  label:"6"},
-    {id:"7",  label:"7"},
-    {id:"8",  label:"8"},
-    {id:"9",  label:"9"},
-    {id:"10", label:"10"},
-    {id:"11GK", label:"11", sub:"GK"},
-    {id:"11LK", label:"11", sub:"LK"},
-    {id:"12GK", label:"12", sub:"GK"},
-    {id:"12LK", label:"12", sub:"LK"},
+    {id:"6",  label:"6",  ordner:"Physik/Klasse_6"},
+    {id:"7",  label:"7",  ordner:"Physik/Klasse_7"},
+    {id:"8",  label:"8",  ordner:"Physik/Klasse_8"},
+    {id:"9",  label:"9",  ordner:"Physik/Klasse_9"},
+    {id:"10", label:"10", ordner:"Physik/Klasse_10"},
+    {id:"11GK", label:"11", sub:"GK", ordner:"Physik/Klasse_11_GK"},
+    {id:"11LK", label:"11", sub:"LK", ordner:"Physik/Klasse_11_LK"},
+    {id:"12GK", label:"12", sub:"GK", ordner:"Physik/Klasse_12_GK"},
+    {id:"12LK", label:"12", sub:"LK", ordner:"Physik/Klasse_12_LK"},
   ],
   informatik: [
-    {id:"7",  label:"7"},
-    {id:"8",  label:"8"},
-    {id:"9",  label:"9"},
-    {id:"10", label:"10"},
-    {id:"11GK", label:"11", sub:"GK"},
-    {id:"11LK", label:"11", sub:"LK"},
-    {id:"12GK", label:"12", sub:"GK"},
-    {id:"12LK", label:"12", sub:"LK"},
+    {id:"7",  label:"7",  ordner:"Informatik/Klasse_7"},
+    {id:"8",  label:"8",  ordner:"Informatik/Klasse_8"},
+    {id:"9",  label:"9",  ordner:"Informatik/Klasse_9"},
+    {id:"10", label:"10", ordner:"Informatik/Klasse_10"},
+    {id:"11GK", label:"11", sub:"GK", ordner:"Informatik/Klasse_11_GK"},
+    {id:"11LK", label:"11", sub:"LK", ordner:"Informatik/Klasse_11_LK"},
+    {id:"12GK", label:"12", sub:"GK", ordner:"Informatik/Klasse_12_GK"},
+    {id:"12LK", label:"12", sub:"LK", ordner:"Informatik/Klasse_12_LK"},
   ]
 };
 
 // >>> HIER EINTRAGEN: eine Zeile pro Lernseite
+// "datei" ist NUR der Dateiname (ohne Ordner) — der Ordner kommt automatisch
+// aus KLASSEN[fach] über die passende "klasse"-id.
 const SEITEN = [
   // Beispiel (auskommentiert) – so sieht ein Eintrag aus:
   // { fach:"physik", klasse:"8", lb:"LB2",
   //   titel:"Stromstärke, Spannung, Widerstand",
-  //   datei:"Physik/K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
+  //   datei:"K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
+  { fach:"physik", klasse:"7", lb:"LB1", titel:"Hookesches Gesetz", datei:"K7_ - LB1 - Hookesches_Gesetz.html" }
 ];
 
 /* ============================================================
@@ -332,6 +338,9 @@ function goSeiten(fach, klasseId, klasseLabel){
   currentKlasse = klasseId;
   document.getElementById("seitenTitle").textContent = FACHNAME[fach] + " — Klasse " + klasseLabel;
 
+  const klasseInfo = KLASSEN[fach].find(k => k.id === klasseId);
+  const ordner = klasseInfo ? klasseInfo.ordner : "";
+
   const treffer = SEITEN.filter(s => s.fach === fach && s.klasse === klasseId);
   const liste = document.getElementById("seitenListe");
   liste.innerHTML = "";
@@ -360,7 +369,7 @@ function goSeiten(fach, klasseId, klasseLabel){
       g.items.forEach(s => {
         const a = document.createElement("a");
         a.className = "seite-card";
-        a.href = s.datei;
+        a.href = ordner ? `${ordner}/${s.datei}` : s.datei;
         a.innerHTML = `<div>
             <div class="seite-titel">${s.titel}${s.neu ? '<span class="badge-neu">Neu</span>' : ""}</div>
           </div>
