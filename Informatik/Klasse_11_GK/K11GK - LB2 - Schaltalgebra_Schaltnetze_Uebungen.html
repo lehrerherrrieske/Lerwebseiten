@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 11GK · LB2 · Schaltalgebra und Schaltnetze – Aufgaben interaktiv üben</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:pointer;user-select:none;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:pointer;user-select:none;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;max-width:420px;}
+.memcard{position:relative;height:58px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-h2);display:flex;align-items:center;justify-content:center;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* ── Eigene Ergänzung: Wahrheitstabellen zum Ausfüllen ── */
+table.truth{border-collapse:collapse;width:100%;margin:12px 0;}
+table.truth th,table.truth td{border:1.5px solid var(--border);padding:7px 6px;text-align:center;}
+table.truth th{background:var(--surface-2);font-weight:700;}
+table.truth td.given{background:var(--surface-2);font-family:var(--font-mono);font-weight:700;}
+table.truth td .inp{width:3.5ch;padding:4px 2px;text-align:center;}
+
+/* ── Eigene Ergänzung: interaktive Schaltkreis-Simulatoren ── */
+.circuit-box{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px;margin:14px 0;overflow-x:auto;}
+.circuit-svg{display:block;margin:0 auto;min-width:460px;}
+.circuit-hint{font-size:var(--fs-sm);color:var(--text-3);text-align:center;margin-top:8px;}
+
+.sw-btn{cursor:pointer;}
+.sw-btn .sw-body{fill:var(--surface);stroke:var(--text);stroke-width:2;}
+.sw-btn.sw-on .sw-body{fill:var(--ok-bg);stroke:var(--ok);}
+.sw-btn .sw-label{font-family:var(--font-mono);font-weight:700;font-size:var(--fs-sm);fill:var(--text);}
+.sw-btn.sw-on .sw-label{fill:#166534;}
+.sw-btn:focus{outline:2.5px solid var(--accent);outline-offset:2px;}
+
+.wire{stroke:var(--border);stroke-width:3;fill:none;transition:stroke .15s;}
+.wire.on{stroke:var(--ok);}
+.gate-body{fill:var(--surface);stroke:var(--text);stroke-width:2;}
+.gate-label{font-family:var(--font-mono);font-weight:700;font-size:var(--fs-h2);fill:var(--text);}
+.gate-bubble{fill:var(--surface);stroke:var(--text);stroke-width:2;}
+
+.lamp-ring{fill:var(--surface);stroke:var(--text);stroke-width:2;transition:fill .15s,stroke .15s;}
+.lamp-ring.on{fill:var(--warn);stroke:var(--warn);}
+.lamp-txt{font-family:var(--font-mono);font-weight:700;font-size:var(--fs-sm);fill:var(--text);transition:fill .15s;}
+.lamp-txt.on{fill:#fff;}
+.lamp-tag{font-family:var(--font-mono);font-weight:700;font-size:var(--fs-sm);fill:var(--text-3);}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 11GK · LB2</div>
+    <h1>Schaltalgebra und Schaltnetze – Aufgaben interaktiv üben</h1>
+    <div class="goal">🎯 Die Lernenden überprüfen ihre Lösungen zu den Aufgaben 3.1 bis 3.3, indem sie Wahrheitstabellen ausfüllen, interaktive Logikgatter über Schalterstellungen testen und ihre Ergebnisse automatisiert kontrollieren.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Start</span>Kurz-Check</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Aufgabe 3.1</span>Schaltnetz analysieren</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Aufgabe 3.2</span>Wahrheitstabelle synthetisieren</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Aufgabe 3.3</span>Schaltplan bauen</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Sicherung</span>Zusammenfassung</button>
+  </nav>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Kurz-Check: Kennst du die Schaltzeichen noch?</h2>
+    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
+    <p>Auf dem Arbeitsblatt hast du vier Grundschaltungen kennengelernt: <span class="tt" data-tip="Ausgang = Eingang, ohne Veränderung">Identität</span>,
+      <span class="tt" data-tip="Ausgang ist nur 1, wenn ALLE Eingänge 1 sind">UND (Konjunktion)</span>,
+      <span class="tt" data-tip="Ausgang ist 1, wenn MINDESTENS EIN Eingang 1 ist">ODER (Disjunktion)</span> und
+      <span class="tt" data-tip="Ausgang ist das Gegenteil des Eingangs">NICHT (Negation)</span>. Diese Seite lässt dich deine Lösungen zu den
+      Aufgaben&nbsp;3.1–3.3 vom Arbeitsblatt an echten, klickbaren Schaltkreisen überprüfen.</p>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Zuordnung</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Quiz</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <p>Ordne zuerst jedes Schaltzeichen seinem Namen zu:</p>
+      <div class="baustein" data-type="match" id="match-schaltzeichen">
+        <div class="m-pool">
+          <span class="m-chip" data-id="und" onclick="matchSelect(this)">&amp;</span>
+          <span class="m-chip" data-id="oder" onclick="matchSelect(this)">&#8805;1</span>
+          <span class="m-chip" data-id="nicht" onclick="matchSelect(this)">1 mit Kreis am Ausgang</span>
+          <span class="m-chip" data-id="ident" onclick="matchSelect(this)">1 ohne Kreis</span>
+        </div>
+        <div class="m-zone" data-correct="und" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">UND-Verknüpfung (Konjunktion): 1, wenn alle Eingänge 1 sind.</span></div>
+        <div class="m-zone" data-correct="oder" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">ODER-Verknüpfung (Disjunktion): 1, wenn mindestens ein Eingang 1 ist.</span></div>
+        <div class="m-zone" data-correct="nicht" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">NICHT-Verknüpfung (Negation): kehrt den Eingang um.</span></div>
+        <div class="m-zone" data-correct="ident" onclick="matchPlace(this)">
+          <span class="m-drop">?</span><span class="m-def">Identität: der Ausgang bleibt wie der Eingang.</span></div>
+        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Weiter zu Teil 2 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <div class="quiz-item">
+        <div class="quiz-q">Ein Eingang trägt am Gatter einen kleinen Kreis (z.&nbsp;B. bei einem NICHT-Gatter). Was bedeutet das?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('kreis', this, 'w')">Der Eingang wird ignoriert und hat keine Wirkung.</button>
+          <button class="quiz-btn" onclick="quizCheck('kreis', this, 'c')">Der Wert an diesem Eingang wird negiert, bevor er weiterverarbeitet wird.</button>
+          <button class="quiz-btn" onclick="quizCheck('kreis', this, 'w')">Der Kreis markiert nur den Eingang, der zuerst ausgewertet wird.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-kreis"></div>
+      </div>
+      <div class="callout callout-warn">⚠️ <span>Häufige Fehlvorstellung: Ein Kreis am Gatter bedeutet <strong>nicht</strong> „Eingang aus" oder „wird nicht benutzt" — er bedeutet <strong>Negation</strong>. Der Eingang wird ganz normal verwendet, nur eben mit umgedrehtem Wert.</span></div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Die vier Grundschaltungen</div>
+        <table>
+          <tr><td><strong>Identität</strong></td><td>„1"</td><td><i>l</i> = <i>s</i><sub>1</sub></td></tr>
+          <tr><td><strong>UND (&amp;)</strong></td><td>„&amp;"</td><td><i>l</i> = <i>s</i><sub>1</sub> &#8743; <i>s</i><sub>2</sub></td></tr>
+          <tr><td><strong>ODER (&ge;1)</strong></td><td>„&ge;1"</td><td><i>l</i> = <i>s</i><sub>1</sub> &#8744; <i>s</i><sub>2</sub></td></tr>
+          <tr><td><strong>NICHT</strong></td><td>„1" mit Kreis am Ausgang</td><td><i>l</i> = &#172;<i>s</i><sub>1</sub></td></tr>
+        </table>
+      </div>
+    <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zu Aufgabe 3.1 →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Aufgabe 3.1 — Schaltnetzanalyse</h2>
+    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
+    <p><strong>Aufgabenstellung (Original):</strong> Erstellen Sie aus diesem Schaltnetz eine Wahrheitstabelle sowie die Schaltfunktion.</p>
+    <p>a) Fassen Sie zuerst die Konjunktion von <i>a</i> und <i>nicht b</i> als <i>h</i> zusammen. &nbsp; b) Erstellen Sie nun die Disjunktion aus <i>h</i> und <i>c</i>. &nbsp; c) Erstellen Sie basierend auf der Wahrheitstabelle eine Schaltfunktion <i>y</i>(<i>a</i>,<i>b</i>,<i>c</i>).</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Schaltkreis testen</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Wahrheitstabelle</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Schaltfunktion</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <p>Klicke auf die Schalter <i>a</i>, <i>b</i> und <i>c</i> und beobachte, wie sich <i>h</i> und <i>y</i> verändern. Der kleine Kreis am zweiten Eingang des UND-Gatters bedeutet: <i>b</i> wird negiert, bevor es ins Gatter geht.</p>
+      <div class="circuit-box">
+        <svg class="circuit-svg" viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schaltnetz zu Aufgabe 3.1 mit Eingängen a, b, c">
+          <g class="sw-btn" id="sw31a" tabindex="0" role="button" aria-label="Schalter a umschalten" onclick="toggleSwitch('c31','a')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c31','a');}">
+            <rect class="sw-body" x="20" y="72" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="95" text-anchor="middle">a=<tspan class="sw-val">0</tspan></text>
+          </g>
+          <g class="sw-btn" id="sw31b" tabindex="0" role="button" aria-label="Schalter b umschalten" onclick="toggleSwitch('c31','b')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c31','b');}">
+            <rect class="sw-body" x="20" y="112" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="135" text-anchor="middle">b=<tspan class="sw-val">0</tspan></text>
+          </g>
+          <g class="sw-btn" id="sw31c" tabindex="0" role="button" aria-label="Schalter c umschalten" onclick="toggleSwitch('c31','c')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c31','c');}">
+            <rect class="sw-body" x="20" y="152" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="175" text-anchor="middle">c=<tspan class="sw-val">0</tspan></text>
+          </g>
+
+          <path class="wire" id="c31-wa" d="M90,90 L260,90"/>
+          <path class="wire" id="c31-wb" d="M90,130 L260,130"/>
+          <circle class="gate-bubble" cx="247" cy="130" r="6"/>
+          <path class="wire" id="c31-wc" d="M90,170 L460,170"/>
+
+          <rect class="gate-body" x="260" y="70" width="80" height="80" rx="6"/>
+          <text class="gate-label" x="300" y="120" text-anchor="middle">&amp;</text>
+
+          <path class="wire" id="c31-wh1" d="M340,110 L385,110"/>
+          <g id="c31-lh"><circle class="lamp-ring" cx="400" cy="110" r="15"/><text class="lamp-txt" x="400" y="115" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="400" y="142" text-anchor="middle">h</text>
+          <path class="wire" id="c31-wh2" d="M415,110 L460,110"/>
+
+          <rect class="gate-body" x="460" y="90" width="80" height="100" rx="6"/>
+          <text class="gate-label" x="500" y="146" text-anchor="middle">&#8805;1</text>
+
+          <path class="wire" id="c31-wy" d="M540,140 L599,140"/>
+          <g id="c31-ly"><circle class="lamp-ring" cx="617" cy="140" r="17"/><text class="lamp-txt" x="617" y="146" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="617" y="174" text-anchor="middle">y</text>
+        </svg>
+        <div class="circuit-hint">🖱️ Schalter a, b, c anklicken (oder mit Tab + Enter). Grün = Signal 1, grau = Signal 0.</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Weiter zu Teil 2 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <p>Trage nun für <strong>alle acht</strong> Kombinationen von <i>a</i>, <i>b</i>, <i>c</i> die Werte von <i>h</i> und <i>y</i> ein. Nutze dazu gern den Schaltkreis oben zum Nachprüfen.</p>
+      <table class="truth">
+        <tr><th>a</th><th>b</th><th>c</th><th>h = a &#8743; &#172;b</th><th>y = h &#8744; c</th></tr>
+        <tr><td class="given">0</td><td class="given">0</td><td class="given">0</td><td><input class="inp" id="t31-h0"></td><td><input class="inp" id="t31-y0"></td></tr>
+        <tr><td class="given">0</td><td class="given">0</td><td class="given">1</td><td><input class="inp" id="t31-h1"></td><td><input class="inp" id="t31-y1"></td></tr>
+        <tr><td class="given">0</td><td class="given">1</td><td class="given">0</td><td><input class="inp" id="t31-h2"></td><td><input class="inp" id="t31-y2"></td></tr>
+        <tr><td class="given">0</td><td class="given">1</td><td class="given">1</td><td><input class="inp" id="t31-h3"></td><td><input class="inp" id="t31-y3"></td></tr>
+        <tr><td class="given">1</td><td class="given">0</td><td class="given">0</td><td><input class="inp" id="t31-h4"></td><td><input class="inp" id="t31-y4"></td></tr>
+        <tr><td class="given">1</td><td class="given">0</td><td class="given">1</td><td><input class="inp" id="t31-h5"></td><td><input class="inp" id="t31-y5"></td></tr>
+        <tr><td class="given">1</td><td class="given">1</td><td class="given">0</td><td><input class="inp" id="t31-h6"></td><td><input class="inp" id="t31-y6"></td></tr>
+        <tr><td class="given">1</td><td class="given">1</td><td class="given">1</td><td><input class="inp" id="t31-h7"></td><td><input class="inp" id="t31-y7"></td></tr>
+      </table>
+      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['t31-h0',0,0.4],['t31-y0',0,0.4],['t31-h1',0,0.4],['t31-y1',1,0.4],['t31-h2',0,0.4],['t31-y2',0,0.4],['t31-h3',0,0.4],['t31-y3',1,0.4],['t31-h4',1,0.4],['t31-y4',1,0.4],['t31-h5',1,0.4],['t31-y5',1,0.4],['t31-h6',0,0.4],['t31-y6',0,0.4],['t31-h7',0,0.4],['t31-y7',1,0.4]])">✓ Prüfen</button>
+      <div class="fb grp-fb"></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Weiter zu Teil 3 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <div class="quiz-item">
+        <div class="quiz-q">Welche Schaltfunktion <i>y</i>(<i>a</i>,<i>b</i>,<i>c</i>) beschreibt das Schaltnetz korrekt?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('y31', this, 'w')"><i>y</i> = (<i>a</i> &#8743; <i>b</i>) &#8744; <i>c</i></button>
+          <button class="quiz-btn" onclick="quizCheck('y31', this, 'c')"><i>y</i> = (<i>a</i> &#8743; &#172;<i>b</i>) &#8744; <i>c</i></button>
+          <button class="quiz-btn" onclick="quizCheck('y31', this, 'w')"><i>y</i> = <i>a</i> &#8744; (<i>b</i> &#8743; <i>c</i>)</button>
+          <button class="quiz-btn" onclick="quizCheck('y31', this, 'w')"><i>y</i> = (<i>a</i> &#8743; &#172;<i>b</i>) &#8743; <i>c</i></button>
+        </div>
+        <div class="quiz-fb" id="qfb-y31"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Aufgabe 3.1</div>
+        <p><i>h</i> = <i>a</i> &#8743; &#172;<i>b</i></p>
+        <p><i>y</i> = <i>h</i> &#8744; <i>c</i></p>
+        <div class="formula"><i>y</i>(<i>a</i>,<i>b</i>,<i>c</i>) = (<i>a</i> &#8743; &#172;<i>b</i>) &#8744; <i>c</i></div>
+      </div>
+    <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zu Aufgabe 3.2 →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Aufgabe 3.2 — Synthese einer Wahrheitstabelle</h2>
+    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
+    <p><strong>Aufgabenstellung (Original):</strong> Gegeben sei die Funktionsgleichung <i>Q</i> = (&#172;<i>a</i> &#8743; <i>b</i>) &#8744; (<i>a</i> &#8743; &#172;<i>b</i>). Erstellen Sie basierend auf dieser Gleichung eine Wahrheitstabelle.</p>
+    <p><em>Tipp aus dem Original-Arbeitsblatt: Bilde dir für die Funktionsteile (&#172;<i>a</i> &#8743; <i>b</i>) und (<i>a</i> &#8743; &#172;<i>b</i>) Zwischenvariablen.</em></p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Schaltkreis testen</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Wahrheitstabelle</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Schaltzeichen</button>
+      <button class="substep-all" onclick="revealSub(2,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <p>Beide Eingänge <i>a</i> und <i>b</i> werden hier je zweimal gebraucht: einmal direkt und einmal negiert (Kreis am Eingang). Klicke die Schalter und beobachte die beiden Zwischenwerte und <i>Q</i>.</p>
+      <div class="circuit-box">
+        <svg class="circuit-svg" viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schaltnetz zu Aufgabe 3.2 mit Eingängen a, b">
+          <g class="sw-btn" id="sw32a" tabindex="0" role="button" aria-label="Schalter a umschalten" onclick="toggleSwitch('c32','a')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c32','a');}">
+            <rect class="sw-body" x="20" y="92" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="115" text-anchor="middle">a=<tspan class="sw-val">0</tspan></text>
+          </g>
+          <g class="sw-btn" id="sw32b" tabindex="0" role="button" aria-label="Schalter b umschalten" onclick="toggleSwitch('c32','b')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c32','b');}">
+            <rect class="sw-body" x="20" y="132" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="155" text-anchor="middle">b=<tspan class="sw-val">0</tspan></text>
+          </g>
+
+          <path class="wire" id="c32-wa-bus" d="M90,110 L110,110 M110,50 L110,170"/>
+          <path class="wire" id="c32-wa1" d="M110,50 L260,50"/>
+          <circle class="gate-bubble" cx="245" cy="50" r="6"/>
+          <path class="wire" id="c32-wa2" d="M110,170 L260,170"/>
+
+          <path class="wire" id="c32-wb-bus" d="M90,150 L150,150 M150,90 L150,210"/>
+          <path class="wire" id="c32-wb1" d="M150,90 L260,90"/>
+          <path class="wire" id="c32-wb2" d="M150,210 L260,210"/>
+          <circle class="gate-bubble" cx="245" cy="210" r="6"/>
+
+          <rect class="gate-body" x="260" y="30" width="80" height="80" rx="6"/>
+          <text class="gate-label" x="300" y="80" text-anchor="middle">&amp;</text>
+          <rect class="gate-body" x="260" y="150" width="80" height="80" rx="6"/>
+          <text class="gate-label" x="300" y="200" text-anchor="middle">&amp;</text>
+
+          <path class="wire" id="c32-wt1a" d="M340,70 L385,70"/>
+          <g id="c32-lt1"><circle class="lamp-ring" cx="400" cy="70" r="14"/><text class="lamp-txt" x="400" y="75" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="400" y="100" text-anchor="middle">&#172;a&#8743;b</text>
+          <path class="wire" id="c32-wt1b" d="M415,70 L460,70"/>
+
+          <path class="wire" id="c32-wt2a" d="M340,190 L385,190"/>
+          <g id="c32-lt2"><circle class="lamp-ring" cx="400" cy="190" r="14"/><text class="lamp-txt" x="400" y="195" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="400" y="218" text-anchor="middle">a&#8743;&#172;b</text>
+          <path class="wire" id="c32-wt2b" d="M415,190 L460,190"/>
+
+          <rect class="gate-body" x="460" y="70" width="80" height="120" rx="6"/>
+          <text class="gate-label" x="500" y="136" text-anchor="middle">&#8805;1</text>
+
+          <path class="wire" id="c32-wq" d="M540,130 L599,130"/>
+          <g id="c32-lq"><circle class="lamp-ring" cx="617" cy="130" r="17"/><text class="lamp-txt" x="617" y="136" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="617" y="164" text-anchor="middle">Q</text>
+        </svg>
+        <div class="circuit-hint">🖱️ Schalter a, b anklicken. Grün = Signal 1, grau = Signal 0.</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Weiter zu Teil 2 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <p>Trage die Wahrheitstabelle mit den beiden Zwischenvariablen ein:</p>
+      <table class="truth">
+        <tr><th>a</th><th>b</th><th>&#172;a &#8743; b</th><th>a &#8743; &#172;b</th><th>Q</th></tr>
+        <tr><td class="given">0</td><td class="given">0</td><td><input class="inp" id="t32-t1_0"></td><td><input class="inp" id="t32-t2_0"></td><td><input class="inp" id="t32-q0"></td></tr>
+        <tr><td class="given">0</td><td class="given">1</td><td><input class="inp" id="t32-t1_1"></td><td><input class="inp" id="t32-t2_1"></td><td><input class="inp" id="t32-q1"></td></tr>
+        <tr><td class="given">1</td><td class="given">0</td><td><input class="inp" id="t32-t1_2"></td><td><input class="inp" id="t32-t2_2"></td><td><input class="inp" id="t32-q2"></td></tr>
+        <tr><td class="given">1</td><td class="given">1</td><td><input class="inp" id="t32-t1_3"></td><td><input class="inp" id="t32-t2_3"></td><td><input class="inp" id="t32-q3"></td></tr>
+      </table>
+      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['t32-t1_0',0,0.4],['t32-t2_0',0,0.4],['t32-q0',0,0.4],['t32-t1_1',1,0.4],['t32-t2_1',0,0.4],['t32-q1',1,0.4],['t32-t1_2',0,0.4],['t32-t2_2',1,0.4],['t32-q2',1,0.4],['t32-t1_3',0,0.4],['t32-t2_3',0,0.4],['t32-q3',0,0.4]])">✓ Prüfen</button>
+      <div class="fb grp-fb"></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Weiter zu Teil 3 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <div class="quiz-item">
+        <div class="quiz-q">Diese Schaltung erhält das Schaltzeichen des …</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('g32', this, 'w')">UND-Gatters (Konjunktion)</button>
+          <button class="quiz-btn" onclick="quizCheck('g32', this, 'w')">ODER-Gatters (Disjunktion)</button>
+          <button class="quiz-btn" onclick="quizCheck('g32', this, 'c')">Antivalenz-Gatters (Exklusiv-Oder, XOR)</button>
+          <button class="quiz-btn" onclick="quizCheck('g32', this, 'w')">NAND-Gatters</button>
+        </div>
+        <div class="quiz-fb" id="qfb-g32"></div>
+      </div>
+      <div class="callout callout-warn">⚠️ <span>Häufige Fehlvorstellung: Viele verwechseln ODER und Antivalenz. Beim gewöhnlichen ODER ist <i>Q</i> auch bei <i>a</i>=1 <strong>und</strong> <i>b</i>=1 gleich 1 — bei der Antivalenz (XOR) dagegen genau dann <strong>nicht</strong>. Teste es am Schaltkreis oben mit a=1, b=1!</span></div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Aufgabe 3.2: Antivalenz (XOR)</div>
+        <div class="formula"><i>Q</i> = (&#172;<i>a</i> &#8743; <i>b</i>) &#8744; (<i>a</i> &#8743; &#172;<i>b</i>)</div>
+        <p>Schaltzeichen: „=1". <i>Q</i> ist 1, wenn <i>a</i> und <i>b</i> <strong>unterschiedliche</strong> Werte haben.</p>
+      </div>
+    <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zu Aufgabe 3.3 →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Aufgabe 3.3 — Schaltplan erstellen</h2>
+    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
+    <p><strong>Aufgabenstellung (Original):</strong> Erstellen Sie den Schaltplan für die Funktionsgleichung <i>Q</i> = &#172;(<i>a</i> &#8743; <i>b</i>) &nbsp;|&nbsp; <i>Q&#772;</i> = <i>a</i> &#8743; <i>b</i>. <em>(Im Original: mit draw.io zu zeichnen — hier kannst du beide Varianten direkt live testen.)</em></p>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Schaltkreis testen</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Quiz</button>
+      <button class="substep-all" onclick="revealSub(3,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <p>Oben siehst du <i>Q</i> = &#172;(<i>a</i> &#8743; <i>b</i>), unten zum Vergleich das reine UND-Ergebnis <i>a</i> &#8743; <i>b</i> (= <i>Q&#772;</i>). Klicke a und b und beobachte: die beiden Lämpchen leuchten immer <strong>gegensätzlich</strong>.</p>
+      <div class="circuit-box">
+        <svg class="circuit-svg" viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schaltnetz zu Aufgabe 3.3: NAND-Gatter im Vergleich zum UND-Gatter">
+          <g class="sw-btn" id="sw33a" tabindex="0" role="button" aria-label="Schalter a umschalten" onclick="toggleSwitch('c33','a')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c33','a');}">
+            <rect class="sw-body" x="20" y="97" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="120" text-anchor="middle">a=<tspan class="sw-val">0</tspan></text>
+          </g>
+          <g class="sw-btn" id="sw33b" tabindex="0" role="button" aria-label="Schalter b umschalten" onclick="toggleSwitch('c33','b')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSwitch('c33','b');}">
+            <rect class="sw-body" x="20" y="137" width="70" height="36" rx="8"/>
+            <text class="sw-label" x="55" y="160" text-anchor="middle">b=<tspan class="sw-val">0</tspan></text>
+          </g>
+
+          <path class="wire" id="c33-wa-bus" d="M90,115 L110,115 M110,60 L110,170"/>
+          <path class="wire" id="c33-wa1" d="M110,60 L220,60"/>
+          <path class="wire" id="c33-wa2" d="M110,170 L220,170"/>
+          <path class="wire" id="c33-wb-bus" d="M90,155 L150,155 M150,100 L150,210"/>
+          <path class="wire" id="c33-wb1" d="M150,100 L220,100"/>
+          <path class="wire" id="c33-wb2" d="M150,210 L220,210"/>
+
+          <rect class="gate-body" x="220" y="40" width="80" height="80" rx="6"/>
+          <text class="gate-label" x="260" y="90" text-anchor="middle">&amp;</text>
+          <circle class="gate-bubble" cx="306" cy="80" r="6"/>
+          <path class="wire" id="c33-wq" d="M312,80 L370,80"/>
+          <g id="c33-lq"><circle class="lamp-ring" cx="390" cy="80" r="17"/><text class="lamp-txt" x="390" y="86" text-anchor="middle">1</text></g>
+          <text class="lamp-tag" x="390" y="112" text-anchor="middle">Q = &#172;(a&#8743;b)</text>
+
+          <rect class="gate-body" x="220" y="150" width="80" height="80" rx="6"/>
+          <text class="gate-label" x="260" y="200" text-anchor="middle">&amp;</text>
+          <path class="wire" id="c33-wqbar" d="M300,190 L370,190"/>
+          <g id="c33-lqbar"><circle class="lamp-ring" cx="390" cy="190" r="17"/><text class="lamp-txt" x="390" y="196" text-anchor="middle">0</text></g>
+          <text class="lamp-tag" x="390" y="222" text-anchor="middle">a &#8743; b</text>
+        </svg>
+        <div class="circuit-hint">🖱️ Schalter a, b anklicken. Der Kreis am Ausgang des oberen Gatters macht aus UND ein NAND.</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Weiter zu Teil 2 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <div class="quiz-item">
+        <div class="quiz-q">Wie entsteht der Schaltplan für <i>Q</i> = &#172;(<i>a</i> &#8743; <i>b</i>) am einfachsten aus einem UND-Gatter?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('g33', this, 'w')">Man tauscht das UND-Gatter komplett gegen ein ODER-Gatter aus.</button>
+          <button class="quiz-btn" onclick="quizCheck('g33', this, 'c')">Man negiert nur den Ausgang des UND-Gatters (Inversionskreis) — das ergibt ein NAND-Gatter.</button>
+          <button class="quiz-btn" onclick="quizCheck('g33', this, 'w')">Man negiert beide Eingänge des UND-Gatters, der Ausgang bleibt unverändert.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-g33"></div>
+      </div>
+      <div class="callout callout-warn">⚠️ <span>Häufige Fehlvorstellung: „NAND" bedeutet nicht „erst negieren, dann UND verknüpfen", sondern <strong>erst</strong> UND verknüpfen und <strong>dann</strong> das Ergebnis negieren. Die Reihenfolge der Buchstaben (Not-AND) beschreibt also den Aufbau von hinten nach vorn.</span></div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Aufgabe 3.3: NAND</div>
+        <div class="formula"><i>Q</i> = &#172;(<i>a</i> &#8743; <i>b</i>) &nbsp;|&nbsp; <i>Q&#772;</i> = <i>a</i> &#8743; <i>b</i></div>
+        <p>Ein NAND-Gatter ist ein UND-Gatter mit Inversionskreis am Ausgang. Nach De Morgan gilt außerdem: &#172;(<i>a</i> &#8743; <i>b</i>) = &#172;<i>a</i> &#8744; &#172;<i>b</i>.</p>
+      </div>
+    <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zur Zusammenfassung →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Zusammenfassung: Alle drei Aufgaben im Überblick</h2>
+    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
+    <p>Du hast jetzt zu allen drei Aufgaben deine Wahrheitstabellen selbst geprüft und die Schaltkreise live ausprobiert. Zeit für eine letzte Runde: Kannst du die Schaltzeichen und Formeln sicher zuordnen?</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Abschluss-Quiz</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Hefter</button>
+      <button class="substep-all" onclick="revealSub(4,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="quiz-item">
+        <div class="quiz-q">In Aufgabe 3.1 war <i>y</i> = (<i>a</i> &#8743; &#172;<i>b</i>) &#8744; <i>c</i>. Wie lautet <i>y</i>, wenn <i>a</i>=1, <i>b</i>=1, <i>c</i>=0 ist?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'c')">0</button>
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'w')">1</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit1"></div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Welche der drei untersuchten Schaltungen (3.1, 3.2, 3.3) ist eine Antivalenz (XOR)?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'w')">Aufgabe 3.1</button>
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'c')">Aufgabe 3.2</button>
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'w')">Aufgabe 3.3</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit2"></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Weiter zu Teil 2 ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Ergebnisse der Aufgaben 3.1–3.3</div>
+        <table>
+          <tr><td><strong>3.1</strong></td><td><i>h</i> = <i>a</i> &#8743; &#172;<i>b</i></td><td><i>y</i> = (<i>a</i> &#8743; &#172;<i>b</i>) &#8744; <i>c</i></td></tr>
+          <tr><td><strong>3.2</strong></td><td colspan="2"><i>Q</i> = (&#172;<i>a</i> &#8743; <i>b</i>) &#8744; (<i>a</i> &#8743; &#172;<i>b</i>) — Antivalenz (XOR), Zeichen „=1"</td></tr>
+          <tr><td><strong>3.3</strong></td><td colspan="2"><i>Q</i> = &#172;(<i>a</i> &#8743; <i>b</i>) — NAND (UND + Inversionskreis am Ausgang)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Schaltnetze analysieren (3.1)</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Ein Schaltnetz aus mehreren Gattern lässt sich Gatter für Gatter auswerten: zuerst die inneren Zwischengrößen (hier <i>h</i>) berechnen, dann die äußere Verknüpfung.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Wahrheitstabellen synthetisieren (3.2)</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Aus einer Funktionsgleichung lässt sich mit Zwischenvariablen für Teilausdrücke Schritt für Schritt eine vollständige Wahrheitstabelle aufbauen.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Schaltpläne bauen (3.3)</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Ein Inversionskreis am Eingang oder Ausgang eines Gatters negiert genau dieses eine Signal — so entstehen aus UND/ODER die Gatter NAND/NOR.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt Schaltnetze analysieren, aus Funktionsgleichungen Wahrheitstabellen aufbauen und Schaltpläne mit Inversionen lesen und testen.</span></div>
+    <p class="connector-text">Nächster Schritt: Wie lässt sich eine Schaltfunktion wie <i>y</i> = (<i>a</i> &#8743; &#172;<i>b</i>) &#8744; <i>c</i> mithilfe eines KV-Diagramms vereinfachen? Das schauen wir uns in der nächsten Stunde an.</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  kreis: {
+    ok:   '✅ <strong>Richtig!</strong> Der Kreis steht für die Negation dieses einen Eingangs.',
+    ng:   '❌ <strong>Nicht ganz.</strong> Der Eingang wird weiterhin ausgewertet — nur eben mit umgedrehtem Wert.',
+    hint: 'Schau dir das NICHT-Gatter an: Es hat genau einen Eingang, und der wird verwendet.'
+  },
+  y31: {
+    ok:   '✅ <strong>Richtig!</strong> y = (a ∧ ¬b) ∨ c passt genau zur Wahrheitstabelle.',
+    ng:   '❌ <strong>Nicht ganz.</strong> Achte auf den Kreis am b-Eingang des UND-Gatters — b wird negiert, nicht a.',
+    hint: 'Setze a=1, b=0, c=0 im Schaltkreis oben ein und lies h und y ab.'
+  },
+  g32: {
+    ok:   '✅ <strong>Richtig!</strong> Q ist 1, wenn a und b unterschiedlich sind — das ist die Antivalenz (XOR).',
+    ng:   '❌ <strong>Nicht ganz.</strong> Teste im Schaltkreis oben a=1, b=1 — was leuchtet dann?',
+    hint: 'Vergleiche mit der Wahrheitstabelle: Bei a=b=1 ist Q = 0. Bei welchem Gatter ist das der Fall?'
+  },
+  g33: {
+    ok:   '✅ <strong>Richtig!</strong> Erst UND verknüpfen, dann den Ausgang negieren — das ist NAND.',
+    ng:   '❌ <strong>Nicht ganz.</strong> Schau dir an, wo genau im Schaltkreis oben der kleine Kreis sitzt.',
+    hint: 'Der Kreis sitzt am Ausgang des Gatters, nicht an den Eingängen.'
+  },
+  exit1: {
+    ok:   '✅ <strong>Richtig!</strong> a∧¬b = 1∧0 = 0, und 0∨c = 0∨0 = 0.',
+    ng:   '❌ <strong>Nicht ganz.</strong> Rechne in zwei Schritten: erst h = a∧¬b, dann y = h∨c.',
+    hint: 'b=1, also ist ¬b=0. Damit wird a∧¬b automatisch 0, egal was a ist.'
+  },
+  exit2: {
+    ok:   '✅ <strong>Richtig!</strong> Q = (¬a∧b)∨(a∧¬b) ist die Antivalenz aus Aufgabe 3.2.',
+    ng:   '❌ <strong>Nicht ganz.</strong> Überlege, bei welcher Aufgabe Q bei a=b=1 auf 0 fällt.',
+    hint: 'Aufgabe 3.1 hat drei Eingänge, Aufgabe 3.3 ist eine Negation eines einzigen UND — bleibt nur eine Möglichkeit.'
+  }
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Eigene Ergänzung: interaktive Schaltkreis-Simulatoren ---------- */
+const circuitState = { c31:{a:0,b:0,c:0}, c32:{a:0,b:0}, c33:{a:0,b:0} };
+
+function toggleSwitch(circuit,key){
+  circuitState[circuit][key] = circuitState[circuit][key] ? 0 : 1;
+  renderCircuit(circuit);
+}
+function setSwitchVisual(id,val){
+  const g=document.getElementById(id); if(!g) return;
+  g.classList.toggle('sw-on', !!val);
+  const t=g.querySelector('.sw-val'); if(t) t.textContent=val;
+}
+function setWire(id,val){ const el=document.getElementById(id); if(el) el.classList.toggle('on', !!val); }
+function setLamp(id,val){
+  const g=document.getElementById(id); if(!g) return;
+  const ring=g.querySelector('.lamp-ring'), txt=g.querySelector('.lamp-txt');
+  if(ring) ring.classList.toggle('on', !!val);
+  if(txt){ txt.textContent=val; txt.classList.toggle('on', !!val); }
+}
+
+function renderCircuit(circuit){
+  if(circuit==='c31'){
+    const {a,b,c}=circuitState.c31;
+    const notB = b?0:1, h=(a&&notB)?1:0, y=(h||c)?1:0;
+    setSwitchVisual('sw31a',a); setSwitchVisual('sw31b',b); setSwitchVisual('sw31c',c);
+    setWire('c31-wa',a); setWire('c31-wb',notB); setWire('c31-wc',c);
+    setWire('c31-wh1',h); setWire('c31-wh2',h); setWire('c31-wy',y);
+    setLamp('c31-lh',h); setLamp('c31-ly',y);
+  } else if(circuit==='c32'){
+    const {a,b}=circuitState.c32;
+    const notA=a?0:1, notB=b?0:1, t1=(notA&&b)?1:0, t2=(a&&notB)?1:0, q=(t1||t2)?1:0;
+    setSwitchVisual('sw32a',a); setSwitchVisual('sw32b',b);
+    setWire('c32-wa-bus',a); setWire('c32-wa1',notA); setWire('c32-wa2',a);
+    setWire('c32-wb-bus',b); setWire('c32-wb1',b); setWire('c32-wb2',notB);
+    setWire('c32-wt1a',t1); setWire('c32-wt1b',t1); setWire('c32-wt2a',t2); setWire('c32-wt2b',t2);
+    setWire('c32-wq',q);
+    setLamp('c32-lt1',t1); setLamp('c32-lt2',t2); setLamp('c32-lq',q);
+  } else if(circuit==='c33'){
+    const {a,b}=circuitState.c33;
+    const andv=(a&&b)?1:0, q=andv?0:1;
+    setSwitchVisual('sw33a',a); setSwitchVisual('sw33b',b);
+    setWire('c33-wa-bus',a); setWire('c33-wa1',a); setWire('c33-wa2',a);
+    setWire('c33-wb-bus',b); setWire('c33-wb1',b); setWire('c33-wb2',b);
+    setWire('c33-wq',q); setWire('c33-wqbar',andv);
+    setLamp('c33-lq',q); setLamp('c33-lqbar',andv);
+  }
+}
+function initCircuits(){ Object.keys(circuitState).forEach(renderCircuit); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initCircuits(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel||zone.classList.contains('filled'))return; zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.add('filled'); sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement; if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').textContent = s._back?cards[i][1]:cards[i][0]; s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  host.querySelectorAll('.ws-cell').forEach(cell=>cell.addEventListener('click',function(){ wsClick(cell); }));
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsClick(cell){ const s=bs(cell); if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const sr=+s._start.dataset.r,sc=+s._start.dataset.c,er=+cell.dataset.r,ec=+cell.dataset.c; s._start.classList.remove('ws-start'); s._start=null;
+  const straight=(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc)); if(!straight)return;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),steps=Math.max(Math.abs(er-sr),Math.abs(ec-sc)); let letters='',cells=[];
+  for(let i=0;i<=steps;i++){ const rr=sr+dr*i,cc=sc+dc*i; letters+=s._grid[rr][cc]; cells.push([rr,cc]); }
+  const rev=letters.split('').reverse().join(''); const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word); cells.forEach(rc=>{ const el=s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); if(el)el.classList.add('ws-found'); }); wsWordList(s); if(s._found.length===s._words.length){ setFb(s,'🎉 Alle Wörter gefunden!',true); } } }
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+</script>
+</body>
+</html>
