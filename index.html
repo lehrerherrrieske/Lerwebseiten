@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernportal · Physik &amp; Informatik</title>
+<!--
+  ============================================================================
+  LERNPORTAL – Startseite für GitHub Pages
+  ============================================================================
+  Diese Seite ist die Startseite des Repos (index.html im Root). Sie führt
+  SuS in drei Schritten zur passenden Lernseite:
+    1) Fach wählen (Physik / Informatik)
+    2) Klassenstufe wählen
+    3) Liste der Lernseiten dieser Klassenstufe, gruppiert nach Lernbereich
+
+  REPO-STRUKTUR (Empfehlung):
+    /index.html                 <- diese Datei
+    /Physik/K7 - LB1 - ....html
+    /Physik/K8 - LB2 - ....html
+    /Informatik/K10 - LB1 - ....html
+    ...
+  Die Lernseiten liegen unverändert in Fach-Ordnern, genau mit dem
+  Dateinamen, den das lernhtml-Skript erzeugt.
+
+  NEUE SEITE EINTRAGEN:
+  Im Array SEITEN weiter unten (Abschnitt "// >>> HIER EINTRAGEN") einfach
+  ein neues Objekt ergänzen, z. B.:
+
+    { fach:"physik", klasse:"8", lb:"LB2",
+      titel:"Stromstärke, Spannung, Widerstand",
+      datei:"Physik/K8 - LB2 - Stromstaerke_Spannung_Widerstand.html" }
+
+  fach   : "physik" oder "informatik"
+  klasse : muss zu einer id aus KLASSEN (weiter unten) passen, z.B. "7",
+           "11GK", "11LK", "12GK", "12LK"
+  lb     : beliebiger kurzer Lernbereichs-Name, wird als Gruppen-Überschrift
+           und als Chip angezeigt
+  titel  : Anzeigename der Stunde
+  datei  : relativer Pfad zur .html-Datei im Repo
+  neu    : optional, true setzt ein "Neu"-Badge
+
+  Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
+  automatisch einen freundlichen Platzhaltertext – kein Fehler.
+  ============================================================================
+-->
+<style>
+  :root{
+    --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7;
+    --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+    --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+    --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+    --color-accent:#B25A38;
+    --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+    --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+
+    --color-physik:#3F5E8C;
+    --color-physik-light:color-mix(in srgb, var(--color-physik) 12%, white);
+    --color-physik-hover:color-mix(in srgb, var(--color-physik) 82%, black);
+
+    --color-informatik:#1C7168;
+    --color-informatik-light:color-mix(in srgb, var(--color-informatik) 12%, white);
+    --color-informatik-hover:color-mix(in srgb, var(--color-informatik) 82%, black);
+
+    --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+    --shadow-md:0 6px 20px rgba(44,42,40,.10);
+    --radius:10px; --radius-lg:18px; --radius-full:9999px;
+
+    --font-display:'Bricolage Grotesque',Georgia,serif;
+    --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+
+    --fs-sm:.85rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-h2:1.4rem; --fs-h1:2rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:112.5%;}
+  body{
+    font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+    line-height:1.6;min-height:100vh;display:flex;flex-direction:column;
+  }
+  .wrap{width:min(980px,100% - 40px);margin:0 auto;}
+
+  /* ── Kopfbereich ── */
+  header{padding:36px 0 20px;border-bottom:1px solid var(--color-border);
+    background:var(--color-surface);}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{
+    width:52px;height:52px;border-radius:var(--radius);
+    background:var(--color-accent-light);display:flex;align-items:center;
+    justify-content:center;font-size:1.6rem;flex-shrink:0;
+  }
+  h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+  header p{color:var(--color-text-muted);font-size:var(--fs-base);margin-top:2px;}
+
+  /* ── Breadcrumb / Zurück ── */
+  .crumbbar{display:none;align-items:center;gap:10px;padding:16px 0 0;flex-wrap:wrap;}
+  .crumbbar.active{display:flex;}
+  .btn-back{
+    display:inline-flex;align-items:center;gap:6px;background:var(--color-surface);
+    border:1px solid var(--color-border);border-radius:var(--radius-full);
+    padding:7px 16px;font-size:var(--fs-sm);font-weight:600;color:var(--color-text-secondary);
+    cursor:pointer;transition:.15s;
+  }
+  .btn-back:hover{border-color:var(--color-accent);color:var(--color-accent-hover);}
+  .crumb-path{font-size:var(--fs-sm);color:var(--color-text-muted);}
+  .crumb-path b{color:var(--color-text);}
+
+  main{flex:1;padding:28px 0 70px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fadeUp .35s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── Fachauswahl ── */
+  .lead{font-size:var(--fs-lg);color:var(--color-text-secondary);margin-bottom:26px;}
+  .fach-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:600px){.fach-grid{grid-template-columns:1fr;}}
+  .fach-card{
+    cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    background:var(--color-surface);padding:34px 26px;text-align:left;
+    display:flex;flex-direction:column;gap:12px;transition:.18s;box-shadow:var(--shadow);
+  }
+  .fach-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+  .fach-card:focus-visible{outline:3px solid var(--fc-accent);outline-offset:2px;}
+  .fach-card .icon{
+    width:56px;height:56px;border-radius:var(--radius);display:flex;align-items:center;
+    justify-content:center;font-size:1.8rem;background:var(--fc-light);
+  }
+  .fach-card[data-fach="physik"]{--fc-accent:var(--color-physik);--fc-light:var(--color-physik-light);}
+  .fach-card[data-fach="informatik"]{--fc-accent:var(--color-informatik);--fc-light:var(--color-informatik-light);}
+  .fach-card h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--fc-accent);}
+  .fach-card p{color:var(--color-text-muted);font-size:var(--fs-sm);}
+  .fach-card .arrow{margin-top:6px;font-weight:700;color:var(--fc-accent);font-size:var(--fs-sm);}
+
+  /* ── Klassenauswahl ── */
+  h2.section-title{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;margin-bottom:18px;}
+  .klasse-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px;}
+  .klasse-btn{
+    cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius);
+    background:var(--color-surface);padding:20px 10px;text-align:center;font-weight:700;
+    font-size:var(--fs-lg);color:var(--color-text);transition:.15s;box-shadow:var(--shadow);
+  }
+  .klasse-btn:hover{border-color:var(--kb-accent);color:var(--kb-accent-hover);transform:translateY(-2px);}
+  .klasse-btn:focus-visible{outline:3px solid var(--kb-accent);outline-offset:2px;}
+  .klasse-btn small{display:block;font-size:var(--fs-sm);font-weight:500;color:var(--color-text-muted);margin-top:2px;}
+  .klasse-btn .count{
+    display:inline-block;margin-top:8px;font-size:var(--fs-sm);font-weight:600;
+    background:var(--kb-light);color:var(--kb-accent-hover);border-radius:var(--radius-full);
+    padding:2px 10px;
+  }
+
+  /* ── Seitenliste ── */
+  .lb-group{margin-bottom:26px;}
+  .lb-title{
+    display:inline-block;font-size:var(--fs-sm);font-weight:700;letter-spacing:.02em;
+    text-transform:uppercase;color:var(--color-text-muted);margin-bottom:10px;
+  }
+  .seite-card{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    border:1px solid var(--color-border);border-radius:var(--radius);
+    background:var(--color-surface);padding:16px 18px;margin-bottom:10px;
+    text-decoration:none;color:var(--color-text);transition:.15s;box-shadow:var(--shadow);
+  }
+  .seite-card:hover{border-color:var(--sc-accent);box-shadow:var(--shadow-md);transform:translateX(2px);}
+  .seite-card:focus-visible{outline:3px solid var(--sc-accent);outline-offset:2px;}
+  .seite-titel{font-weight:700;font-size:var(--fs-base);}
+  .seite-meta{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
+  .badge-neu{
+    background:var(--color-success-light,#E8F5EE);color:#2D8B55;font-size:var(--fs-sm);
+    font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;
+  }
+  .goto{font-size:1.3rem;color:var(--sc-accent);flex-shrink:0;}
+
+  .empty-state{
+    border:1px dashed var(--color-border);border-radius:var(--radius-lg);
+    padding:44px 24px;text-align:center;color:var(--color-text-muted);
+  }
+  .empty-state .em-icon{font-size:2rem;margin-bottom:10px;}
+
+  footer{border-top:1px solid var(--color-border);padding:20px 0;text-align:center;
+    color:var(--color-text-muted);font-size:var(--fs-sm);}
+
+  /* Fachspezifische Laufvariablen, werden per JS am <body> gesetzt */
+  body[data-fach="physik"]{--sc-accent:var(--color-physik);--kb-accent:var(--color-physik);
+    --kb-accent-hover:var(--color-physik-hover);--kb-light:var(--color-physik-light);}
+  body[data-fach="informatik"]{--sc-accent:var(--color-informatik);--kb-accent:var(--color-informatik);
+    --kb-accent-hover:var(--color-informatik-hover);--kb-light:var(--color-informatik-light);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">📚</div>
+      <div>
+        <h1>Lernportal</h1>
+        <p>Physik &amp; Informatik — Material zum Nacharbeiten und Üben</p>
+      </div>
+    </div>
+    <div class="crumbbar" id="crumbbar">
+      <button class="btn-back" id="btnBack">← Zurück</button>
+      <span class="crumb-path" id="crumbPath"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Schritt 1: Fach -->
+  <section class="view active" id="view-fach">
+    <p class="lead">Wähle zuerst dein Fach:</p>
+    <div class="fach-grid">
+      <button class="fach-card" data-fach="physik">
+        <div class="icon">⚛️</div>
+        <h2>Physik</h2>
+        <p>Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe.</p>
+        <span class="arrow">Zu Physik →</span>
+      </button>
+      <button class="fach-card" data-fach="informatik">
+        <div class="icon">💻</div>
+        <h2>Informatik</h2>
+        <p>Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe.</p>
+        <span class="arrow">Zu Informatik →</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Schritt 2: Klasse -->
+  <section class="view" id="view-klasse">
+    <h2 class="section-title" id="klasseTitle">Klassenstufe wählen</h2>
+    <div class="klasse-grid" id="klasseGrid"></div>
+  </section>
+
+  <!-- Schritt 3: Seiten -->
+  <section class="view" id="view-seiten">
+    <h2 class="section-title" id="seitenTitle">Lernseiten</h2>
+    <div id="seitenListe"></div>
+  </section>
+
+</main>
+
+<footer>Lernportal für den Unterricht · Seiten laufen offline, ein Klick genügt.</footer>
+
+<script>
+/* ============================================================
+   KONFIGURATION – hier anpassen
+   ============================================================ */
+
+// Verfügbare Klassenstufen je Fach (id = wird auch für "klasse" in
+// SEITEN benutzt; label = Anzeige auf dem Button)
+const KLASSEN = {
+  physik: [
+    {id:"6",  label:"6"},
+    {id:"7",  label:"7"},
+    {id:"8",  label:"8"},
+    {id:"9",  label:"9"},
+    {id:"10", label:"10"},
+    {id:"11GK", label:"11", sub:"GK"},
+    {id:"11LK", label:"11", sub:"LK"},
+    {id:"12GK", label:"12", sub:"GK"},
+    {id:"12LK", label:"12", sub:"LK"},
+  ],
+  informatik: [
+    {id:"7",  label:"7"},
+    {id:"8",  label:"8"},
+    {id:"9",  label:"9"},
+    {id:"10", label:"10"},
+    {id:"11GK", label:"11", sub:"GK"},
+    {id:"11LK", label:"11", sub:"LK"},
+    {id:"12GK", label:"12", sub:"GK"},
+    {id:"12LK", label:"12", sub:"LK"},
+  ]
+};
+
+// >>> HIER EINTRAGEN: eine Zeile pro Lernseite
+const SEITEN = [
+  // Beispiel (auskommentiert) – so sieht ein Eintrag aus:
+  // { fach:"physik", klasse:"8", lb:"LB2",
+  //   titel:"Stromstärke, Spannung, Widerstand",
+  //   datei:"Physik/K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
+];
+
+/* ============================================================
+   LOGIK – muss normalerweise nicht angepasst werden
+   ============================================================ */
+const FACHNAME = {physik:"Physik", informatik:"Informatik"};
+let currentFach = null, currentKlasse = null;
+
+const viewFach = document.getElementById("view-fach");
+const viewKlasse = document.getElementById("view-klasse");
+const viewSeiten = document.getElementById("view-seiten");
+const crumbbar = document.getElementById("crumbbar");
+const crumbPath = document.getElementById("crumbPath");
+const btnBack = document.getElementById("btnBack");
+
+function showView(view){
+  [viewFach, viewKlasse, viewSeiten].forEach(v => v.classList.remove("active"));
+  view.classList.add("active");
+}
+
+function goFach(){
+  currentFach = null; currentKlasse = null;
+  document.body.removeAttribute("data-fach");
+  crumbbar.classList.remove("active");
+  showView(viewFach);
+}
+
+function goKlasse(fach){
+  currentFach = fach; currentKlasse = null;
+  document.body.setAttribute("data-fach", fach);
+  document.getElementById("klasseTitle").textContent = FACHNAME[fach] + " — Klassenstufe wählen";
+
+  const grid = document.getElementById("klasseGrid");
+  grid.innerHTML = "";
+  KLASSEN[fach].forEach(k => {
+    const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id).length;
+    const btn = document.createElement("button");
+    btn.className = "klasse-btn";
+    btn.innerHTML = `Klasse ${k.label}${k.sub ? `<small>${k.sub}</small>` : ""}`
+      + (anzahl ? `<span class="count">${anzahl} Seite${anzahl === 1 ? "" : "n"}</span>` : "");
+    btn.addEventListener("click", () => goSeiten(fach, k.id, k.label + (k.sub ? " " + k.sub : "")));
+    grid.appendChild(btn);
+  });
+
+  crumbbar.classList.add("active");
+  crumbPath.innerHTML = `<b>${FACHNAME[fach]}</b>`;
+  btnBack.onclick = goFach;
+  showView(viewKlasse);
+}
+
+function goSeiten(fach, klasseId, klasseLabel){
+  currentKlasse = klasseId;
+  document.getElementById("seitenTitle").textContent = FACHNAME[fach] + " — Klasse " + klasseLabel;
+
+  const treffer = SEITEN.filter(s => s.fach === fach && s.klasse === klasseId);
+  const liste = document.getElementById("seitenListe");
+  liste.innerHTML = "";
+
+  if (treffer.length === 0){
+    liste.innerHTML = `<div class="empty-state">
+        <div class="em-icon">🗂️</div>
+        Für Klasse ${klasseLabel} sind noch keine Lernseiten hinterlegt.<br>
+        Schau in Kürze wieder vorbei!
+      </div>`;
+  } else {
+    // Nach Lernbereich gruppieren, Reihenfolge des ersten Auftretens
+    const gruppen = [];
+    treffer.forEach(s => {
+      let g = gruppen.find(g => g.lb === s.lb);
+      if (!g){ g = {lb: s.lb, items: []}; gruppen.push(g); }
+      g.items.push(s);
+    });
+    gruppen.forEach(g => {
+      const block = document.createElement("div");
+      block.className = "lb-group";
+      const heading = document.createElement("div");
+      heading.className = "lb-title";
+      heading.textContent = g.lb;
+      block.appendChild(heading);
+      g.items.forEach(s => {
+        const a = document.createElement("a");
+        a.className = "seite-card";
+        a.href = s.datei;
+        a.innerHTML = `<div>
+            <div class="seite-titel">${s.titel}${s.neu ? '<span class="badge-neu">Neu</span>' : ""}</div>
+          </div>
+          <div class="goto">→</div>`;
+        block.appendChild(a);
+      });
+      liste.appendChild(block);
+    });
+  }
+
+  crumbbar.classList.add("active");
+  crumbPath.innerHTML = `<b>${FACHNAME[fach]}</b> · Klasse ${klasseLabel}`;
+  btnBack.onclick = () => goKlasse(fach);
+  showView(viewSeiten);
+}
+
+document.querySelectorAll(".fach-card").forEach(card => {
+  card.addEventListener("click", () => goKlasse(card.dataset.fach));
+});
+</script>
+</body>
+</html>
