@@ -39,6 +39,8 @@
   titel  : Anzeigename der Stunde
   datei  : relativer Pfad zur .html-Datei im Repo
   neu    : optional, true setzt ein "Neu"-Badge
+  wip    : optional, true zeigt die Karte ausgegraut und nicht anklickbar
+           mit Badge "In Arbeit" (für Seiten, die noch nicht fertig sind)
 
   Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
   automatisch einen freundlichen Platzhaltertext – kein Fehler.
@@ -170,6 +172,20 @@
   }
   .goto{font-size:1.3rem;color:var(--sc-accent);flex-shrink:0;}
 
+  /* ── Seiten "unter Arbeit" ── */
+  .seite-card.wip{
+    cursor:default;background:var(--color-bg-warm);color:var(--color-text-muted);
+    box-shadow:none;
+  }
+  .seite-card.wip:hover{border-color:var(--color-border);box-shadow:none;transform:none;}
+  .seite-card.wip .seite-titel{color:var(--color-text-muted);}
+  .seite-card.wip .goto{visibility:hidden;}
+  .badge-wip{
+    background:var(--color-border-light);color:var(--color-text-muted);font-size:var(--fs-sm);
+    font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;
+    border:1px solid var(--color-border);
+  }
+
   .empty-state{
     border:1px dashed var(--color-border);border-radius:var(--radius-lg);
     padding:44px 24px;text-align:center;color:var(--color-text-muted);
@@ -239,7 +255,7 @@
 
 </main>
 
-<footer>Lernportal für den Unterricht · Seiten laufen offline, ein Klick genügt.</footer>
+<footer>Lernportal für den Unterricht - Erstellt von Herr Rieske mit der Hilfe von KI und ❤️ für das Fach </footer>
 
 <script>
 /* ============================================================
@@ -279,35 +295,67 @@ const KLASSEN = {
 // "datei" ist NUR der Dateiname (ohne Ordner) — der Ordner kommt automatisch
 // aus KLASSEN[fach] über die passende "klasse"-id.
 const SEITEN = [
+
+
   // Beispiel (auskommentiert) – so sieht ein Eintrag aus:
   // { fach:"physik", klasse:"8", lb:"LB2",
   //   titel:"Stromstärke, Spannung, Widerstand",
   //   datei:"K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
-    { fach:"physik", klasse:"7", lb:"LB1", titel:"Hookesches Gesetz",
-    datei:"K7 - LB1 - Hookesches_Gesetz.html" },
 
-    { fach:"informatik", klasse:"7", lb:"LB1", titel:"Binärzahlen",
-      datei:"K7 - LB1 - Binaerzahlen.html" },
+  // Beispiel (auskommentiert) – so sieht ein Eintrag aus:
+  // { fach:"physik", klasse:"8", lb:"LB2",
+  //   titel:"Stromstärke, Spannung, Widerstand",
+  //   datei:"K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
 
-    { fach:"informatik", klasse:"9", lb:"LB1", titel:"ERD aus Text erstellen",
-      datei:"K9 - LB1 - ERD_aus_Text_erstellen.html" },
+  // =================PHYSIK=============================== 
+  // Klasse 6
 
-    { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Prozessoren – Kernaufgaben",
-      datei:"K11GK - LB1 - Prozessoren_Kernaufgaben.html" },
+  // Klasse 7
+  // Passwort : feder2026 
+  { fach:"physik", klasse:"7", lb:"LB1", titel:"Hookesches Gesetz", datei:"K7 - LB1 - Hookesches_Gesetz.html" },
+  
+  // Klasse 8
+  { fach:"physik", klasse:"8", lb:"LB1", titel:"Druck – Hydraulik (Vertiefung)", datei:"K8 - LB1 - Druck Hydraulik Vertiefung.html" },
+  { fach:"physik", klasse:"8", lb:"LB1", titel:"Schweredruck in Flüssigkeiten", datei:"K8 - LB1 - Schweredruck_Fluessigkeiten.html", wip:true },
 
-    { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Speichersysteme – Kernthemen",
-      datei:"K11GK - LB1 - Speichersysteme_Kernthemen.html" },
+  // Klasse 9
 
-    { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Schaltalgebra & Schaltnetze – Übungen",
-      datei:"K11GK - LB1 - Schaltalgebra_Schaltnetze_Uebungen.html" },
+  // Klasse 10 
 
-    { fach:"physik", klasse:"8", lb:"LB1", titel:"Druck – Hydraulik (Vertiefung)",
-      datei:"K8 - LB1 - Druck Hydraulik Vertiefung.html" },
+  // Klasse GK11
 
-    { fach:"physik", klasse:"8", lb:"LB1", titel:"Schweredruck in Flüssigkeiten",
-      datei:"K8 - LB1 - Schweredruck_Fluessigkeiten.html" },
+  // Klasse GK12
+  
+  // Klasse LK11
+
+  // Klasse LK12
+
+  // =================Informatik===============================
+  // Klasse 7
+  // Passwort : 
+  { fach:"informatik", klasse:"7", lb:"LB1", titel:"Binärzahlen", datei:"K7 - LB1 - Binaerzahlen.html" },
+
+  // Klasse 8
+
+  // Klasse 9
+  { fach:"informatik", klasse:"9", lb:"LB1", titel:"ERD aus Text erstellen", datei:"K9 - LB1 - ERD_aus_Text_erstellen.html" },
+
+  // Klasse 10 
+  // Passwort : InfoIstCool
+  { fach:"informatik", klasse:"10", lb:"LB1", titel:"Befehlssammlung Programmierung in Python ", datei:"04_K10 - Python - Befehlssammlung.html" },
+
+  // Klasse GK11
+  { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Prozessoren – Kernaufgaben", datei:"K11GK - LB1 - Prozessoren_Kernaufgaben.html" },
+  { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Speichersysteme – Kernthemen", datei:"K11GK - LB1 - Speichersysteme_Kernthemen.html", wip : true },
+  { fach:"informatik", klasse:"11GK", lb:"LB1", titel:"Schaltalgebra & Schaltnetze – Übungen", datei:"K11GK - LB1 - Schaltalgebra_Schaltnetze_Uebungen.html",wip : true },
+
+  // Klasse GK12
+  
+
+  // Klasse LK11
+
+  // Klasse LK12
 ];
-
 
 /* ============================================================
    LOGIK – muss normalerweise nicht angepasst werden
@@ -342,7 +390,7 @@ function goKlasse(fach){
   const grid = document.getElementById("klasseGrid");
   grid.innerHTML = "";
   KLASSEN[fach].forEach(k => {
-    const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id).length;
+    const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id && !s.wip).length;
     const btn = document.createElement("button");
     btn.className = "klasse-btn";
     btn.innerHTML = `Klasse ${k.label}${k.sub ? `<small>${k.sub}</small>` : ""}`
@@ -390,14 +438,18 @@ function goSeiten(fach, klasseId, klasseLabel){
       heading.textContent = g.lb;
       block.appendChild(heading);
       g.items.forEach(s => {
-        const a = document.createElement("a");
-        a.className = "seite-card";
-        a.href = ordner ? `${ordner}/${s.datei}` : s.datei;
-        a.innerHTML = `<div>
-            <div class="seite-titel">${s.titel}${s.neu ? '<span class="badge-neu">Neu</span>' : ""}</div>
+        const el = document.createElement(s.wip ? "div" : "a");
+        el.className = "seite-card" + (s.wip ? " wip" : "");
+        if (!s.wip){
+          el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
+        } else {
+          el.setAttribute("aria-disabled", "true");
+        }
+        el.innerHTML = `<div>
+            <div class="seite-titel">${s.titel}${s.wip ? '<span class="badge-wip">In Arbeit</span>' : (s.neu ? '<span class="badge-neu">Neu</span>' : "")}</div>
           </div>
           <div class="goto">→</div>`;
-        block.appendChild(a);
+        block.appendChild(el);
       });
       liste.appendChild(block);
     });

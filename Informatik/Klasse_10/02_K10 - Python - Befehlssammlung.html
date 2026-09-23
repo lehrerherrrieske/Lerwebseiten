@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python – Unsere Befehlssammlung · Klasse 10</title>
+<style>
+/* ============================================================
+   Design-Tokens (warme Palette, Farbschema_LernHTML)
+   Akzent: Schiefer-Blau — kennzeichnet diese Sammlung
+   ============================================================ */
+:root{
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  --fs-sm:.85rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-h2:1.4rem; --fs-h1:1.75rem;
+
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light);
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light);
+  --err:var(--color-error); --err-bg:var(--color-error-light);
+  --info:var(--color-info); --info-bg:var(--color-info-light);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(920px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:28px 0 10px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0 0 6px;}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+
+/* ── Kopf ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+
+/* ── Suche ── */
+.suchbox{display:flex;gap:8px;align-items:center;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-full);padding:9px 16px;margin-bottom:8px;box-shadow:var(--shadow);}
+.suchbox input{border:none;outline:none;background:transparent;font-family:var(--font);
+  font-size:var(--fs-base);color:var(--text);width:100%;}
+.such-info{font-size:var(--fs-sm);color:var(--text-3);margin:0 0 20px 4px;}
+
+/* ── Kategorien-Navigation ── */
+.toc-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+.toc-link{display:inline-block;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-full);padding:7px 16px;font-family:var(--font);font-size:var(--fs-sm);
+  font-weight:700;color:var(--accent-hover);text-decoration:none;}
+.toc-link:hover{border-color:var(--accent-muted);background:var(--accent-light);}
+.toc-link.leer{color:var(--text-3);border-style:dashed;font-weight:600;}
+
+/* ── Karten je Begriff/Befehl ── */
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.card-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+
+/* ── Zweistufiges Quiz (Analysebeispiele) ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;color:var(--text);}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:8px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 15px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:10px 0 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+.hefter-box table{border-collapse:collapse;margin-top:8px;}
+.hefter-box td{padding:3px 10px 3px 0;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Codebeispiele ── */
+.code-wrap{position:relative;margin:10px 0 0;}
+.code{background:var(--color-bg-code);color:#E4E1F0;font-family:var(--mono);font-size:var(--fs-base);
+  border-radius:var(--radius);padding:14px 84px 14px 18px;overflow-x:auto;white-space:pre;}
+.code-copy-btn{position:absolute;top:10px;right:10px;font-family:var(--font);font-size:var(--fs-sm);
+  font-weight:600;color:#E4E1F0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  border-radius:var(--radius-full);padding:4px 12px;cursor:pointer;}
+.code-copy-btn:hover{background:rgba(255,255,255,.2);}
+.code-copy-btn.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+.code-label{font-size:var(--fs-sm);font-weight:700;color:var(--text-3);margin:12px 0 0;
+  text-transform:uppercase;letter-spacing:.06em;}
+.code-label:first-child{margin-top:6px;}
+
+/* ── Buttons ── */
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;
+  padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);}
+.btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.sammel-leiste{text-align:center;margin:34px 0 4px;}
+
+/* ── Akkordeon (Reserve für spätere Begriffe mit Zusatzinfo) ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:10px 0 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 14px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:10px 14px;}
+
+/* ── Fußnotiz für künftige Kategorien ── */
+.platzhalter{border:2px dashed var(--border);border-radius:var(--radius);padding:16px 20px;
+  color:var(--text-3);font-size:var(--fs-base);text-align:center;margin-bottom:16px;}
+
+@media print{
+  body{background:#fff;padding:0;}
+  .suchbox,.hefter-btn,.sammel-leiste,.toc-nav{display:none !important;}
+  .card{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="pagehead">
+    <div class="eyebrow">Informatik · Klasse 10 · Python-Sammlung</div>
+    <h1>Unsere Python-Werkzeugkiste</h1>
+    <div class="goal">📚 <span>Hier sammeln wir alle Python-Befehle und Konzepte, die wir im Unterricht besprochen haben. Diese Seite wächst mit jeder Stunde weiter und ist dein Nachschlagewerk anstelle des Heftereintrags.</span></div>
+  </header>
+
+  <div class="suchbox">
+    🔍 <input type="text" id="suche" placeholder="Begriff oder Befehl suchen …" oninput="filterKarten()">
+  </div>
+  <div class="such-info" id="such-info"></div>
+
+  <!-- ============================================================
+       KATEGORIEN-NAVIGATION
+       Für jede neue Kategorie hier einen weiteren <a class="toc-link">
+       ergänzen, der per href="#kat-…" auf den Abschnitt unten zeigt.
+       ============================================================ -->
+  <nav class="toc-nav">
+    <a class="toc-link" href="#kat-grundlagen">🧩 Grundlagen</a>
+    <a class="toc-link" href="#kat-algorithmus">🔍 Eigenschaften eines Algorithmus</a>
+    <a class="toc-link" href="#kat-variablen">📦 Variablen</a>
+    <span class="toc-link leer">+ weitere Kategorien folgen</span>
+  </nav>
+
+  <main id="sammlung">
+
+    <!-- ============================================================
+         KATEGORIE: Grundlagen
+         ============================================================ -->
+    <section class="kategorie" id="kat-grundlagen">
+      <h2>🧩 Grundlagen</h2>
+
+      <!-- ---------- Begriff: Programmiersprache ---------- -->
+      <div class="card" data-suchtext="programmiersprache programmierung algorithmus formale sprache anweisungen">
+        <div class="card-head">
+          <h3>Programmiersprache</h3>
+          <span class="badge">Konzept</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p>Eine <span class="tt" data-tip="Eine Sprache mit festen Regeln, die keine mehrdeutigen Formulierungen zulässt.">Programmiersprache</span> ist eine formale Sprache, die verwendet wird, um Anweisungen für den Computer zu schreiben, damit dieser bestimmte Aufgaben ausführen kann. Diese Anweisungen nennt man <strong>Algorithmus</strong>.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Eigenschaften eines Algorithmus
+         ============================================================ -->
+    <section class="kategorie" id="kat-algorithmus">
+      <h2>🔍 Eigenschaften eines Algorithmus</h2>
+
+      <!-- ---------- Eigenschaft: Eindeutigkeit ---------- -->
+      <div class="card" data-suchtext="eindeutigkeit determinismus deterministisch nächste anweisung eigenschaft algorithmus">
+        <div class="card-head">
+          <h3>Eindeutigkeit (Determinismus)</h3>
+          <span class="badge">Eigenschaft</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p>Die nächste Anweisung in der Schrittfolge ist zu jedem Zeitpunkt <strong>eindeutig definiert</strong>.</p>
+        </div>
+      </div>
+
+      <!-- ---------- Eigenschaft: Ausführbarkeit ---------- -->
+      <div class="card" data-suchtext="ausführbarkeit verständlich befehlsempfänger eigenschaft algorithmus">
+        <div class="card-head">
+          <h3>Ausführbarkeit</h3>
+          <span class="badge">Eigenschaft</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p>Jeder Schritt des Verfahrens ist für den <span class="tt" data-tip="Die Person, das Gerät oder das Programm, das die Anweisungen ausführt.">Befehlsempfänger</span> <strong>verständlich</strong>.</p>
+        </div>
+      </div>
+
+      <!-- ---------- Eigenschaft: Allgemeingültigkeit ---------- -->
+      <div class="card" data-suchtext="allgemeingültigkeit gleichartige probleme eigenschaft algorithmus">
+        <div class="card-head">
+          <h3>Allgemeingültigkeit</h3>
+          <span class="badge">Eigenschaft</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p>Es können <strong>viele gleichartige Probleme</strong> gelöst werden.</p>
+        </div>
+      </div>
+
+      <!-- ---------- Eigenschaft: Endlichkeit ---------- -->
+      <div class="card" data-suchtext="endlichkeit terminiertheit terminierung schrittfolge endet lösung eigenschaft algorithmus">
+        <div class="card-head">
+          <h3>Endlichkeit (Terminiertheit)</h3>
+          <span class="badge">Eigenschaft</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p>Die Schrittfolge <strong>endet</strong> und liefert eine <strong>Lösung</strong> des Problems.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">❗ <span>Es handelt sich nur dann um einen <strong>Algorithmus</strong>, wenn <u>alle vier Eigenschaften</u> gleichzeitig erfüllt sind — fehlt eine einzige, ist es keiner.</span></div>
+
+      <!-- ---------- Analysebeispiele: Algorithmus oder nicht? ---------- -->
+      <div class="card" data-suchtext="analysebeispiele algorithmus oder nicht überprüfen anwenden">
+        <div class="card-head">
+          <h3>🕵️ Analysebeispiele — Algorithmus oder nicht?</h3>
+        </div>
+        <p>Entscheide bei jedem Beispiel: Handelt es sich um einen Algorithmus? Prüfe dabei, welche der vier Eigenschaften erfüllt oder verletzt ist.</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">1️⃣ Eine Bedienungsanleitung für einen Kaffeevollautomaten: „Bohnen einfüllen → Wassertank füllen → Taste drücken → warten, bis die Anzeige ‚fertig' zeigt → Tasse entnehmen."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg1', this, 'c')">✅ Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg1', this, 'w')">❌ Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg1"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">2️⃣ Eine Kochanweisung: „Fahre so lange fort, bis sich der Teig richtig anfühlt."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg2', this, 'w')">✅ Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg2', this, 'c')">❌ Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg2"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">3️⃣ Eine Zählvorschrift: „Zähle immer weiter von 1 an aufwärts, ohne jemals aufzuhören."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg3', this, 'w')">✅ Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg3', this, 'c')">❌ Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg3"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">4️⃣ Eine Wegbeschreibung: „Wenn du an der Kreuzung ankommst, bieg links ab oder rechts ab oder geh geradeaus — ganz wie du magst."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg4', this, 'w')">✅ Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg4', this, 'c')">❌ Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg4"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">5️⃣ Eine Rechenvorschrift zur schriftlichen Addition zweier beliebiger natürlicher Zahlen, egal wie groß sie sind.</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg5', this, 'c')">✅ Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg5', this, 'w')">❌ Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg5"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Variablen
+         ============================================================ -->
+    <section class="kategorie" id="kat-variablen">
+      <h2>📦 Variablen</h2>
+
+      <!-- ---------- Begriff: Variable ---------- -->
+      <div class="card" data-suchtext="variable variablen daten speichern manipulieren zugreifen bausteine python">
+        <div class="card-head">
+          <h3>Variable</h3>
+          <span class="badge">Konzept</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">📓 Definition</div>
+          <p><span class="tt" data-tip="Ein benannter Speicherplatz im Arbeitsspeicher, unter dem ein Wert abgelegt wird.">Variablen</span> sind die Bausteine, die es ermöglichen, Daten zu <strong>speichern</strong>, zu <strong>manipulieren</strong> und auf sie <strong>zuzugreifen</strong>.</p>
+        </div>
+
+        <p class="code-label">1 · Speichern — einer Variable einen Wert zuweisen</p>
+        <div class="code-wrap">
+          <div class="code">alter = 16
+name = "Mia"
+pi = 3.14</div>
+          <button class="code-copy-btn">📋 kopieren</button>
+        </div>
+
+        <p class="code-label">2 · Zugreifen — den gespeicherten Wert verwenden</p>
+        <div class="code-wrap">
+          <div class="code">alter = 16
+print(alter)</div>
+          <button class="code-copy-btn">📋 kopieren</button>
+        </div>
+
+        <p class="code-label">3 · Manipulieren — den gespeicherten Wert verändern</p>
+        <div class="code-wrap">
+          <div class="code">punkte = 10
+punkte = punkte + 5
+print(punkte)</div>
+          <button class="code-copy-btn">📋 kopieren</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         WEITERE KATEGORIEN
+         Neue <section class="kategorie" id="kat-…"> nach demselben Muster
+         ergänzen (z. B. Datentypen, Verzweigungen, Schleifen, Funktionen,
+         Listen). Jede Karte braucht:
+         - data-suchtext (alle Suchbegriffe klein geschrieben)
+         - hefter-box mit der Definition/Merksatz
+         - optional <div class="code-wrap"><div class="code">…</div>
+           <button class="code-copy-btn">📋 kopieren</button></div> für Code
+         ============================================================ -->
+    <div class="platzhalter">Weitere Kategorien (z. B. Datentypen, Schleifen, Funktionen) werden hier ergänzt, sobald wir sie im Unterricht behandelt haben.</div>
+
+  </main>
+
+  <div class="sammel-leiste">
+    <button class="btn btn-ghost" id="hefter-all">📋 Gesamte Sammlung in den Hefter kopieren</button>
+  </div>
+
+</div>
+
+<script>
+/* ---------- Akkordeon (Reserve für spätere Begriffe) ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Zweistufiges Quiz: Algorithmus oder nicht? ---------- */
+const quizFeedback = {
+  alg1:{ ok:'✅ <strong>Richtig!</strong> Alle vier Eigenschaften sind erfüllt: eindeutige Schrittfolge, jeder Schritt verständlich, für jede Kaffeezubereitung anwendbar, und der Vorgang endet mit der fertigen Tasse.',
+         ng:'❌ <strong>Nicht ganz.</strong> Prüfe noch einmal alle vier Eigenschaften einzeln — hier ist tatsächlich jede erfüllt.',
+         hint:'Geh die vier Eigenschaften einzeln durch: Ist jeder Schritt klar? Endet der Vorgang? Funktioniert es für jede Tasse Kaffee?' },
+  alg2:{ ok:'✅ <strong>Richtig, kein Algorithmus!</strong> „Richtig anfühlt" ist für den Befehlsempfänger nicht eindeutig verständlich — die Ausführbarkeit ist verletzt.',
+         ng:'❌ <strong>Nicht ganz.</strong> Überlege: Kann jeder (z. B. auch ein Roboterarm) eindeutig erkennen, wann sich ein Teig „richtig anfühlt"?',
+         hint:'Welche Eigenschaft verlangt, dass jeder Schritt für den Ausführenden klar verständlich sein muss?' },
+  alg3:{ ok:'✅ <strong>Richtig, kein Algorithmus!</strong> Die Schrittfolge endet nie — die Endlichkeit (Terminiertheit) ist verletzt.',
+         ng:'❌ <strong>Nicht ganz.</strong> Überlege: Kommt diese Zählvorschrift jemals zu einem Ende?',
+         hint:'Welche Eigenschaft verlangt, dass eine Schrittfolge irgendwann endet?' },
+  alg4:{ ok:'✅ <strong>Richtig, kein Algorithmus!</strong> Der nächste Schritt ist nicht eindeutig festgelegt, da drei Möglichkeiten gleichzeitig erlaubt sind — die Eindeutigkeit (Determinismus) ist verletzt.',
+         ng:'❌ <strong>Nicht ganz.</strong> Überlege: Weiß der Ausführende an der Kreuzung eindeutig, was als Nächstes zu tun ist?',
+         hint:'Welche Eigenschaft verlangt, dass zu jedem Zeitpunkt klar ist, welcher Schritt als Nächstes folgt?' },
+  alg5:{ ok:'✅ <strong>Richtig!</strong> Die Vorschrift funktioniert für beliebig viele gleichartige Additionsaufgaben — sie ist allgemeingültig, und die übrigen Eigenschaften sind ebenfalls erfüllt.',
+         ng:'❌ <strong>Nicht ganz.</strong> Prüfe noch einmal alle vier Eigenschaften einzeln — hier ist tatsächlich jede erfüllt.',
+         hint:'Funktioniert das Verfahren für viele gleichartige Aufgaben oder nur für einen einzigen Spezialfall?' }
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Code in die Zwischenablage kopieren ---------- */
+function initCodeCopy(){
+  document.querySelectorAll('.code-copy-btn').forEach(btn=>{
+    if(btn.dataset.wired) return;
+    btn.dataset.wired='1';
+    const code = btn.previousElementSibling;
+    btn.onclick=async ()=>{
+      try{
+        await navigator.clipboard.writeText(code.innerText);
+        btn.textContent='✓ kopiert'; btn.classList.add('copied');
+        setTimeout(()=>{ btn.textContent='📋 kopieren'; btn.classList.remove('copied'); },1800);
+      }catch(e){ btn.textContent='⚠️ manuell markieren'; }
+    };
+  });
+}
+
+/* ---------- Suche über alle Karten ---------- */
+function filterKarten(){
+  const q=(document.getElementById('suche').value||'').trim().toLowerCase();
+  const karten=[...document.querySelectorAll('.card')];
+  let treffer=0;
+  karten.forEach(k=>{
+    const text=(k.dataset.suchtext||'')+' '+k.innerText.toLowerCase();
+    const sichtbar = q==='' || text.toLowerCase().includes(q);
+    k.style.display = sichtbar ? '' : 'none';
+    if(sichtbar) treffer++;
+  });
+  const info=document.getElementById('such-info');
+  info.textContent = q==='' ? '' : (treffer+' Treffer für „'+q+'"');
+}
+
+/* ---------- Init ---------- */
+function initSeite(){ initHefter(); initCodeCopy(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+</script>
+</body>
+</html>
