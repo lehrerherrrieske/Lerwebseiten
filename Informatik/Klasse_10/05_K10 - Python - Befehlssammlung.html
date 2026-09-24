@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python – Unsere Befehlssammlung · Klasse 10</title>
+<style>
+/* ============================================================
+   Design-Tokens (warme Palette, Farbschema_LernHTML)
+   Akzent: Schiefer-Blau — kennzeichnet diese Sammlung
+   ============================================================ */
+:root{
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  --fs-sm:.85rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-h2:1.4rem; --fs-h1:1.75rem;
+
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light);
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light);
+  --err:var(--color-error); --err-bg:var(--color-error-light);
+  --info:var(--color-info); --info-bg:var(--color-info-light);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(920px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:28px 0 10px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:0 0 6px;}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+
+/* ── Kopf ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+
+/* ── Suche ── */
+.suchbox{display:flex;gap:8px;align-items:center;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-full);padding:9px 16px;margin-bottom:8px;box-shadow:var(--shadow);}
+.suchbox input{border:none;outline:none;background:transparent;font-family:var(--font);
+  font-size:var(--fs-base);color:var(--text);width:100%;}
+.such-info{font-size:var(--fs-sm);color:var(--text-3);margin:0 0 20px 4px;}
+
+/* ── Kategorien-Navigation ── */
+.toc-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+.toc-link{display:inline-block;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-full);padding:7px 16px;font-family:var(--font);font-size:var(--fs-sm);
+  font-weight:700;color:var(--accent-hover);text-decoration:none;}
+.toc-link:hover{border-color:var(--accent-muted);background:var(--accent-light);}
+.toc-link.leer{color:var(--text-3);border-style:dashed;font-weight:600;}
+
+/* ── Karten je Begriff/Befehl ── */
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.card-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+
+/* ── Zweistufiges Quiz (Analysebeispiele) ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;color:var(--text);}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:8px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 15px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:10px 0 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+.hefter-box table{border-collapse:collapse;margin-top:8px;}
+.hefter-box td{padding:3px 10px 3px 0;font-size:var(--fs-base);color:var(--text-2);}
+.hefter-box code, p code{font-family:var(--mono);font-size:.92em;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:5px;padding:1px 6px;}
+
+/* ── Codebeispiele ── */
+.code-wrap{position:relative;margin:10px 0 0;}
+.code{background:var(--color-bg-code);color:#E4E1F0;font-family:var(--mono);font-size:var(--fs-base);
+  border-radius:var(--radius);padding:14px 84px 14px 18px;overflow-x:auto;white-space:pre;}
+.code-copy-btn{position:absolute;top:10px;right:10px;font-family:var(--font);font-size:var(--fs-sm);
+  font-weight:600;color:#E4E1F0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  border-radius:var(--radius-full);padding:4px 12px;cursor:pointer;}
+.code-copy-btn:hover{background:rgba(255,255,255,.2);}
+.code-copy-btn.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+.code-label{font-size:var(--fs-sm);font-weight:700;color:var(--text-3);margin:12px 0 0;
+  text-transform:uppercase;letter-spacing:.06em;}
+.code-label:first-child{margin-top:6px;}
+
+/* ── Buttons ── */
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;
+  padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);}
+.btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.sammel-leiste{text-align:center;margin:34px 0 4px;}
+
+/* ── Akkordeon (Reserve für spätere Begriffe mit Zusatzinfo) ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:10px 0 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 14px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:10px 14px;}
+
+/* ── Reiter-Navigation (weitere Reiter folgen künftig) ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Klickbare Fachbegriffe (Hover-Erklärung + Sprung zur Definition) ── */
+.fach{font-family:var(--mono);font-size:.92em;background:var(--surface-2);border:1px solid var(--accent-muted);
+  border-radius:5px;padding:1px 6px;color:var(--accent-hover);text-decoration:none;cursor:pointer;position:relative;}
+.fach:hover{background:var(--accent-light);}
+.fach-highlight{animation:fach-flash 1.6s ease;}
+@keyframes fach-flash{0%{box-shadow:0 0 0 4px var(--accent-muted);}100%{box-shadow:none;}}
+
+/* ── Globales Tooltip-Popup (fixed, entkommt jedem overflow:hidden) ── */
+#tt-popup{position:fixed;z-index:1000;display:none;max-width:260px;width:max-content;
+  background:var(--color-text);color:#fff;font-size:var(--fs-sm);font-weight:400;line-height:1.45;
+  padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);pointer-events:none;}
+#tt-popup.show{display:block;}
+
+/* ── PAP-Beispieldiagramm ── */
+.pap-diagramm{max-width:420px;margin:10px auto 0;}
+.pap-diagramm svg{display:block;width:100%;height:auto;}
+.pap-diagramm.breit{max-width:580px;}
+
+/* ── Algorithmische Grundlagen: Erklärung + Code links, PAP rechts ── */
+.algo-row{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;}
+.algo-text{flex:1 1 340px;min-width:0;}
+.algo-pap{flex:0 1 300px;max-width:100%;margin:10px auto 0;}
+.algo-pap svg{display:block;width:100%;height:auto;}
+
+/* ── Zuordnung per Drag & Drop (mit Tipp-Alternative) ── */
+.dnd{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:12px 0;background:var(--surface);}
+.dnd-pool{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:10px;margin-bottom:12px;
+  border:2px dashed var(--border);border-radius:var(--radius);background:var(--surface-2);}
+.dnd-chip{display:inline-block;background:var(--surface);border:1.5px solid var(--accent-muted);border-radius:8px;
+  padding:7px 12px;font-size:var(--fs-base);color:var(--text);cursor:grab;user-select:none;line-height:1.4;}
+.dnd-chip:hover{background:var(--accent-light);}
+.dnd-chip.sel{outline:3px solid var(--accent);outline-offset:1px;}
+.dnd-chip.dragging{opacity:.45;}
+.dnd-zones{display:flex;flex-direction:column;gap:8px;}
+.dnd-zone{display:flex;align-items:stretch;gap:10px;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:6px;background:var(--surface-2);cursor:pointer;}
+.dnd-zone.over{border-color:var(--accent);background:var(--accent-light);}
+.dnd-zone.z-ok{border-color:var(--ok);background:var(--ok-bg);}
+.dnd-zone.z-err{border-color:var(--err);background:var(--err-bg);}
+.dnd-nr{flex:0 0 32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-full);
+  background:var(--accent);color:#fff;font-weight:700;font-size:var(--fs-base);}
+.dnd-slot{flex:1;display:flex;align-items:center;min-height:40px;}
+.dnd-platz{color:var(--text-3);font-size:var(--fs-sm);font-style:italic;}
+.dnd-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.dnd-fb{font-weight:600;}
+.dnd-fb.ok{color:var(--ok);} .dnd-fb.err{color:var(--err);}
+
+/* ── Reiterübergreifende Suche ── */
+.suchbox .such-neu-btn{flex:0 0 auto;white-space:nowrap;}
+body.suchmodus .phase{display:block;}
+body.suchmodus .phase.such-leer{display:none;}
+body.suchmodus .phase::before{content:attr(data-titel);display:block;font-family:var(--mono);
+  font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin:18px 0 4px;}
+body.suchmodus .kategorie.such-leer{display:none;}
+body.suchmodus .kategorie-head + .kategorie-body{display:block;}
+body.suchmodus .toc-nav,body.suchmodus .platzhalter,
+body.suchmodus .kategorie-body > p,body.suchmodus .kategorie-body > .callout{display:none;}
+.such-aus{display:none !important;}
+
+/* ── Tag "Neu" (einziges Emoji der Seite) ── */
+.tag-neu{display:inline-block;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn);
+  border-radius:var(--radius-full);font-size:var(--fs-sm);font-weight:700;padding:2px 10px;margin-left:8px;}
+
+/* ── Einklappbare Oberkategorien (Reiter 01) ── */
+.kategorie-head{display:flex;align-items:center;justify-content:space-between;width:100%;
+  background:none;border:none;cursor:pointer;padding:0;margin:28px 0 10px;text-align:left;}
+.kategorie-head h2{margin:0;}
+.kategorie-head .acc-icon{font-size:var(--fs-base);color:var(--text-3);transition:transform .2s ease;flex:0 0 auto;margin-left:12px;}
+.kategorie-head:not(.open) .acc-icon{transform:rotate(-90deg);}
+.kategorie-body{display:block;}
+.kategorie-head:not(.open) + .kategorie-body{display:none;}
+
+/* ── Übungsaufgaben: Niveaustufen ── */
+.niveau{margin-top:14px;}
+.niveau:first-of-type{margin-top:10px;}
+.niveau p{margin:0;}
+.aufgaben-nr{font-weight:700;color:var(--accent-hover);margin-right:4px;}
+
+/* ── Übungsaufgaben: Hilfestellung mit Zeitschaltung ── */
+.hilfe-trigger{margin-top:16px;}
+.hilfe-box{display:none;margin-top:12px;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;background:var(--surface-2);}
+.hilfe-box.on{display:block;}
+.hilfe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--text-3);margin-bottom:10px;}
+.hilfe-item{margin-bottom:8px;} .hilfe-item:last-child{margin-bottom:0;}
+.hilfe-btn{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;font-family:var(--font);font-size:var(--fs-base);font-weight:600;
+  color:var(--text);cursor:pointer;}
+.hilfe-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.hilfe-btn:disabled{cursor:not-allowed;color:var(--text-3);}
+.hilfe-timer{font-weight:400;color:var(--text-3);font-size:var(--fs-sm);}
+.hilfe-text{display:none;margin-top:8px;padding:10px 14px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:8px;color:var(--text-2);font-size:var(--fs-base);}
+.hilfe-text.on{display:block;}
+
+/* ── PAP-Symbolkarten (Form + Erklärung) ── */
+.pap-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+.pap-shape{flex:0 0 140px;}
+.pap-shape svg{display:block;width:100%;height:auto;}
+.pap-content{flex:1;min-width:220px;}
+.pap-content p{margin-bottom:0;color:var(--text-2);}
+
+/* ── Lehrermodus-Leiste ── */
+.lehrer-bar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  background:var(--surface-2);border-bottom:1.5px solid var(--border);padding:8px 16px;
+  font-family:var(--font);font-size:var(--fs-sm);}
+.lehrer-label{font-weight:700;color:var(--text-2);}
+.lehrer-bar input{font-family:var(--font);font-size:var(--fs-sm);padding:5px 12px;
+  border:1.5px solid var(--border);border-radius:var(--radius-full);background:var(--surface);color:var(--text);}
+.lehrer-status{font-weight:700;color:var(--text-3);}
+.lehrer-status.aktiv{color:var(--ok);}
+.lehrer-status.fehler{color:var(--err);}
+body.lehrermodus-aktiv .lehrer-bar{background:var(--ok-bg);border-bottom-color:var(--ok);}
+body.lehrermodus-aktiv .hilfe-trigger{display:none;}
+.lehrer-nur-aktiv{display:none;}
+body.lehrermodus-aktiv .lehrer-nur-aktiv{display:inline-block;}
+
+/* ── Fußnotiz für künftige Kategorien ── */
+.platzhalter{border:2px dashed var(--border);border-radius:var(--radius);padding:16px 20px;
+  color:var(--text-3);font-size:var(--fs-base);text-align:center;margin-bottom:16px;}
+
+@media print{
+  body{background:#fff;padding:0;}
+  .suchbox,.hefter-btn,.sammel-leiste,.toc-nav,.phase-nav,.lehrer-bar{display:none !important;}
+  .phase{display:block !important;}
+  .card{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+<div class="lehrer-bar" id="lehrer-bar">
+  <span class="lehrer-label">Lehrermodus</span>
+  <input type="password" id="lehrer-pw" placeholder="Passwort" onkeydown="if(event.key==='Enter'){aktiviereLehrermodus();}">
+  <button class="btn btn-primary btn-sm" onclick="aktiviereLehrermodus()">Aktivieren</button>
+  <button class="btn btn-ghost btn-sm lehrer-nur-aktiv" onclick="deaktiviereLehrermodus()">Deaktivieren</button>
+  <span class="lehrer-status" id="lehrer-status">inaktiv</span>
+</div>
+<div class="wrap">
+
+  <header class="pagehead">
+    <div class="eyebrow">Informatik · Klasse 10 · Python-Sammlung</div>
+    <h1>Unsere Python-Werkzeugkiste</h1>
+    <div class="goal"><span>Hier sammeln wir alle Python-Befehle und Konzepte, die wir im Unterricht besprochen haben. Diese Seite wächst mit jeder Stunde weiter und ist dein Nachschlagewerk anstelle des Heftereintrags.</span></div>
+  </header>
+
+  <!-- ============================================================
+       REITER-NAVIGATION
+       Für jeden neuen Reiter hier einen weiteren <button class="pnav">
+       ergänzen (nächste id: pn3) und unten eine neue <section class="phase" id="ph3" data-titel="04 · …">.
+       ============================================================ -->
+  <nav class="phase-nav" id="phase-nav">
+    <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">01</span>Grundlagen</button>
+    <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">02</span>PaP – Der Programmablaufplan</button>
+    <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">03</span>Übungsaufgaben</button>
+  </nav>
+
+  <div class="suchbox">
+    <input type="text" id="suche" placeholder="Begriff oder Befehl suchen … („neu“ zeigt alle neuen Inhalte)" oninput="filterKarten()">
+    <button class="btn btn-ghost btn-sm such-neu-btn" onclick="sucheNeu()">Neue Inhalte zeigen</button>
+  </div>
+  <div class="such-info" id="such-info"></div>
+
+  <section class="phase on" id="ph0" data-titel="01 · Grundlagen">
+
+  <!-- ============================================================
+       KATEGORIEN-NAVIGATION
+       Für jede neue Kategorie hier einen weiteren <a class="toc-link">
+       ergänzen, der per href="#kat-…" auf den Abschnitt unten zeigt.
+       ============================================================ -->
+  <nav class="toc-nav">
+    <a class="toc-link" href="#kat-grundlagen">Grundlagen</a>
+    <a class="toc-link" href="#kat-algorithmus">Eigenschaften eines Algorithmus</a>
+    <a class="toc-link" href="#kat-variablen">Variablen</a>
+    <a class="toc-link" href="#kat-datentypen">Datentypen</a>
+    <a class="toc-link" href="#kat-algogrund">Algorithmische Grundlagen</a>
+    <span class="toc-link leer">+ weitere Kategorien folgen</span>
+  </nav>
+
+  <main id="sammlung">
+
+    <!-- ============================================================
+         KATEGORIE: Grundlagen
+         ============================================================ -->
+    <section class="kategorie" id="kat-grundlagen">
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Grundlagen</h2><span class="acc-icon">▼</span></button>
+      <div class="kategorie-body">
+
+      <!-- ---------- Begriff: Programmiersprache ---------- -->
+      <div class="card" data-suchtext="programmiersprache programmierung algorithmus formale sprache anweisungen">
+        <div class="card-head">
+          <h3>Programmiersprache</h3>
+          <span class="badge">Konzept</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Definition</div>
+          <p>Eine <span class="tt" data-tip="Eine Sprache mit festen Regeln, die keine mehrdeutigen Formulierungen zulässt.">Programmiersprache</span> ist eine formale Sprache, die verwendet wird, um Anweisungen für den Computer zu schreiben, damit dieser bestimmte Aufgaben ausführen kann. Diese Anweisungen nennt man <strong>Algorithmus</strong>.</p>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Eigenschaften eines Algorithmus
+         ============================================================ -->
+    <section class="kategorie" id="kat-algorithmus">
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Eigenschaften eines Algorithmus</h2><span class="acc-icon">▼</span></button>
+      <div class="kategorie-body">
+
+      <!-- ---------- Die vier Eigenschaften — zusammengefasst in EINER Box ---------- -->
+      <div class="card" id="def-eigenschaften" data-suchtext="eindeutigkeit determinismus ausführbarkeit allgemeingültigkeit endlichkeit terminiertheit eigenschaften algorithmus">
+        <div class="card-head">
+          <h3>Die vier Eigenschaften eines Algorithmus</h3>
+          <span class="badge">Merksatz</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Definition</div>
+          <p><strong>Eindeutigkeit (Determinismus):</strong> Die nächste Anweisung in der Schrittfolge ist zu jedem Zeitpunkt eindeutig definiert.</p>
+          <p><strong>Ausführbarkeit:</strong> Jeder Schritt des Verfahrens ist für den <span class="tt" data-tip="Die Person, das Gerät oder das Programm, das die Anweisungen ausführt.">Befehlsempfänger</span> verständlich.</p>
+          <p><strong>Allgemeingültigkeit:</strong> Es können viele gleichartige Probleme gelöst werden.</p>
+          <p><strong>Endlichkeit (Terminiertheit):</strong> Die Schrittfolge endet und liefert eine Lösung des Problems.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warn"><span>Es handelt sich nur dann um einen <strong>Algorithmus</strong>, wenn <u>alle vier Eigenschaften</u> gleichzeitig erfüllt sind — fehlt eine einzige, ist es keiner.</span></div>
+
+      <!-- ---------- Analysebeispiele: Algorithmus oder nicht? ---------- -->
+      <div class="card" data-suchtext="analysebeispiele algorithmus oder nicht überprüfen anwenden">
+        <div class="card-head">
+          <h3>Analysebeispiele — Algorithmus oder nicht?</h3>
+        </div>
+        <p>Entscheide bei jedem Beispiel: Handelt es sich um einen Algorithmus? Prüfe dabei, welche der vier Eigenschaften erfüllt oder verletzt ist.</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">1️⃣ Eine Bedienungsanleitung für einen Kaffeevollautomaten: „Bohnen einfüllen → Wassertank füllen → Taste drücken → warten, bis die Anzeige ‚fertig' zeigt → Tasse entnehmen."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg1', this, 'c')">Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg1', this, 'w')">Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg1"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">2️⃣ Eine Kochanweisung: „Fahre so lange fort, bis sich der Teig richtig anfühlt."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg2', this, 'w')">Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg2', this, 'c')">Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg2"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">3️⃣ Eine Zählvorschrift: „Zähle immer weiter von 1 an aufwärts, ohne jemals aufzuhören."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg3', this, 'w')">Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg3', this, 'c')">Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg3"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">4️⃣ Eine Wegbeschreibung: „Wenn du an der Kreuzung ankommst, bieg links ab oder rechts ab oder geh geradeaus — ganz wie du magst."</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg4', this, 'w')">Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg4', this, 'c')">Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg4"></div>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">5️⃣ Eine Rechenvorschrift zur schriftlichen Addition zweier beliebiger natürlicher Zahlen, egal wie groß sie sind.</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('alg5', this, 'c')">Ja, Algorithmus</button>
+            <button class="quiz-btn" onclick="quizCheck('alg5', this, 'w')">Nein, kein Algorithmus</button>
+          </div>
+          <div class="quiz-fb" id="qfb-alg5"></div>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Variablen
+         ============================================================ -->
+    <section class="kategorie" id="kat-variablen">
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Variablen</h2><span class="acc-icon">▼</span></button>
+      <div class="kategorie-body">
+
+      <!-- ---------- Begriff: Variable ---------- -->
+      <div class="card" id="def-variable" data-suchtext="variable variablen daten speichern manipulieren zugreifen bausteine python">
+        <div class="card-head">
+          <h3>Variable</h3>
+          <span class="badge">Konzept</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Definition</div>
+          <p><span class="tt" data-tip="Ein benannter Speicherplatz im Arbeitsspeicher, unter dem ein Wert abgelegt wird.">Variablen</span> sind die Bausteine, die es ermöglichen, Daten zu <strong>speichern</strong>, zu <strong>manipulieren</strong> und auf sie <strong>zuzugreifen</strong>.</p>
+          <p>Eine Variable besteht dabei immer aus zwei Teilen: einem <strong>Variablennamen</strong> und einem <strong>Variablenwert</strong> (z. B. <code>alter = 16</code> → Name: <code>alter</code>, Wert: <code>16</code>).</p>
+        </div>
+
+        <div class="callout callout-info"><span><strong>Regel für Variablennamen:</strong> Variablennamen werden immer <strong>kleingeschrieben</strong> und beginnen immer mit einem <strong>Buchstaben</strong> (nie mit einer Zahl oder einem Sonderzeichen).</span></div>
+
+        <p class="code-label">1 · Speichern — einer Variable einen Wert zuweisen</p>
+        <div class="code-wrap">
+          <div class="code">alter = 16
+name = "Mia"
+pi = 3.14</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+
+        <p class="code-label">2 · Zugreifen — den gespeicherten Wert verwenden</p>
+        <div class="code-wrap">
+          <div class="code">alter = 16
+print(alter)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+
+        <p class="code-label">3 · Manipulieren — den gespeicherten Wert verändern</p>
+        <div class="code-wrap">
+          <div class="code">punkte = 10
+punkte = punkte + 5
+print(punkte)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Datentypen
+         ============================================================ -->
+    <section class="kategorie" id="kat-datentypen">
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Datentypen</h2><span class="acc-icon">▼</span></button>
+      <div class="kategorie-body">
+
+      <!-- ---------- Datentyp: String ---------- -->
+      <div class="card" id="def-str" data-suchtext="string str text zeichenkette datentyp python">
+        <div class="card-head">
+          <h3>String <code>str</code></h3>
+          <span class="badge">Datentyp</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Ein <strong>String</strong> ist eine Zeichenkette, also ein Text. Er wird in Python immer in Anführungszeichen (<code>"…"</code> oder <code>'…'</code>) geschrieben.</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code">name = "Anna"
+print(name)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      <!-- ---------- Datentyp: Integer ---------- -->
+      <div class="card" id="def-int" data-suchtext="integer int ganze zahl zahlen datentyp python">
+        <div class="card-head">
+          <h3>Integer <code>int</code></h3>
+          <span class="badge">Datentyp</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Ein <strong>Integer</strong> ist eine <strong>ganze Zahl</strong> — also eine Zahl ohne Nachkommastellen (auch negativ möglich).</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code">alter = 15
+print(alter)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      <!-- ---------- Datentyp: Float ---------- -->
+      <div class="card" id="def-float" data-suchtext="float gleitkommazahl kommazahl nachkommastellen datentyp python">
+        <div class="card-head">
+          <h3>Float <code>float</code></h3>
+          <span class="badge">Datentyp</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Ein <strong>Float</strong> ist eine <strong>Kommazahl</strong> — eine Zahl mit Nachkommastellen. In Python wird dabei ein <strong>Punkt</strong> statt eines Kommas verwendet.</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code">groesse = 1.65
+print(groesse)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      <!-- ---------- Datentyp: Boolean ---------- -->
+      <div class="card" id="def-bool" data-suchtext="boolean bool wahrheitswert true false datentyp python">
+        <div class="card-head">
+          <h3>Boolean <code>bool</code></h3>
+          <span class="badge">Datentyp</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Ein <strong>Boolean</strong> ist ein <strong>Wahrheitswert</strong> — er kann nur genau zwei Zustände annehmen: <code>True</code> oder <code>False</code>.</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code">ist_wach = True
+print(ist_wach)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      <!-- ---------- Datentyp: Liste ---------- -->
+      <div class="card" id="def-liste" data-suchtext="liste list datentyp python index indexierung adressierung append remove count methoden">
+        <div class="card-head">
+          <h3>Liste <code>list</code></h3>
+          <span class="badge">Datentyp</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Eine <strong>Liste</strong> speichert mehrere Werte in einer einzigen Variable, in einer festen Reihenfolge.</p>
+        </div>
+        <p class="code-label">Speichern und ausgeben</p>
+        <div class="code-wrap">
+          <div class="code">meine_liste = ["Apfel", "Banane", "Kirsche"]
+print(meine_liste)</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+
+        <div class="hefter-box">
+          <div class="hefter-label">Adressierung — Zugriff über den Index</div>
+          <p>Jedes Element einer Liste hat eine feste Position, den <strong>Index</strong>. Die Zählung beginnt bei <code>0</code>.</p>
+        </div>
+        <p class="code-label">Einzelnes Element ansprechen</p>
+        <div class="code-wrap">
+          <div class="code">meine_liste = ["Apfel", "Banane", "Kirsche"]
+print(meine_liste[0])
+print(meine_liste[2])</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+
+        <div class="hefter-box">
+          <div class="hefter-label">Wichtige Methoden</div>
+          <table>
+            <tr><td><code>meine_liste.index(a)</code></td><td>Index von Element a</td></tr>
+            <tr><td><code>meine_liste.count(a)</code></td><td>Zählt, wie oft a vorkommt</td></tr>
+            <tr><td><code>meine_liste.append(a)</code></td><td>Fügt Element a hinzu</td></tr>
+            <tr><td><code>meine_liste.remove(a)</code></td><td>Löscht Element a</td></tr>
+          </table>
+        </div>
+        <p class="code-label">Methoden anwenden</p>
+        <div class="code-wrap">
+          <div class="code">meine_liste = ["Apfel", "Banane", "Kirsche"]
+meine_liste.append("Traube")
+meine_liste.remove("Banane")
+print(meine_liste.index("Kirsche"))
+print(meine_liste.count("Apfel"))</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Algorithmische Grundlagen
+         ============================================================ -->
+    <section class="kategorie" id="kat-algogrund">
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Algorithmische Grundlagen <span class="tag-neu">❗ Neu</span></h2><span class="acc-icon">▼</span></button>
+      <div class="kategorie-body">
+
+      <p>Jeder Algorithmus lässt sich aus nur drei Grundbausteinen zusammensetzen: <strong>Sequenz</strong>, <strong>Verzweigung</strong> und <strong>Schleife</strong>.</p>
+
+      <!-- ---------- Sequenz ---------- -->
+      <div class="card" id="def-sequenz" data-suchtext="sequenz folge anweisungen nacheinander reihenfolge algorithmische grundlagen kontrollstruktur">
+        <div class="card-head">
+          <h3>Sequenz</h3>
+          <span class="badge">Grundbaustein</span>
+          <span class="tag-neu">❗ Neu</span>
+        </div>
+        <div class="algo-row">
+          <div class="algo-text">
+            <div class="hefter-box">
+              <div class="hefter-label">Definition</div>
+              <p>Eine <strong>Sequenz</strong> ist eine Folge von <span class="tt" data-tip="Ein einzelner Befehl, z. B. eine Zuweisung oder print().">Anweisungen</span>, die genau in der angegebenen Reihenfolge <strong>nacheinander</strong> ausgeführt werden — von oben nach unten.</p>
+            </div>
+            <p class="code-label">Kommentierter Quellcode</p>
+            <div class="code-wrap">
+              <div class="code"># Sequenz: Die Anweisungen laufen von oben nach unten ab
+preis = 8.50             # 1. Preis speichern
+anzahl = 3               # 2. Anzahl speichern
+gesamt = preis * anzahl  # 3. Gesamtpreis berechnen
+print(gesamt)            # 4. Ergebnis ausgeben</div>
+              <button class="code-copy-btn">kopieren</button>
+            </div>
+          </div>
+          <div class="algo-pap">
+            <svg viewBox="0 0 240 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP einer Sequenz: Start, Werte speichern, Gesamtpreis berechnen, Ausgabe, Ende">
+              <defs><marker id="algo-arrow-1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+              <rect x="50" y="10" width="140" height="44" rx="22" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="37" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+              <line x1="120" y1="54" x2="120" y2="78" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-1)"/>
+              <rect x="20" y="80" width="200" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="101" text-anchor="middle" font-size="12" fill="var(--text)">preis = 8.50</text>
+              <text x="120" y="119" text-anchor="middle" font-size="12" fill="var(--text)">anzahl = 3</text>
+              <line x1="120" y1="130" x2="120" y2="154" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-1)"/>
+              <rect x="20" y="156" width="200" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="181" text-anchor="middle" font-size="12" fill="var(--text)">gesamt = preis * anzahl</text>
+              <line x1="120" y1="196" x2="120" y2="220" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-1)"/>
+              <polygon points="40,222 220,222 200,262 20,262" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="247" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(gesamt)</text>
+              <line x1="120" y1="262" x2="120" y2="286" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-1)"/>
+              <rect x="50" y="288" width="140" height="44" rx="22" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="315" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Verzweigung ---------- -->
+      <div class="card" id="def-verzweigung" data-suchtext="verzweigung if else bedingung entscheidung true false algorithmische grundlagen kontrollstruktur">
+        <div class="card-head">
+          <h3>Verzweigung <code>if</code> / <code>else</code></h3>
+          <span class="badge">Grundbaustein</span>
+          <span class="tag-neu">❗ Neu</span>
+        </div>
+        <div class="algo-row">
+          <div class="algo-text">
+            <div class="hefter-box">
+              <div class="hefter-label">Definition</div>
+              <p>Eine <strong>Verzweigung</strong> prüft eine <span class="tt" data-tip="Eine Aussage, die entweder True oder False ist, z. B. alter &gt;= 18.">Bedingung</span>. Ist sie <code>True</code>, wird der eine Programmteil ausgeführt, ist sie <code>False</code>, der andere. In Python schreibt man das mit <code>if</code> und <code>else</code>.</p>
+            </div>
+            <p class="code-label">Kommentierter Quellcode</p>
+            <div class="code-wrap">
+              <div class="code">alter = 16                     # Wert speichern
+
+if alter &gt;= 18:                # Bedingung prüfen (Doppelpunkt nicht vergessen!)
+    print("Volljährig")        # True-Zweig: eingerückt
+else:                          # sonst ...
+    print("Nicht volljährig")  # False-Zweig: eingerückt</div>
+              <button class="code-copy-btn">kopieren</button>
+            </div>
+            <div class="callout callout-info"><span>Alles, was zu einem Zweig gehört, wird <span class="tt" data-tip="Leerzeichen am Zeilenanfang (in Python üblich: 4). Daran erkennt Python, welche Zeilen zusammengehören.">eingerückt</span>. Die Einrückung ist in Python keine Formsache, sondern legt fest, was zum Zweig gehört.</span></div>
+          </div>
+          <div class="algo-pap">
+            <svg viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP einer Verzweigung: Bedingung alter größer gleich 18, True führt zu Ausgabe Volljährig, False zu Ausgabe Nicht volljährig">
+              <defs><marker id="algo-arrow-2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+              <rect x="60" y="10" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="35" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+              <line x1="120" y1="50" x2="120" y2="72" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <rect x="40" y="74" width="160" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="99" text-anchor="middle" font-size="12" fill="var(--text)">alter = 16</text>
+              <line x1="120" y1="114" x2="120" y2="136" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <polygon points="120,138 200,181 120,224 40,181" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &gt;= 18 ?</text>
+              <line x1="200" y1="181" x2="238" y2="181" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <text x="219" y="173" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+              <polygon points="256,161 410,161 394,201 240,201" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="325" y="185" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Volljährig")</text>
+              <line x1="120" y1="224" x2="120" y2="258" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <text x="145" y="245" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+              <polygon points="30,260 230,260 210,300 10,300" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="120" y="284" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Nicht volljährig")</text>
+              <line x1="325" y1="201" x2="325" y2="328" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <polyline points="120,300 120,350 258,350" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
+              <rect x="260" y="330" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="325" y="355" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Schleife ---------- -->
+      <div class="card" id="def-schleife" data-suchtext="schleife while wiederholung wiederholen bedingung zähler zaehler algorithmische grundlagen kontrollstruktur">
+        <div class="card-head">
+          <h3>Schleife <code>while</code></h3>
+          <span class="badge">Grundbaustein</span>
+          <span class="tag-neu">❗ Neu</span>
+        </div>
+        <div class="algo-row">
+          <div class="algo-text">
+            <div class="hefter-box">
+              <div class="hefter-label">Definition</div>
+              <p>Eine <strong>Schleife</strong> <strong>wiederholt</strong> Anweisungen, solange eine <span class="tt" data-tip="Eine Aussage, die entweder True oder False ist, z. B. zaehler &lt;= 3.">Bedingung</span> <code>True</code> ist. Sobald die Bedingung <code>False</code> ist, geht es nach der Schleife weiter. In Python schreibt man das mit <code>while</code>.</p>
+            </div>
+            <p class="code-label">Kommentierter Quellcode</p>
+            <div class="code-wrap">
+              <div class="code">zaehler = 1                # Startwert festlegen
+
+while zaehler &lt;= 3:        # Bedingung prüfen: solange True, wiederholen
+    print(zaehler)         # Schleifenkörper: eingerückt
+    zaehler = zaehler + 1  # Zähler erhöhen
+
+print("Fertig")            # läuft erst, wenn die Bedingung False ist</div>
+              <button class="code-copy-btn">kopieren</button>
+            </div>
+            <div class="callout callout-warn"><span>Fehlt die Zeile <code>zaehler = zaehler + 1</code>, bleibt die Bedingung für immer <code>True</code> und die Schleife endet nie. Dann ist die Eigenschaft <a class="tt" href="#def-eigenschaften" onclick="gotoBegriff(event,0,'def-eigenschaften')" data-tip="Die Schrittfolge endet und liefert eine Lösung des Problems. Klicken, um zur Definition zu springen.">Endlichkeit</a> verletzt — es ist kein Algorithmus mehr.</span></div>
+          </div>
+          <div class="algo-pap">
+            <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP einer Schleife: solange zaehler kleiner gleich 3 wird zaehler ausgegeben und um 1 erhöht, danach Ausgabe Fertig">
+              <defs><marker id="algo-arrow-3" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+              <rect x="70" y="10" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="130" y="35" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+              <line x1="130" y1="50" x2="130" y2="72" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <rect x="50" y="74" width="160" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="130" y="99" text-anchor="middle" font-size="12" fill="var(--text)">zaehler = 1</text>
+              <line x1="130" y1="114" x2="130" y2="140" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <polygon points="130,142 215,187 130,232 45,187" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="130" y="191" text-anchor="middle" font-size="11" fill="var(--text)">zaehler &lt;= 3 ?</text>
+              <line x1="130" y1="232" x2="130" y2="262" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <text x="152" y="251" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+              <polygon points="66,264 214,264 194,304 46,304" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="130" y="288" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(zaehler)</text>
+              <line x1="130" y1="304" x2="130" y2="326" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <rect x="40" y="328" width="180" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="130" y="353" text-anchor="middle" font-size="12" fill="var(--text)">zaehler = zaehler + 1</text>
+              <polyline points="40,348 12,348 12,187 43,187" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <line x1="215" y1="187" x2="254" y2="187" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <text x="236" y="179" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+              <polygon points="272,167 396,167 380,207 256,207" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="326" y="191" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Fertig")</text>
+              <line x1="326" y1="207" x2="326" y2="250" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
+              <rect x="266" y="252" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="326" y="277" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         WEITERE KATEGORIEN
+         Neue <section class="kategorie" id="kat-…"> nach demselben Muster
+         ergänzen (z. B. Verzweigungen, Schleifen, Funktionen, Listen).
+         Jede Karte braucht:
+         - data-suchtext (alle Suchbegriffe klein geschrieben)
+         - hefter-box mit der Definition/Erklärung (auch kurze Erklärungen
+           gehören in eine hefter-box, damit sie in den Sammel-Button
+           "Gesamte Sammlung kopieren" einbezogen werden)
+         - optional <div class="code-wrap"><div class="code">…</div>
+           <button class="code-copy-btn">kopieren</button></div> für Code
+         ============================================================ -->
+    <div class="platzhalter">Weitere Kategorien (z. B. Funktionen) werden hier ergänzt, sobald wir sie im Unterricht behandelt haben.</div>
+
+  </main>
+
+  </section>
+
+  <!-- ============================================================
+       REITER 02: PaP – Der Programmablaufplan
+       ============================================================ -->
+  <section class="phase" id="ph1" data-titel="02 · PaP – Der Programmablaufplan">
+  <main>
+
+    <section class="kategorie" id="kat-pap-grundlagen">
+      <h2>Der Programmablaufplan</h2>
+
+      <!-- ---------- Begriff: Programmablaufplan ---------- -->
+      <div class="card" data-suchtext="programmablaufplan pap ablaufdiagramm algorithmus grafische darstellung">
+        <div class="card-head">
+          <h3>Programmablaufplan (PAP)</h3>
+          <span class="badge">Konzept</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Definition</div>
+          <p>Ein <span class="tt" data-tip="Auch Flussdiagramm oder Ablaufdiagramm genannt.">Programmablaufplan</span> ist ein Ablaufdiagramm für einen Algorithmus. Es ist eine grafische Darstellung zur Umsetzung eines Algorithmus und beschreibt die Folge von Operationen zur Lösung einer Aufgabe.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="kategorie" id="kat-pap-elemente">
+      <h2>Elemente des Programmablaufplans</h2>
+
+      <!-- ---------- Element: Start/Stop ---------- -->
+      <div class="card" data-suchtext="start stop ende symbol element pap oval">
+        <div class="card-head">
+          <h3>Start / Stop</h3>
+          <span class="badge">Element</span>
+        </div>
+        <div class="pap-row">
+          <div class="pap-shape">
+            <svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="20" width="120" height="40" rx="20" ry="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="70" y="45" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+            </svg>
+          </div>
+          <div class="pap-content">
+            <div class="hefter-box">
+              <div class="hefter-label">Bedeutung</div>
+              <p>Kennzeichnet den <strong>Anfang</strong> oder das <strong>Ende</strong> eines Ablaufs. Pro PAP gibt es genau <strong>ein Start-</strong> und <strong>ein Endsymbol</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Element: Operation ---------- -->
+      <div class="card" data-suchtext="operation verarbeitung berechnung symbol element pap rechteck">
+        <div class="card-head">
+          <h3>Operation</h3>
+          <span class="badge">Element</span>
+        </div>
+        <div class="pap-row">
+          <div class="pap-shape">
+            <svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+              <rect x="15" y="15" width="110" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="70" y="45" text-anchor="middle" font-size="13" fill="var(--text)">Operation</text>
+            </svg>
+          </div>
+          <div class="pap-content">
+            <div class="hefter-box">
+              <div class="hefter-label">Bedeutung</div>
+              <p>Steht für eine <strong>Verarbeitung</strong> oder <strong>Berechnung</strong>, z. B. eine Zuweisung wie <code>v = a * b * c</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Element: Eingabe/Ausgabe ---------- -->
+      <div class="card" data-suchtext="eingabe ausgabe symbol element pap parallelogramm">
+        <div class="card-head">
+          <h3>Eingaben / Ausgaben</h3>
+          <span class="badge">Element</span>
+        </div>
+        <div class="pap-row">
+          <div class="pap-shape">
+            <svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="30,15 130,15 110,65 10,65" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="70" y="43" text-anchor="middle" font-size="12" fill="var(--text)">Ein-/Ausgabe</text>
+            </svg>
+          </div>
+          <div class="pap-content">
+            <div class="hefter-box">
+              <div class="hefter-label">Bedeutung</div>
+              <p>Kennzeichnet eine <strong>Eingabe</strong> oder <strong>Ausgabe</strong> von Daten, z. B. <code>a = Eingabe()</code> oder <code>Ausgabe(v)</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Element: Verzweigung ---------- -->
+      <div class="card" data-suchtext="verzweigung entscheidung true false symbol element pap raute">
+        <div class="card-head">
+          <h3>Verzweigung</h3>
+          <span class="badge">Element</span>
+        </div>
+        <div class="pap-row">
+          <div class="pap-shape">
+            <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="70,10 130,45 70,80 10,45" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+              <text x="70" y="49" text-anchor="middle" font-size="11" fill="var(--text)">Verzweigung</text>
+              <text x="115" y="40" text-anchor="middle" font-size="10" fill="var(--text-3)">False</text>
+              <text x="82" y="72" text-anchor="middle" font-size="10" fill="var(--text-3)">True</text>
+            </svg>
+          </div>
+          <div class="pap-content">
+            <div class="hefter-box">
+              <div class="hefter-label">Bedeutung</div>
+              <p>Stellt eine <strong>Entscheidung</strong> dar. Jede Verzweigung hat <strong>genau zwei Ausgänge</strong>: <code>True</code> und <code>False</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Element: Verbindung ---------- -->
+      <div class="card" data-suchtext="verbindung pfeil ablaufrichtung symbol element pap">
+        <div class="card-head">
+          <h3>Verbindung</h3>
+          <span class="badge">Element</span>
+        </div>
+        <div class="pap-row">
+          <div class="pap-shape">
+            <svg viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+              <line x1="10" y1="20" x2="110" y2="20" stroke="var(--accent)" stroke-width="2.5"/>
+              <polygon points="110,12 130,20 110,28" fill="var(--accent)"/>
+            </svg>
+          </div>
+          <div class="pap-content">
+            <div class="hefter-box">
+              <div class="hefter-label">Bedeutung</div>
+              <p>Verbindet die Elemente und zeigt die <strong>Ablaufrichtung</strong> an. Verbindungen werden — im Gegensatz zu allen anderen Elementen — <strong>nicht beschriftet</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="kategorie" id="kat-pap-regeln">
+      <h2>Regeln des PAP</h2>
+
+      <!-- ---------- Regeln nach DIN 66001 ---------- -->
+      <div class="card" data-suchtext="regeln din 66001 leserichtung startsymbol endsymbol beschriftet pap">
+        <div class="card-head">
+          <h3>Regeln des PAP</h3>
+          <span class="badge">Merksatz</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Regeln (nach DIN 66001)</div>
+          <p>Jede <strong>Verzweigung</strong> aus einer Entscheidung hat <strong>genau zwei Ausgänge</strong> (<code>True</code>/<code>False</code>).</p>
+          <p>Es müssen <strong>genau ein Start-</strong> und <strong>ein Endsymbol</strong> pro Ablauf vorhanden sein.</p>
+          <p><strong>Alle Elemente</strong> werden beschriftet (<strong>außer Verbindungen</strong>).</p>
+          <p><strong>Leserichtung:</strong> immer von oben nach unten, links nach rechts.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="kategorie" id="kat-pap-beispiel">
+      <h2>Beispiel</h2>
+
+      <!-- ---------- Beispiel: Schulweg-PAP ---------- -->
+      <div class="card" data-suchtext="beispiel schulweg pap verzweigung bus verpasst aufstehen">
+        <div class="card-head">
+          <h3>Der Schulweg</h3>
+          <span class="badge">Beispiel</span>
+        </div>
+        <p>Ein vollständiger PAP mit allen Elementen: Start/Stop, Operation, Verzweigung und Verbindung.</p>
+        <div class="pap-diagramm">
+          <svg viewBox="0 0 460 560" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="pap-beispiel-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <polygon points="0,0 10,5 0,10" fill="var(--accent)"/>
+              </marker>
+            </defs>
+
+            <rect x="30" y="10" width="160" height="56" rx="28" ry="28" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="110" y="43" text-anchor="middle" font-size="14" fill="var(--text)">Start</text>
+
+            <line x1="110" y1="66" x2="110" y2="94" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+
+            <rect x="30" y="96" width="160" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="110" y="126" text-anchor="middle" font-size="13" fill="var(--text)">Aufstehen</text>
+
+            <line x1="110" y1="146" x2="110" y2="174" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+
+            <rect x="30" y="176" width="160" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="110" y="206" text-anchor="middle" font-size="13" fill="var(--text)">Los gehen</text>
+
+            <line x1="110" y1="226" x2="110" y2="243" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+
+            <polygon points="110,245 200,300 110,355 20,300" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="110" y="297" text-anchor="middle" font-size="11" fill="var(--text)">Bus</text>
+            <text x="110" y="311" text-anchor="middle" font-size="11" fill="var(--text)">verpasst?</text>
+
+            <line x1="200" y1="300" x2="268" y2="300" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+            <text x="234" y="292" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+
+            <rect x="270" y="275" width="160" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="350" y="305" text-anchor="middle" font-size="12" fill="var(--text)">Zur Schule rennen</text>
+
+            <line x1="110" y1="355" x2="110" y2="383" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+            <text x="134" y="372" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+
+            <rect x="30" y="385" width="160" height="50" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="110" y="415" text-anchor="middle" font-size="12" fill="var(--text)">Zur Schule fahren</text>
+
+            <line x1="350" y1="325" x2="350" y2="460" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+
+            <polyline points="110,435 110,490 268,490" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-beispiel-arrow)"/>
+
+            <rect x="270" y="462" width="160" height="56" rx="28" ry="28" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="350" y="495" text-anchor="middle" font-size="14" fill="var(--text)">Ende</text>
+          </svg>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         WEITERE KATEGORIEN in diesem Reiter
+         (z. B. PAP lesen/analysieren, PAP selbst erstellen) nach
+         demselben Muster ergänzen.
+         ============================================================ -->
+    <div class="platzhalter">Weitere Inhalte (z. B. PAP-Beispiele analysieren, eigene PAPs erstellen) werden hier ergänzt.</div>
+
+  </main>
+  </section>
+
+  <!-- ============================================================
+       REITER 03: Übungsaufgaben
+       ============================================================ -->
+  <section class="phase" id="ph2" data-titel="03 · Übungsaufgaben">
+  <main>
+
+    <section class="kategorie" id="kat-uebung-grundlagen">
+      <h2>Grundlagen – Sequenzen</h2>
+
+      <!-- ---------- Aufgabe 1 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>1. Mein Gamer-Steckbrief</span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Du erstellst ein Spielerprofil für ein Online-Spiel.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">1.1</span>Lege Variablen für deinen Spielernamen (<a class="fach" href="#def-str" onclick="gotoBegriff(event,0,'def-str')" data-tip="String: speichert Text, z. B. &quot;Nova_07&quot;.">str</a>), dein Alter (<a class="fach" href="#def-int" onclick="gotoBegriff(event,0,'def-int')" data-tip="Integer: eine ganze Zahl ohne Nachkommastellen.">int</a>) und deine Größe in Metern (<a class="fach" href="#def-float" onclick="gotoBegriff(event,0,'def-float')" data-tip="Float: eine Kommazahl mit Nachkommastellen.">float</a>) an. Gib alle drei mit <code>print()</code> aus.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">1.2</span>Ergänze dein Lieblingsspiel und dein Level (<a class="fach" href="#def-int" onclick="gotoBegriff(event,0,'def-int')" data-tip="Integer: eine ganze Zahl ohne Nachkommastellen.">int</a>). Gestalte die Ausgabe als Profilkarte, zum Beispiel so:</p>
+              <div class="code">=========================
+ Spieler: Nova_07
+ Alter:   14
+ Level:   42
+=========================</div>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">1.3</span>Fehlerdetektiv: Probiere <code>print("Ich bin " + alter + " Jahre alt")</code> aus. Was passiert? Erkläre die Fehlermeldung und finde zwei Wege, das Problem zu lösen.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> die drei Datentypen unterscheiden und die Ausgabe gestalten. Aufgabe 1.3 führt entdeckend auf Typfehler hin.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a1">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Überlege dir zuerst, welcher Datentyp zu welcher Information passt: Text, ganze Zahl oder Kommazahl.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Nutze für jede Information eine eigene Variable, z. B. <code>name = "Nova_07"</code>. Mehrere Werte kannst du mit Kommas ausgeben: <code>print("Alter:", alter)</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Bei <code>print("Ich bin " + alter + " Jahre alt")</code> entsteht ein Fehler, weil <code>+</code> Text und Zahl nicht automatisch verbindet. Wandle die Zahl mit <code>str(alter)</code> in Text um, oder trenne die Ausgabe mit Kommas: <code>print("Ich bin", alter, "Jahre alt")</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <div class="code">spielername = "Nova_07"
+alter = 14
+groesse = 1.65
+lieblingsspiel = "Elden Ring"
+level = 42
+
+print("=========================")
+print(" Spieler:", spielername)
+print(" Alter:  ", alter)
+print(" Level:  ", level)
+print("=========================")
+
+print("Ich bin " + str(alter) + " Jahre alt")   # Lösung 1: mit str() umwandeln
+print("Ich bin", alter, "Jahre alt")            # Lösung 2: mit Komma trennen</div>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ---------- Aufgabe 2 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>2. Pizza-Abend der Klasse</span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Eure Klasse bestellt Pizza. Eine Pizza kostet 8.50 €, und 24 SuS wollen mitessen. Eine Pizza reicht für 3 Personen.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">2.1</span>Speichere Preis, Anzahl der SuS und Personen pro Pizza in Variablen. Berechne, wie viele Pizzen ihr braucht, und gib das Ergebnis aus.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">2.2</span>Berechne die Gesamtkosten und die Kosten pro Person. Gib alles in einem sinnvollen Satz aus, zum Beispiel: <code>Jede Person zahlt 2.83 €</code>.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">2.3</span>Es kommt eine Lieferpauschale von 3.90 € dazu, und bei der Bestellung gibt es 10 % Rabatt auf die Pizzen (nicht auf die Lieferung). Ändere dein Programm so, dass du nur eine Variable ändern musst, wenn z. B. 27 SuS mitessen.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> mit Integer und Float rechnen und verstehen, warum Variablen statt fester Zahlen praktisch sind. Aufgabe 2.3 regt zum Nachdenken über Programmstruktur an.</span></div>
+
+            <div class="callout callout-warn"><span><strong>Hinweis für die Besprechung:</strong> <code>24 / 3</code> ergibt <code>8.0</code> und nicht <code>8</code>. Warum?</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a2">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Lege für Preis, Anzahl SuS und Personen pro Pizza jeweils eine eigene Variable an, bevor du rechnest.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Für die Anzahl der Pizzen brauchst du eine Division: Anzahl SuS geteilt durch Personen pro Pizza. Die Gesamtkosten ergeben sich aus Anzahl Pizzen mal Preis.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Damit du bei einer anderen Anzahl SuS nur eine Zahl ändern musst, sollten alle Berechnungen (Anzahl Pizzen, Gesamtkosten, Kosten pro Person, Rabatt, Lieferpauschale) auf dieser einen Variable aufbauen — verwende die Variable überall statt der festen Zahl 24.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <div class="code">preis_pro_pizza = 8.50
+anzahl_sus = 24
+personen_pro_pizza = 3
+rabatt = 0.10
+lieferpauschale = 3.90
+
+anzahl_pizzen = anzahl_sus / personen_pro_pizza
+gesamtkosten = anzahl_pizzen * preis_pro_pizza * (1 - rabatt) + lieferpauschale
+kosten_pro_person = gesamtkosten / anzahl_sus
+
+print("Ihr braucht", anzahl_pizzen, "Pizzen.")
+print("Gesamtkosten:", round(gesamtkosten, 2), "€")
+print("Jede Person zahlt", round(kosten_pro_person, 2), "€")</div>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ---------- Aufgabe 3 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>3. Der Bildschirmzeit-Check</span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Laut deinem Handy nutzt du es durchschnittlich 3.5 Stunden pro Tag.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">3.1</span>Berechne, wie viele Stunden das in einer Woche und in einem Jahr sind.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">3.2</span>Rechne aus, wie viele ganze Tage (à 24 h) du pro Jahr am Handy verbringst. Wie viel Prozent eines Jahres sind das?</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">3.3</span>Finde mit den Operatoren <code>//</code> und <code>%</code> heraus, wie man die Jahresstunden als „X Tage und Y Stunden" ausgibt. Rechne zusätzlich hoch: Wie viele Jahre deines Lebens wären das bis zu deinem 80. Geburtstag?</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> mehrschrittige Berechnungen mit Zwischenergebnissen in Variablen durchführen. Aufgabe 3.3 erweitert um Ganzzahldivision und Rest.</span></div>
+
+            <div class="callout callout-warn"><span><strong>Hinweis:</strong> Die SuS setzen ihre echte Bildschirmzeit ein — die Ergebnisse sorgen meist für Gesprächsstoff.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a3">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Eine Woche hat 7 Tage, ein Jahr hat 365 Tage. Multipliziere die tägliche Nutzung entsprechend.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Für die ganzen Tage pro Jahr teilst du die Jahresstunden durch 24. Der Prozentsatz ergibt sich aus dem Verhältnis von Handy-Stunden zu den Gesamtstunden eines Jahres (Jahr = 24 · 365 Stunden).</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><code>//</code> liefert das ganzzahlige Ergebnis einer Division (die vollen Tage), <code>%</code> liefert den Rest (die restlichen Stunden). Für die Hochrechnung bis zum 80. Geburtstag multiplizierst du deine Jahres-Tage mit der Anzahl verbleibender Jahre.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <div class="code">stunden_pro_tag = 3.5
+aktuelles_alter = 15   # individuell anpassen
+
+stunden_pro_woche = stunden_pro_tag * 7
+stunden_pro_jahr = stunden_pro_tag * 365
+
+tage_pro_jahr = stunden_pro_jahr // 24
+rest_stunden = stunden_pro_jahr % 24
+prozent_jahr = stunden_pro_jahr / (24 * 365) * 100
+
+jahre_bis_80 = 80 - aktuelles_alter
+lebenszeit_jahre = (stunden_pro_jahr * jahre_bis_80) / (24 * 365)
+
+print("Pro Woche:", stunden_pro_woche, "Stunden")
+print("Pro Jahr:", stunden_pro_jahr, "Stunden")
+print(int(tage_pro_jahr), "Tage und", int(rest_stunden), "Stunden pro Jahr")
+print(round(prozent_jahr, 1), "% eines Jahres")
+print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")</div>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Implementieren von Programmablaufplänen
+         ============================================================ -->
+    <section class="kategorie" id="kat-uebung-pap">
+      <h2>Implementieren von Programmablaufplänen <span class="tag-neu">❗ Neu</span></h2>
+
+      <!-- ---------- Aufgabe 4 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>4. Einen PAP beschreiben <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Eine App schlägt dir morgens passende Kleidung vor. Ihr Ablauf ist als Programmablaufplan dargestellt, jedes Element trägt eine Nummer.</p>
+
+            <div class="pap-diagramm breit">
+              <svg viewBox="0 0 460 412" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP mit sechs nummerierten Elementen: 1 Start, 2 temperatur = 25, 3 Verzweigung temperatur größer 20, 4 True: Ausgabe T-Shirt anziehen, 5 False: Ausgabe Jacke anziehen, 6 Ende">
+                <defs><marker id="uebung-pap-arrow-4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                <rect x="60" y="10" width="130" height="44" rx="22" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="125" y="37" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                <circle cx="38" cy="32" r="12" fill="var(--accent)"/><text x="38" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">1</text>
+                <line x1="125" y1="54" x2="125" y2="76" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <rect x="45" y="78" width="160" height="42" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="125" y="104" text-anchor="middle" font-size="12" fill="var(--text)">temperatur = 25</text>
+                <circle cx="24" cy="99" r="12" fill="var(--accent)"/><text x="24" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
+                <line x1="125" y1="120" x2="125" y2="142" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <polygon points="125,144 215,192 125,240 35,192" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="125" y="196" text-anchor="middle" font-size="11" fill="var(--text)">temperatur &gt; 20 ?</text>
+                <circle cx="17" cy="192" r="12" fill="var(--accent)"/><text x="17" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">3</text>
+                <line x1="215" y1="192" x2="256" y2="192" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <text x="236" y="184" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                <polygon points="276,172 450,172 432,212 258,212" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="354" y="196" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("T-Shirt anziehen")</text>
+                <circle cx="354" cy="152" r="12" fill="var(--accent)"/><text x="354" y="156" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">4</text>
+                <line x1="125" y1="240" x2="125" y2="272" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <text x="150" y="260" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                <polygon points="48,274 222,274 202,314 28,314" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="125" y="298" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Jacke anziehen")</text>
+                <circle cx="15" cy="294" r="12" fill="var(--accent)"/><text x="15" y="298" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">5</text>
+                <line x1="354" y1="212" x2="354" y2="356" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <polyline points="125,314 125,380 292,380" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
+                <rect x="294" y="358" width="120" height="44" rx="22" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="354" y="385" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                <circle cx="438" cy="380" r="12" fill="var(--accent)"/><text x="438" y="384" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">6</text>
+              </svg>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">4.1</span>Beschreibe den PAP: Ziehe jede Aussage auf die Nummer des passenden Elements. Eine Aussage passt zu keinem Element und bleibt übrig.</p>
+            </div>
+
+            <div class="dnd" id="dnd-a4">
+              <div class="dnd-pool" aria-label="Aussagen">
+                <span class="dnd-chip" draggable="true" data-id="e3" tabindex="0">Es wird geprüft, ob die Temperatur größer als 20 ist.</span>
+                <span class="dnd-chip" draggable="true" data-id="e6" tabindex="0">Der Ablauf endet.</span>
+                <span class="dnd-chip" draggable="true" data-id="x" tabindex="0">Die Anweisung wird wiederholt, solange die Bedingung True ist.</span>
+                <span class="dnd-chip" draggable="true" data-id="e2" tabindex="0">Der Variablen temperatur wird der Wert 25 zugewiesen.</span>
+                <span class="dnd-chip" draggable="true" data-id="e5" tabindex="0">Ist die Bedingung False, wird „Jacke anziehen“ ausgegeben.</span>
+                <span class="dnd-chip" draggable="true" data-id="e1" tabindex="0">Der Ablauf beginnt.</span>
+                <span class="dnd-chip" draggable="true" data-id="e4" tabindex="0">Ist die Bedingung True, wird „T-Shirt anziehen“ ausgegeben.</span>
+              </div>
+              <div class="dnd-zones">
+                <div class="dnd-zone" data-correct="e1"><span class="dnd-nr">1</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+                <div class="dnd-zone" data-correct="e2"><span class="dnd-nr">2</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+                <div class="dnd-zone" data-correct="e3"><span class="dnd-nr">3</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+                <div class="dnd-zone" data-correct="e4"><span class="dnd-nr">4</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+                <div class="dnd-zone" data-correct="e5"><span class="dnd-nr">5</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+                <div class="dnd-zone" data-correct="e6"><span class="dnd-nr">6</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
+              </div>
+              <div class="dnd-actions">
+                <button class="btn btn-primary btn-sm" onclick="dndCheck(this)">Prüfen</button>
+                <button class="btn btn-ghost btn-sm" onclick="dndReset(this)">Zurücksetzen</button>
+                <span class="dnd-fb"></span>
+              </div>
+              <p class="caption">Ohne Maus: Aussage antippen, dann auf das Feld mit der Nummer tippen.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">4.2</span>Ändere in Gedanken den Wert auf <code>temperatur = 20</code>. Welche Ausgabe erscheint jetzt? Begründe mit der Bedingung.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> die Elemente eines Programmablaufplans erkennen und seinen Ablauf in eigenen Worten beschreiben.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a4">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Folge den Pfeilen von oben nach unten und achte auf die Form jedes Elements. Die Bedeutung der Formen findest du im Reiter <a class="fach" href="#kat-pap-elemente" onclick="gotoBegriff(event,1,'kat-pap-elemente')" data-tip="Oval: Start/Ende · Rechteck: Operation · Raute: Verzweigung · Parallelogramm: Ein-/Ausgabe">Elemente des PAP</a>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Die übrig bleibende Aussage beschreibt einen anderen Grundbaustein, der in diesem PAP gar nicht vorkommt. Hier gibt es keinen Pfeil, der zurück nach oben führt.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zu 4.2: Die Bedingung lautet <code>temperatur &gt; 20</code>, also „echt größer als 20". Ist 20 größer als 20?</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <p>4.1: 1 – Der Ablauf beginnt. · 2 – Der Variablen temperatur wird der Wert 25 zugewiesen. · 3 – Es wird geprüft, ob die Temperatur größer als 20 ist. · 4 – Ist die Bedingung True, wird „T-Shirt anziehen“ ausgegeben. · 5 – Ist die Bedingung False, wird „Jacke anziehen“ ausgegeben. · 6 – Der Ablauf endet.</p>
+                  <p>Übrig bleibt „Die Anweisung wird wiederholt …“ — das beschreibt eine <strong>Schleife</strong>, dieser PAP enthält aber nur eine <strong>Verzweigung</strong>.</p>
+                  <p>4.2: Es erscheint „Jacke anziehen“. <code>20 &gt; 20</code> ist <code>False</code>, weil 20 nicht echt größer als 20 ist. Deshalb läuft der False-Zweig.</p>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ---------- Aufgabe 5 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>5. Einen gegebenen PAP implementieren <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Der folgende Programmablaufplan beschreibt einen Algorithmus mit einer <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="Verzweigung: prüft eine Bedingung und führt je nach True oder False einen von zwei Programmteilen aus.">Verzweigung</a>. Übersetze ihn in ein Python-Programm.</p>
+
+            <div class="pap-diagramm breit">
+              <svg viewBox="0 0 555 405" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP: Start, a = 5, b = 5, c = 5, Verzweigung (a == b) == c; False: v = a * b * c; True: v = a^3; beide Zweige führen zu Ausgabe(v), dann Ende">
+                <defs><marker id="uebung-pap-arrow-5" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                <rect x="20" y="4" width="120" height="60" rx="30" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="80" y="39" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                <line x1="80" y1="64" x2="80" y2="98" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <polygon points="36,100 140,100 124,166 20,166" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="80" y="122" text-anchor="middle" font-size="12" fill="var(--text)">a = 5</text>
+                <text x="80" y="138" text-anchor="middle" font-size="12" fill="var(--text)">b = 5</text>
+                <text x="80" y="154" text-anchor="middle" font-size="12" fill="var(--text)">c = 5</text>
+                <line x1="80" y1="166" x2="80" y2="198" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <polygon points="80,200 152,244 80,288 8,244" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="80" y="248" text-anchor="middle" font-size="11" fill="var(--text)">(a == b) == c</text>
+                <line x1="152" y1="244" x2="218" y2="244" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <text x="185" y="235" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                <rect x="220" y="211" width="132" height="66" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="286" y="248" text-anchor="middle" font-size="12" fill="var(--text)">v = a * b * c</text>
+                <line x1="80" y1="288" x2="80" y2="330" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <text x="100" y="313" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                <rect x="14" y="332" width="132" height="66" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="80" y="369" text-anchor="middle" font-size="12" fill="var(--text)">v = a^3</text>
+                <line x1="286" y1="277" x2="286" y2="330" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <line x1="146" y1="365" x2="226" y2="365" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <polygon points="236,332 352,332 336,398 220,398" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="286" y="369" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(v)</text>
+                <line x1="344" y1="365" x2="422" y2="365" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-5)"/>
+                <rect x="424" y="335" width="120" height="60" rx="30" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="484" y="370" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+              </svg>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.1</span>Implementiere den Programmablaufplan in Python. Übernimm dazu die Werte, baue die Verzweigung mit <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">if / else</a> und gib <code>v</code> aus.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.2</span>Beschreibe, was der Algorithmus berechnet. Was bedeuten <code>a</code>, <code>b</code> und <code>c</code>, und warum gibt es zwei verschiedene Rechenwege für <code>v</code>?</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.3</span>Fehlerdetektiv: Übernimm die Bedingung <code>(a == b) == c</code> und die Rechnung <code>v = a^3</code> wörtlich in Python. Teste dein Programm danach mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code>. Welches Ergebnis erwartest du, welches bekommst du? Finde die beiden Stolperstellen und verbessere sie.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> einen Programmablaufplan Symbol für Symbol in Python-Code übersetzen und eine Verzweigung mit <code>if</code> / <code>else</code> umsetzen. Aufgabe 5.3 zeigt, dass eine wörtliche Übersetzung nicht immer das Gemeinte tut.</span></div>
+
+            <div class="callout callout-warn"><span><strong>Hinweis für die Besprechung:</strong> Mit <code>a = b = c = 5</code> liefern beide Zweige <code>125</code> — der Fehler fällt dort gar nicht auf. Erst andere Testwerte decken ihn auf. Warum ist gutes Testen deshalb so wichtig?</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a5">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Geh den PAP von oben nach unten durch und übersetze jedes Symbol einzeln: Parallelogramm mit Werten → Zuweisungen, Raute → <code>if</code> / <code>else</code>, Rechteck → Rechnung, <code>Ausgabe(v)</code> → <code>print(v)</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Nach <code>if Bedingung:</code> und nach <code>else:</code> steht jeweils ein Doppelpunkt, die Rechnung darunter wird eingerückt. Weil beide Zweige im PAP zur selben Ausgabe führen, steht <code>print(v)</code> <strong>nicht</strong> eingerückt ganz am Ende. Zu 5.2: Überlege, welche Formel <code>a * b * c</code> aus dem Mathematikunterricht ist.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zwei Stolperstellen: Das Zeichen <code>^</code> bedeutet in Python <strong>nicht</strong> „hoch" — für Potenzen schreibt man <code>**</code>. Und <code>(a == b) == c</code> vergleicht zuerst <code>a</code> mit <code>b</code> (Ergebnis <code>True</code> oder <code>False</code>) und dann dieses <code>True</code>/<code>False</code> mit <code>c</code>. Um zu prüfen, ob alle drei Werte gleich sind, schreibt man <code>a == b and b == c</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <div class="code"># Werte festlegen (Parallelogramm im PAP)
+a = 5
+b = 5
+c = 5
+
+# Verzweigung: Sind alle drei Seiten gleich lang?
+if a == b and b == c:
+    v = a ** 3        # True-Zweig: Würfel, Volumen = a hoch 3
+else:
+    v = a * b * c     # False-Zweig: Quader, Volumen = a · b · c
+
+# Ausgabe (gehört zu beiden Zweigen, daher nicht eingerückt)
+print(v)</div>
+                  <p>5.2: Der Algorithmus berechnet das <strong>Volumen eines Quaders</strong> mit den Kantenlängen <code>a</code>, <code>b</code> und <code>c</code>. Sind alle drei Kanten gleich lang, ist der Quader ein <strong>Würfel</strong> und das Volumen ist <code>a</code> hoch 3.</p>
+                  <p>5.3: Wörtlich übersetzt ergibt sich mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code> der Wert <code>0</code> statt <code>9</code>. Grund: <code>(3 == 3) == 1</code> wird zu <code>True == 1</code>, und das ist in Python <code>True</code>. Danach rechnet <code>3^3</code> nicht „hoch", sondern ergibt <code>0</code>.</p>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- Aufgabe 6 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>6. Das Kinoticket <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Ein Kino verkauft Tickets zu zwei Preisen: Kinder unter 14 Jahren zahlen 6.50 €, alle anderen 9.00 €. Der Ablauf an der Kasse sieht so aus:</p>
+
+            <div class="pap-diagramm">
+              <svg viewBox="0 0 420 445" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP Kinoticket: Start, alter = 12, Verzweigung alter kleiner 14; True: preis = 6.50; False: preis = 9.00; beide Zweige führen zu Ausgabe(preis), dann Ende">
+                <defs><marker id="uebung-pap-arrow-6" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                <rect x="60" y="10" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="120" y="35" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                <line x1="120" y1="50" x2="120" y2="72" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <rect x="40" y="74" width="160" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="120" y="99" text-anchor="middle" font-size="12" fill="var(--text)">alter = 12</text>
+                <line x1="120" y1="114" x2="120" y2="136" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <polygon points="120,138 200,181 120,224 40,181" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &lt; 14 ?</text>
+                <line x1="200" y1="181" x2="238" y2="181" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <text x="219" y="173" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                <rect x="240" y="161" width="150" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="315" y="186" text-anchor="middle" font-size="12" fill="var(--text)">preis = 6.50</text>
+                <line x1="120" y1="224" x2="120" y2="256" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <text x="145" y="243" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                <rect x="40" y="258" width="160" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="120" y="283" text-anchor="middle" font-size="12" fill="var(--text)">preis = 9.00</text>
+                <line x1="120" y1="298" x2="120" y2="330" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <polyline points="315,201 315,352 212,352" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <polygon points="52,332 220,332 200,372 32,372" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="126" y="356" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(preis)</text>
+                <line x1="120" y1="372" x2="120" y2="396" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
+                <rect x="60" y="398" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="120" y="423" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+              </svg>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.1</span>Implementiere den Programmablaufplan in Python mit einer <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">Verzweigung</a>. Gib den Preis in einem Satz aus, z. B. <code>Dein Ticket kostet 6.5 €</code>.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.2</span>Teste dein Programm mit <code>alter = 14</code>. Welchen Preis erwartest du, welchen gibt das Programm aus? Erkläre das Ergebnis.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.3</span>Am Kinotag kostet jedes Ticket 2 € weniger. Lege dafür eine Variable <code>kinotag</code> vom Typ <a class="fach" href="#def-bool" onclick="gotoBegriff(event,0,'def-bool')" data-tip="Boolean: ein Wahrheitswert, entweder True oder False.">bool</a> an und ergänze dein Programm um eine zweite Verzweigung. Zeichne die Ergänzung auch in den PAP ein.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Verzweigung aus einem PAP selbstständig implementieren und mit Grenzwerten testen. Aufgabe 6.3 kombiniert zwei Verzweigungen nacheinander.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a6">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Gehe vor wie in Aufgabe 5: Übersetze den PAP Symbol für Symbol. Die Raute wird zu <code>if alter &lt; 14:</code>, der False-Zweig zu <code>else:</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">In beiden Zweigen wird nur <code>preis</code> festgelegt. Die Ausgabe gehört zu beiden Zweigen und steht deshalb <strong>nicht</strong> eingerückt am Ende. Zu 6.2: Ist 14 kleiner als 14?</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zu 6.3: Die zweite Verzweigung kommt <strong>nach</strong> der ersten und vor der Ausgabe. Weil <code>kinotag</code> schon <code>True</code> oder <code>False</code> ist, reicht <code>if kinotag:</code>. Im True-Zweig verringerst du den Preis mit <code>preis = preis - 2</code>. Einen else-Zweig brauchst du hier nicht.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">
+                  <div class="code">alter = 12              # Alter festlegen
+kinotag = True          # 6.3: Ist heute Kinotag?
+
+# Erste Verzweigung: Kinderpreis oder Normalpreis?
+if alter &lt; 14:
+    preis = 6.50        # True-Zweig: Kinderpreis
+else:
+    preis = 9.00        # False-Zweig: Normalpreis
+
+# 6.3: Zweite Verzweigung, am Kinotag 2 € Rabatt
+if kinotag:
+    preis = preis - 2
+
+# Ausgabe (gehört zu allen Zweigen, daher nicht eingerückt)
+print("Dein Ticket kostet", preis, "€")</div>
+                  <p>6.2: Mit <code>alter = 14</code> kostet das Ticket 9.00 €. <code>14 &lt; 14</code> ist <code>False</code>, denn 14 ist nicht kleiner als 14. Wer genau 14 ist, zahlt also schon den Normalpreis.</p>
+                  <p>6.3: Im PAP folgt nach dem Zusammenlaufen der beiden Preis-Zweige eine zweite Raute <code>kinotag ?</code>. Ihr True-Zweig führt zu <code>preis = preis - 2</code>, ihr False-Zweig direkt weiter. Beide laufen dann in <code>Ausgabe(preis)</code>.</p>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  </section>
+
+  <div class="sammel-leiste">
+    <button class="btn btn-ghost" id="hefter-all">Gesamte Sammlung in den Hefter kopieren</button>
+  </div>
+
+</div>
+
+<script>
+/* ---------- Reiter (Phasen) ---------- */
+function showPhase(n){
+  if(typeof sucheLeeren==='function') sucheLeeren();
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Lehrermodus ---------- */
+const LEHRER_PW = 'InfoIstCool';
+function setLehrermodus(an){
+  document.body.classList.toggle('lehrermodus-aktiv', an);
+  const status = document.getElementById('lehrer-status');
+  if(status){
+    status.textContent = an ? 'aktiv' : 'inaktiv';
+    status.classList.toggle('aktiv', an);
+    status.classList.remove('fehler');
+  }
+  if(an){
+    document.querySelectorAll('.hilfe-box').forEach(box=>{
+      box.classList.add('on');
+      if(box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+      box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+        btn.disabled=false;
+        const t=btn.querySelector('.hilfe-timer'); if(t) t.textContent='';
+      });
+    });
+  }
+}
+function aktiviereLehrermodus(){
+  const feld = document.getElementById('lehrer-pw');
+  const status = document.getElementById('lehrer-status');
+  if(feld.value === LEHRER_PW){
+    try{ localStorage.setItem('lehrermodus','1'); }catch(e){}
+    setLehrermodus(true);
+  } else {
+    status.textContent = 'falsches Passwort';
+    status.classList.remove('aktiv');
+    status.classList.add('fehler');
+  }
+  feld.value='';
+}
+function deaktiviereLehrermodus(){
+  try{ localStorage.removeItem('lehrermodus'); }catch(e){}
+  setLehrermodus(false);
+  resetHilfeBoxen();
+}
+function resetHilfeBoxen(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    box.classList.remove('on');
+    delete box.dataset.started;
+    delete box.dataset.startTime;
+    if(box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+    box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+      btn.disabled=true;
+      const t=btn.querySelector('.hilfe-timer'); if(t) t.textContent='';
+    });
+    const trigger = box.previousElementSibling;
+    if(trigger && trigger.classList.contains('hilfe-trigger')){
+      trigger.disabled=false;
+      trigger.textContent='Hilfestellungen';
+    }
+  });
+}
+function initLehrermodus(){
+  let gespeichert=false;
+  try{ gespeichert = localStorage.getItem('lehrermodus')==='1'; }catch(e){}
+  if(gespeichert) setLehrermodus(true);
+}
+
+/* ---------- Einklappbare Oberkategorien (Reiter 01) ---------- */
+function toggleKategorie(btn){ btn.classList.toggle('open'); }
+
+/* ---------- Klickbarer Fachbegriff: Reiter wechseln + zur Definition springen ---------- */
+function gotoBegriff(ev, phase, id){
+  ev.preventDefault();
+  showPhase(phase);
+  setTimeout(()=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    const kopf = el.closest('.kategorie') && el.closest('.kategorie').querySelector('.kategorie-head');
+    if(kopf) kopf.classList.add('open');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('fach-highlight');
+    setTimeout(()=>el.classList.remove('fach-highlight'), 1600);
+  }, 60);
+}
+
+/* ---------- Globales Tooltip-Popup (für .tt und .fach, entkommt overflow:hidden) ---------- */
+function initTooltips(){
+  const popup = document.getElementById('tt-popup');
+  if(!popup) return;
+  const positioniere = (el)=>{
+    const tip = el.getAttribute('data-tip');
+    if(!tip) return;
+    popup.textContent = tip;
+    popup.classList.add('show');
+    const r = el.getBoundingClientRect();
+    const pw = popup.offsetWidth, ph = popup.offsetHeight;
+    let left = r.left, top = r.bottom + 8;
+    if(left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+    if(left < 8) left = 8;
+    if(top + ph > window.innerHeight - 8) top = r.top - ph - 8;
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  };
+  const verstecken = ()=> popup.classList.remove('show');
+  document.querySelectorAll('.tt, .fach').forEach(el=>{
+    if(el.dataset.ttWired) return;
+    el.dataset.ttWired='1';
+    el.addEventListener('mouseenter', ()=>positioniere(el));
+    el.addEventListener('mouseleave', verstecken);
+    el.addEventListener('focus', ()=>positioniere(el));
+    el.addEventListener('blur', verstecken);
+  });
+  window.addEventListener('scroll', verstecken, true);
+}
+
+/* ---------- Akkordeon (Reserve für spätere Begriffe) ---------- */
+function toggleAcc(btn){
+  const open = btn.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+}
+
+/* ---------- Zeitgesteuerte Hilfestellung (2 / 4 / 6 Minuten) ---------- */
+function zeigeHilfe(btn){
+  const box = btn.nextElementSibling;
+  box.classList.add('on');
+  btn.disabled = true;
+  startHilfeTimer(box);
+}
+function startHilfeTimer(box){
+  if(box.dataset.started) return;
+  box.dataset.started='1';
+  box.dataset.startTime=Date.now();
+  updateHilfe(box);
+  box._hilfeInterval=setInterval(()=>updateHilfe(box),1000);
+}
+function updateHilfe(box){
+  const elapsedMin=(Date.now()-parseInt(box.dataset.startTime,10))/60000;
+  let alleFrei=true;
+  box.querySelectorAll('.hilfe-btn').forEach(btn=>{
+    const need=parseFloat(btn.dataset.min);
+    const timer=btn.querySelector('.hilfe-timer');
+    if(elapsedMin>=need){
+      btn.disabled=false; timer.textContent='';
+    } else {
+      alleFrei=false;
+      const restSek=Math.ceil((need-elapsedMin)*60);
+      const mm=Math.floor(restSek/60), ss=restSek%60;
+      timer.textContent=' (in '+mm+':'+String(ss).padStart(2,'0')+')';
+    }
+  });
+  if(alleFrei && box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
+}
+function toggleHilfe(btn){
+  if(btn.disabled) return;
+  const text=btn.nextElementSibling.classList.contains('hilfe-text') ? btn.nextElementSibling : btn.parentElement.querySelector('.hilfe-text');
+  const open=text.classList.toggle('on');
+  btn.setAttribute('aria-expanded', open);
+}
+
+/* ---------- Zweistufiges Quiz: Algorithmus oder nicht? ---------- */
+const quizFeedback = {
+  alg1:{ ok:'<strong>Richtig!</strong> Alle vier Eigenschaften sind erfüllt: eindeutige Schrittfolge, jeder Schritt verständlich, für jede Kaffeezubereitung anwendbar, und der Vorgang endet mit der fertigen Tasse.',
+         ng:'<strong>Nicht ganz.</strong> Prüfe noch einmal alle vier Eigenschaften einzeln — hier ist tatsächlich jede erfüllt.',
+         hint:'Geh die vier Eigenschaften einzeln durch: Ist jeder Schritt klar? Endet der Vorgang? Funktioniert es für jede Tasse Kaffee?' },
+  alg2:{ ok:'<strong>Richtig, kein Algorithmus!</strong> „Richtig anfühlt" ist für den Befehlsempfänger nicht eindeutig verständlich — die Ausführbarkeit ist verletzt.',
+         ng:'<strong>Nicht ganz.</strong> Überlege: Kann jeder (z. B. auch ein Roboterarm) eindeutig erkennen, wann sich ein Teig „richtig anfühlt"?',
+         hint:'Welche Eigenschaft verlangt, dass jeder Schritt für den Ausführenden klar verständlich sein muss?' },
+  alg3:{ ok:'<strong>Richtig, kein Algorithmus!</strong> Die Schrittfolge endet nie — die Endlichkeit (Terminiertheit) ist verletzt.',
+         ng:'<strong>Nicht ganz.</strong> Überlege: Kommt diese Zählvorschrift jemals zu einem Ende?',
+         hint:'Welche Eigenschaft verlangt, dass eine Schrittfolge irgendwann endet?' },
+  alg4:{ ok:'<strong>Richtig, kein Algorithmus!</strong> Der nächste Schritt ist nicht eindeutig festgelegt, da drei Möglichkeiten gleichzeitig erlaubt sind — die Eindeutigkeit (Determinismus) ist verletzt.',
+         ng:'<strong>Nicht ganz.</strong> Überlege: Weiß der Ausführende an der Kreuzung eindeutig, was als Nächstes zu tun ist?',
+         hint:'Welche Eigenschaft verlangt, dass zu jedem Zeitpunkt klar ist, welcher Schritt als Nächstes folgt?' },
+  alg5:{ ok:'<strong>Richtig!</strong> Die Vorschrift funktioniert für beliebig viele gleichartige Additionsaufgaben — sie ist allgemeingültig, und die übrigen Eigenschaften sind ebenfalls erfüllt.',
+         ng:'<strong>Nicht ganz.</strong> Prüfe noch einmal alle vier Eigenschaften einzeln — hier ist tatsächlich jede erfüllt.',
+         hint:'Funktioniert das Verfahren für viele gleichartige Aufgaben oder nur für einen einzigen Spezialfall?' }
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'<strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='<strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Code in die Zwischenablage kopieren ---------- */
+function initCodeCopy(){
+  document.querySelectorAll('.code-copy-btn').forEach(btn=>{
+    if(btn.dataset.wired) return;
+    btn.dataset.wired='1';
+    const code = btn.previousElementSibling;
+    btn.onclick=async ()=>{
+      try{
+        await navigator.clipboard.writeText(code.innerText);
+        btn.textContent='kopiert'; btn.classList.add('copied');
+        setTimeout(()=>{ btn.textContent='kopieren'; btn.classList.remove('copied'); },1800);
+      }catch(e){ btn.textContent='manuell markieren'; }
+    };
+  });
+}
+
+/* ---------- Reiterübergreifende Suche ----------
+   Normale Suche: Volltext + data-suchtext über ALLE Reiter.
+   "neu" / "neue inhalte": zeigt genau die Einträge mit .tag-neu. */
+function istNeuSuche(q){ return q==='neu' || q==='neue inhalte' || q==='neue'; }
+function filterKarten(){
+  const q=(document.getElementById('suche').value||'').trim().toLowerCase();
+  const info=document.getElementById('such-info');
+  const aktiv = q!=='';
+  document.body.classList.toggle('suchmodus', aktiv);
+  const items=[...document.querySelectorAll('.card, .kategorie > .acc')];
+  if(!aktiv){
+    items.forEach(k=>k.classList.remove('such-aus'));
+    document.querySelectorAll('.such-leer').forEach(el=>el.classList.remove('such-leer'));
+    info.textContent='';
+    return;
+  }
+  const neuModus = istNeuSuche(q);
+  let treffer=0;
+  items.forEach(k=>{
+    const text=((k.dataset.suchtext||'')+' '+k.textContent).toLowerCase();
+    const sichtbar = neuModus ? !!k.querySelector('.tag-neu') : text.includes(q);
+    k.classList.toggle('such-aus', !sichtbar);
+    if(sichtbar) treffer++;
+  });
+  document.querySelectorAll('.kategorie').forEach(kat=>{
+    const hat=[...kat.querySelectorAll('.card, :scope > .acc')].some(k=>!k.classList.contains('such-aus'));
+    kat.classList.toggle('such-leer', !hat);
+  });
+  document.querySelectorAll('.phase').forEach(ph=>{
+    const hat=[...ph.querySelectorAll('.kategorie')].some(k=>!k.classList.contains('such-leer'));
+    ph.classList.toggle('such-leer', !hat);
+  });
+  info.textContent = neuModus
+    ? (treffer===0 ? 'Aktuell sind keine Inhalte als neu markiert.' : treffer+' neue Inhalte aus der letzten Stunde')
+    : (treffer+' Treffer für „'+q+'“');
+}
+function sucheNeu(){
+  const f=document.getElementById('suche'); f.value='neu'; filterKarten();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+function sucheLeeren(){
+  const f=document.getElementById('suche');
+  if(f && f.value!==''){ f.value=''; filterKarten(); }
+}
+
+/* ---------- Kategorien-Sprungmarken öffnen die (zugeklappte) Kategorie ---------- */
+function initTocLinks(){
+  document.querySelectorAll('.toc-link[href^="#kat-"]').forEach(a=>{
+    a.addEventListener('click', ev=>{
+      const kat=document.querySelector(a.getAttribute('href'));
+      if(!kat) return;
+      ev.preventDefault();
+      const kopf=kat.querySelector('.kategorie-head'); if(kopf) kopf.classList.add('open');
+      kat.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+}
+
+/* ---------- Zuordnung per Drag & Drop (Maus) bzw. Antippen (Touch/Tastatur) ---------- */
+function dndBox(el){ return el.closest('.dnd'); }
+function dndLeereSlot(slot){ slot.innerHTML='<span class="dnd-platz">hierher ziehen</span>'; }
+function dndAblegen(chip, zone){
+  const box=dndBox(zone), pool=box.querySelector('.dnd-pool');
+  const slot=zone.querySelector('.dnd-slot');
+  const alterSlot=chip.parentElement && chip.parentElement.classList.contains('dnd-slot') ? chip.parentElement : null;
+  const belegt=slot.querySelector('.dnd-chip');
+  if(belegt===chip) return;
+  if(belegt){ if(alterSlot){ alterSlot.innerHTML=''; alterSlot.appendChild(belegt); } else { pool.appendChild(belegt); } }
+  else if(alterSlot){ dndLeereSlot(alterSlot); }
+  slot.innerHTML=''; slot.appendChild(chip);
+  box.querySelectorAll('.dnd-zone').forEach(z=>z.classList.remove('z-ok','z-err'));
+  const fb=box.querySelector('.dnd-fb'); fb.textContent=''; fb.className='dnd-fb';
+}
+function dndZurueck(chip){
+  const box=dndBox(chip), pool=box.querySelector('.dnd-pool');
+  const alterSlot=chip.parentElement && chip.parentElement.classList.contains('dnd-slot') ? chip.parentElement : null;
+  if(alterSlot){ pool.appendChild(chip); dndLeereSlot(alterSlot); }
+}
+function initDnd(){
+  document.querySelectorAll('.dnd').forEach(box=>{
+    if(box.dataset.wired) return; box.dataset.wired='1';
+    box._start=[...box.querySelectorAll('.dnd-chip')];
+    box.addEventListener('dragstart',ev=>{
+      const chip=ev.target.closest && ev.target.closest('.dnd-chip'); if(!chip) return;
+      box._drag=chip; chip.classList.add('dragging');
+      try{ ev.dataTransfer.setData('text/plain', chip.dataset.id); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+    });
+    box.addEventListener('dragend',()=>{ if(box._drag) box._drag.classList.remove('dragging'); box._drag=null;
+      box.querySelectorAll('.dnd-zone.over').forEach(z=>z.classList.remove('over')); });
+    box.querySelectorAll('.dnd-zone').forEach(zone=>{
+      zone.addEventListener('dragover',ev=>{ ev.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave',()=>zone.classList.remove('over'));
+      zone.addEventListener('drop',ev=>{ ev.preventDefault(); zone.classList.remove('over'); if(box._drag) dndAblegen(box._drag, zone); });
+      zone.addEventListener('click',ev=>{
+        if(ev.target.closest('.dnd-chip')) return;
+        if(box._sel){ dndAblegen(box._sel, zone); box._sel.classList.remove('sel'); box._sel=null; }
+      });
+    });
+    const pool=box.querySelector('.dnd-pool');
+    pool.addEventListener('dragover',ev=>ev.preventDefault());
+    pool.addEventListener('drop',ev=>{ ev.preventDefault(); if(box._drag) dndZurueck(box._drag); });
+    pool.addEventListener('click',ev=>{
+      if(ev.target.closest('.dnd-chip')) return;
+      if(box._sel){ dndZurueck(box._sel); box._sel.classList.remove('sel'); box._sel=null; }
+    });
+    box.querySelectorAll('.dnd-chip').forEach(chip=>{
+      const waehlen=()=>{
+        if(box._sel===chip){ chip.classList.remove('sel'); box._sel=null; return; }
+        if(box._sel) box._sel.classList.remove('sel');
+        box._sel=chip; chip.classList.add('sel');
+      };
+      chip.addEventListener('click',waehlen);
+      chip.addEventListener('keydown',ev=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); waehlen(); } });
+    });
+    box.querySelectorAll('.dnd-zone').forEach(zone=>{ zone.tabIndex=0;
+      zone.addEventListener('keydown',ev=>{ if((ev.key==='Enter'||ev.key===' ') && box._sel){ ev.preventDefault();
+        dndAblegen(box._sel, zone); box._sel.classList.remove('sel'); box._sel=null; } }); });
+  });
+}
+function dndCheck(btn){
+  const box=dndBox(btn); let ok=0, total=0;
+  box.querySelectorAll('.dnd-zone').forEach(z=>{
+    total++; const chip=z.querySelector('.dnd-chip');
+    const gut=!!chip && chip.dataset.id===z.dataset.correct;
+    z.classList.remove('z-ok','z-err'); z.classList.add(gut?'z-ok':'z-err'); if(gut) ok++;
+  });
+  const fb=box.querySelector('.dnd-fb');
+  fb.textContent = ok===total ? 'Alle '+total+' Zuordnungen richtig!' : ok+' von '+total+' richtig — die rot markierten Felder noch einmal prüfen.';
+  fb.className='dnd-fb '+(ok===total?'ok':'err');
+}
+function dndReset(btn){
+  const box=dndBox(btn), pool=box.querySelector('.dnd-pool');
+  box._start.forEach(c=>{ c.classList.remove('sel','dragging'); pool.appendChild(c); });
+  box.querySelectorAll('.dnd-slot').forEach(dndLeereSlot);
+  box.querySelectorAll('.dnd-zone').forEach(z=>z.classList.remove('z-ok','z-err','over'));
+  box._sel=null; const fb=box.querySelector('.dnd-fb'); fb.textContent=''; fb.className='dnd-fb';
+}
+
+/* ---------- Init ---------- */
+function initSeite(){ initHefter(); initCodeCopy(); initTooltips(); initLehrermodus(); initTocLinks(); initDnd(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+</script>
+
+<div id="tt-popup" role="tooltip"></div>
+</body>
+</html>
