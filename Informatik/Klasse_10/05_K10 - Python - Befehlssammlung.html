@@ -1294,7 +1294,7 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
                 <circle cx="24" cy="99" r="12" fill="var(--accent)"/><text x="24" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">2</text>
                 <line x1="125" y1="120" x2="125" y2="142" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
                 <polygon points="125,144 215,192 125,240 35,192" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
-                <text x="125" y="196" text-anchor="middle" font-size="11" fill="var(--text)">temperatur &gt; 20 ?</text>
+                <text x="125" y="196" text-anchor="middle" font-size="11" fill="var(--text)">temperatur &gt; 20</text>
                 <circle cx="17" cy="192" r="12" fill="var(--accent)"/><text x="17" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">3</text>
                 <line x1="215" y1="192" x2="256" y2="192" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-4)"/>
                 <text x="236" y="184" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
@@ -1320,13 +1320,13 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
 
             <div class="dnd" id="dnd-a4">
               <div class="dnd-pool" aria-label="Aussagen">
-                <span class="dnd-chip" draggable="true" data-id="e3" tabindex="0">Es wird geprüft, ob die Temperatur größer als 20 ist.</span>
-                <span class="dnd-chip" draggable="true" data-id="e6" tabindex="0">Der Ablauf endet.</span>
+                <span class="dnd-chip" draggable="true" data-id="e3" tabindex="0">Es wird geprüft, ob der Variablenwert der Variable temperatur über 20 ist.</span>
+                <span class="dnd-chip" draggable="true" data-id="e6" tabindex="0">Der Algorithmus wird beendet.</span>
                 <span class="dnd-chip" draggable="true" data-id="x" tabindex="0">Die Anweisung wird wiederholt, solange die Bedingung True ist.</span>
-                <span class="dnd-chip" draggable="true" data-id="e2" tabindex="0">Der Variablen temperatur wird der Wert 25 zugewiesen.</span>
-                <span class="dnd-chip" draggable="true" data-id="e5" tabindex="0">Ist die Bedingung False, wird „Jacke anziehen“ ausgegeben.</span>
-                <span class="dnd-chip" draggable="true" data-id="e1" tabindex="0">Der Ablauf beginnt.</span>
-                <span class="dnd-chip" draggable="true" data-id="e4" tabindex="0">Ist die Bedingung True, wird „T-Shirt anziehen“ ausgegeben.</span>
+                <span class="dnd-chip" draggable="true" data-id="e2" tabindex="0">Die Variable temperatur wird mit dem Variablenwert 25 belegt.</span>
+                <span class="dnd-chip" draggable="true" data-id="e5" tabindex="0">Es wird eine Nutzerausgabe „Jacke anziehen“ getätigt.</span>
+                <span class="dnd-chip" draggable="true" data-id="e1" tabindex="0">Der Algorithmus beginnt.</span>
+                <span class="dnd-chip" draggable="true" data-id="e4" tabindex="0">Es wird eine Nutzerausgabe „T-Shirt anziehen“ getätigt.</span>
               </div>
               <div class="dnd-zones">
                 <div class="dnd-zone" data-correct="e1"><span class="dnd-nr">1</span><div class="dnd-slot"><span class="dnd-platz">hierher ziehen</span></div></div>
@@ -1368,7 +1368,7 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
                 <div class="hilfe-text">
-                  <p>4.1: 1 – Der Ablauf beginnt. · 2 – Der Variablen temperatur wird der Wert 25 zugewiesen. · 3 – Es wird geprüft, ob die Temperatur größer als 20 ist. · 4 – Ist die Bedingung True, wird „T-Shirt anziehen“ ausgegeben. · 5 – Ist die Bedingung False, wird „Jacke anziehen“ ausgegeben. · 6 – Der Ablauf endet.</p>
+                  <p>4.1: 1 – Der Algorithmus beginnt. · 2 – Die Variable temperatur wird mit dem Variablenwert 25 belegt. · 3 – Es wird geprüft, ob der Variablenwert der Variable temperatur über 20 ist. · 4 – Es wird eine Nutzerausgabe „T-Shirt anziehen“ getätigt. · 5 – Es wird eine Nutzerausgabe „Jacke anziehen“ getätigt. · 6 – Der Algorithmus wird beendet.</p>
                   <p>Übrig bleibt „Die Anweisung wird wiederholt …“ — das beschreibt eine <strong>Schleife</strong>, dieser PAP enthält aber nur eine <strong>Verzweigung</strong>.</p>
                   <p>4.2: Es erscheint „Jacke anziehen“. <code>20 &gt; 20</code> ist <code>False</code>, weil 20 nicht echt größer als 20 ist. Deshalb läuft der False-Zweig.</p>
                 </div>
