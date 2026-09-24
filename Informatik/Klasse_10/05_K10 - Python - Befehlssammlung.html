@@ -192,7 +192,7 @@ a{color:var(--accent);font-weight:600;}
 .pap-diagramm svg{display:block;width:100%;height:auto;}
 .pap-diagramm.breit{max-width:580px;}
 
-/* ── Algorithmische Grundlagen: Erklärung + Code links, PAP rechts ── */
+/* ── Algorithmische Grundstrukturen: Erklärung + Code links, PAP rechts ── */
 .algo-row{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;}
 .algo-text{flex:1 1 340px;min-width:0;}
 .algo-pap{flex:0 1 300px;max-width:100%;margin:10px auto 0;}
@@ -351,7 +351,7 @@ body.lehrermodus-aktiv .lehrer-nur-aktiv{display:inline-block;}
     <a class="toc-link" href="#kat-algorithmus">Eigenschaften eines Algorithmus</a>
     <a class="toc-link" href="#kat-variablen">Variablen</a>
     <a class="toc-link" href="#kat-datentypen">Datentypen</a>
-    <a class="toc-link" href="#kat-algogrund">Algorithmische Grundlagen</a>
+    <a class="toc-link" href="#kat-algogrund">Algorithmische Grundstrukturen</a>
     <span class="toc-link leer">+ weitere Kategorien folgen</span>
   </nav>
 
@@ -635,16 +635,16 @@ print(meine_liste.count("Apfel"))</div>
     </section>
 
     <!-- ============================================================
-         KATEGORIE: Algorithmische Grundlagen
+         KATEGORIE: Algorithmische Grundstrukturen
          ============================================================ -->
     <section class="kategorie" id="kat-algogrund">
-      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Algorithmische Grundlagen <span class="tag-neu">❗ Neu</span></h2><span class="acc-icon">▼</span></button>
+      <button class="kategorie-head" onclick="toggleKategorie(this)"><h2>Algorithmische Grundstrukturen <span class="tag-neu">❗ Neu</span></h2><span class="acc-icon">▼</span></button>
       <div class="kategorie-body">
 
       <p>Jeder Algorithmus lässt sich aus nur drei Grundbausteinen zusammensetzen: <strong>Sequenz</strong>, <strong>Verzweigung</strong> und <strong>Schleife</strong>.</p>
 
       <!-- ---------- Sequenz ---------- -->
-      <div class="card" id="def-sequenz" data-suchtext="sequenz folge anweisungen nacheinander reihenfolge algorithmische grundlagen kontrollstruktur">
+      <div class="card" id="def-sequenz" data-suchtext="sequenz folge anweisungen nacheinander reihenfolge algorithmische grundstrukturen grundlagen kontrollstruktur">
         <div class="card-head">
           <h3>Sequenz</h3>
           <span class="badge">Grundbaustein</span>
@@ -690,7 +690,7 @@ print(gesamt)            # 4. Ergebnis ausgeben</div>
       </div>
 
       <!-- ---------- Verzweigung ---------- -->
-      <div class="card" id="def-verzweigung" data-suchtext="verzweigung if else bedingung entscheidung true false algorithmische grundlagen kontrollstruktur">
+      <div class="card" id="def-verzweigung" data-suchtext="verzweigung if else bedingung entscheidung true false algorithmische grundstrukturen grundlagen kontrollstruktur">
         <div class="card-head">
           <h3>Verzweigung <code>if</code> / <code>else</code></h3>
           <span class="badge">Grundbaustein</span>
@@ -724,7 +724,7 @@ else:                          # sonst ...
               <text x="120" y="99" text-anchor="middle" font-size="12" fill="var(--text)">alter = 16</text>
               <line x1="120" y1="114" x2="120" y2="136" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
               <polygon points="120,138 200,181 120,224 40,181" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
-              <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &gt;= 18 ?</text>
+              <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &gt;= 18</text>
               <line x1="200" y1="181" x2="238" y2="181" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-2)"/>
               <text x="219" y="173" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
               <polygon points="256,161 410,161 394,201 240,201" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
@@ -743,7 +743,7 @@ else:                          # sonst ...
       </div>
 
       <!-- ---------- Schleife ---------- -->
-      <div class="card" id="def-schleife" data-suchtext="schleife while wiederholung wiederholen bedingung zähler zaehler algorithmische grundlagen kontrollstruktur">
+      <div class="card" id="def-schleife" data-suchtext="schleife while wiederholung wiederholen bedingung zähler zaehler algorithmische grundstrukturen grundlagen kontrollstruktur">
         <div class="card-head">
           <h3>Schleife <code>while</code></h3>
           <span class="badge">Grundbaustein</span>
@@ -778,7 +778,7 @@ print("Fertig")            # läuft erst, wenn die Bedingung False ist</div>
               <text x="130" y="99" text-anchor="middle" font-size="12" fill="var(--text)">zaehler = 1</text>
               <line x1="130" y1="114" x2="130" y2="140" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
               <polygon points="130,142 215,187 130,232 45,187" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
-              <text x="130" y="191" text-anchor="middle" font-size="11" fill="var(--text)">zaehler &lt;= 3 ?</text>
+              <text x="130" y="191" text-anchor="middle" font-size="11" fill="var(--text)">zaehler &lt;= 3</text>
               <line x1="130" y1="232" x2="130" y2="262" stroke="var(--accent)" stroke-width="2" marker-end="url(#algo-arrow-3)"/>
               <text x="152" y="251" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
               <polygon points="66,264 214,264 194,304 46,304" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
@@ -1498,7 +1498,7 @@ print(v)</div>
                 <text x="120" y="99" text-anchor="middle" font-size="12" fill="var(--text)">alter = 12</text>
                 <line x1="120" y1="114" x2="120" y2="136" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
                 <polygon points="120,138 200,181 120,224 40,181" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
-                <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &lt; 14 ?</text>
+                <text x="120" y="185" text-anchor="middle" font-size="11" fill="var(--text)">alter &lt; 14</text>
                 <line x1="200" y1="181" x2="238" y2="181" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-6)"/>
                 <text x="219" y="173" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
                 <rect x="240" y="161" width="150" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
