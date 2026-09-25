@@ -221,6 +221,12 @@ a{color:var(--accent);font-weight:600;}
 .dnd-fb{font-weight:600;}
 .dnd-fb.ok{color:var(--ok);} .dnd-fb.err{color:var(--err);}
 
+/* ── Externer Link (z. B. draw.io) ── */
+.extern-link{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;
+  border-radius:8px;padding:7px 14px;font-size:var(--fs-sm);}
+.extern-link:hover{background:var(--accent-hover);}
+.extern-link::after{content:" \2197";}
+
 /* ── Reiterübergreifende Suche ── */
 .suchbox .such-neu-btn{flex:0 0 auto;white-space:nowrap;}
 body.suchmodus .phase{display:block;}
@@ -1573,6 +1579,211 @@ print("Dein Ticket kostet", preis, "€")</div>
           </div></div>
         </div>
       </div>
+
+      <!-- ---------- Aufgabe 7 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>7. Der Schul-Login <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Beim Anmelden am Schulrechner wird zuerst geprüft, ob es den Benutzernamen gibt. Nur wenn das stimmt, wird anschließend das Passwort geprüft. Der Ablauf enthält also zwei <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="Verzweigung: prüft eine Bedingung und führt je nach True oder False einen von zwei Programmteilen aus.">Verzweigungen</a>, und in beiden werden zwei <a class="fach" href="#def-str" onclick="gotoBegriff(event,0,'def-str')" data-tip="String: speichert Text, steht immer in Anführungszeichen.">Strings</a> miteinander verglichen.</p>
+
+            <div class="pap-diagramm breit">
+              <svg viewBox="0 0 570 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP Schul-Login: Start, benutzername und passwort festlegen, erste Verzweigung benutzername gleich mia; False: Ausgabe Benutzer unbekannt; True: zweite Verzweigung passwort gleich Info123; True: Ausgabe Willkommen, Mia; False: Ausgabe Falsches Passwort; alle Wege führen zum Ende">
+                <defs><marker id="uebung-pap-arrow-7" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                <rect x="90" y="10" width="140" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="160" y="35" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                <line x1="160" y1="50" x2="160" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <rect x="40" y="72" width="240" height="54" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="160" y="94" text-anchor="middle" font-size="12" fill="var(--text)">benutzername = "mia"</text>
+                <text x="160" y="114" text-anchor="middle" font-size="12" fill="var(--text)">passwort = "Info123"</text>
+                <line x1="160" y1="126" x2="160" y2="146" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <polygon points="160,148 270,196 160,244 50,196" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="160" y="200" text-anchor="middle" font-size="11" fill="var(--text)">benutzername == "mia"</text>
+                <line x1="270" y1="196" x2="316" y2="196" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <text x="293" y="188" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                <polygon points="338,176 550,176 530,216 318,216" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="434" y="200" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Benutzer unbekannt")</text>
+                <line x1="160" y1="244" x2="160" y2="276" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <text x="182" y="264" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                <polygon points="160,278 270,326 160,374 50,326" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="160" y="330" text-anchor="middle" font-size="11" fill="var(--text)">passwort == "Info123"</text>
+                <line x1="270" y1="326" x2="316" y2="326" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <text x="293" y="318" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                <polygon points="338,306 550,306 530,346 318,346" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="434" y="330" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Falsches Passwort")</text>
+                <line x1="160" y1="374" x2="160" y2="406" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <text x="182" y="394" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                <polygon points="70,408 270,408 250,448 50,448" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="160" y="432" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Willkommen, Mia!")</text>
+                <line x1="434" y1="346" x2="434" y2="488" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <polyline points="540,196 560,196 560,510 496,510" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <polyline points="160,448 160,510 372,510" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-7)"/>
+                <rect x="374" y="490" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="434" y="515" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+              </svg>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">7.1</span>Implementiere den Programmablaufplan in Python. Achte darauf, an welcher Stelle die zweite Verzweigung beginnt.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">7.2</span>Teste dein Programm so, dass jede der drei Ausgaben genau einmal erscheint. Notiere für jeden Test die Werte von <code>benutzername</code> und <code>passwort</code>, die du verwendet hast.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">7.3</span>Setze <code>passwort = "info123"</code> (kleines i). Welche Ausgabe erscheint? Erkläre, was das über den Vergleich von Strings in Python aussagt, und warum das bei Passwörtern sinnvoll ist.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> zwei ineinander liegende Verzweigungen implementieren und Strings mit <code>==</code> vergleichen. Aufgabe 7.3 zeigt, dass Python beim Vergleich Groß- und Kleinschreibung unterscheidet.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a7">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Im PAP gibt es zwei Rauten, also brauchst du zwei <code>if</code>-Anweisungen. Die zweite Raute liegt im <strong>True-Zweig</strong> der ersten. Deshalb steht das zweite <code>if</code> eingerückt <strong>innerhalb</strong> des ersten.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Strings stehen immer in Anführungszeichen, verglichen wird mit <code>==</code> (zwei Gleichheitszeichen). Das Gerüst sieht so aus:<div class="code">if benutzername == "mia":
+    if passwort == "Info123":
+        ...
+    else:
+        ...
+else:
+    ...</div>Jede Ebene wird um 4 Leerzeichen weiter eingerückt.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zu 7.2: Für „Benutzer unbekannt“ reicht ein anderer Benutzername, das Passwort ist dann egal. Für „Falsches Passwort“ muss der Benutzername stimmen, das Passwort aber nicht. Zu 7.3: Für Python ist <code>"i"</code> ein anderes Zeichen als <code>"I"</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><div class="code">benutzername = "mia"       # Sequenz: Werte festlegen
+passwort = "Info123"
+
+if benutzername == "mia":            # 1. Verzweigung: Gibt es den Benutzer?
+    if passwort == "Info123":        # 2. Verzweigung: Stimmt das Passwort?
+        print("Willkommen, Mia!")    # beide Bedingungen True
+    else:
+        print("Falsches Passwort")   # Benutzer stimmt, Passwort nicht
+else:
+    print("Benutzer unbekannt")      # Benutzer stimmt nicht</div>
+                  <p>7.2: z. B. <code>"mia"</code> / <code>"Info123"</code> → Willkommen, Mia! · <code>"mia"</code> / <code>"abc"</code> → Falsches Passwort · <code>"tom"</code> / beliebig → Benutzer unbekannt.</p>
+                  <p>7.3: Es erscheint „Falsches Passwort“. Python vergleicht Strings Zeichen für Zeichen und unterscheidet dabei Groß- und Kleinschreibung: <code>"info123" == "Info123"</code> ist <code>False</code>. Bei Passwörtern ist das gewollt, weil es mehr mögliche Passwörter gibt und sie schwerer zu erraten sind.</p></div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Erstellen eines PaP
+         ============================================================ -->
+    <section class="kategorie" id="kat-uebung-pap-erstellen">
+      <h2>Erstellen eines PaP <span class="tag-neu">❗ Neu</span></h2>
+
+      <!-- ---------- Aufgabe 8 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>8. Der Getränkeautomat <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Ein Getränk aus dem Automaten in der Schulmensa kostet 1.50 €. Zuerst speichert der Automat den Preis und das Guthaben, das eingeworfen wurde, zum Beispiel 2.00 €. Danach prüft er, ob das Guthaben mindestens so groß ist wie der Preis. Ist das der Fall, berechnet er das Wechselgeld, zeigt „Getränk kommt“ an und gibt anschließend das Wechselgeld aus. Reicht das Guthaben nicht, zeigt er „Guthaben zu gering“ an. In beiden Fällen ist der Vorgang danach beendet.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">8.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
+              <p><a class="extern-link" href="https://app.diagrams.net/" target="_blank" rel="noopener noreferrer">draw.io öffnen (app.diagrams.net)</a></p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">8.2</span>Markiere in deinem PAP farbig, welche Teile eine <a class="fach" href="#def-sequenz" onclick="gotoBegriff(event,0,'def-sequenz')" data-tip="Sequenz: Anweisungen werden nacheinander von oben nach unten ausgeführt.">Sequenz</a> sind und wo die <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="Verzweigung: prüft eine Bedingung und führt je nach True oder False einen von zwei Programmteilen aus.">Verzweigung</a> liegt.</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">8.3</span>Implementiere deinen PAP in Python. Teste mit <code>guthaben = 2.00</code> und mit <code>guthaben = 1.00</code>.</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>So geht's in draw.io:</strong> Beim ersten Öffnen „Gerät“ als Speicherort wählen und „Leeres Diagramm“ erstellen. Die PAP-Symbole findest du links in der Formenbibliothek unter <strong>Flussdiagramm</strong>. Zum Abgeben über <strong>Datei → Exportieren als → PNG</strong> ein Bild speichern.</span></div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Situation in Alltagssprache in einen Programmablaufplan übertragen und darin Sequenz und Verzweigung erkennen.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a8">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Unterstreiche in der Situationsbeschreibung jede Tätigkeit und jede Entscheidung. Jede Tätigkeit wird zu einem eigenen PAP-Element. Überlege bei jedem, welche Form passt: Rechteck für eine Rechnung oder Zuweisung, Parallelogramm für eine Anzeige, Raute für eine Entscheidung.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Die Entscheidung „mindestens so groß wie“ wird zur Raute mit der Bedingung <code>guthaben &gt;= preis</code>. Beschrifte beide Ausgänge mit True und False. Beide Zweige müssen am Ende im <strong>selben</strong> Endsymbol ankommen, denn es gibt genau ein Start- und ein Endsymbol.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Die Reihenfolge lautet: Start → Preis und Guthaben festlegen → Raute → True-Zweig: Wechselgeld berechnen → „Getränk kommt“ anzeigen → Wechselgeld ausgeben. False-Zweig: „Guthaben zu gering“ anzeigen. Danach laufen beide Zweige ins Ende. Sequenzen sind der Anfang bis zur Raute und die drei Schritte im True-Zweig.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><div class="pap-diagramm">
+                  <svg viewBox="0 0 470 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Getränkeautomat: Start, preis und guthaben festlegen, Verzweigung guthaben größer gleich preis; True: wechselgeld berechnen, Ausgabe Getränk kommt, Ausgabe wechselgeld; False: Ausgabe Guthaben zu gering; Ende">
+                    <defs><marker id="uebung-pap-arrow-8" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                    <rect x="60" y="10" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="35" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                    <line x1="125" y1="50" x2="125" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <rect x="35" y="72" width="180" height="54" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="94" text-anchor="middle" font-size="12" fill="var(--text)">preis = 1.50</text>
+                    <text x="125" y="114" text-anchor="middle" font-size="12" fill="var(--text)">guthaben = 2.00</text>
+                    <line x1="125" y1="126" x2="125" y2="146" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <polygon points="125,148 215,194 125,240 35,194" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="198" text-anchor="middle" font-size="11" fill="var(--text)">guthaben &gt;= preis</text>
+                    <line x1="125" y1="240" x2="125" y2="270" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <text x="147" y="258" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <rect x="25" y="272" width="200" height="40" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="297" text-anchor="middle" font-size="11" fill="var(--text)">wechselgeld = guthaben - preis</text>
+                    <line x1="125" y1="312" x2="125" y2="332" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <polygon points="45,334 225,334 205,374 25,374" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="358" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Getränk kommt")</text>
+                    <line x1="125" y1="374" x2="125" y2="394" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <polygon points="45,396 225,396 205,436 25,436" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="420" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe(wechselgeld)</text>
+                    <line x1="215" y1="194" x2="250" y2="194" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <text x="236" y="186" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="270,174 466,174 448,214 252,214" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="359" y="198" text-anchor="middle" font-size="10.5" fill="var(--text)">Ausgabe("Guthaben zu gering")</text>
+                    <line x1="359" y1="214" x2="359" y2="478" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <polyline points="125,436 125,500 297,500" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#uebung-pap-arrow-8)"/>
+                    <rect x="299" y="480" width="120" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="359" y="505" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                  </svg>
+                  </div>
+                  <p>8.2: Sequenzen sind das Festlegen von Preis und Guthaben sowie die drei aufeinanderfolgenden Schritte im True-Zweig. Die Verzweigung ist die Raute <code>guthaben &gt;= preis</code>.</p>
+                  <div class="code">preis = 1.50                          # Sequenz: Werte festlegen
+guthaben = 2.00
+
+if guthaben &gt;= preis:                 # Verzweigung
+    wechselgeld = guthaben - preis    # True-Zweig: Sequenz aus drei Schritten
+    print("Getränk kommt")
+    print("Wechselgeld:", wechselgeld, "€")
+else:
+    print("Guthaben zu gering")       # False-Zweig</div>
+                  <p>8.3: Mit <code>guthaben = 2.00</code> erscheinen „Getränk kommt“ und „Wechselgeld: 0.5 €“, mit <code>guthaben = 1.00</code> erscheint „Guthaben zu gering“.</p></div>
+              </div>
+            </div>
+
+          </div></div>
+        </div>
+      </div>
+
     </section>
 
   </main>
