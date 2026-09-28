@@ -231,6 +231,34 @@ img{max-width:100%;height:auto;}
 .hefter-btn{margin-top:10px;}
 .hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
 
+/* ── hidden muss immer gewinnen (sonst überschreibt z. B. .callout{display:flex}
+   das hidden-Attribut und die Tipps sind sofort sichtbar) ── */
+[hidden]{display:none !important;}
+
+/* ── Zuordnung in Tabellenspalten (Drag & Drop + Antippen) ── */
+.gs-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;min-height:58px;background:var(--surface-2);
+  border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.gs-scroll{overflow-x:auto;margin:10px 0;}
+.gs-table{width:100%;min-width:560px;border-collapse:separate;border-spacing:6px 0;table-layout:fixed;}
+.gs-table th{background:var(--accent);color:#fff;font-size:var(--fs-base);font-weight:700;
+  padding:8px 6px;border-radius:8px 8px 0 0;text-align:center;}
+.gs-table th:last-child{background:var(--text-2);}
+.gs-zone{vertical-align:top;}
+.gs-table .gs-zone{height:230px;padding:8px 6px;background:var(--surface);border:1.5px solid var(--border);
+  border-top:none;border-radius:0 0 8px 8px;}
+.gs-table .gs-zone .gs-chip{display:block;margin-bottom:6px;text-align:center;}
+.gs-zone.dragover{background:var(--accent-light);border-color:var(--accent);}
+.gs-zone:focus-visible{outline:3px solid var(--accent-muted);outline-offset:2px;}
+.gs-chip{padding:6px 12px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  font-weight:600;font-size:var(--fs-base);cursor:grab;user-select:none;touch-action:none;}
+.gs-chip:hover{border-color:var(--accent-muted);}
+.gs-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px var(--accent-muted);}
+.gs-chip.dragging{opacity:.35;cursor:grabbing;}
+.gs-chip.gs-ok{border-color:var(--ok);background:var(--ok-bg);color:#166534;}
+.gs-chip.gs-err{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.gs-chip.gs-ok::after{content:" ✓";} .gs-chip.gs-err::after{content:" ✗";}
+.gs-ghost{position:fixed;z-index:50;pointer-events:none;opacity:.9;box-shadow:var(--shadow-md);}
+
 /* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
 @media print{
   body{background:#fff;padding:0;}
@@ -332,6 +360,15 @@ img{max-width:100%;height:auto;}
 <body>
 <div class="wrap">
 
+  <div class="teachbar" id="teachbar" data-pw="Ü_ERD01">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+
   <header class="pagehead">
     <div class="eyebrow">Klasse 9 · LB1</div>
     <h1>ER-Modell: Die Rechnerverwaltung der Schule</h1>
@@ -347,7 +384,7 @@ img{max-width:100%;height:auto;}
     <h2>ER-Modell erstellen</h2>
     <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
     <div class="card" style="background:var(--surface-2);border-style:dashed;">
-      <p>Der Informatikkurs soll für das Gymnasium eine Datenbank zur Verwaltung der Computer entwickeln. Erfasst werden <strong>Räume</strong>, <strong>Rechner</strong> und <strong>Wartungen</strong>.</p>
+      <p>Der Informatikkurs soll für das Gymnasium eine Datenbank zur Verwaltung der Computer entwickeln. Erfasst werden Räume, Rechner und Wartungen.</p>
       <p>Von jedem Raum sollen die Raumbezeichnung, die Etage und die Anzahl der Sitzplätze gespeichert werden. Jeder Raum hat eine eindeutige Raum-ID.</p>
       <p>Zu jedem Rechner werden das Modell, das Betriebssystem und das Anschaffungsjahr gespeichert. Auch jeder Rechner hat eine eindeutige Rechner-ID.</p>
       <p>Zu jeder Wartung werden das Datum, eine Beschreibung der durchgeführten Arbeiten und die Dauer in Minuten gespeichert. Jede Wartung hat eine eindeutige Wartungs-ID.</p>
@@ -364,22 +401,41 @@ img{max-width:100%;height:auto;}
 
     <div class="subphase on" id="ph0-sub-1">
       <h3>Teil 1 · Attribute der richtigen Tabelle zuordnen</h3>
-      <p>Bevor du zeichnest: Markiere im folgenden Kasten alle Wörter, die Attribute der Tabelle <strong>Rechner</strong> sind (nicht von Raum oder Wartung).</p>
-      <div class="baustein" data-type="mark" id="mark-rechner-attribute">
-        <p class="mark-text">
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Modell</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Etage</span>
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Betriebssystem</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Dauer_Min</span>
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Anschaffungsjahr</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Sitzplätze</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Beschreibung</span>
-        </p>
-        <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+      <p>Bevor du zeichnest: Ziehe jedes Kärtchen in die Spalte der Entität, zu der es gehört. Drei Kärtchen stehen gar nicht im Text — sie kommen in die letzte Spalte. Ohne Maus: Kärtchen antippen, dann die Spalte antippen.</p>
+      <div class="gs" id="gs-attribute">
+        <div class="gs-pool gs-zone" data-zone="pool" tabindex="0" aria-label="Ablage für noch nicht zugeordnete Kärtchen">
+          <span class="gs-chip" data-group="raum">Raum-ID</span>
+          <span class="gs-chip" data-group="raum">Raumbezeichnung</span>
+          <span class="gs-chip" data-group="raum">Etage</span>
+          <span class="gs-chip" data-group="raum">Anzahl der Sitzplätze</span>
+          <span class="gs-chip" data-group="rechner">Rechner-ID</span>
+          <span class="gs-chip" data-group="rechner">Modell</span>
+          <span class="gs-chip" data-group="rechner">Betriebssystem</span>
+          <span class="gs-chip" data-group="rechner">Anschaffungsjahr</span>
+          <span class="gs-chip" data-group="wartung">Wartungs-ID</span>
+          <span class="gs-chip" data-group="wartung">Datum</span>
+          <span class="gs-chip" data-group="wartung">Beschreibung</span>
+          <span class="gs-chip" data-group="wartung">Dauer</span>
+          <span class="gs-chip" data-group="keine">Hersteller</span>
+          <span class="gs-chip" data-group="keine">Kosten</span>
+          <span class="gs-chip" data-group="keine">Name des Technikers</span>
+        </div>
+        <div class="gs-scroll">
+          <table class="gs-table">
+            <thead><tr><th>Räume</th><th>Rechner</th><th>Wartungen</th><th>❌ steht nicht im Text</th></tr></thead>
+            <tbody><tr>
+              <td class="gs-zone" data-zone="raum" tabindex="0" aria-label="Spalte Räume"></td>
+              <td class="gs-zone" data-zone="rechner" tabindex="0" aria-label="Spalte Rechner"></td>
+              <td class="gs-zone" data-zone="wartung" tabindex="0" aria-label="Spalte Wartungen"></td>
+              <td class="gs-zone gs-zone-none" data-zone="keine" tabindex="0" aria-label="Spalte steht nicht im Text"></td>
+            </tr></tbody>
+          </table>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="gsCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb" aria-live="polite"></div>
       </div>
-      <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Tabelle — er steht nicht ausdrücklich als „Attribut" im Text, wird aber in jedem Satz erwähnt (…„hat eine eindeutige …-ID").</span></div>
+      <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
 
@@ -425,47 +481,69 @@ img{max-width:100%;height:auto;}
         <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Die Kette lautet Raum 1:n Rechner 1:n Wartung. Der Fremdschlüssel RaumID steht in der Tabelle Rechner, der Fremdschlüssel RechnerID steht in der Tabelle Wartung.</span></div>
       </div>
 
-      <div class="teachbar" id="teachbar" data-pw="Ü_ERD01">
-        <span class="teachbar-label">Lehrermodus</span>
-        <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort"
-               onkeydown="if(event.key==='Enter'){teachActivate();}">
-        <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
-        <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
-        <span class="teachbar-status" id="teachbar-status">inaktiv</span>
-      </div>
-
       <div class="lehrer-only" hidden>
         <div class="card" style="background:var(--surface-2);">
-          <h3>Musterlösung</h3>
-          <svg viewBox="0 0 720 210" width="100%" height="auto" role="img" aria-label="ER-Modell: Raum 1:n Rechner 1:n Wartung">
-            <rect x="10" y="60" width="180" height="90" rx="8" fill="#FFFFFF" stroke="#3F5E8C" stroke-width="2"/>
-            <text x="100" y="82" text-anchor="middle" font-family="monospace" font-weight="700" fill="#33475B">Raum</text>
-            <text x="100" y="104" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B" text-decoration="underline">RaumID</text>
-            <text x="100" y="122" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">Raumbezeichnung</text>
-            <text x="100" y="138" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">Etage, Sitzplätze</text>
-
-            <rect x="270" y="60" width="180" height="90" rx="8" fill="#FFFFFF" stroke="#3F5E8C" stroke-width="2"/>
-            <text x="360" y="82" text-anchor="middle" font-family="monospace" font-weight="700" fill="#33475B">Rechner</text>
-            <text x="360" y="104" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B" text-decoration="underline">RechnerID</text>
-            <text x="360" y="122" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">Modell, Betriebssystem</text>
-            <text x="360" y="138" text-anchor="middle" font-family="monospace" font-size="11" fill="#33475B">Anschaffungsjahr, RaumID*</text>
-
-            <rect x="530" y="60" width="180" height="90" rx="8" fill="#FFFFFF" stroke="#3F5E8C" stroke-width="2"/>
-            <text x="620" y="82" text-anchor="middle" font-family="monospace" font-weight="700" fill="#33475B">Wartung</text>
-            <text x="620" y="104" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B" text-decoration="underline">WartungsID</text>
-            <text x="620" y="122" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">Datum, Beschreibung</text>
-            <text x="620" y="138" text-anchor="middle" font-family="monospace" font-size="11" fill="#33475B">Dauer_Min, RechnerID*</text>
-
-            <line x1="190" y1="105" x2="270" y2="105" stroke="#33475B" stroke-width="2"/>
-            <text x="200" y="98" font-family="monospace" font-size="13" fill="#33475B">1</text>
-            <text x="255" y="98" font-family="monospace" font-size="13" fill="#33475B">n</text>
-            <text x="230" y="180" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">beherbergt</text>
-
-            <line x1="450" y1="105" x2="530" y2="105" stroke="#33475B" stroke-width="2"/>
-            <text x="460" y="98" font-family="monospace" font-size="13" fill="#33475B">1</text>
-            <text x="515" y="98" font-family="monospace" font-size="13" fill="#33475B">n</text>
-            <text x="490" y="180" text-anchor="middle" font-family="monospace" font-size="12" fill="#33475B">wird gewartet</text>
-          </svg>
+          <h3>Musterlösung ER-Modell</h3>
+          <svg viewBox="0 0 800 570" width="100%" role="img" aria-label="ER-Modell in Chen-Notation: Räume 1 zu n Rechner über die Beziehung stehen, Rechner 1 zu n Wartungen über die Beziehung wird gewartet">
+<rect x="0" y="0" width="800" height="570" fill="#FFFFFF"/>
+<line x1="310" y1="202" x2="358" y2="202" stroke="#111111" stroke-width="1.3"/>
+<line x1="438" y1="202" x2="488" y2="202" stroke="#111111" stroke-width="1.3"/>
+<line x1="548" y1="232" x2="548" y2="262" stroke="#111111" stroke-width="1.3"/>
+<line x1="548" y1="362" x2="548" y2="402" stroke="#111111" stroke-width="1.3"/>
+<line x1="225" y1="172" x2="165" y2="118" stroke="#111111" stroke-width="1.3"/>
+<line x1="275" y1="172" x2="335" y2="96" stroke="#111111" stroke-width="1.3"/>
+<line x1="190" y1="222" x2="140" y2="256" stroke="#111111" stroke-width="1.3"/>
+<line x1="262" y1="232" x2="272" y2="272" stroke="#111111" stroke-width="1.3"/>
+<line x1="553" y1="172" x2="560" y2="120" stroke="#111111" stroke-width="1.3"/>
+<line x1="608" y1="184" x2="668" y2="134" stroke="#111111" stroke-width="1.3"/>
+<line x1="608" y1="198" x2="660" y2="190" stroke="#111111" stroke-width="1.3"/>
+<line x1="608" y1="222" x2="660" y2="252" stroke="#111111" stroke-width="1.3"/>
+<line x1="488" y1="428" x2="466" y2="432" stroke="#111111" stroke-width="1.3"/>
+<line x1="488" y1="450" x2="420" y2="492" stroke="#111111" stroke-width="1.3"/>
+<line x1="548" y1="462" x2="548" y2="510" stroke="#111111" stroke-width="1.3"/>
+<line x1="608" y1="452" x2="652" y2="472" stroke="#111111" stroke-width="1.3"/>
+<rect x="190.0" y="172.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
+<text x="250" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Räume</text>
+<rect x="488.0" y="172.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
+<text x="548" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Rechner</text>
+<rect x="488.0" y="402.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
+<text x="548" y="437" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Wartungen</text>
+<polygon points="398,162 438,202 398,242 358,202" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
+<text x="398" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">stehen</text>
+<polygon points="548,262 606,312 548,362 490,312" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
+<text x="548" y="317" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">wird gewartet</text>
+<text x="336" y="192" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">1</text>
+<text x="466" y="192" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">n</text>
+<text x="566" y="252" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">1</text>
+<text x="566" y="392" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">n</text>
+<ellipse cx="150" cy="98" rx="66" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="150" y="103" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Raumbezeichnung</text>
+<ellipse cx="362" cy="78" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="362" y="83" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Etage</text>
+<ellipse cx="102" cy="268" rx="80" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="102" y="273" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Anzahl der Sitzplätze</text>
+<ellipse cx="278" cy="296" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="278" y="301" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Raum-ID</text>
+<line x1="252.8" y1="304" x2="303.2" y2="304" stroke="#111111" stroke-width="1"/>
+<ellipse cx="563" cy="98" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="563" y="103" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Modell</text>
+<ellipse cx="718" cy="118" rx="62" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="718" y="123" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Betriebssystem</text>
+<ellipse cx="713" cy="190" rx="56" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="713" y="195" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Rechner-ID</text>
+<line x1="677.0" y1="198" x2="749.0" y2="198" stroke="#111111" stroke-width="1"/>
+<ellipse cx="713" cy="268" rx="74" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="713" y="273" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Anschaffungsjahr</text>
+<ellipse cx="393" cy="437" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="393" y="442" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Beschreibung</text>
+<ellipse cx="373" cy="512" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="373" y="517" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Dauer</text>
+<ellipse cx="548" cy="532" rx="76" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="548" y="537" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Wartungs-ID</text>
+<line x1="508.4" y1="540" x2="587.6" y2="540" stroke="#111111" stroke-width="1"/>
+<ellipse cx="703" cy="490" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
+<text x="703" y="495" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Datum</text>
+</svg>
           <div class="callout callout-success">✅ <span><strong>Relationenmodell:</strong> Raum(<u>RaumID</u>, Raumbezeichnung, Etage, Sitzplätze) · Rechner(<u>RechnerID</u>, Modell, Betriebssystem, Anschaffungsjahr, <i>RaumID</i>) · Wartung(<u>WartungsID</u>, Datum, Beschreibung, Dauer_Min, <i>RechnerID</i>)</span></div>
         </div>
       </div>
@@ -650,6 +728,8 @@ function teachSetUI(active){
   const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
   const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
   document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.documentElement.classList.toggle('teach-on',active);
+  hilfeRefresh();   /* Lehrermodus zeigt alle Tipps sofort, Deaktivieren stellt den Timer-Zustand wieder her */
 }
 function teachActivate(){
   const bar=document.getElementById('teachbar'); if(!bar)return;
@@ -675,19 +755,33 @@ function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
 }
+function teachOn(){ return document.documentElement.classList.contains('teach-on'); }
 function hilfeTick(box, requestedAt){
   const status=box.querySelector('.hilfe-status');
   const stufen=[...box.querySelectorAll('.hilfe-stufe')];
   const elapsedMin=(Date.now()-requestedAt)/60000;
   let next=null;
   stufen.forEach(s=>{
-    const min=parseFloat(s.dataset.min);
-    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+    const min=parseFloat(s.dataset.min), frei=elapsedMin>=min;
+    s.hidden = !(frei || teachOn());
+    if(!frei && (next===null || min<next)){ next=min; }
   });
-  if(status) status.textContent = (next!==null)
-    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
-    : 'Alle Tipps freigeschaltet.';
-  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+  if(status){ status.hidden=false; status.textContent = teachOn() ? 'Lehrermodus: alle Tipps sichtbar.'
+    : (next!==null ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …') : 'Alle Tipps freigeschaltet.'); }
+  clearTimeout(box._hilfeT);
+  if(next!==null){ box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+/* Zustand aller Hilfe-Kästen neu setzen: vor dem Anfordern sind alle Tipps verborgen
+   (außer im Lehrermodus), danach entscheidet der Timer. */
+function hilfeRefresh(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(t){ hilfeTick(box, parseInt(t,10)); return; }
+    clearTimeout(box._hilfeT);
+    box.querySelectorAll('.hilfe-stufe').forEach(s=>{ s.hidden=!teachOn(); });
+    const status=box.querySelector('.hilfe-status');
+    if(status){ status.hidden=!teachOn(); status.textContent=teachOn()?'Lehrermodus: alle Tipps sichtbar.':''; }
+  });
 }
 function hilfeRequest(btn){
   const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
@@ -703,13 +797,76 @@ function initHilfe(){
     if(!t) return;
     box.dataset.requested='1';
     const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
-    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
-    hilfeTick(box, parseInt(t,10));
+  });
+  hilfeRefresh();
+}
+
+/* ---------- Zuordnung in Tabellenspalten ----------
+   Ziehen mit Maus/Finger (Pointer Events, klappt auch auf Tablets) oder
+   Kärtchen antippen und dann Spalte antippen; per Tastatur Enter/Leertaste. */
+function gsRoot(el){ return el.closest('.gs'); }
+function gsClear(g){ g.querySelectorAll('.gs-chip').forEach(c=>c.classList.remove('gs-ok','gs-err'));
+  const f=g.querySelector('.fb'); if(f){ f.textContent=''; f.className='fb grp-fb'; } }
+function gsSelect(chip){ const g=gsRoot(chip), was=chip.classList.contains('sel');
+  g.querySelectorAll('.gs-chip.sel').forEach(c=>c.classList.remove('sel')); if(!was) chip.classList.add('sel'); }
+function gsMove(chip,zone){ zone.appendChild(chip); chip.classList.remove('sel'); gsClear(gsRoot(chip)); }
+function gsZoneActivate(zone){ const sel=gsRoot(zone).querySelector('.gs-chip.sel'); if(sel) gsMove(sel,zone); }
+function gsCheck(btn){
+  const g=gsRoot(btn); let ok=0,total=0,left=0;
+  g.querySelectorAll('.gs-chip').forEach(c=>{ total++; const z=c.parentElement.dataset.zone;
+    c.classList.remove('gs-ok','gs-err','sel');
+    if(z==='pool'){ left++; return; }
+    if(z===c.dataset.group){ c.classList.add('gs-ok'); ok++; } else { c.classList.add('gs-err'); } });
+  const f=g.querySelector('.fb'), all=(ok===total);
+  f.textContent = all ? '🎉 Alles richtig zugeordnet!'
+    : (ok+' von '+total+' richtig'+(left?(', '+left+' Kärtchen noch nicht zugeordnet'):'')+'. Verschiebe die Kärtchen mit ✗ in eine andere Spalte.');
+  f.className='fb grp-fb '+(all?'ok':'err');
+}
+function gsReset(btn){ const g=gsRoot(btn), pool=g.querySelector('.gs-pool');
+  shuffle([...g.querySelectorAll('.gs-chip')]).forEach(c=>{ c.classList.remove('sel'); pool.appendChild(c); }); gsClear(g); }
+function initGs(g){
+  const pool=g.querySelector('.gs-pool');
+  shuffle([...pool.querySelectorAll('.gs-chip')]).forEach(c=>pool.appendChild(c));
+  g.querySelectorAll('.gs-chip').forEach(chip=>{
+    chip.tabIndex=0; chip.setAttribute('role','button');
+    chip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); gsSelect(chip); } });
+    chip.addEventListener('pointerdown',e=>{
+      if(e.button!==0) return;
+      const sx=e.clientX, sy=e.clientY; let ghost=null, over=null;
+      try{ chip.setPointerCapture(e.pointerId); }catch(err){}
+      const move=ev=>{
+        if(!ghost){
+          if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+          ghost=chip.cloneNode(true); ghost.classList.remove('sel','gs-ok','gs-err'); ghost.classList.add('gs-ghost');
+          ghost.style.width=chip.offsetWidth+'px'; document.body.appendChild(ghost); chip.classList.add('dragging');
+        }
+        ghost.style.left=(ev.clientX-chip.offsetWidth/2)+'px'; ghost.style.top=(ev.clientY-18)+'px';
+        const hit=document.elementFromPoint(ev.clientX,ev.clientY);
+        let z=hit?hit.closest('.gs-zone'):null; if(z && gsRoot(z)!==g) z=null;
+        if(over!==z){ if(over) over.classList.remove('dragover'); over=z; if(over) over.classList.add('dragover'); }
+      };
+      const up=ev=>{
+        chip.removeEventListener('pointermove',move); chip.removeEventListener('pointerup',up); chip.removeEventListener('pointercancel',up);
+        if(ghost){ ghost.remove(); chip.classList.remove('dragging');
+          if(over){ over.classList.remove('dragover'); if(ev.type==='pointerup') gsMove(chip,over); } }
+        else if(ev.type==='pointerup'){
+          const sel=g.querySelector('.gs-chip.sel');
+          if(sel && sel!==chip && sel.parentElement!==chip.parentElement){ gsMove(sel,chip.parentElement); }
+          else { gsSelect(chip); }
+        }
+      };
+      chip.addEventListener('pointermove',move); chip.addEventListener('pointerup',up); chip.addEventListener('pointercancel',up);
+    });
+  });
+  g.querySelectorAll('.gs-zone').forEach(zone=>{
+    zone.addEventListener('click',e=>{ if(e.target.closest('.gs-chip')) return; gsZoneActivate(zone); });
+    zone.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && e.target===zone){ e.preventDefault(); gsZoneActivate(zone); } });
   });
 }
 
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); initHilfe(); }
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); initHilfe();
+  document.querySelectorAll('.gs').forEach(initGs); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */

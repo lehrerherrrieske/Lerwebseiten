@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Klasse 9 · LB1 · ER-Modell: Die Rechnerverwaltung der Schule</title>
+<title>Klasse 9 · LB1 · Vom Text zum ER-Diagramm</title>
 <style>
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
@@ -198,31 +198,6 @@ img{max-width:100%;height:auto;}
   line-height:1.7;transition:padding .28s ease;}
 .acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
 
-/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
-   damit sie auf jeder Seite exakt gleich aussieht ── */
-.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
-  background:var(--color-bg-warm);border:1.5px solid var(--border);
-  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
-.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
-.teachbar-label{font-weight:700;color:var(--text);}
-.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
-  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
-.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
-.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
-.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
-  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
-.teachbar-on:hover{background:#283A4B;}
-.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
-  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
-.teachbar-off:hover{background:var(--surface-2);}
-.teachbar-status{font-weight:700;margin-left:auto;}
-.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
-
-/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
-.hilfe-box{margin:12px 0;}
-.hilfe-box .hilfe-stufe{margin-top:8px;}
-.hilfe-status{display:block;margin-top:6px;}
-
 /* ── Heftereintrag ── */
 .hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
   padding:14px 16px;background:var(--accent-light);margin:12px 0;}
@@ -231,42 +206,12 @@ img{max-width:100%;height:auto;}
 .hefter-btn{margin-top:10px;}
 .hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
 
-/* ── hidden muss immer gewinnen (sonst überschreibt z. B. .callout{display:flex}
-   das hidden-Attribut und die Tipps sind sofort sichtbar) ── */
-[hidden]{display:none !important;}
-
-/* ── Zuordnung in Tabellenspalten (Drag & Drop + Antippen) ── */
-.gs-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;min-height:58px;background:var(--surface-2);
-  border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
-.gs-scroll{overflow-x:auto;margin:10px 0;}
-.gs-table{width:100%;min-width:560px;border-collapse:separate;border-spacing:6px 0;table-layout:fixed;}
-.gs-table th{background:var(--accent);color:#fff;font-size:var(--fs-base);font-weight:700;
-  padding:8px 6px;border-radius:8px 8px 0 0;text-align:center;}
-.gs-table th:last-child{background:var(--text-2);}
-.gs-zone{vertical-align:top;}
-.gs-table .gs-zone{height:230px;padding:8px 6px;background:var(--surface);border:1.5px solid var(--border);
-  border-top:none;border-radius:0 0 8px 8px;}
-.gs-table .gs-zone .gs-chip{display:block;margin-bottom:6px;text-align:center;}
-.gs-zone.dragover{background:var(--accent-light);border-color:var(--accent);}
-.gs-zone:focus-visible{outline:3px solid var(--accent-muted);outline-offset:2px;}
-.gs-chip{padding:6px 12px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
-  font-weight:600;font-size:var(--fs-base);cursor:grab;user-select:none;touch-action:none;}
-.gs-chip:hover{border-color:var(--accent-muted);}
-.gs-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px var(--accent-muted);}
-.gs-chip.dragging{opacity:.35;cursor:grabbing;}
-.gs-chip.gs-ok{border-color:var(--ok);background:var(--ok-bg);color:#166534;}
-.gs-chip.gs-err{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
-.gs-chip.gs-ok::after{content:" ✓";} .gs-chip.gs-err::after{content:" ✗";}
-.gs-ghost{position:fixed;z-index:50;pointer-events:none;opacity:.9;box-shadow:var(--shadow-md);}
-
 /* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
 @media print{
   body{background:#fff;padding:0;}
   .phase{display:block !important;} .subphase{display:block !important;}
   .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
   .sol{display:block !important;}
-  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
-  .lehrer-only{display:block !important;}
   .card,.pagehead{box-shadow:none;break-inside:avoid;}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
@@ -291,12 +236,10 @@ img{max-width:100%;height:auto;}
 
 /* Zuordnung Begriff ↔ Definition */
 .m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
-.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:pointer;user-select:none;}
 .m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
 .m-chip.used{opacity:.3;pointer-events:none;}
-.m-chip.dragging{opacity:.35;cursor:grabbing;}
 .m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);}
-.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
 .m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
 .m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
 .m-def{font-size:var(--fs-sm);color:var(--text-2);}
@@ -304,10 +247,8 @@ img{max-width:100%;height:auto;}
 
 /* Reihenfolge sortieren */
 .sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
-.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;}
+.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;}
 .sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
-.sort-item.dragging{opacity:.35;cursor:grabbing;}
-.sort-btns{cursor:auto;}
 .sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
 
 /* Wörter markieren */
@@ -355,207 +296,1231 @@ img{max-width:100%;height:auto;}
 .ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
 .ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
 
+
+/* ── Ergänzungen für diese Seite ── */
+.tab{border-collapse:collapse;width:100%;margin:10px 0;background:var(--surface);}
+.tab th,.tab td{border:1px solid var(--border);padding:6px 9px;text-align:left;color:var(--text-2);vertical-align:top;}
+.tab th{background:var(--surface-2);color:var(--text);font-weight:700;}
+.miniwelt{background:var(--surface-2);border-left:4px solid var(--accent-muted);
+  border-radius:0 var(--radius) var(--radius) 0;padding:12px 18px;margin:14px 0;}
+.miniwelt ul{margin:6px 0 0 20px;} .miniwelt li{margin:6px 0;color:var(--text-2);}
+.fig{margin:16px 0;text-align:center;}
+.fig svg{max-width:100%;height:auto;}
+.task{border:1.5px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);
+  padding:12px 16px;margin:16px 0;background:var(--surface);}
+.task-h{font-weight:700;color:var(--accent-hover);margin-bottom:6px;}
+.steps{margin:8px 0 8px 22px;} .steps li{margin:7px 0;color:var(--text-2);}
+.fc-card:focus{outline:3px solid var(--accent-muted);outline-offset:2px;}
+
+
+/* ── Nachträge ── */
+.fc-card{width:100%;max-width:460px;height:auto;min-height:120px;padding:16px 20px;
+  font-family:var(--font-body);font-size:var(--fs-lg);line-height:1.5;text-align:center;
+  overflow-wrap:anywhere;margin-left:auto;margin-right:auto;}
+.fc-face{display:block;}
+.fc-controls{justify-content:center;}
+.btn:disabled{opacity:.55;cursor:default;}
+.btn:disabled:hover{background:transparent;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="teachbar" id="teachbar" data-pw="Ü_ERD01">
-    <span class="teachbar-label">Lehrermodus</span>
-    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort"
-           onkeydown="if(event.key==='Enter'){teachActivate();}">
-    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
-    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
-    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
-  </div>
-
   <header class="pagehead">
     <div class="eyebrow">Klasse 9 · LB1</div>
-    <h1>ER-Modell: Die Rechnerverwaltung der Schule</h1>
-    <div class="goal">🎯 Die Lernenden erstellen ein ER-Modell mit drei Entitäten, indem sie aus einem Text Entitäten, Attribute und Kardinalitäten ohne m:n-Beziehung ableiten.</div>
+    <h1>Vom Text zum ER-Diagramm</h1>
+    <div class="goal">🎯 Die Lernenden entwerfen zu einem beschreibenden Text ein ER-Diagramm, indem sie Entitäten mit ihrem Primärschlüssel und deren Attribute bestimmen, Beziehungen benennen und die Kardinalitäten festlegen.</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
-  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Aufgabe</span>ER-Modell erstellen</button>
+    <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Eine Tabelle für alles?</button>
+    <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Bausteine des ER-Diagramms</button>
+    <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Formen und Kardinalität</button>
+    <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Phase 3</span>Übung: Turniertag</button>
+    <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Werkzeug</span>Zeichnen mit draw.io</button>
+    <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Sicherung</span>Exit-Ticket</button>
   </nav>
 
+<!-- ============================================================ EINSTIEG -->
 <section class="phase on" id="ph0">
   <div class="card">
-    <h2>ER-Modell erstellen</h2>
-    <!-- Hook: bleibt immer sichtbar, steht VOR dem Stepper -->
-    <div class="card" style="background:var(--surface-2);border-style:dashed;">
-      <p>Der Informatikkurs soll für das Gymnasium eine Datenbank zur Verwaltung der Computer entwickeln. Erfasst werden Räume, Rechner und Wartungen.</p>
-      <p>Von jedem Raum sollen die Raumbezeichnung, die Etage und die Anzahl der Sitzplätze gespeichert werden. Jeder Raum hat eine eindeutige Raum-ID.</p>
-      <p>Zu jedem Rechner werden das Modell, das Betriebssystem und das Anschaffungsjahr gespeichert. Auch jeder Rechner hat eine eindeutige Rechner-ID.</p>
-      <p>Zu jeder Wartung werden das Datum, eine Beschreibung der durchgeführten Arbeiten und die Dauer in Minuten gespeichert. Jede Wartung hat eine eindeutige Wartungs-ID.</p>
-      <p>In einem Raum können beliebig viele Rechner stehen, aber jeder Rechner steht in genau einem Raum. Ein Rechner kann im Laufe der Zeit beliebig oft gewartet werden, aber jede Wartung wird an genau einem Rechner durchgeführt.</p>
-    </div>
-    <div class="callout">📐 <span><strong>Auftrag:</strong> Erstelle auf Papier oder in einem <span class="tt" data-tip="z. B. draw.io, Lucidchart oder ein ER-Tool deiner Wahl">ER-Editor</span> ein vollständiges ER-Modell zu diesem Text: alle drei <span class="tt" data-tip="Ein Ding, über das Daten gespeichert werden, z. B. eine Tabelle">Entitäten</span> mit Primärschlüssel und Attributen, sowie beide Beziehungen mit ihrer <span class="tt" data-tip="Gibt an, wie viele Datensätze der einen Seite zu wie vielen Datensätzen der anderen Seite gehören">Kardinalität</span>. Die Bausteine unten helfen dir dabei, bevor du dein Modell zeichnest.</span></div>
+    <h2>Eine Tabelle für alles?</h2>
+    <p>Am Turniertag spielen zwölf Mannschaften in zwei Hallen um den Wanderpokal. Frau Wetter aus der
+      Fachschaft Sport will das erste Mal alles digital verwalten – Mannschaften, Spielerinnen und Spieler,
+      Spiele, Hallen. Sie öffnet eine Tabellenkalkulation und legt <strong>eine einzige große Tabelle</strong> an.</p>
 
     <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
       <span class="substep-label">Teile:</span>
-      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Attribute zuordnen</button>
-      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Kardinalität bestimmen</button>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Die Tabelle</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Der bessere Weg</button>
       <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
     </div>
 
     <div class="subphase on" id="ph0-sub-1">
-      <h3>Teil 1 · Attribute der richtigen Tabelle zuordnen</h3>
-      <p>Bevor du zeichnest: Ziehe jedes Kärtchen in die Spalte der Entität, zu der es gehört. Drei Kärtchen stehen gar nicht im Text — sie kommen in die letzte Spalte. Ohne Maus: Kärtchen antippen, dann die Spalte antippen.</p>
-      <div class="gs" id="gs-attribute">
-        <div class="gs-pool gs-zone" data-zone="pool" tabindex="0" aria-label="Ablage für noch nicht zugeordnete Kärtchen">
-          <span class="gs-chip" data-group="raum">Raum-ID</span>
-          <span class="gs-chip" data-group="raum">Raumbezeichnung</span>
-          <span class="gs-chip" data-group="raum">Etage</span>
-          <span class="gs-chip" data-group="raum">Anzahl der Sitzplätze</span>
-          <span class="gs-chip" data-group="rechner">Rechner-ID</span>
-          <span class="gs-chip" data-group="rechner">Modell</span>
-          <span class="gs-chip" data-group="rechner">Betriebssystem</span>
-          <span class="gs-chip" data-group="rechner">Anschaffungsjahr</span>
-          <span class="gs-chip" data-group="wartung">Wartungs-ID</span>
-          <span class="gs-chip" data-group="wartung">Datum</span>
-          <span class="gs-chip" data-group="wartung">Beschreibung</span>
-          <span class="gs-chip" data-group="wartung">Dauer</span>
-          <span class="gs-chip" data-group="keine">Hersteller</span>
-          <span class="gs-chip" data-group="keine">Kosten</span>
-          <span class="gs-chip" data-group="keine">Name des Technikers</span>
-        </div>
-        <div class="gs-scroll">
-          <table class="gs-table">
-            <thead><tr><th>Räume</th><th>Rechner</th><th>Wartungen</th><th>❌ steht nicht im Text</th></tr></thead>
-            <tbody><tr>
-              <td class="gs-zone" data-zone="raum" tabindex="0" aria-label="Spalte Räume"></td>
-              <td class="gs-zone" data-zone="rechner" tabindex="0" aria-label="Spalte Rechner"></td>
-              <td class="gs-zone" data-zone="wartung" tabindex="0" aria-label="Spalte Wartungen"></td>
-              <td class="gs-zone gs-zone-none" data-zone="keine" tabindex="0" aria-label="Spalte steht nicht im Text"></td>
-            </tr></tbody>
-          </table>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="gsCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb" aria-live="polite"></div>
+      <table class="tab">
+        <tr><th>Spieler</th><th>Klasse</th><th>Mannschaft</th><th>Trikotfarbe</th><th>Spiel-Nr.</th><th>Halle</th><th>Plätze</th></tr>
+        <tr><td>Jana Türlich</td><td>9c</td><td>Die Raketen</td><td>rot</td><td>1</td><td>Halle Nord</td><td>120</td></tr>
+        <tr><td>Klara Fall</td><td>9c</td><td>Die Raketen</td><td>rot</td><td>1</td><td>Halle Nord</td><td>120</td></tr>
+        <tr><td>Justin Tim</td><td>10b</td><td>Sockenschuss</td><td>blau</td><td>1</td><td>Halle Nord</td><td>120</td></tr>
+        <tr><td>Jana Türlich</td><td>9c</td><td>Die Raketen</td><td>rot</td><td>2</td><td>Halle Süd</td><td>90</td></tr>
+        <tr><td>Wilma Ruhe</td><td>10b</td><td>Sockenschuss</td><td>blau</td><td>3</td><td>Halle Nord</td><td>120</td></tr>
+      </table>
+      <p class="caption">Lies die Spalten von oben nach unten – fällt dir etwas auf?</p>
+
+      <div class="poe-box" id="poe-halle">
+        <div class="poe-label">🤔 Was passiert wohl?</div>
+        <p>Die „Halle Nord“ wird in „Sportforum Ost“ umbenannt. Was müsste Frau Wetter in dieser Tabelle tun –
+          und was kann dabei schiefgehen?</p>
+        <textarea id="poe-halle-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-halle')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-halle-out" hidden></div>
       </div>
-      <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
-      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Weiter zu Teil 2 ↓</button></div>
+
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Vergleiche deine Vermutung ↓</button></div>
     </div>
 
     <div class="subphase" id="ph0-sub-2">
-      <h3>Teil 2 · Kardinalität bestimmen</h3>
-      <p>Lies die beiden letzten Sätze des Textes noch einmal genau — sie legen fest, wie die drei Tabellen miteinander verbunden sind.</p>
+      <p>Frau Wetter muss <strong>jede einzelne Zeile</strong> ändern. Übersieht sie eine, heißt dieselbe Halle
+        plötzlich zweimal verschieden – und die Datenbank widerspricht sich selbst. Dasselbe passiert bei der
+        Trikotfarbe, bei der Platzanzahl, bei jedem Wert, der mehrfach dasteht.</p>
+
+      <div class="callout">💡 <span>Wenn dieselbe Angabe mehrfach gespeichert wird, nennt man das
+        <span class="tt" data-tip="Mehrfachspeicherung derselben Information an verschiedenen Stellen">Redundanz</span>.
+        Redundanz kostet Platz – vor allem aber führt sie zu Widersprüchen, sobald sich etwas ändert.</span></div>
+
+      <p>Viele denken zuerst: „Eine Datenbank ist doch einfach eine große Tabelle.“ Genau das ist der Denkfehler.
+        Eine Datenbank besteht später aus <strong>mehreren</strong> Tabellen, die miteinander verknüpft sind –
+        eine für Mannschaften, eine für Spieler, eine für Hallen. Welche Tabellen das sein müssen, überlegt man
+        sich <em>vorher</em> und zeichnet es auf: im
+        <span class="tt" data-tip="Entity-Relationship-Diagramm – der Bauplan einer Datenbank">ER-Diagramm</span>.</p>
+
+      <div class="callout callout-info">📐 <span><strong>ER-Diagramm (ERD)</strong> heißt
+        „Entity-Relationship-Diagramm“, also <span class="tt" data-tip="Entität: ein Objekt, über das Daten gespeichert werden – z. B. ein Schüler oder ein Kurs. Wird später zu einer Tabelle.">Entitäten</span>-Beziehungs-Diagramm. Es stellt den Aufbau einer Datenbank
+        grafisch dar – noch bevor die erste Tabelle angelegt wird. Ein Bauplan also, und der entsteht auch beim
+        Hausbau vor der ersten Mauer.</span></div>
+
+      <h3>Der Fahrplan</h3>
+      <p>Bring die Schritte in die richtige Reihenfolge – so gehst du gleich selbst vor.</p>
+      <div class="baustein" data-type="sort" id="sort-fahrplan">
+        <div class="sort-list">
+          <div class="sort-item" data-v="4"><span>Beziehungen einzeichnen und mit einem Verb benennen</span>
+            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          <div class="sort-item" data-v="1"><span>Festlegen, worum es überhaupt geht – und was weggelassen wird</span>
+            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          <div class="sort-item" data-v="5"><span>Für jede Beziehung festlegen, wie viele zu wie vielen gehören</span>
+            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          <div class="sort-item" data-v="2"><span>Die Entitäten finden, über die Daten gespeichert werden</span>
+            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          <div class="sort-item" data-v="3"><span>Zu jeder Entität die Attribute ergänzen und den Primärschlüssel festlegen</span>
+            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="sortCheckTimed(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm sort-sol-btn" disabled onclick="sortShowSolution(this)">🔒 Lösung nach 4 Minuten</button>
+        <div class="fb grp-fb"></div>
+      </div>
 
       <div class="quiz-item">
-        <div class="quiz-q">Welche Kardinalität hat die Beziehung zwischen Raum und Rechner?</div>
+        <div class="quiz-q">Warum zeichnet man erst ein Diagramm, statt sofort Tabellen anzulegen?</div>
         <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'w')">n : n</button>
-          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'c')">1 : n</button>
-          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'w')">1 : 1</button>
+          <button class="quiz-btn" onclick="quizCheck('ein1', this, 'w')">Weil eine Datenbank aus genau einer Tabelle bestehen muss.</button>
+          <button class="quiz-btn" onclick="quizCheck('ein1', this, 'c')">Weil im Diagramm sofort sichtbar ist, welche Entitäten es gibt und wie sie zusammenhängen – Fehler fallen auf, bevor Daten drin sind.</button>
+          <button class="quiz-btn" onclick="quizCheck('ein1', this, 'w')">Weil der Computer ein Diagramm schneller verarbeitet als eine Tabelle.</button>
         </div>
-        <div class="quiz-fb" id="qfb-kard1"></div>
+        <div class="quiz-fb" id="qfb-ein1"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Warum ein ER-Diagramm?</div>
+        <p><strong>Problem:</strong> Eine einzige große Tabelle speichert dieselben Angaben mehrfach
+          (Redundanz). Bei Änderungen entstehen Widersprüche.</p>
+        <p><strong>Lösung:</strong> Erst den Aufbau der Datenbank planen, dann Tabellen anlegen.</p>
+        <p><strong>ER-Diagramm (ERD):</strong> ein Modell, das den Aufbau einer Datenbank grafisch darstellt –
+          noch bevor die erste Tabelle angelegt wird.</p>
+      </div>
+
+      <p class="connector-text">Ein Bauplan braucht Bauteile. Ein ER-Diagramm kommt mit erstaunlich wenigen aus –
+        schauen wir sie uns an.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zu den Bausteinen →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PHASE 1 -->
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Die Bausteine: Entität, Attribut, Beziehung</h2>
+    <p>Jedes ER-Diagramm beantwortet drei Fragen: <em>Über welche <span class="tt" data-tip="Entität: ein Objekt, über das Daten gespeichert werden – z. B. ein Schüler oder ein Kurs. Wird später zu einer Tabelle.">Entitäten</span> speichern wir Daten? Was wollen wir über
+      sie wissen? Wie hängen sie zusammen?</em></p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Entitäten und Attribute</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Beziehungen</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Begriffe sichern</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <h3>Entität – das Objekt</h3>
+      <p>In der Schule spielen Schülerinnen und Schüler eine große Rolle: Jana Türlich mit der Schülernummer
+        33333, ihre Freundin Klara Fall, die Klassensprecherin Anna Konda. Jede von ihnen ist ein einzelnes,
+        eindeutig erkennbares Objekt – eine
+        <span class="tt" data-tip="Ein einzelnes Objekt der betrachteten Welt, das eindeutig identifizierbar ist – z. B. genau diese eine Schülerin">Entität</span>.</p>
+      <p>Alle drei haben dieselben Eigenschaften: Vorname, Nachname, Geburtsdatum, Schülernummer. Deshalb fasst
+        man sie zu einer Gruppe zusammen – dem
+        <span class="tt" data-tip="Alle gleichartigen Entitäten zusammengefasst, z. B. alle Schülerinnen und Schüler">Entitätstyp</span>
+        „Schüler“. Im Diagramm steht dafür ein schlichtes <strong>Rechteck</strong>. Später wird daraus eine Tabelle.</p>
+
+      <h3>Attribut – die Eigenschaft</h3>
+      <p>Was über eine <span class="tt" data-tip="Entität: ein Objekt, über das Daten gespeichert werden – z. B. ein Schüler oder ein Kurs. Wird später zu einer Tabelle.">Entität</span> gespeichert wird, heißt <strong>Attribut</strong>: Vorname, Geburtsdatum, Schülernummer.
+        Attribute hängen als <strong>Ellipsen</strong> am Rechteck. Später wird aus jedem Attribut eine Spalte.</p>
+
+      <h3>Primärschlüssel – die eindeutige Kennung</h3>
+      <p><strong>Jede Entität braucht einen Primärschlüssel.</strong> Das ist das eine Attribut, mit dem sich jeder
+        Datensatz zweifelsfrei wiederfinden lässt. Den Namen „Klara Fall“ kann es an einer Schule zweimal geben,
+        ein Geburtsdatum teilen sich viele – eine Schülernummer gehört dagegen zu genau einer Person.</p>
+      <div class="callout">🔑 <span>Der <span class="tt" data-tip="Primärschlüssel: das Attribut, das jede Entität eindeutig identifiziert. Es wird unterstrichen und heißt bei uns immer PK_ plus Name des Entitätstyps.">Primärschlüssel</span> wird
+        im Diagramm <strong>unterstrichen</strong>. Er heißt bei uns immer <span class="math">PK_</span> plus Name
+        des Entitätstyps – also <span class="math">PK_Schueler</span>, <span class="math">PK_Kurs</span>,
+        <span class="math">PK_Halle</span>. PK steht für <em>primary key</em>, den englischen Fachbegriff.
+        Umlaute und Leerzeichen bleiben dabei draußen: aus „Schüler“ wird <span class="math">PK_Schueler</span>.</span></div>
+      <p>Findest du im Text kein passendes Attribut, erfindest du eines – eine fortlaufende Nummer tut es immer.
+        Das ist kein Schummeln, sondern üblich: Deine Bibliothek macht es mit der Ausweisnummer genauso, die Schule
+        mit der Schülernummer.</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 640 240" role="img" aria-labelledby="svg1-title">
+          <title id="svg1-title">Entitätstyp Schüler als Rechteck, daran vier Attribute als Ellipsen: der unterstrichene Primärschlüssel PK_Schueler sowie Vorname, Nachname und Geburtsdatum</title>
+          <line x1="285" y1="162" x2="130" y2="86" stroke="#7A736E" stroke-width="2"/>
+          <line x1="305" y1="162" x2="255" y2="62" stroke="#7A736E" stroke-width="2"/>
+          <line x1="345" y1="162" x2="400" y2="62" stroke="#7A736E" stroke-width="2"/>
+          <line x1="365" y1="162" x2="530" y2="86" stroke="#7A736E" stroke-width="2"/>
+          <ellipse cx="90" cy="62" rx="80" ry="26" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="90" y="68" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16" text-decoration="underline">PK_Schueler</text>
+          <ellipse cx="250" cy="36" rx="66" ry="26" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="250" y="42" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16">Vorname</text>
+          <ellipse cx="405" cy="36" rx="70" ry="26" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="405" y="42" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16">Nachname</text>
+          <ellipse cx="560" cy="62" rx="78" ry="26" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="560" y="68" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16">Geburtsdatum</text>
+          <rect x="245" y="162" width="160" height="54" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="325" y="196" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="19" font-weight="bold">Schüler</text>
+        </svg>
+        <p class="caption">Rechteck = Entitätstyp, Ellipse = Attribut, unterstrichene Ellipse = Primärschlüssel.</p>
+      </div>
+
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Rechteck oder Ellipse?</div>
+        <p>Aus welchen Wörtern wird ein <strong>Rechteck</strong> (eine <span class="tt" data-tip="Entität: ein Objekt, über das Daten gespeichert werden – z. B. ein Schüler oder ein Kurs. Wird später zu einer Tabelle.">Entität</span>, über die Daten gespeichert werden)?
+          Klicke sie an. Alle anderen werden Ellipsen.</p>
+        <div class="baustein" data-type="mark" id="mark-biblio">
+          <p class="mark-text">In der Bibliothek werden
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Bücher</span> mit
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Titel</span>,
+            <span class="mw" data-correct="0" onclick="markToggle(this)">ISBN</span> und
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Erscheinungsjahr</span> erfasst.
+            Jedes Buch steht in einem <span class="mw" data-correct="1" onclick="markToggle(this)">Regal</span>
+            mit einer <span class="mw" data-correct="0" onclick="markToggle(this)">Regalnummer</span>.
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Leser</span> mit
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Nachname</span> und
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Geburtsdatum</span> dürfen ausleihen.</p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
       </div>
 
       <div class="quiz-item">
-        <div class="quiz-q">Welche Kardinalität hat die Beziehung zwischen Rechner und Wartung?</div>
+        <div class="quiz-q">Woran erkennst du in einem Text ein Attribut?</div>
         <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'w')">1 : 1</button>
-          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'w')">n : n</button>
-          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'c')">1 : n</button>
+          <button class="quiz-btn" onclick="quizCheck('ent1', this, 'w')">Attribute sind immer Zahlen.</button>
+          <button class="quiz-btn" onclick="quizCheck('ent1', this, 'c')">Es beschreibt eine Eigenschaft und ergibt allein keinen Sinn – „Geburtsdatum“ von wem?</button>
+          <button class="quiz-btn" onclick="quizCheck('ent1', this, 'w')">Attribute stehen im Text immer am Satzanfang.</button>
         </div>
-        <div class="quiz-fb" id="qfb-kard2"></div>
+        <div class="quiz-fb" id="qfb-ent1"></div>
       </div>
 
       <div class="quiz-item">
-        <div class="quiz-q">Auf welcher Seite einer 1:n-Beziehung steht im Relationenmodell der Fremdschlüssel?</div>
+        <div class="quiz-q">Warum ist „Nachname“ kein guter Primärschlüssel für den Entitätstyp Schüler?</div>
         <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('kard3', this, 'w')">Auf der 1-Seite</button>
-          <button class="quiz-btn" onclick="quizCheck('kard3', this, 'c')">Auf der n-Seite</button>
-          <button class="quiz-btn" onclick="quizCheck('kard3', this, 'w')">Auf beiden Seiten</button>
+          <button class="quiz-btn" onclick="quizCheck('pk1', this, 'w')">Weil ein Primärschlüssel immer eine Zahl sein muss.</button>
+          <button class="quiz-btn" onclick="quizCheck('pk1', this, 'w')">Weil Namen für eine Datenbankspalte zu lang sind.</button>
+          <button class="quiz-btn" onclick="quizCheck('pk1', this, 'c')">Weil es zwei Personen mit dem Nachnamen „Fall“ geben kann – dann ist nicht mehr klar, wer gemeint ist.</button>
         </div>
-        <div class="quiz-fb" id="qfb-kard3"></div>
+        <div class="quiz-fb" id="qfb-pk1"></div>
       </div>
 
-      <div class="hilfe-box" id="hilfe-er-aufgabe">
-        <button class="btn btn-ghost btn-sm hilfe-request" onclick="hilfeRequest(this)">🆘 Hilfe anfordern</button>
-        <small class="hilfe-status" hidden></small>
-        <div class="callout hilfe-stufe" data-min="2" hidden>💡 <span>Tipp 1: Zeichne zuerst drei Kästchen für Raum, Rechner und Wartung und trage in jedes nur die ID als Primärschlüssel ein.</span></div>
-        <div class="callout hilfe-stufe" data-min="4" hidden>💡 <span>Tipp 2: Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</span></div>
-        <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Die Kette lautet Raum 1:n Rechner 1:n Wartung. Der Fremdschlüssel RaumID steht in der Tabelle Rechner, der Fremdschlüssel RechnerID steht in der Tabelle Wartung.</span></div>
+      <p class="connector-text">Die Rechtecke stehen jetzt ziemlich einsam nebeneinander. Aber eine Schülerin
+        gehört ja zu einer Klasse – wie kommt dieser Zusammenhang ins Diagramm?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Beziehungen ansehen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <h3>Beziehung – der Zusammenhang</h3>
+      <p>Eine <strong>Beziehung</strong> verbindet zwei Entitäten: „Jana besucht die 7c“. Alle gleichartigen
+        Beziehungen fasst man zum
+        <span class="tt" data-tip="Alle gleichartigen Beziehungen zusammengefasst, z. B. alle Zuordnungen Schüler – Klasse">Beziehungstyp</span>
+        zusammen und zeichnet ihn als <strong>Raute</strong>, beschriftet mit einem Verb.</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 640 140" role="img" aria-labelledby="svg2-title">
+          <title id="svg2-title">Rechteck Schüler, verbunden über eine Raute mit der Aufschrift besucht, mit dem Rechteck Klasse</title>
+          <line x1="180" y1="70" x2="248" y2="70" stroke="#7A736E" stroke-width="2"/>
+          <line x1="392" y1="70" x2="460" y2="70" stroke="#7A736E" stroke-width="2"/>
+          <rect x="30" y="43" width="150" height="54" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="105" y="77" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="19" font-weight="bold">Schüler</text>
+          <polygon points="320,36 392,70 320,104 248,70" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text x="320" y="76" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="17" font-weight="bold">besucht</text>
+          <rect x="460" y="43" width="150" height="54" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="535" y="77" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="19" font-weight="bold">Klasse</text>
+        </svg>
+        <p class="caption">Gelesen: „Schüler besucht Klasse“ – die Raute trägt das Verb.</p>
       </div>
 
-      <div class="lehrer-only" hidden>
-        <div class="card" style="background:var(--surface-2);">
-          <h3>Musterlösung ER-Modell</h3>
-          <svg viewBox="0 0 800 570" width="100%" role="img" aria-label="ER-Modell in Chen-Notation: Räume 1 zu n Rechner über die Beziehung stehen, Rechner 1 zu n Wartungen über die Beziehung wird gewartet">
-<rect x="0" y="0" width="800" height="570" fill="#FFFFFF"/>
-<line x1="310" y1="202" x2="358" y2="202" stroke="#111111" stroke-width="1.3"/>
-<line x1="438" y1="202" x2="488" y2="202" stroke="#111111" stroke-width="1.3"/>
-<line x1="548" y1="232" x2="548" y2="262" stroke="#111111" stroke-width="1.3"/>
-<line x1="548" y1="362" x2="548" y2="402" stroke="#111111" stroke-width="1.3"/>
-<line x1="225" y1="172" x2="165" y2="118" stroke="#111111" stroke-width="1.3"/>
-<line x1="275" y1="172" x2="335" y2="96" stroke="#111111" stroke-width="1.3"/>
-<line x1="190" y1="222" x2="140" y2="256" stroke="#111111" stroke-width="1.3"/>
-<line x1="262" y1="232" x2="272" y2="272" stroke="#111111" stroke-width="1.3"/>
-<line x1="553" y1="172" x2="560" y2="120" stroke="#111111" stroke-width="1.3"/>
-<line x1="608" y1="184" x2="668" y2="134" stroke="#111111" stroke-width="1.3"/>
-<line x1="608" y1="198" x2="660" y2="190" stroke="#111111" stroke-width="1.3"/>
-<line x1="608" y1="222" x2="660" y2="252" stroke="#111111" stroke-width="1.3"/>
-<line x1="488" y1="428" x2="466" y2="432" stroke="#111111" stroke-width="1.3"/>
-<line x1="488" y1="450" x2="420" y2="492" stroke="#111111" stroke-width="1.3"/>
-<line x1="548" y1="462" x2="548" y2="510" stroke="#111111" stroke-width="1.3"/>
-<line x1="608" y1="452" x2="652" y2="472" stroke="#111111" stroke-width="1.3"/>
-<rect x="190.0" y="172.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
-<text x="250" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Räume</text>
-<rect x="488.0" y="172.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
-<text x="548" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Rechner</text>
-<rect x="488.0" y="402.0" width="120" height="60" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
-<text x="548" y="437" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Wartungen</text>
-<polygon points="398,162 438,202 398,242 358,202" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
-<text x="398" y="207" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">stehen</text>
-<polygon points="548,262 606,312 548,362 490,312" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/>
-<text x="548" y="317" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">wird gewartet</text>
-<text x="336" y="192" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">1</text>
-<text x="466" y="192" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">n</text>
-<text x="566" y="252" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">1</text>
-<text x="566" y="392" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111111">n</text>
-<ellipse cx="150" cy="98" rx="66" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="150" y="103" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Raumbezeichnung</text>
-<ellipse cx="362" cy="78" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="362" y="83" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Etage</text>
-<ellipse cx="102" cy="268" rx="80" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="102" y="273" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Anzahl der Sitzplätze</text>
-<ellipse cx="278" cy="296" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="278" y="301" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Raum-ID</text>
-<line x1="252.8" y1="304" x2="303.2" y2="304" stroke="#111111" stroke-width="1"/>
-<ellipse cx="563" cy="98" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="563" y="103" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Modell</text>
-<ellipse cx="718" cy="118" rx="62" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="718" y="123" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Betriebssystem</text>
-<ellipse cx="713" cy="190" rx="56" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="713" y="195" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Rechner-ID</text>
-<line x1="677.0" y1="198" x2="749.0" y2="198" stroke="#111111" stroke-width="1"/>
-<ellipse cx="713" cy="268" rx="74" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="713" y="273" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Anschaffungsjahr</text>
-<ellipse cx="393" cy="437" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="393" y="442" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Beschreibung</text>
-<ellipse cx="373" cy="512" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="373" y="517" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Dauer</text>
-<ellipse cx="548" cy="532" rx="76" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="548" y="537" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Wartungs-ID</text>
-<line x1="508.4" y1="540" x2="587.6" y2="540" stroke="#111111" stroke-width="1"/>
-<ellipse cx="703" cy="490" rx="75" ry="24" fill="#FFFFFF" stroke="#111111" stroke-width="1.3"/>
-<text x="703" y="495" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#111111">Datum</text>
-</svg>
-          <div class="callout callout-success">✅ <span><strong>Relationenmodell:</strong> Raum(<u>RaumID</u>, Raumbezeichnung, Etage, Sitzplätze) · Rechner(<u>RechnerID</u>, Modell, Betriebssystem, Anschaffungsjahr, <i>RaumID</i>) · Wartung(<u>WartungsID</u>, Datum, Beschreibung, Dauer_Min, <i>RechnerID</i>)</span></div>
+      <p>Zwischen denselben zwei Rechtecken kann es <strong>mehrere</strong> Beziehungen geben. Anna Konda
+        <em>besucht</em> die 7c – und sie <em>ist Klassensprecherin von</em> der 7c. Das sind zwei verschiedene
+        Zusammenhänge, also zwei Rauten mit zwei Namen.</p>
+
+      <div class="callout">💡 <span>Faustregel für den Text: <strong>Substantive</strong> werden meist zu
+        Rechtecken oder Ellipsen, <strong>Verben</strong> werden zu Rauten.</span></div>
+
+      <h3>Fremdschlüssel – wie die Linie später hält</h3>
+      <p>Im Diagramm ist die Beziehung eine Linie. In einer Tabelle gibt es aber keine Linien, sondern nur Spalten.
+        Wie merkt sich die Datenbank also, dass Jana in die 7c gehört?</p>
+      <p>Die Antwort ist verblüffend einfach: Der <strong>Primärschlüssel</strong> der einen Entität wird als
+        zusätzliche Spalte in die andere Tabelle geschrieben. Diese Spalte heißt
+        <span class="tt" data-tip="Fremdschlüssel: der Primärschlüssel einer anderen Entität, der als Spalte übernommen wird. Er stellt die Verbindung zwischen zwei Tabellen her und heißt bei uns FK_ plus Name der Entität, auf die er zeigt.">Fremdschlüssel</span> – sie ist „fremd“, weil ihr Wert
+        eigentlich einer anderen Tabelle gehört.</p>
+
+      <div class="callout">🔗 <span>Der Fremdschlüssel heißt immer <span class="math">FK_</span> plus Name der
+        Entität, auf die er zeigt: <span class="math">FK_Klasse</span>, <span class="math">FK_Mannschaft</span>,
+        <span class="math">FK_Halle</span>. FK steht für <em>foreign key</em>. In der Spalte steht immer ein
+        Primärschlüsselwert der anderen Tabelle – nie ein Name und nie eine Aufzählung mehrerer Werte.</span></div>
+
+      <div class="fig">
+        <svg viewBox="0 0 660 250" role="img" aria-labelledby="svg6-title">
+          <title id="svg6-title">Eine Klasse wird von vielen Schülern besucht. Der Primärschlüssel PK_Klasse wird als Spalte FK_Klasse in die Tabelle Schüler übernommen, also auf die Seite mit den vielen.</title>
+          <line x1="190" y1="66" x2="260" y2="66" stroke="#7A736E" stroke-width="2"/>
+          <line x1="400" y1="66" x2="470" y2="66" stroke="#7A736E" stroke-width="2"/>
+          <rect x="40" y="40" width="150" height="52" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="115" y="72" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="18" font-weight="bold">Klasse</text>
+          <polygon points="330,34 400,66 330,98 260,66" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text x="330" y="72" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="15" font-weight="bold">besuchen</text>
+          <rect x="470" y="40" width="150" height="52" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="545" y="72" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="18" font-weight="bold">Schüler</text>
+          <text x="207" y="56" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          <text x="443" y="56" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+          <text x="115" y="114" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="13">eine Klasse je Schüler</text>
+          <text x="545" y="114" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="13">viele Schüler je Klasse</text>
+          <text x="115" y="132" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="13" text-decoration="underline">PK_Klasse</text>
+          <path d="M115 146 C115 210, 545 210, 545 152" fill="none" stroke="#C2410C" stroke-width="2.5" stroke-dasharray="7 5"/>
+          <polygon points="545,136 537,152 553,152" fill="#C2410C"/>
+          <text x="330" y="240" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="15" font-weight="bold">PK_Klasse wird als Spalte FK_Klasse in die Tabelle Schüler kopiert</text>
+        </svg>
+        <p class="caption">Der Pfeil zeigt, wohin der Schlüssel wandert: auf die Seite, von der es viele gibt.</p>
+      </div>
+
+      <p>In Tabellen sieht dasselbe so aus:</p>
+      <div class="two-col">
+        <div>
+          <p class="caption">Tabelle Klasse</p>
+          <table class="tab">
+            <tr><th>PK_Klasse</th><th>Bezeichnung</th></tr>
+            <tr><td>1</td><td>7c</td></tr>
+            <tr><td>2</td><td>10b</td></tr>
+          </table>
+        </div>
+        <div>
+          <p class="caption">Tabelle Schüler</p>
+          <table class="tab">
+            <tr><th>PK_Schueler</th><th>Nachname</th><th>FK_Klasse</th></tr>
+            <tr><td>101</td><td>Türlich</td><td>1</td></tr>
+            <tr><td>102</td><td>Fall</td><td>1</td></tr>
+            <tr><td>103</td><td>Tim</td><td>2</td></tr>
+          </table>
+        </div>
+      </div>
+      <p class="caption">Die 1 bei Jana Türlich ist der Primärschlüssel der 7c. Die Bezeichnung „7c“ selbst steht
+        nur ein einziges Mal in der ganzen Datenbank – genau das hat der einen Riesentabelle vom Stundenanfang
+        gefehlt.</p>
+
+      <p><strong>Auf welche Seite kommt der Fremdschlüssel?</strong> Entscheidend ist, wie viele Partner eine Seite
+        haben kann. Ein Schüler hat genau eine Klasse – diese eine Zahl passt bequem in eine Zelle. Eine Klasse hat
+        dagegen 28 Schüler; die müssten alle in eine einzige Zelle gequetscht werden, und das ist in einer Datenbank
+        nicht erlaubt. Also gilt:</p>
+
+      <div class="callout">🔑 <span><strong>Merksatz:</strong> Der Fremdschlüssel steht immer bei dem, von dem es
+        <strong>viele</strong> gibt – und zeigt auf die Seite, von der es nur <strong>eine</strong> gibt.</span></div>
+
+      <table class="tab">
+        <tr><th>Was der Text sagt</th><th>Wohin der Fremdschlüssel kommt</th></tr>
+        <tr><td>Eine Seite „genau eine“, die andere „viele“<br><span class="caption">Klasse – Schüler</span></td>
+            <td>auf die Viele-Seite: <span class="math">FK_Klasse</span> in der Tabelle Schüler</td></tr>
+        <tr><td>Beide Seiten „genau eine“<br><span class="caption">Klasse – Klassenraum</span></td>
+            <td>auf eine der beiden Seiten – du darfst wählen</td></tr>
+        <tr><td>Beide Seiten „viele“<br><span class="caption">Schüler – Lehrer</span></td>
+            <td>gar nicht direkt: Dafür entsteht später eine eigene Zwischentabelle, die zwei Fremdschlüssel
+                enthält</td></tr>
+      </table>
+      <p class="caption">Die Fachbegriffe für diese drei Fälle – 1:n, 1:1 und n:m – lernst du in der nächsten Phase
+        kennen.</p>
+
+      <div class="callout callout-info">📐 <span>Im ER-Diagramm zeichnest du den Fremdschlüssel <strong>nicht</strong>
+        als Ellipse. Dort genügt die Linie zwischen den Rechtecken. Er entsteht erst, wenn aus dem Bauplan Tabellen
+        werden – wissen solltest du trotzdem schon jetzt, auf welcher Seite er landet.</span></div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">In der Bibliothek: In einem Regal stehen viele Bücher, ein Buch steht in genau einem Regal. Wo steht der Fremdschlüssel?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('fk3', this, 'w')">In der Tabelle Regal als Spalte FK_Buch.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk3', this, 'w')">In beiden Tabellen, damit man in beide Richtungen suchen kann.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk3', this, 'c')">In der Tabelle Buch als Spalte FK_Regal.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-fk3"></div>
+      </div>
+
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Satz vervollständigen</div>
+        <p>Klicke erst ein Wort im Vorrat an, dann die passende Lücke.</p>
+        <div class="baustein" data-type="dtw" id="dtw-beziehung">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Raute" onclick="dtwSelect(this)">Raute</span>
+            <span class="dtw-word" data-w="Verb" onclick="dtwSelect(this)">Verb</span>
+            <span class="dtw-word" data-w="mehrere" onclick="dtwSelect(this)">mehrere</span>
+            <span class="dtw-word" data-w="Rechtecke" onclick="dtwSelect(this)">Rechtecke</span>
+          </div>
+          <p class="dtw-text">Ein Beziehungstyp wird als
+            <span class="dtw-gap" data-answer="Raute" onclick="dtwPlace(this)">______</span> gezeichnet und mit einem
+            <span class="dtw-gap" data-answer="Verb" onclick="dtwPlace(this)">______</span> beschriftet. Er verbindet zwei
+            <span class="dtw-gap" data-answer="Rechtecke" onclick="dtwPlace(this)">______</span>. Zwischen denselben beiden Entitätstypen kann es
+            <span class="dtw-gap" data-answer="mehrere" onclick="dtwPlace(this)">______</span> Beziehungen geben.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Warum zeichnet man zwischen „Schüler“ und „Klasse“ zwei Rauten – <em>besucht</em> und <em>ist Klassensprecher von</em>?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('bez1', this, 'c')">Weil es zwei verschiedene Zusammenhänge sind – jeder braucht seine eigene Raute mit eigenem Namen.</button>
+          <button class="quiz-btn" onclick="quizCheck('bez1', this, 'w')">Weil Anna Konda in zwei Klassen gleichzeitig ist.</button>
+          <button class="quiz-btn" onclick="quizCheck('bez1', this, 'w')">Weil man Verbindungslinien immer doppelt zeichnet, damit sie stabil sind.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-bez1"></div>
+      </div>
+
+      <div class="callout callout-info">⭐ <span>Für Schnelle: Auch eine <strong>Raute</strong> kann Attribute
+        tragen. Beim Beziehungstyp „leiht aus“ zwischen Leser und Buch gehört das Ausleihdatum weder allein zum
+        Leser noch allein zum Buch – es gehört zur Beziehung.</span></div>
+
+      <p class="connector-text">Fünf Begriffe hast du jetzt beisammen. Bevor es an die Formen geht: Sitzen sie wirklich?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Begriffe prüfen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Begriff und Bedeutung</div>
+        <p>Wähle einen Begriff und klicke dann auf die passende Beschreibung.</p>
+        <div class="baustein" data-type="match" id="match-begriffe">
+          <div class="m-pool">
+            <span class="m-chip" data-id="erd" onclick="matchSelect(this)">ER-Diagramm</span>
+            <span class="m-chip" data-id="ent" onclick="matchSelect(this)">Entität</span>
+            <span class="m-chip" data-id="att" onclick="matchSelect(this)">Attribut</span>
+            <span class="m-chip" data-id="bez" onclick="matchSelect(this)">Beziehung</span>
+          </div>
+          <div class="m-zone" data-correct="erd" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Ein Modell, das den Aufbau einer Datenbank grafisch darstellt – noch bevor die erste Tabelle angelegt wird.</span></div>
+          <div class="m-zone" data-correct="ent" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Ein Objekt, über das Daten gespeichert werden, z. B. Schüler oder Kurs. Wird später zu einer Tabelle.</span></div>
+          <div class="m-zone" data-correct="att" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Eine Eigenschaft, z. B. Name oder Geburtsdatum. Wird später zu einer Spalte.</span></div>
+          <div class="m-zone" data-correct="bez" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Die Verbindung zwischen zwei Entitäten, z. B. „Schüler besucht Kurs“.</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
       </div>
 
       <div class="hefter-box">
-        <div class="hefter-label">📓 Heftereintrag — Kardinalität 1:n</div>
-        <p>Eine <strong>1:n-Beziehung</strong> liegt vor, wenn zu einem Datensatz der einen Tabelle beliebig viele Datensätze der anderen Tabelle gehören, aber umgekehrt jeder Datensatz nur zu genau einem Datensatz der ersten Tabelle gehört.</p>
+        <div class="hefter-label">📓 Heftereintrag — Bausteine eines ER-Diagramms</div>
+        <p><strong>Entität:</strong> ein Objekt, über das Daten gespeichert werden (z. B. Schüler, Kurs).
+          Gleichartige Entitäten bilden einen <strong>Entitätstyp</strong> – gezeichnet als Rechteck, später eine Tabelle.</p>
+        <p><strong>Attribut:</strong> eine Eigenschaft einer Entität (z. B. Name, Geburtsdatum) – gezeichnet als
+          Ellipse, später eine Spalte.</p>
+        <p><strong>Primärschlüssel:</strong> Jede Entität braucht ein Attribut, das sie eindeutig identifiziert.
+          Es wird unterstrichen und immer <strong>PK_</strong> plus Name des Entitätstyps genannt, z. B.
+          PK_Schueler, PK_Kurs, PK_Halle. Gibt es kein passendes Attribut, wird eine fortlaufende Nummer ergänzt.</p>
+        <p><strong>Beziehung:</strong> die Verbindung zwischen zwei Entitäten (z. B. „Schüler besucht Kurs“) –
+          gezeichnet als Raute mit einem Verb.</p>
+        <p><strong>Fremdschlüssel:</strong> der Primärschlüssel einer Entität, der als Spalte in die andere Tabelle
+          übernommen wird und dort die Verbindung herstellt. Benennung: <strong>FK_</strong> plus Name der Entität,
+          auf die er zeigt, z. B. FK_Klasse. Er steht immer bei dem, von dem es viele gibt. Im ER-Diagramm wird er
+          noch nicht gezeichnet.</p>
+        <p><strong>Merke:</strong> Substantive → Rechtecke und Ellipsen, Verben → Rauten.</p>
+      </div>
+
+      <p class="connector-text">Ein Diagramm mit Rechtecken, Ellipsen und Rauten kann viel. Aber eine Frage bleibt
+        offen: Gehören zu <em>einem</em> Kurs eigentlich ein Schüler oder dreißig?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zu den Formen und Zahlen →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PHASE 2 -->
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Formen und Kardinalität</h2>
+    <p>Ein ER-Diagramm kommt mit vier Formen aus. Der Rest sind Zahlen an den Linien – und die haben es in sich.</p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Die Formen</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Kardinalität</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Üben</button>
+      <button class="substep-all" onclick="revealSub(2,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <div class="fig">
+        <svg viewBox="0 0 660 350" role="img" aria-labelledby="svg3-title">
+          <title id="svg3-title">Übersicht der Formen: Rechteck für den Entitätstyp, Ellipse für das Attribut, unterstrichene Ellipse für den Primärschlüssel PK_Schueler, Raute für den Beziehungstyp, Linie mit Zahlen für die Kardinalität</title>
+          <rect x="40" y="18" width="130" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="105" y="48" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">Schüler</text>
+          <text x="200" y="36" fill="#111111" font-family="sans-serif" font-size="17" font-weight="bold">Rechteck – Entitätstyp</text>
+          <text x="200" y="58" fill="#4A4542" font-family="sans-serif" font-size="15">die Entität; wird später eine Tabelle</text>
+
+          <ellipse cx="105" cy="110" rx="65" ry="25" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="105" y="116" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16">Vorname</text>
+          <text x="200" y="104" fill="#111111" font-family="sans-serif" font-size="17" font-weight="bold">Ellipse – Attribut</text>
+          <text x="200" y="126" fill="#4A4542" font-family="sans-serif" font-size="15">die Eigenschaft; wird später eine Spalte</text>
+
+          <ellipse cx="105" cy="180" rx="65" ry="25" fill="#FDF9F3" stroke="#8C7B6B" stroke-width="2"/>
+          <text x="105" y="186" text-anchor="middle" fill="#4A4542" font-family="sans-serif" font-size="16" text-decoration="underline">PK_Schueler</text>
+          <text x="200" y="174" fill="#111111" font-family="sans-serif" font-size="17" font-weight="bold">unterstrichen – Primärschlüssel</text>
+          <text x="200" y="196" fill="#4A4542" font-family="sans-serif" font-size="15">macht jede Entität eindeutig; heißt immer PK_…</text>
+
+          <polygon points="105,225 170,255 105,285 40,255" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text x="105" y="261" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="15" font-weight="bold">besucht</text>
+          <text x="200" y="248" fill="#111111" font-family="sans-serif" font-size="17" font-weight="bold">Raute – Beziehungstyp</text>
+          <text x="200" y="270" fill="#4A4542" font-family="sans-serif" font-size="15">der Zusammenhang; trägt ein Verb</text>
+
+          <line x1="40" y1="322" x2="170" y2="322" stroke="#7A736E" stroke-width="2"/>
+          <text x="62" y="312" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+          <text x="144" y="312" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          <text x="200" y="316" fill="#111111" font-family="sans-serif" font-size="17" font-weight="bold">Linie mit Zahlen – Kardinalität</text>
+          <text x="200" y="338" fill="#4A4542" font-family="sans-serif" font-size="15">wie viele gehören zu wie vielen?</text>
+        </svg>
+      </div>
+
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Welche Form wofür?</div>
+        <div class="baustein" data-type="dtw" id="dtw-formen">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Rechteck" onclick="dtwSelect(this)">Rechteck</span>
+            <span class="dtw-word" data-w="Ellipse" onclick="dtwSelect(this)">Ellipse</span>
+            <span class="dtw-word" data-w="Raute" onclick="dtwSelect(this)">Raute</span>
+            <span class="dtw-word" data-w="unterstrichen" onclick="dtwSelect(this)">unterstrichen</span>
+            <span class="dtw-word" data-w="Linie" onclick="dtwSelect(this)">Linie</span>
+          </div>
+          <p class="dtw-text">„Mannschaft“ wird ein
+            <span class="dtw-gap" data-answer="Rechteck" onclick="dtwPlace(this)">______</span>, „Trikotfarbe“ eine
+            <span class="dtw-gap" data-answer="Ellipse" onclick="dtwPlace(this)">______</span> und „bestreitet“ eine
+            <span class="dtw-gap" data-answer="Raute" onclick="dtwPlace(this)">______</span>. Der Primärschlüssel <span class="math">PK_Mannschaft</span> wird
+            <span class="dtw-gap" data-answer="unterstrichen" onclick="dtwPlace(this)">______</span>, weil er jede Mannschaft eindeutig macht. Die Zahlen der Kardinalität stehen an der
+            <span class="dtw-gap" data-answer="Linie" onclick="dtwPlace(this)">______</span>.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">In welcher Form steht „Anstoßzeit“ im Diagramm?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('form1', this, 'w')">In einem Rechteck.</button>
+          <button class="quiz-btn" onclick="quizCheck('form1', this, 'w')">In einer Raute.</button>
+          <button class="quiz-btn" onclick="quizCheck('form1', this, 'c')">In einer Ellipse.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-form1"></div>
+      </div>
+
+      <p class="connector-text">Die Formen stehen. Jetzt die Zahlen an den Linien – dort werden die meisten Fehler gemacht.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Weiter zur Kardinalität ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <h3>Kardinalität – wie viele zu wie vielen?</h3>
+      <p>Die <span class="tt" data-tip="Aus dem Lateinischen: cardinalis – „hauptsächlich“; hier die Anzahlangabe an einer Beziehung">Kardinalität</span>
+        gibt an, wie viele Datensätze einander zugeordnet werden. Es gibt genau drei Fälle:
+        <strong>1:1</strong>, <strong>1:n</strong> und <strong>n:m</strong>.</p>
+
+      <div class="callout">💡 <span>So findest du sie sicher: Schreib <strong>zwei Sätze</strong>, einen für jede
+        Richtung. „Ein Schüler besucht <em>genau eine</em> Klasse.“ und „Eine Klasse wird von <em>vielen</em>
+        Schülern besucht.“ Einmal „genau eine“, einmal „viele“ – also 1:n.</span></div>
+
+      <div class="fig">
+        <svg viewBox="0 0 660 390" role="img" aria-labelledby="svg4-title">
+          <title id="svg4-title">Drei Beispiele: Klasse und Klassenleiter als Eins-zu-eins-Beziehung, Klasse und Schüler als Eins-zu-n-Beziehung, Schüler und Lehrer als n-zu-m-Beziehung</title>
+          <text x="20" y="26" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">1 : 1</text>
+          <line x1="160" y1="62" x2="270" y2="62" stroke="#7A736E" stroke-width="2"/>
+          <line x1="390" y1="62" x2="500" y2="62" stroke="#7A736E" stroke-width="2"/>
+          <text x="205" y="52" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          <text x="440" y="52" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          <rect x="20" y="38" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="90" y="68" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Klasse</text>
+          <polygon points="330,30 390,62 330,94 270,62" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text x="330" y="67" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="14" font-weight="bold">wird geleitet von</text>
+          <rect x="500" y="38" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="570" y="68" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Lehrer</text>
+          <text x="20" y="114" fill="#4A4542" font-family="sans-serif" font-size="14">Jede Klasse hat genau einen Klassenleiter – jeder Klassenleiter leitet genau eine Klasse.</text>
+
+          <text x="20" y="166" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">1 : n</text>
+          <line x1="160" y1="202" x2="270" y2="202" stroke="#7A736E" stroke-width="2"/>
+          <line x1="390" y1="202" x2="500" y2="202" stroke="#7A736E" stroke-width="2"/>
+          <text x="205" y="192" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          <text x="440" y="192" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+          <rect x="20" y="178" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="90" y="208" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Klasse</text>
+          <polygon points="330,170 390,202 330,234 270,202" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text x="330" y="207" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="15" font-weight="bold">besuchen</text>
+          <rect x="500" y="178" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="570" y="208" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Schüler</text>
+          <text x="20" y="254" fill="#4A4542" font-family="sans-serif" font-size="14">Eine Klasse wird von vielen Schülern besucht – ein Schüler besucht genau eine Klasse.</text>
+
+          <text x="20" y="306" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">n : m</text>
+          <line x1="160" y1="342" x2="270" y2="342" stroke="#7A736E" stroke-width="2"/>
+          <line x1="390" y1="342" x2="500" y2="342" stroke="#7A736E" stroke-width="2"/>
+          <text x="205" y="332" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+          <text x="440" y="332" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">m</text>
+          <rect x="20" y="318" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="90" y="348" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Schüler</text>
+          <polygon points="330,310 390,342 330,374 270,342" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+          <text text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="13" font-weight="bold"><tspan x="330" y="339">wird unterrichtet</tspan><tspan x="330" y="355">von</tspan></text>
+          <rect x="500" y="318" width="140" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+          <text x="570" y="348" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="16" font-weight="bold">Lehrer</text>
+          <text x="20" y="386" fill="#4A4542" font-family="sans-serif" font-size="14">Ein Schüler wird von mehreren Lehrern unterrichtet – ein Lehrer unterrichtet mehrere Schüler.</text>
+        </svg>
+        <p class="caption">Die Buchstaben <em>n</em> und <em>m</em> bedeuten schlicht „mehrere“ – sie stehen für
+          keine feste Zahl.</p>
+      </div>
+
+      <div class="callout callout-warn">⚠️ <span>Bücher und Lehrkräfte setzen die Zahlen manchmal an die jeweils
+        andere Linie. Verlass dich deshalb nie allein auf die Zahl, sondern schreib immer <strong>beide Sätze</strong>
+        dazu – die sind eindeutig.</span></div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">In der 9c sitzen 28 Schüler. Was schreibst du an die Linie zwischen „Klasse“ und „Schüler“?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'w')">28, weil das die aktuelle Anzahl ist.</button>
+          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'c')">n – die Kardinalität sagt nur „mehrere“, nicht wie viele genau.</button>
+          <button class="quiz-btn" onclick="quizCheck('kard1', this, 'w')">1, weil es sich um eine einzige Klasse handelt.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-kard1"></div>
+      </div>
+
+      <div class="callout callout-info">⭐ <span>Für Schnelle: Man <em>kann</em> genaue Grenzen angeben, etwa
+        <span class="math">(1,30)</span> für „mindestens 1, höchstens 30 Schüler pro Klasse“. Im Unterricht
+        genügen 1, n und m.</span></div>
+
+      <h3>Und der Fremdschlüssel?</h3>
+      <p>Jetzt hast du die Fachbegriffe für das, was du in der letzten Phase schon gesehen hast. Damit lässt sich
+        die Frage nach der Seite in einem Satz beantworten:</p>
+      <table class="tab">
+        <tr><th>Kardinalität</th><th>Wohin kommt der Fremdschlüssel?</th></tr>
+        <tr><td>1:n</td><td>auf die n-Seite – jeder Spieler merkt sich seine eine Mannschaft, also
+          <span class="math">FK_Mannschaft</span> in der Tabelle Spieler</td></tr>
+        <tr><td>1:1</td><td>auf eine der beiden Seiten, du darfst wählen</td></tr>
+        <tr><td>n:m</td><td>gar nicht direkt – dort entsteht später eine eigene Zwischentabelle mit
+          zwei Fremdschlüsseln</td></tr>
+      </table>
+
+      <div class="quiz-item">
+        <div class="quiz-q">„Eine Halle ist Austragungsort mehrerer Spiele, ein Spiel findet in genau einer Halle statt.“ Wo landet der Fremdschlüssel?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('fk1', this, 'w')">In der Tabelle Halle als Spalte FK_Spiel.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk1', this, 'c')">In der Tabelle Spiel als Spalte FK_Halle.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk1', this, 'w')">In beiden Tabellen, damit die Verbindung in beide Richtungen funktioniert.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-fk1"></div>
+      </div>
+
+      <p class="connector-text">Klingt einfach? Die drei Fälle auseinanderzuhalten ist Übungssache. Los geht's.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Zum Üben ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Welcher Typ ist das?</div>
+        <p>Wähle eine Kardinalität und klicke dann auf das passende Satzpaar.</p>
+        <div class="baustein" data-type="match" id="match-kard">
+          <div class="m-pool">
+            <span class="m-chip" data-id="k11" onclick="matchSelect(this)">1:1</span>
+            <span class="m-chip" data-id="k1n" onclick="matchSelect(this)">1:n</span>
+            <span class="m-chip" data-id="knm" onclick="matchSelect(this)">n:m</span>
+          </div>
+          <div class="m-zone" data-correct="k1n" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">In einer Halle finden mehrere Spiele statt. Ein Spiel findet in genau einer Halle statt.</span></div>
+          <div class="m-zone" data-correct="knm" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Ein Buch kann von mehreren Lesern ausgeliehen worden sein. Ein Leser leiht mehrere Bücher aus.</span></div>
+          <div class="m-zone" data-correct="k11" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Jede Klasse hat genau einen Klassenraum. Jeder Klassenraum gehört zu genau einer Klasse.</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">„An einem Spiel sind zwei Mannschaften beteiligt, und eine Mannschaft bestreitet mehrere Spiele.“ Welche Kardinalität hat die Beziehung „bestreitet“?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'w')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'c')">n:m</button>
+          <button class="quiz-btn" onclick="quizCheck('kard2', this, 'w')">1:1</button>
+        </div>
+        <div class="quiz-fb" id="qfb-kard2"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Formen und Kardinalität</div>
+        <p><strong>Formen:</strong> Rechteck = Entitätstyp · Ellipse = Attribut · unterstrichene Ellipse =
+          Primärschlüssel (PK_…) · Raute = Beziehungstyp · Linie = Verbindung, trägt die Kardinalität.</p>
+        <p><strong>Kardinalität:</strong> gibt an, wie viele Datensätze einander zugeordnet werden: 1:1, 1:n oder n:m.</p>
+        <p><strong>Vorgehen:</strong> für jede Beziehung zwei Sätze bilden – einen je Richtung. „Genau ein …“
+          ergibt 1, „mehrere …“ ergibt n bzw. m.</p>
+        <p><strong>Fremdschlüssel:</strong> Bei 1:n auf der n-Seite · bei 1:1 auf einer der beiden Seiten ·
+          bei n:m gar nicht direkt, dort ist später eine Zwischentabelle nötig.</p>
         <table>
-          <tr><td>Fremdschlüssel</td><td>steht immer auf der n-Seite</td></tr>
-          <tr><td>Beispiel hier</td><td>Raum 1:n Rechner 1:n Wartung</td></tr>
+          <tr><td>1:1</td><td>Klasse – Klassenraum</td></tr>
+          <tr><td>1:n</td><td>Klasse – Schüler</td></tr>
+          <tr><td>n:m</td><td>Schüler – Lehrer</td></tr>
         </table>
       </div>
+
+      <p class="connector-text">Genug Theorie. Frau Wetter wartet auf ihren Turnierplan – und du hast jetzt alles,
+        was du dafür brauchst.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Zur Textaufgabe →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PHASE 3 -->
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Übung: Der Turniertag</h2>
+    <p>Frau Wetter hat ihre Anforderungen aufgeschrieben, so wie sie ihr eingefallen sind. Dein Auftrag: Finde die
+      Entitäten, lege ihre Primärschlüssel fest, ordne die Attribute zu und bestimme die Kardinalitäten. Am Ende steht dein eigenes ER-Diagramm.</p>
+
+    <div class="miniwelt">
+      <p><strong>Der Turniertag am Gymnasium – Beschreibung</strong></p>
+      <ul>
+        <li>Am Turniertag treten mehrere Mannschaften gegeneinander an. Zu jeder Mannschaft werden der
+          Mannschaftsname, eine Startnummer und die Trikotfarbe gespeichert.</li>
+        <li>Von jeder Spielerin und jedem Spieler werden Vorname, Nachname, Klasse und Rückennummer erfasst.
+          Wer mitspielt, gehört zu genau einer Mannschaft; zu einer Mannschaft gehören mehrere Spielerinnen und Spieler.</li>
+        <li>Jede Mannschaft hat genau eine Kapitänin oder einen Kapitän. Wer diese Aufgabe übernimmt, ist Kapitän
+          für genau diese eine Mannschaft.</li>
+        <li>Für jedes Spiel werden eine Spielnummer, die Anstoßzeit und das Ergebnis notiert. An einem Spiel sind
+          zwei Mannschaften beteiligt, und jede Mannschaft bestreitet im Laufe des Tages mehrere Spiele.</li>
+        <li>Jedes Spiel wird in genau einer Halle ausgetragen. In einer Halle finden über den Tag verteilt mehrere
+          Spiele statt. Zu jeder Halle werden der Hallenname und die Platzanzahl gespeichert.</li>
+        <li>Zum Schluss gibt es für alle Kuchen, den der Elternrat gespendet hat.</li>
+      </ul>
+    </div>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Entitäten und Attribute</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Kardinalitäten</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Lösung und Diagramm</button>
+      <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe 1: Entitäten finden</div>
+        <p>Klicke die Wörter an, aus denen ein <strong>Rechteck</strong> wird. Achtung: Ein Wort gehört gar nicht
+          in diese Datenbank.</p>
+        <div class="baustein" data-type="mark" id="mark-turnier">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Mannschaft</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Mannschaftsname</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Startnummer</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Trikotfarbe</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Spieler</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Rückennummer</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Spiel</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Anstoßzeit</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Halle</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Platzanzahl</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Kuchen</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="showSol('tipp-ent')">🛟 Wenn du nicht weiterkommst</button>
+        <div class="sol" id="tipp-ent">Frag dich bei jedem Wort: Könnte ich darüber eine eigene Liste führen, in
+          der jede Zeile eine eigene Entität ist? Über „Mannschaften“ ja – über „rot“ nicht. Und: Nicht alles, was im
+          Text steht, gehört in die Datenbank.</div>
+      </div>
+
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe 2: Attribute zuordnen</div>
+        <p>Welche Eigenschaften gehören zu welchem Entitätstyp? Wähle oben einen Begriff, klicke dann die Zeile an.</p>
+        <div class="baustein" data-type="match" id="match-attr">
+          <div class="m-pool">
+            <span class="m-chip" data-id="mann" onclick="matchSelect(this)">Mannschaft</span>
+            <span class="m-chip" data-id="spie" onclick="matchSelect(this)">Spieler</span>
+            <span class="m-chip" data-id="spl" onclick="matchSelect(this)">Spiel</span>
+            <span class="m-chip" data-id="hal" onclick="matchSelect(this)">Halle</span>
+          </div>
+          <div class="m-zone" data-correct="spie" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Vorname, Nachname, Klasse, Rückennummer</span></div>
+          <div class="m-zone" data-correct="hal" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Hallenname, Platzanzahl</span></div>
+          <div class="m-zone" data-correct="mann" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Mannschaftsname, Startnummer, Trikotfarbe</span></div>
+          <div class="m-zone" data-correct="spl" onclick="matchPlace(this)">
+            <span class="m-drop">?</span><span class="m-def">Spielnummer, Anstoßzeit, Ergebnis</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">„Klasse“ steht im Text als Eigenschaft der Spieler. Warum ist „Klasse“ hier kein eigenes Rechteck?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('tk0', this, 'c')">Weil in dieser Beschreibung nichts über Klassen gespeichert werden soll – nur, in welcher ein Spieler ist.</button>
+          <button class="quiz-btn" onclick="quizCheck('tk0', this, 'w')">Weil Klassen keine eindeutigen Namen haben.</button>
+          <button class="quiz-btn" onclick="quizCheck('tk0', this, 'w')">Weil ein ER-Diagramm höchstens vier Rechtecke haben darf.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-tk0"></div>
+      </div>
+
+      <p class="connector-text">Die Rechtecke und Ellipsen stehen. Jetzt der Teil, der über richtig und falsch
+        entscheidet: die Zahlen an den Linien.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Weiter zu den Kardinalitäten ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe 3: Kardinalitäten bestimmen</div>
+        <p>Lies für jede Beziehung die passende Stelle im Text oben nach und bilde die zwei Sätze.</p>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Mannschaft – <em>gehört zu</em> – Spieler</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('tk1', this, 'w')">1:1</button>
+          <button class="quiz-btn" onclick="quizCheck('tk1', this, 'c')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('tk1', this, 'w')">n:m</button>
+        </div>
+        <div class="quiz-fb" id="qfb-tk1"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Mannschaft – <em>hat als Kapitän</em> – Spieler</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('tk2', this, 'c')">1:1</button>
+          <button class="quiz-btn" onclick="quizCheck('tk2', this, 'w')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('tk2', this, 'w')">n:m</button>
+        </div>
+        <div class="quiz-fb" id="qfb-tk2"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Mannschaft – <em>bestreitet</em> – Spiel</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('tk3', this, 'w')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('tk3', this, 'w')">1:1</button>
+          <button class="quiz-btn" onclick="quizCheck('tk3', this, 'c')">n:m</button>
+        </div>
+        <div class="quiz-fb" id="qfb-tk3"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Halle – <em>ist Austragungsort von</em> – Spiel</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('tk4', this, 'w')">n:m</button>
+          <button class="quiz-btn" onclick="quizCheck('tk4', this, 'c')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('tk4', this, 'w')">1:1</button>
+        </div>
+        <div class="quiz-fb" id="qfb-tk4"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Wie heißt der Primärschlüssel des Entitätstyps „Halle“ in unserer Schreibweise?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('pk2', this, 'c')">PK_Halle</button>
+          <button class="quiz-btn" onclick="quizCheck('pk2', this, 'w')">Halle_PK</button>
+          <button class="quiz-btn" onclick="quizCheck('pk2', this, 'w')">Hallenname</button>
+        </div>
+        <div class="quiz-fb" id="qfb-pk2"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Die Tabelle Spieler bekommt später die Spalte <span class="math">FK_Mannschaft</span>. Was steht dort drin?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('fk2', this, 'w')">Der Mannschaftsname, also z. B. „Die Raketen“.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk2', this, 'c')">Der Primärschlüssel der Mannschaft, zu der dieser Spieler gehört.</button>
+          <button class="quiz-btn" onclick="quizCheck('fk2', this, 'w')">Alle Spieler der Mannschaft, durch Komma getrennt.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-fk2"></div>
+      </div>
+
+      <p class="connector-text">Zwischen Mannschaft und Spieler sind dir zwei verschiedene Beziehungen begegnet –
+        genau wie bei Anna Konda und ihrer 7c. Zeit für den Vergleich mit der Lösung.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Lösung ansehen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-3">
+      <p>Zeichne dein Diagramm zuerst selbst – auf Papier oder in draw.io. Erst danach vergleichen, sonst prüfst du
+        nur ab, ob du abschreiben kannst.</p>
+      <button class="btn btn-primary btn-sm" onclick="showSol('sol-turnier')">Musterlösung zeigen</button>
+      <div class="sol" id="sol-turnier">
+        <p><strong>Vier Entitätstypen:</strong> Mannschaft, Spieler, Spiel, Halle. „Kuchen“ gehört nicht dazu –
+          er wird nirgends gespeichert und ist für den Turnierplan bedeutungslos.</p>
+        <div class="fig">
+          <svg viewBox="0 0 680 420" role="img" aria-labelledby="svg5-title">
+            <title id="svg5-title">Lösungsdiagramm: Spieler und Mannschaft sind über gehört zu (n zu 1) und über ist Kapitän von (1 zu 1) verbunden; Mannschaft und Spiel über bestreitet (n zu m); Spiel und Halle über findet statt in (n zu 1)</title>
+            <line x1="180" y1="54" x2="197" y2="54" stroke="#7A736E" stroke-width="2"/>
+            <line x1="307" y1="54" x2="400" y2="54" stroke="#7A736E" stroke-width="2"/>
+            <polyline points="105,78 105,140 190,140" fill="none" stroke="#7A736E" stroke-width="2"/>
+            <polyline points="314,140 420,140 420,78" fill="none" stroke="#7A736E" stroke-width="2"/>
+            <line x1="520" y1="78" x2="520" y2="112" stroke="#7A736E" stroke-width="2"/>
+            <line x1="520" y1="168" x2="520" y2="200" stroke="#7A736E" stroke-width="2"/>
+            <line x1="475" y1="248" x2="475" y2="262" stroke="#7A736E" stroke-width="2"/>
+            <line x1="475" y1="318" x2="475" y2="340" stroke="#7A736E" stroke-width="2"/>
+
+            <rect x="30" y="30" width="150" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+            <text x="105" y="60" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">Spieler</text>
+            <rect x="400" y="30" width="150" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+            <text x="475" y="60" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">Mannschaft</text>
+            <rect x="400" y="200" width="150" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+            <text x="475" y="230" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">Spiel</text>
+            <rect x="400" y="340" width="150" height="48" rx="4" fill="#E7ECF4" stroke="#3F5E8C" stroke-width="2.5"/>
+            <text x="475" y="370" text-anchor="middle" fill="#223B5E" font-family="sans-serif" font-size="17" font-weight="bold">Halle</text>
+
+            <polygon points="252,28 307,54 252,80 197,54" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+            <text x="252" y="59" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="14" font-weight="bold">gehört zu</text>
+            <polygon points="252,108 314,140 252,172 190,140" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+            <text x="252" y="145" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="14" font-weight="bold">ist Kapitän von</text>
+            <polygon points="520,110 575,140 520,170 465,140" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+            <text x="520" y="145" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="14" font-weight="bold">bestreitet</text>
+            <polygon points="475,262 537,290 475,318 413,290" fill="#FBF1E9" stroke="#C2410C" stroke-width="2.5"/>
+            <text x="475" y="295" text-anchor="middle" fill="#8A3A0C" font-family="sans-serif" font-size="14" font-weight="bold">findet statt in</text>
+
+            <text x="186" y="44" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+            <text x="318" y="44" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+            <text x="115" y="132" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+            <text x="404" y="132" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+            <text x="530" y="102" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+            <text x="530" y="192" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">m</text>
+            <text x="486" y="262" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">n</text>
+            <text x="486" y="334" fill="#C2410C" font-family="sans-serif" font-size="17" font-weight="bold">1</text>
+          </svg>
+          <p class="caption">Die Attribute sind hier weggelassen, damit die Beziehungen sichtbar bleiben – in
+            deinem Diagramm gehören sie als Ellipsen an die Rechtecke.</p>
+        </div>
+        <table class="tab">
+          <tr><th>Entitätstyp</th><th>Attribute (Primärschlüssel unterstrichen)</th></tr>
+          <tr><td>Mannschaft</td><td><u>PK_Mannschaft</u>, Mannschaftsname, Startnummer, Trikotfarbe</td></tr>
+          <tr><td>Spieler</td><td><u>PK_Spieler</u>, Vorname, Nachname, Klasse, Rückennummer</td></tr>
+          <tr><td>Spiel</td><td><u>PK_Spiel</u>, Spielnummer, Anstoßzeit, Ergebnis</td></tr>
+          <tr><td>Halle</td><td><u>PK_Halle</u>, Hallenname, Platzanzahl</td></tr>
+        </table>
+        <p><strong>Zu den Kardinalitäten:</strong> Eine Mannschaft hat mehrere Spieler, ein Spieler gehört zu genau
+          einer Mannschaft → 1:n. Kapitän ist jeweils genau eine Person für genau eine Mannschaft → 1:1. Eine
+          Mannschaft bestreitet mehrere Spiele, an einem Spiel sind zwei Mannschaften beteiligt – und zwei ist mehr
+          als eines → n:m. In einer Halle finden mehrere Spiele statt, ein Spiel nur in einer Halle → 1:n.</p>
+        <p><strong>Zu den Primärschlüsseln:</strong> Die Rückennummer taugt nicht dafür – die 7 kann es in jeder
+          Mannschaft geben. Auch der Hallenname ist heikel, sobald zwei Hallen gleich heißen. Deshalb bekommt jeder
+          Entitätstyp einen eigenen, unterstrichenen Primärschlüssel nach dem Muster PK_… .</p>
+        <p><strong>Und die Fremdschlüssel?</strong> Sie tauchen auf, sobald aus dem Bauplan Tabellen werden:</p>
+        <table class="tab">
+          <tr><th>Beziehung</th><th>Kardinalität</th><th>Fremdschlüssel</th></tr>
+          <tr><td>Mannschaft – gehört zu – Spieler</td><td>1:n</td><td>FK_Mannschaft in der Tabelle Spieler (n-Seite)</td></tr>
+          <tr><td>Mannschaft – hat als Kapitän – Spieler</td><td>1:1</td><td>FK_Spieler in der Tabelle Mannschaft (eine Seite genügt)</td></tr>
+          <tr><td>Halle – ist Austragungsort von – Spiel</td><td>1:n</td><td>FK_Halle in der Tabelle Spiel (n-Seite)</td></tr>
+          <tr><td>Mannschaft – bestreitet – Spiel</td><td>n:m</td><td>geht nicht direkt – eine Zwischentabelle mit FK_Mannschaft und FK_Spiel</td></tr>
+        </table>
+      </div>
+
+      <div class="callout callout-info">⭐ <span>Für Schnelle: Ergänze einen Entitätstyp <strong>Schiedsrichter</strong>.
+        Jedes Spiel wird von genau einer Person gepfiffen, eine Person pfeift mehrere Spiele. Welche Kardinalität
+        trägst du ein – und welche Attribute braucht der neue Entitätstyp?</span></div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Frau Wetter überlegt, zusätzlich die Handynummern der Eltern und die Lieblingsmusik der Spieler zu speichern. Was spricht dagegen?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('ds1', this, 'w')">Das Diagramm hätte dann zu viele Ellipsen und sähe unordentlich aus.</button>
+          <button class="quiz-btn" onclick="quizCheck('ds1', this, 'w')">Lieblingsmusik lässt sich technisch nicht speichern.</button>
+          <button class="quiz-btn" onclick="quizCheck('ds1', this, 'c')">Man speichert nur Daten, die für den Zweck wirklich gebraucht werden – alles andere ist unnötiges Risiko.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-ds1"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Vom Text zum ER-Diagramm in 5 Schritten</div>
+        <p><strong>1.</strong> Abgrenzen: Worum geht es? Was gehört nicht dazu?</p>
+        <p><strong>2.</strong> Substantive prüfen: Worüber führe ich eine eigene Liste? → Entitätstyp (Rechteck)</p>
+        <p><strong>3.</strong> Übrige Substantive zuordnen: Eigenschaft von wem? → Attribut (Ellipse).
+          Für jede Entität einen Primärschlüssel festlegen: PK_… , unterstrichen</p>
+        <p><strong>4.</strong> Verben suchen: Was tut wer mit wem? → Beziehungstyp (Raute)</p>
+        <p><strong>5.</strong> Je Beziehung zwei Sätze bilden, einen pro Richtung → Kardinalität 1:1, 1:n oder n:m</p>
+      </div>
+
+      <p class="connector-text">Auf Papier hast du es im Griff. Ein sauberes Diagramm zum Abgeben oder für die
+        Gruppenarbeit entsteht schneller am Rechner.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zum Werkzeug →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PHASE 4 -->
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Zeichnen mit draw.io</h2>
+    <p>ER-Diagramme zeichnet man selten zweimal gleich – man verschiebt, benennt um, wirft Rechtecke weg. Genau
+      dafür gibt es <strong>draw.io</strong> (auch <em>diagrams.net</em> genannt): ein kostenloses
+      Zeichenprogramm, das im Browser läuft oder als Programm installiert werden kann.</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Das Werkzeug</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · So gehst du vor</button>
+      <button class="substep-all" onclick="revealSub(4,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="callout callout-warn">🌐 <span>Diese Links führen ins Internet – auf dieser Seite funktioniert
+        sonst alles offline. Ohne Netz hilft die Version <strong>draw.io Desktop</strong> oder schlicht Papier
+        und Bleistift.</span></div>
+
+      <p><strong>Im Browser:</strong> <a href="https://app.diagrams.net" target="_blank" rel="noopener">app.diagrams.net</a><br>
+        <strong>Programm zum Installieren:</strong> <a href="https://www.drawio.com" target="_blank" rel="noopener">drawio.com</a></p>
+
+      <p>Zwei Punkte sind angenehm: Es ist kostenlos und ohne Anmeldung nutzbar, und die Datei bleibt auf deinem
+        eigenen Gerät, wenn du „Gerätespeicher“ als Speicherort wählst. Du kannst dein Diagramm als
+        <span class="math">.drawio</span> speichern (später weiterbearbeiten) und als
+        <span class="math">.png</span> exportieren (in den Hefter kleben oder abgeben).</p>
+
+      <div class="callout">💡 <span>Dieselbe Datei lässt sich zu zweit bearbeiten und weitergeben – praktisch,
+        wenn ihr in der Gruppe an einer Miniwelt arbeitet und nachher vergleicht, wer wie modelliert hat.</span></div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Dein Diagramm sieht in draw.io ordentlich aus. Heißt das, dein Modell ist richtig?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('dio1', this, 'w')">Ja, draw.io meldet einen Fehler, wenn eine Kardinalität nicht passt.</button>
+          <button class="quiz-btn" onclick="quizCheck('dio1', this, 'c')">Nein – draw.io zeichnet nur. Ob die Kardinalitäten stimmen, prüft niemand außer dir.</button>
+          <button class="quiz-btn" onclick="quizCheck('dio1', this, 'w')">Ja, beim Export als PNG wird das Modell automatisch geprüft.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-dio1"></div>
+      </div>
+
+      <p class="connector-text">Bleibt die Frage, wo die Rauten und Ellipsen im Programm eigentlich versteckt sind.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Anleitung anzeigen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <h3>In sieben Schritten zum Diagramm</h3>
+      <ol class="steps">
+        <li>Seite öffnen und <em>Neues Diagramm erstellen</em> wählen, leeres Blatt, Dateiname z. B.
+          <span class="math">Turniertag.drawio</span>.</li>
+        <li>Links unten auf <em>Weitere Formen</em> klicken, im Bereich <em>Software</em> den Haken bei
+          <em>Entity Relation</em> setzen und übernehmen. Jetzt stehen Rechteck, Ellipse und Raute in der
+          linken Spalte bereit.</li>
+        <li>Für jeden Entitätstyp ein Rechteck aufs Blatt ziehen und per Doppelklick beschriften.</li>
+        <li>Attribute als Ellipsen daneben legen; den Primärschlüssel PK_… markieren und mit
+          <span class="math">Strg</span>+<span class="math">U</span> unterstreichen.</li>
+        <li>Beziehungstypen als Rauten setzen und mit einem Verb beschriften.</li>
+        <li>Linien ziehen: mit der Maus an den Rand einer Form gehen, bis Pfeile erscheinen, und auf die nächste
+          Form ziehen. Doppelklick auf die Linie setzt die Kardinalität <span class="math">1</span>,
+          <span class="math">n</span> oder <span class="math">m</span>.</li>
+        <li><em>Datei → Speichern unter</em> für die Weiterarbeit, <em>Datei → Exportieren als → PNG</em> für den Hefter.</li>
+      </ol>
+
+      <div class="task">
+        <div class="task-h">✏️ Aufgabe: Reihenfolge prüfen</div>
+        <p>Bring die fünf wichtigsten Schritte in die Reihenfolge, in der du sie im Programm gehst.</p>
+        <div class="baustein" data-type="sort" id="sort-drawio">
+          <div class="sort-list">
+            <div class="sort-item" data-v="3"><span>Attribute als Ellipsen anhängen, Primärschlüssel unterstreichen</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="5"><span>Datei speichern und als Bild exportieren</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="1"><span>Formenbibliothek „Entity Relation“ einschalten</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="4"><span>Rauten setzen, Linien ziehen und Kardinalitäten eintragen</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="2"><span>Rechtecke für die Entitätstypen aufziehen und beschriften</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="sortCheckTimed(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm sort-sol-btn" disabled onclick="sortShowSolution(this)">🔒 Lösung nach 4 Minuten</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Warum lohnt es sich, das Diagramm als <span class="math">.drawio</span> zu speichern und nicht nur als Bild?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('dio2', this, 'c')">Weil sich eine .drawio-Datei weiter bearbeiten lässt – ein PNG ist nur ein Foto des Diagramms.</button>
+          <button class="quiz-btn" onclick="quizCheck('dio2', this, 'w')">Weil PNG-Dateien nach einigen Tagen gelöscht werden.</button>
+          <button class="quiz-btn" onclick="quizCheck('dio2', this, 'w')">Weil nur .drawio-Dateien ausgedruckt werden können.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-dio2"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Werkzeug</div>
+        <p><strong>draw.io / diagrams.net:</strong> kostenloses Zeichenprogramm für Diagramme, im Browser unter
+          app.diagrams.net oder als Programm.</p>
+        <p><strong>Formen:</strong> Weitere Formen → Software → Entity Relation.</p>
+        <p><strong>Unterstreichen:</strong> Primärschlüssel markieren und Strg+U drücken.</p>
+        <p><strong>Speichern:</strong> .drawio zum Weiterarbeiten, PNG für den Hefter.</p>
+        <p><strong>Wichtig:</strong> Das Programm prüft das Modell nicht. Ob die Kardinalitäten stimmen,
+          entscheidest du.</p>
+      </div>
+
+      <p class="connector-text">Bleibt eine letzte Runde: Sitzen die fünf Begriffe wirklich?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Zum Exit-Ticket →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ SICHERUNG -->
+<section class="phase" id="ph5">
+  <div class="card">
+    <h2>Exit-Ticket</h2>
+    <p>Fünf Begriffe, vier Formen, drei Kardinalitäten – prüfe, was hängengeblieben ist.</p>
+
+    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(5,1)">1 · Wiederholen</button>
+      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(5,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph5-sub-1">
+      <div class="task">
+        <div class="task-h">✏️ Der Merksatz</div>
+        <div class="baustein" data-type="dtw" id="dtw-summary">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Bauplan" onclick="dtwSelect(this)">Bauplan</span>
+            <span class="dtw-word" data-w="Rechteck" onclick="dtwSelect(this)">Rechteck</span>
+            <span class="dtw-word" data-w="Tabelle" onclick="dtwSelect(this)">Tabelle</span>
+            <span class="dtw-word" data-w="Spalte" onclick="dtwSelect(this)">Spalte</span>
+            <span class="dtw-word" data-w="Raute" onclick="dtwSelect(this)">Raute</span>
+            <span class="dtw-word" data-w="Kardinalität" onclick="dtwSelect(this)">Kardinalität</span>
+            <span class="dtw-word" data-w="Primärschlüssel" onclick="dtwSelect(this)">Primärschlüssel</span>
+            <span class="dtw-word" data-w="Fremdschlüssel" onclick="dtwSelect(this)">Fremdschlüssel</span>
+          </div>
+          <p class="dtw-text">Ein ER-Diagramm ist der
+            <span class="dtw-gap" data-answer="Bauplan" onclick="dtwPlace(this)">______</span> einer Datenbank. Jede Entität wird als
+            <span class="dtw-gap" data-answer="Rechteck" onclick="dtwPlace(this)">______</span> gezeichnet und später zu einer
+            <span class="dtw-gap" data-answer="Tabelle" onclick="dtwPlace(this)">______</span>; jedes Attribut wird später zu einer
+            <span class="dtw-gap" data-answer="Spalte" onclick="dtwPlace(this)">______</span>. Jede Entität bekommt einen
+            <span class="dtw-gap" data-answer="Primärschlüssel" onclick="dtwPlace(this)">______</span>, der unterstrichen wird und mit <span class="math">PK_</span> beginnt. Eine Beziehung steht in einer
+            <span class="dtw-gap" data-answer="Raute" onclick="dtwPlace(this)">______</span>, und die
+            <span class="dtw-gap" data-answer="Kardinalität" onclick="dtwPlace(this)">______</span> sagt, wie viele Datensätze einander zugeordnet werden. Verbunden werden die Tabellen später über einen
+            <span class="dtw-gap" data-answer="Fremdschlüssel" onclick="dtwPlace(this)">______</span> mit dem Namen <span class="math">FK_</span>…</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-h">🔁 Karten zum Abfragen</div>
+        <p>Klicke auf die Karte, um die Rückseite zu sehen.</p>
+        <div class="baustein" data-type="flashcards" id="fc-begriffe"
+             data-cards='[["ER-Diagramm (ERD)","Bauplan einer Datenbank – grafisch, vor der ersten Tabelle"],["Entität","Objekt, über das Daten gespeichert werden — später eine Tabelle"],["Attribut","Eigenschaft einer Entität — später eine Spalte"],["Beziehung","Verbindung zwischen zwei Entitäten, z. B. Schüler besucht Kurs"],["Kardinalität","Wie viele zu wie vielen: 1:1, 1:n oder n:m"],["Welche Form? Entitätstyp","Rechteck"],["Welche Form? Attribut","Ellipse"],["Welche Form? Beziehungstyp","Raute"],["Primärschlüssel","Eindeutige Kennung je Entität – unterstrichen, heißt PK_…"],["Welche Form? Primärschlüssel","unterstrichene Ellipse"],["Wie heißt der Schlüssel von „Kurs“?","PK_Kurs"],["Fremdschlüssel","Primärschlüssel einer anderen Tabelle als Spalte – heißt FK_…"],["Wo steht der Fremdschlüssel bei 1:n?","Auf der n-Seite – bei dem, von dem es viele gibt"]]'>
+          <div class="fc-card" onclick="fcFlip(this)" tabindex="0"><span class="fc-face">ER-Diagramm (ERD)</span></div>
+          <div class="fc-controls">
+            <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
+            <span class="caption fc-count">1 / 13</span>
+            <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)">weiter →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">„Jede Lehrkraft unterrichtet mehrere Fächer, und jedes Fach wird von mehreren Lehrkräften unterrichtet.“ Welche Kardinalität?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'w')">1:n</button>
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'w')">1:1</button>
+          <button class="quiz-btn" onclick="quizCheck('exit1', this, 'c')">n:m</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit1"></div>
+      </div>
+
+      <p class="connector-text">Letzte Frage – und eine Zugabe für alle, die Lust auf Rätsel haben.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Exit-Ticket öffnen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph5-sub-2">
+      <div class="quiz-item">
+        <div class="quiz-q">Welche Wörter eines Textes werden meistens zu Rauten?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'c')">Die Verben – sie beschreiben, was die Entitäten miteinander zu tun haben.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'w')">Die Zahlen – sie stehen ja für die Kardinalität.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit2', this, 'w')">Die Adjektive – sie beschreiben Eigenschaften.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit2"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Was gehört <em>nicht</em> in ein ER-Diagramm?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit3', this, 'w')">Die Namen der Beziehungstypen.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit3', this, 'c')">Die konkreten Daten, also Zeilen wie „Jana Türlich, 9c“.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit3', this, 'w')">Die Kardinalitäten an den Linien.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit3"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">In deinem Diagramm hat der Entitätstyp „Buch“ die Attribute Titel, ISBN und Verlag. Was fehlt noch?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit4', this, 'w')">Nichts – drei Attribute genügen für eine Entität.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit4', this, 'c')">Ein Primärschlüssel PK_Buch, unterstrichen, der jedes Buch eindeutig macht.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit4', this, 'w')">Eine zweite Raute, damit das Rechteck verbunden ist.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit4"></div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Warum ist ein Fremdschlüssel besser, als den Mannschaftsnamen in jede Spielerzeile zu schreiben?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('exit5', this, 'w')">Weil Zahlen weniger Speicherplatz brauchen als Text.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit5', this, 'c')">Weil der Name dann nur an einer Stelle steht – beim Umbenennen ändert sich genau ein Feld.</button>
+          <button class="quiz-btn" onclick="quizCheck('exit5', this, 'w')">Weil Datenbanken keine Wörter speichern können.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-exit5"></div>
+      </div>
+
+      <div class="task">
+        <div class="task-h">★ Zugabe: Kreuzworträtsel</div>
+        <p>Freiwillig – vier Begriffe aus dieser Stunde.</p>
+        <div class="baustein" data-type="crossword" id="cw-erd"
+             data-rows="....A....../....T..E.../....T..L.../...ERD.L.../....I..I.../....B..P.../....U..S.../....TABELLE">
+          <div class="cw-grid"></div>
+          <div class="cw-clues">
+            <strong>Waagerecht:</strong> 3 Kurzform für „Entity-Relationship-Diagramm“ · 4 Das wird später aus jedem Rechteck<br>
+            <strong>Senkrecht:</strong> 1 Eigenschaft einer Entität · 2 Form, in der eine Eigenschaft gezeichnet wird
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="cwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="cwReveal(this)">Lösung zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-success">🎉 <span>Du kannst jetzt aus einem beschreibenden Text ein ER-Diagramm
+        entwerfen: Entitäten und Attribute finden, Beziehungen benennen und die Kardinalitäten bestimmen.</span></div>
     </div>
   </div>
 </section>
@@ -565,18 +1530,57 @@ img{max-width:100%;height:auto;}
     <div class="acc">
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-          <span>1:n-Beziehung erkennen</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Die Formulierungen „beliebig viele" und „genau ein(e)" im Text verraten dir, welche Seite die n-Seite und welche die 1-Seite einer Beziehung ist.</div></div>
+          <span>Wozu ein ER-Diagramm?</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Es stellt den Aufbau einer Datenbank grafisch dar,
+          noch bevor die erste Tabelle angelegt wird. So fallen Fehler auf, solange sie nichts kosten – und
+          Redundanz mit ihren Widersprüchen entsteht gar nicht erst.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-          <span>Fremdschlüssel platzieren</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Bei einer 1:n-Beziehung steht der Fremdschlüssel immer in der Tabelle auf der n-Seite — hier also RaumID in Rechner und RechnerID in Wartung.</div></div>
+          <span>Entität, Attribut, Beziehung</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Eine Entität ist ein Objekt, über das Daten gespeichert
+          werden (später eine Tabelle). Ein Attribut ist eine Eigenschaft davon (später eine Spalte). Eine
+          Beziehung verbindet zwei Entitäten und trägt ein Verb.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Primärschlüssel</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Jede Entität braucht ein Attribut, das sie eindeutig
+          identifiziert. Es wird unterstrichen und heißt immer PK_ plus Name des Entitätstyps – PK_Schueler,
+          PK_Mannschaft, PK_Halle. Fehlt ein geeignetes Attribut, wird eine fortlaufende Nummer ergänzt.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Fremdschlüssel</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Damit Tabellen zusammenfinden, wandert der
+          Primärschlüssel der einen als Spalte in die andere – der Fremdschlüssel, benannt FK_ plus Name der
+          Entität, auf die er zeigt. Bei 1:n steht er auf der n-Seite, bei 1:1 auf einer der beiden Seiten, bei
+          n:m braucht es eine Zwischentabelle.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Die vier Formen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Rechteck für den Entitätstyp, Ellipse für das Attribut
+          (unterstrichen, wenn es der Primärschlüssel ist), Raute für den Beziehungstyp, Linie für die Verbindung mit der
+          Kardinalität.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Kardinalität bestimmen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Für jede Beziehung zwei Sätze bilden, einen je Richtung.
+          „Genau ein …“ ergibt 1, „mehrere …“ ergibt n bzw. m. Daraus folgt 1:1, 1:n oder n:m.</div></div>
       </div>
     </div>
-    <div class="callout callout-success">🎉 <span>Du kannst jetzt aus einem Text mit mehreren Entitäten die passenden 1:n-Beziehungen ableiten und weißt, auf welcher Seite der Fremdschlüssel steht.</span></div>
-    <p class="connector-text">Was passiert, wenn ein Rechner von mehreren Technikern gewartet werden kann und ein Techniker viele Rechner betreut? Dann reicht eine einfache 1:n-Beziehung nicht mehr aus …</p>
+
+    <p class="connector-text">In der nächsten Stunde wird aus dem Bauplan echtes Mauerwerk: Aus jedem Rechteck
+      wird eine Tabelle, aus jeder Ellipse eine Spalte, aus jeder Linie ein Fremdschlüssel – und du wirst sehen,
+      dass ausgerechnet die n:m-Beziehung dafür eine eigene dritte Tabelle braucht.</p>
+
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+
+    <p class="caption">Fachliche Grundlage: inf-schule.de, Kapitel „Entwurf von Datenbanken“ (CC BY-SA 4.0).
+      Lehrplanbezug: Lehrplan Gymnasium Informatik Sachsen 2022, Klassenstufe 9, Lernbereich 1 –
+      Informationen und Daten.</p>
   </div>
 
 </div>
@@ -615,21 +1619,9 @@ function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=
    1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
    2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
 const quizFeedback = {
-  kard1: {
-    ok:   '✅ <strong>Richtig!</strong> „In einem Raum können beliebig viele Rechner stehen, aber jeder Rechner steht in genau einem Raum" — das ist die 1:n-Definition.',
-    ng:   '❌ <strong>Nicht ganz.</strong> Ein Rechner gehört immer zu genau einem Raum, aber ein Raum kann viele Rechner enthalten — das ist keine n:n- oder 1:1-Beziehung.',
-    hint: 'Kann ein Rechner gleichzeitig in mehreren Räumen stehen? Was sagt der Text über die Anzahl der Rechner pro Raum?'
-  },
-  kard2: {
-    ok:   '✅ <strong>Richtig!</strong> Ein Rechner kann beliebig oft gewartet werden, aber jede Wartung gehört zu genau einem Rechner.',
-    ng:   '❌ <strong>Nicht ganz.</strong> Eine einzelne Wartung betrifft immer nur einen Rechner, ein Rechner kann aber mehrfach gewartet werden.',
-    hint: 'Kann derselbe Rechner im Laufe der Zeit mehrfach gewartet werden? Kann eine Wartung zu mehreren Rechnern gleichzeitig gehören?'
-  },
-  kard3: {
-    ok:   '✅ <strong>Richtig!</strong> Die n-Seite „weiß", zu welchem Datensatz der 1-Seite sie gehört, und trägt deshalb den Fremdschlüssel.',
-    ng:   '❌ <strong>Nicht ganz.</strong> Überlege: Ein Rechner (n-Seite) gehört zu genau einem Raum — er kann also dessen ID als Fremdschlüssel speichern. Umgekehrt geht das nicht.',
-    hint: 'Welche Tabelle kann sinnvoll nur EINEN Wert des Fremdschlüssels speichern — die 1-Seite oder die n-Seite?'
-  }
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
 };
 function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
 
@@ -716,157 +1708,8 @@ function initHefter(){
   }
 }
 
-/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
-   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
-   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
-   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
-function teachSetUI(active){
-  const bar=document.getElementById('teachbar'); if(!bar)return;
-  bar.classList.toggle('active',active);
-  const status=document.getElementById('teachbar-status');
-  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
-  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
-  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
-  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
-  document.documentElement.classList.toggle('teach-on',active);
-  hilfeRefresh();   /* Lehrermodus zeigt alle Tipps sofort, Deaktivieren stellt den Timer-Zustand wieder her */
-}
-function teachActivate(){
-  const bar=document.getElementById('teachbar'); if(!bar)return;
-  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
-  if((pw.value||'')!==(bar.dataset.pw||'')){
-    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
-  }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
-  teachSetUI(true);
-}
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
-function initTeachbar(){
-  if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
-  teachSetUI(on);
-}
-
-/* ---------- Gestufte Hilfe: Button „Hilfe anfordern" startet einen Timer;
-   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
-   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
-function hilfeFormat(min){
-  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
-  return mm+':'+String(ss).padStart(2,'0');
-}
-function teachOn(){ return document.documentElement.classList.contains('teach-on'); }
-function hilfeTick(box, requestedAt){
-  const status=box.querySelector('.hilfe-status');
-  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
-  const elapsedMin=(Date.now()-requestedAt)/60000;
-  let next=null;
-  stufen.forEach(s=>{
-    const min=parseFloat(s.dataset.min), frei=elapsedMin>=min;
-    s.hidden = !(frei || teachOn());
-    if(!frei && (next===null || min<next)){ next=min; }
-  });
-  if(status){ status.hidden=false; status.textContent = teachOn() ? 'Lehrermodus: alle Tipps sichtbar.'
-    : (next!==null ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …') : 'Alle Tipps freigeschaltet.'); }
-  clearTimeout(box._hilfeT);
-  if(next!==null){ box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
-}
-/* Zustand aller Hilfe-Kästen neu setzen: vor dem Anfordern sind alle Tipps verborgen
-   (außer im Lehrermodus), danach entscheidet der Timer. */
-function hilfeRefresh(){
-  document.querySelectorAll('.hilfe-box').forEach(box=>{
-    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
-    if(t){ hilfeTick(box, parseInt(t,10)); return; }
-    clearTimeout(box._hilfeT);
-    box.querySelectorAll('.hilfe-stufe').forEach(s=>{ s.hidden=!teachOn(); });
-    const status=box.querySelector('.hilfe-status');
-    if(status){ status.hidden=!teachOn(); status.textContent=teachOn()?'Lehrermodus: alle Tipps sichtbar.':''; }
-  });
-}
-function hilfeRequest(btn){
-  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
-  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
-  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
-  const now=Date.now();
-  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
-  hilfeTick(box, now);
-}
-function initHilfe(){
-  document.querySelectorAll('.hilfe-box').forEach(box=>{
-    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
-    if(!t) return;
-    box.dataset.requested='1';
-    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
-  });
-  hilfeRefresh();
-}
-
-/* ---------- Zuordnung in Tabellenspalten ----------
-   Ziehen mit Maus/Finger (Pointer Events, klappt auch auf Tablets) oder
-   Kärtchen antippen und dann Spalte antippen; per Tastatur Enter/Leertaste. */
-function gsRoot(el){ return el.closest('.gs'); }
-function gsClear(g){ g.querySelectorAll('.gs-chip').forEach(c=>c.classList.remove('gs-ok','gs-err'));
-  const f=g.querySelector('.fb'); if(f){ f.textContent=''; f.className='fb grp-fb'; } }
-function gsSelect(chip){ const g=gsRoot(chip), was=chip.classList.contains('sel');
-  g.querySelectorAll('.gs-chip.sel').forEach(c=>c.classList.remove('sel')); if(!was) chip.classList.add('sel'); }
-function gsMove(chip,zone){ zone.appendChild(chip); chip.classList.remove('sel'); gsClear(gsRoot(chip)); }
-function gsZoneActivate(zone){ const sel=gsRoot(zone).querySelector('.gs-chip.sel'); if(sel) gsMove(sel,zone); }
-function gsCheck(btn){
-  const g=gsRoot(btn); let ok=0,total=0,left=0;
-  g.querySelectorAll('.gs-chip').forEach(c=>{ total++; const z=c.parentElement.dataset.zone;
-    c.classList.remove('gs-ok','gs-err','sel');
-    if(z==='pool'){ left++; return; }
-    if(z===c.dataset.group){ c.classList.add('gs-ok'); ok++; } else { c.classList.add('gs-err'); } });
-  const f=g.querySelector('.fb'), all=(ok===total);
-  f.textContent = all ? '🎉 Alles richtig zugeordnet!'
-    : (ok+' von '+total+' richtig'+(left?(', '+left+' Kärtchen noch nicht zugeordnet'):'')+'. Verschiebe die Kärtchen mit ✗ in eine andere Spalte.');
-  f.className='fb grp-fb '+(all?'ok':'err');
-}
-function gsReset(btn){ const g=gsRoot(btn), pool=g.querySelector('.gs-pool');
-  shuffle([...g.querySelectorAll('.gs-chip')]).forEach(c=>{ c.classList.remove('sel'); pool.appendChild(c); }); gsClear(g); }
-function initGs(g){
-  const pool=g.querySelector('.gs-pool');
-  shuffle([...pool.querySelectorAll('.gs-chip')]).forEach(c=>pool.appendChild(c));
-  g.querySelectorAll('.gs-chip').forEach(chip=>{
-    chip.tabIndex=0; chip.setAttribute('role','button');
-    chip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); gsSelect(chip); } });
-    chip.addEventListener('pointerdown',e=>{
-      if(e.button!==0) return;
-      const sx=e.clientX, sy=e.clientY; let ghost=null, over=null;
-      try{ chip.setPointerCapture(e.pointerId); }catch(err){}
-      const move=ev=>{
-        if(!ghost){
-          if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
-          ghost=chip.cloneNode(true); ghost.classList.remove('sel','gs-ok','gs-err'); ghost.classList.add('gs-ghost');
-          ghost.style.width=chip.offsetWidth+'px'; document.body.appendChild(ghost); chip.classList.add('dragging');
-        }
-        ghost.style.left=(ev.clientX-chip.offsetWidth/2)+'px'; ghost.style.top=(ev.clientY-18)+'px';
-        const hit=document.elementFromPoint(ev.clientX,ev.clientY);
-        let z=hit?hit.closest('.gs-zone'):null; if(z && gsRoot(z)!==g) z=null;
-        if(over!==z){ if(over) over.classList.remove('dragover'); over=z; if(over) over.classList.add('dragover'); }
-      };
-      const up=ev=>{
-        chip.removeEventListener('pointermove',move); chip.removeEventListener('pointerup',up); chip.removeEventListener('pointercancel',up);
-        if(ghost){ ghost.remove(); chip.classList.remove('dragging');
-          if(over){ over.classList.remove('dragover'); if(ev.type==='pointerup') gsMove(chip,over); } }
-        else if(ev.type==='pointerup'){
-          const sel=g.querySelector('.gs-chip.sel');
-          if(sel && sel!==chip && sel.parentElement!==chip.parentElement){ gsMove(sel,chip.parentElement); }
-          else { gsSelect(chip); }
-        }
-      };
-      chip.addEventListener('pointermove',move); chip.addEventListener('pointerup',up); chip.addEventListener('pointercancel',up);
-    });
-  });
-  g.querySelectorAll('.gs-zone').forEach(zone=>{
-    zone.addEventListener('click',e=>{ if(e.target.closest('.gs-chip')) return; gsZoneActivate(zone); });
-    zone.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && e.target===zone){ e.preventDefault(); gsZoneActivate(zone); } });
-  });
-}
-
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); initHilfe();
-  document.querySelectorAll('.gs').forEach(initGs); }
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -942,53 +1785,184 @@ function wsClick(cell){ const s=bs(cell); if(!s._start){ s._start=cell; cell.cla
   const rev=letters.split('').reverse().join(''); const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
   if(word&&!s._found.includes(word)){ s._found.push(word); cells.forEach(rc=>{ const el=s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); if(el)el.classList.add('ws-found'); }); wsWordList(s); if(s._found.length===s._words.length){ setFb(s,'🎉 Alle Wörter gefunden!',true); } } }
 
-/* 2b Zuordnung per Drag & Drop (zusätzlich zum Klicken; Klick bleibt die
-   barrierearme Grundbedienung, Drag & Drop ist eine reine Zusatzoption) */
-function initMatchDnD(s){
-  const pool=s.querySelector('.m-pool'); if(!pool||pool.dataset.dnd)return; pool.dataset.dnd='1';
-  pool.querySelectorAll('.m-chip').forEach(chip=>{
-    chip.setAttribute('draggable','true');
-    chip.addEventListener('dragstart',function(e){ if(chip.classList.contains('used')){e.preventDefault();return;}
-      s._dragChip=chip; chip.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
-    chip.addEventListener('dragend',function(){ chip.classList.remove('dragging'); s._dragChip=null; });
-  });
-  s.querySelectorAll('.m-zone').forEach(zone=>{
-    zone.addEventListener('dragover',function(e){ if(!s._dragChip)return; e.preventDefault(); zone.classList.add('dragover'); });
-    zone.addEventListener('dragleave',function(){ zone.classList.remove('dragover'); });
-    zone.addEventListener('drop',function(e){ e.preventDefault(); zone.classList.remove('dragover');
-      const chip=s._dragChip; if(!chip)return; s._sel=chip; matchPlace(zone); s._dragChip=null; });
-  });
-}
-
-/* 3b Sortieren per Drag & Drop (zusätzlich zu den ▲▼-Tasten, die als
-   barrierearme/tastaturbedienbare Grundbedienung erhalten bleiben) */
-function sortDragAfter(list,y){
-  const els=[...list.querySelectorAll('.sort-item:not(.dragging)')];
-  return els.reduce(function(best,child){
-    const box=child.getBoundingClientRect(), offset=y-box.top-box.height/2;
-    return (offset<0 && offset>best.offset) ? {offset:offset,element:child} : best;
-  }, {offset:-Infinity,element:null}).element;
-}
-function initSortDnD(s){
-  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd)return; list.dataset.dnd='1';
-  list.querySelectorAll('.sort-item').forEach(item=>{
-    item.setAttribute('draggable','true');
-    item.addEventListener('dragstart',function(e){ item.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
-    item.addEventListener('dragend',function(){ item.classList.remove('dragging'); });
-  });
-  list.addEventListener('dragover',function(e){
-    const dragging=list.querySelector('.sort-item.dragging'); if(!dragging)return; e.preventDefault();
-    const after=sortDragAfter(list,e.clientY);
-    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging,after);
-  });
-}
-
 /* ---------- Init: alle Bausteine initialisieren ---------- */
 function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
-  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
-  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); }); }
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s); }); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
 
+
+/* ---------- Rückmeldungen zu den Fragen dieser Seite ---------- */
+quizFeedback['ein1'] = {
+  ok:'✅ <strong>Richtig!</strong> Das Diagramm ist der Bauplan. Eine Linie zu verschieben kostet nichts – eine Datenbank mit 2000 Datensätzen umzubauen schon.',
+  ng:'❌ <strong>Nicht ganz.</strong> Eine Datenbank besteht später aus mehreren verknüpften Tabellen, und der Computer arbeitet gar nicht mit dem Diagramm – es ist ein Plan für Menschen.',
+  hint:'Überlege, wann eine Änderung teurer ist: im Plan oder in der fertigen Datenbank, in der schon Daten stehen?'
+};
+quizFeedback['ent1'] = {
+  ok:'✅ <strong>Richtig!</strong> Ein Attribut hängt immer an etwas. „Geburtsdatum“ allein ist keine Liste wert – „Schüler“ schon.',
+  ng:'❌ <strong>Nicht ganz.</strong> Weder die Satzstellung noch der Datentyp entscheiden. Entscheidend ist: Beschreibt das Wort etwas anderes, oder ist es selbst die Entität?',
+  hint:'Frag dich bei jedem Wort: Kann ich darüber allein eine Liste führen – oder gehört es zu etwas anderem?'
+};
+quizFeedback['bez1'] = {
+  ok:'✅ <strong>Richtig!</strong> „besucht“ und „ist Klassensprecher von“ sagen Verschiedenes – deshalb zwei Rauten mit eigenen Namen.',
+  ng:'❌ <strong>Nicht ganz.</strong> Anna ist in genau einer Klasse. Es sind zwei unterschiedliche Zusammenhänge zwischen denselben beiden Rechtecken, und jeder braucht seine eigene Raute.',
+  hint:'Lies beide Sätze laut: „Anna besucht die 7c“ und „Anna ist Klassensprecherin der 7c“. Sagen sie dasselbe?'
+};
+quizFeedback['form1'] = {
+  ok:'✅ <strong>Richtig!</strong> Die Anstoßzeit beschreibt ein Spiel – also eine Ellipse am Rechteck „Spiel“.',
+  ng:'❌ <strong>Nicht ganz.</strong> Über Anstoßzeiten führt man keine eigene Liste, und ein Verb ist es auch nicht. Es ist eine Eigenschaft des Spiels.',
+  hint:'Frag: Ist das eine Entität, ein Tun – oder eine Angabe über eine Entität?'
+};
+quizFeedback['kard1'] = {
+  ok:'✅ <strong>Richtig!</strong> Die Kardinalität beschreibt die Regel, nicht den heutigen Datenbestand. Morgen sind es vielleicht 29.',
+  ng:'❌ <strong>Nicht ganz.</strong> Das Diagramm beschreibt, was grundsätzlich erlaubt ist. Sonst müsste man es bei jeder Neuaufnahme ändern.',
+  hint:'Was passiert mit deinem Diagramm, wenn morgen eine Schülerin dazukommt?'
+};
+quizFeedback['kard2'] = {
+  ok:'✅ <strong>Richtig!</strong> Beide Richtungen sagen „mehrere“ – zwei ist eben mehr als eines. Also n:m.',
+  ng:'❌ <strong>Nicht ganz.</strong> Für eine 1er-Seite müsste es „genau eine“ heißen. An einem Spiel sind aber zwei Mannschaften beteiligt.',
+  hint:'Prüfe beide Richtungen einzeln. Steht irgendwo wirklich „genau eine“?'
+};
+quizFeedback['tk0'] = {
+  ok:'✅ <strong>Richtig!</strong> Es sollen keine Daten über Klassen gespeichert werden – nur, wo ein Spieler hingehört. Damit bleibt „Klasse“ ein Attribut.',
+  ng:'❌ <strong>Nicht ganz.</strong> Klassenbezeichnungen wären durchaus eindeutig, und die Anzahl der Rechtecke ist nicht begrenzt. Entscheidend ist, was in dieser Beschreibung gebraucht wird.',
+  hint:'Steht im Text irgendetwas, das über eine Klasse gespeichert werden soll – etwa ihr Klassenleiter oder ihr Raum?'
+};
+quizFeedback['tk1'] = {
+  ok:'✅ <strong>Richtig!</strong> Eine Mannschaft hat mehrere Spieler, ein Spieler gehört zu genau einer Mannschaft – 1:n.',
+  ng:'❌ <strong>Nicht ganz.</strong> Der Text sagt: „gehört zu genau einer Mannschaft“ und „zu einer Mannschaft gehören mehrere Spieler“. Einmal 1, einmal n.',
+  hint:'Bilde die zwei Sätze: „Eine Mannschaft hat …“ und „Ein Spieler gehört zu …“.'
+};
+quizFeedback['tk2'] = {
+  ok:'✅ <strong>Richtig!</strong> Genau eine Person je Mannschaft, und diese Person ist Kapitän für genau diese eine Mannschaft – 1:1.',
+  ng:'❌ <strong>Nicht ganz.</strong> Im Text stehen beide Male die Worte „genau eine“. Das ist der einzige Fall auf dieser Seite, in dem beide Richtungen 1 ergeben.',
+  hint:'Kann eine Person Kapitän von zwei Mannschaften sein? Lies den dritten Punkt noch einmal.'
+};
+quizFeedback['tk3'] = {
+  ok:'✅ <strong>Richtig!</strong> Mehrere Spiele je Mannschaft, zwei Mannschaften je Spiel – beide Seiten „mehrere“, also n:m.',
+  ng:'❌ <strong>Nicht ganz.</strong> Achte auf die Zwei: An einem Spiel sind zwei Mannschaften beteiligt. Damit ist auch diese Seite nicht „genau eine“.',
+  hint:'Zwei Mannschaften je Spiel – zählt zwei noch als „genau eine“?'
+};
+quizFeedback['tk4'] = {
+  ok:'✅ <strong>Richtig!</strong> Mehrere Spiele je Halle, aber genau eine Halle je Spiel – 1:n.',
+  ng:'❌ <strong>Nicht ganz.</strong> Ein Spiel wird in genau einer Halle ausgetragen, in einer Halle finden aber mehrere Spiele statt.',
+  hint:'Kann ein einzelnes Spiel gleichzeitig in zwei Hallen laufen?'
+};
+quizFeedback['ds1'] = {
+  ok:'✅ <strong>Richtig!</strong> Gespeichert wird nur, was der Zweck verlangt. Was nicht gespeichert ist, kann auch nicht verloren gehen oder missbraucht werden.',
+  ng:'❌ <strong>Nicht ganz.</strong> Technisch wäre beides problemlos möglich, und die Optik ist kein Argument. Es geht darum, wie viel man über andere Menschen überhaupt sammelt.',
+  hint:'Stell dir vor, die Turnierdatei liegt auf einem USB-Stick, der verloren geht. Was wäre dann draußen?'
+};
+quizFeedback['dio1'] = {
+  ok:'✅ <strong>Richtig!</strong> draw.io ist ein Zeichenprogramm, kein Prüfprogramm. Ob „genau eine“ oder „mehrere“ gilt, weiß nur, wer die Miniwelt kennt.',
+  ng:'❌ <strong>Nicht ganz.</strong> Das Programm kennt deine Miniwelt gar nicht – für draw.io sind Rechtecke und Rauten einfach Formen.',
+  hint:'Woher sollte ein Zeichenprogramm wissen, wie viele Spieler in eine Mannschaft gehören?'
+};
+quizFeedback['dio2'] = {
+  ok:'✅ <strong>Richtig!</strong> Die .drawio-Datei enthält die Formen als Objekte, das PNG nur Bildpunkte.',
+  ng:'❌ <strong>Nicht ganz.</strong> PNG-Dateien bleiben erhalten und lassen sich drucken – nur ändern kannst du darin nichts mehr.',
+  hint:'Versuch gedanklich, in einem Foto deines Diagramms ein Rechteck umzubenennen.'
+};
+quizFeedback['exit1'] = {
+  ok:'✅ <strong>Richtig!</strong> Beide Richtungen sagen „mehrere“ – n:m.',
+  ng:'❌ <strong>Nicht ganz.</strong> Für 1:n oder 1:1 müsste mindestens eine Richtung „genau ein“ lauten. Hier steht zweimal „mehrere“.',
+  hint:'Unterstreiche in beiden Satzhälften das Zahlwort.'
+};
+quizFeedback['exit2'] = {
+  ok:'✅ <strong>Richtig!</strong> Verben werden zu Rauten: besucht, bestreitet, leiht aus.',
+  ng:'❌ <strong>Nicht ganz.</strong> Zahlen landen an den Linien, Adjektive meist gar nicht im Diagramm. Die Rauten tragen das, was die Entitäten miteinander tun.',
+  hint:'Sieh dir die Beschriftungen der Rauten auf dieser Seite an – welche Wortart ist das jeweils?'
+};
+quizFeedback['exit3'] = {
+  ok:'✅ <strong>Richtig!</strong> Das Diagramm beschreibt den Aufbau, nicht den Inhalt. Konkrete Daten kommen erst später in die Tabellen.',
+  ng:'❌ <strong>Nicht ganz.</strong> Beziehungsnamen und Kardinalitäten gehören unbedingt hinein – sie sind der Kern des Modells.',
+  hint:'Ein Bauplan zeigt, wo Zimmer sind – nicht, wer darin wohnt.'
+};
+
+
+/* ---------- Sortier-Aufgaben: Lösung erst 4 Minuten nach dem ersten Prüfen ----------
+   Die Zeit läuft ab dem ersten Klick auf „Prüfen“ und übersteht einen Reload. */
+var SORT_SOL_WAIT = 240000;
+
+function sortSolTick(s, b, end){
+  var rest = Math.max(0, Math.ceil((end - Date.now())/1000));
+  if(rest <= 0){
+    if(s._solTimer){ clearInterval(s._solTimer); s._solTimer = null; }
+    b.disabled = false; b.textContent = 'Lösung anzeigen'; return;
+  }
+  b.disabled = true;
+  b.textContent = '🔒 Lösung in ' + Math.floor(rest/60) + ':' + ('0'+(rest%60)).slice(-2);
+}
+
+function sortSolStart(s){
+  var b = s.querySelector('.sort-sol-btn'); if(!b || s._solTimer || !b.disabled) return;
+  var key = 'sortsol_' + s.id, end = 0;
+  try{ end = parseInt(localStorage.getItem(key)||'0', 10) || 0; }catch(e){}
+  if(!end){ end = Date.now() + SORT_SOL_WAIT; try{ localStorage.setItem(key, String(end)); }catch(e){} }
+  s._solTimer = setInterval(function(){ sortSolTick(s, b, end); }, 1000);
+  sortSolTick(s, b, end);
+}
+
+function sortCheckTimed(btn){ sortCheck(btn); sortSolStart(bs(btn)); }
+
+function sortShowSolution(btn){
+  var s = bs(btn), list = s.querySelector('.sort-list');
+  var items = [].slice.call(s.querySelectorAll('.sort-item'));
+  items.sort(function(a,b){ return a.dataset.v - b.dataset.v; });
+  items.forEach(function(it){ list.appendChild(it); it.classList.add('s-ok'); });
+  setFb(s, 'So ist die richtige Reihenfolge.', true);
+  btn.disabled = true; btn.textContent = 'Lösung angezeigt';
+}
+
+function initSortSol(){
+  document.querySelectorAll('.baustein[data-type="sort"]').forEach(function(s){
+    var b = s.querySelector('.sort-sol-btn'); if(!b) return;
+    var end = 0; try{ end = parseInt(localStorage.getItem('sortsol_'+s.id)||'0', 10) || 0; }catch(e){}
+    if(!end) return;
+    if(Date.now() >= end){ b.disabled = false; b.textContent = 'Lösung anzeigen'; }
+    else { s._solTimer = setInterval(function(){ sortSolTick(s, b, end); }, 1000); sortSolTick(s, b, end); }
+  });
+}
+if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', initSortSol); }
+else { initSortSol(); }
+
+
+quizFeedback['pk1'] = {
+  ok:'✅ <strong>Richtig!</strong> Ein Primärschlüssel muss eindeutig sein. Bei Namen ist das nie garantiert – deshalb PK_Schueler als eigene Nummer.',
+  ng:'❌ <strong>Nicht ganz.</strong> Eine Zahl muss es nicht sein, eine ISBN ist zum Beispiel Text, und die Länge stört auch nicht. Entscheidend ist allein: Kommt der Wert wirklich nur einmal vor?',
+  hint:'Stell dir vor, an der Schule sind zwei Geschwister mit demselben Nachnamen. Wen findest du dann?'
+};
+quizFeedback['pk2'] = {
+  ok:'✅ <strong>Richtig!</strong> PK_ steht vorn, dahinter der Name des Entitätstyps – PK_Halle.',
+  ng:'❌ <strong>Nicht ganz.</strong> Die Kennung beginnt immer mit PK_, deshalb weder Halle_PK noch der Hallenname. Der Name könnte außerdem doppelt vorkommen.',
+  hint:'Schau dir die Schreibweise am Beispiel PK_Schueler an: Was steht dort vorn?'
+};
+quizFeedback['exit4'] = {
+  ok:'✅ <strong>Richtig!</strong> Ohne Primärschlüssel lässt sich kein Datensatz sicher wiederfinden. Die ISBN wäre hier sogar ein Kandidat – nach unserer Schreibweise heißt er trotzdem PK_Buch.',
+  ng:'❌ <strong>Nicht ganz.</strong> Eine Entität ohne eindeutige Kennung ist unbrauchbar, und Rauten ergänzt man nur, wenn es wirklich eine Beziehung gibt.',
+  hint:'Zähle die Regeln durch, die für jede Entität gelten – eine davon betrifft die Eindeutigkeit.'
+};
+
+quizFeedback['fk1'] = {
+  ok:'✅ <strong>Richtig!</strong> Der Fremdschlüssel steht auf der n-Seite: Jedes Spiel merkt sich seine eine Halle.',
+  ng:'❌ <strong>Nicht ganz.</strong> In der Halle müssten sonst alle Spiele des Tages in einer Zelle stehen. Und doppelt speichern erzeugt genau die Widersprüche, die wir vermeiden wollen.',
+  hint:'Frag dich: Welche Seite hat immer nur einen einzigen Partner – und passt damit in eine einzelne Zelle?'
+};
+quizFeedback['fk2'] = {
+  ok:'✅ <strong>Richtig!</strong> Im Fremdschlüssel steht immer ein Primärschlüsselwert der anderen Tabelle, also z. B. die 1 für „Die Raketen“.',
+  ng:'❌ <strong>Nicht ganz.</strong> Der Name stünde dann wieder in jeder Zeile – zurück zur Redundanz vom Stundenanfang. Und mehrere Werte in einer Zelle sind in einer Datenbank tabu.',
+  hint:'Schau dir die beiden Beispieltabellen an: Welche Werte stehen in der Spalte FK_Mannschaft?'
+};
+quizFeedback['exit5'] = {
+  ok:'✅ <strong>Richtig!</strong> Genau darum ging es am Anfang der Stunde: Jede Information gehört an genau eine Stelle.',
+  ng:'❌ <strong>Nicht ganz.</strong> Text speichern können Datenbanken problemlos, und Speicherplatz ist nicht der Hauptgrund. Es geht um Widersprüche beim Ändern.',
+  hint:'Denk an die Halle Nord aus der ersten Tabelle. Was war dort das Problem?'
+};
+
+quizFeedback['fk3'] = {
+  ok:'✅ <strong>Richtig!</strong> Das Buch hat genau ein Regal – diese eine Nummer passt in eine Zelle. Also FK_Regal in der Tabelle Buch.',
+  ng:'❌ <strong>Nicht ganz.</strong> Im Regal stehen viele Bücher; die passen nicht in eine einzelne Zelle. Und doppelt speichern führt genau zu den Widersprüchen vom Stundenanfang.',
+  hint:'Welche der beiden Seiten hat immer nur einen einzigen Partner?'
+};
 </script>
 </body>
 </html>
