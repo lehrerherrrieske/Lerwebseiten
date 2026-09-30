@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 10 · LB3 · Lernpfad: Die Sonne</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#B25A38;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:pointer;user-select:none;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.m-chip.dragging{opacity:.35;cursor:grabbing;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{opacity:.35;cursor:grabbing;}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;max-width:420px;}
+.memcard{position:relative;height:58px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-h2);display:flex;align-items:center;justify-content:center;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+
+/* ── Lernpfad Sonne: Zusatz ── */
+[hidden]{display:none !important;}
+/* Formeln mit echten Bruchstrichen */
+.formula{font-family:'Cambria Math','STIX Two Math','Latin Modern Math','Times New Roman',serif;font-weight:400;
+  font-size:var(--fs-h2);color:var(--text);line-height:2.2;display:block;text-align:center;}
+.formula i,.fline i{font-family:'Cambria Math','STIX Two Math','Times New Roman',serif;}
+.formula sup,.fline sup{line-height:0;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .15em;line-height:1.2;}
+.frac>.num{border-bottom:1.5px solid currentColor;padding:0 .25em .1em;text-align:center;white-space:nowrap;}
+.frac>.den{padding:.1em .25em 0;text-align:center;white-space:nowrap;}
+.frac .frac{margin:0 .05em;}
+.sqrt{position:relative;display:inline-flex;align-items:stretch;vertical-align:middle;margin:0 .1em;padding-left:.75em;}
+.sqrt>.rad{position:absolute;left:0;top:0;width:.75em;height:100%;overflow:visible;}
+.sqrt>.rad path{fill:none;stroke:currentColor;stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round;}
+.sqrt>.radicand{border-top:1.6px solid currentColor;padding:.15em .25em 0 .15em;display:inline-block;line-height:1.6;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.fline{display:block;line-height:2.4;margin:4px 0;}
+.src-gate{border:2px solid var(--accent);background:var(--accent-light);border-radius:var(--radius);padding:12px 16px;margin:12px 0 16px;}
+.src-gate-head{font-weight:800;color:var(--accent-hover);font-size:var(--fs-lg);margin-bottom:4px;}
+.src-gate .src-link{display:inline-block;text-decoration:none;margin:4px 0;}
+.src-ok{margin-top:8px;font-weight:600;color:#166534;}
+.src-lock{margin-top:8px;font-weight:600;color:var(--text-2);}
+.gate-content.locked{display:none;}
+@media print{ .gate-content.locked{display:block !important;} .src-lock{display:none !important;} }
+.hs{margin:12px 0;}
+.hs-btn{font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:#2F4A6D;background:#F4EFE7;border:1.5px solid #E5DFD6;
+  border-radius:10px;padding:8px 18px;cursor:pointer;}
+.hs-btn:hover,.hs-btn[aria-expanded="true"]{background:#ECE5D9;}
+.hs-btn:focus-visible,.hs-head:focus-visible{outline:3px solid #9DB4CF;outline-offset:2px;}
+.hs-panel{margin-top:10px;background:#F4EFE7;border:1.5px solid #E5DFD6;border-radius:12px;padding:14px 18px 4px;}
+.hs-title{text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#7A736E;font-size:var(--fs-sm);margin-bottom:10px;}
+.hs-item{background:#FFFFFF;border:1.5px solid #E5DFD6;border-radius:10px;margin-bottom:10px;}
+.hs-head{width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:10px 16px;font-family:var(--font);
+  font-size:var(--fs-base);cursor:pointer;color:var(--text);display:flex;gap:6px;align-items:baseline;}
+.hs-head .hs-name{font-weight:700;}
+.hs-head:disabled{cursor:not-allowed;color:#7A736E;}
+.hs-head .hs-t{font-size:var(--fs-sm);color:#7A736E;font-weight:400;}
+.hs-item.free .hs-head::before{content:"▸";color:var(--accent);}
+.hs-item.free .hs-head.open::before{content:"▾";}
+.hs-body{padding:0 16px 12px;color:var(--text-2);}
+@media print{ .hs-btn{display:none !important;} .hs .hs-panel[hidden],.hs .hs-body[hidden]{display:block !important;} .hs-t{display:none;} }
+.quellen{margin:14px 0;border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;background:var(--surface-warm);}
+.quellen summary{font-weight:700;cursor:pointer;}
+.quellen ul{margin:8px 0 0 18px;} .quellen li{margin-bottom:4px;color:var(--text-2);}
+
+/* Lernkarten: lange Rückseiten lesbar darstellen */
+.fc-card{position:relative;width:100%;max-width:600px;height:auto;min-height:190px;padding:34px 26px 22px;
+  font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;line-height:1.35;text-align:center;
+  overflow-wrap:break-word;hyphens:auto;background:var(--surface-warm);border:2px solid var(--accent-muted);}
+.fc-card.fc-back{font-family:var(--font-body);font-size:var(--fs-lg);font-weight:500;color:var(--text);background:var(--accent-light);}
+.fc-card::before{content:"Begriff · antippen ↻";position:absolute;top:8px;left:14px;font-family:var(--font-body);
+  font-size:var(--fs-sm);font-weight:600;color:var(--text-3);}
+.fc-card.fc-back::before{content:"Erklärung";}
+.fc-face{display:block;max-width:100%;}
+
+.pnav.st-done .pnum{margin-right:4px;}
+.lp-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center;}
+.lp-clock{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;padding:3px 12px;border-radius:var(--radius-full);
+  background:var(--surface-2);border:1.5px solid var(--border);}
+.lp-chip{font-size:var(--fs-sm);font-weight:600;padding:3px 12px;border-radius:var(--radius-full);
+  border:1.5px dashed var(--border);color:var(--text-3);background:var(--surface);}
+.lp-chip.done{border-style:solid;border-color:var(--ok-b);background:var(--ok-bg);color:#166534;}
+.pnav.st-done .pnum::after{content:" ✓";}
+.booklet-ref{font-size:var(--fs-sm);color:var(--text-3);}
+.fig-wide img{width:100%;border-radius:var(--radius);display:block;}
+figure{margin:12px 0;} figure img{border-radius:8px;}
+.data-tbl{border-collapse:collapse;width:100%;margin:10px 0;font-size:var(--fs-base);}
+.data-tbl th,.data-tbl td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;}
+.data-tbl th{background:var(--surface-2);font-weight:700;color:var(--text);}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0 14px;}
+.plan-card{border:1.5px solid var(--accent-muted);border-radius:var(--radius);padding:10px 14px;background:var(--surface-warm);
+  display:flex;flex-direction:column;gap:2px;}
+.plan-card span{font-weight:700;color:var(--accent-hover);}
+.plan-star{border-style:dashed;}
+.lp-started{display:inline-block;margin-left:10px;}
+.aufbau-wrap{position:relative;display:inline-block;max-width:100%;}
+.aufbau-wrap img{display:block;}
+.pin{position:absolute;transform:translate(-50%,-50%);min-width:30px;height:30px;border-radius:50%;
+  background:var(--accent);color:#fff;font-weight:800;font-size:var(--fs-base);display:flex;align-items:center;justify-content:center;
+  border:2px solid #fff;box-shadow:var(--shadow-md);}
+.two-col-fig{grid-template-columns:3fr 2fr;align-items:start;}
+@media (max-width:760px){.two-col-fig{grid-template-columns:1fr;}}
+.task{border-left:4px solid var(--accent);background:var(--surface-warm);padding:10px 14px;border-radius:0 var(--radius) var(--radius) 0;margin:12px 0;}
+.inp-s{width:6.5em;}
+.check-box{border:2px solid var(--ok-b);background:#F6FBF8;border-radius:var(--radius);padding:12px 16px;margin:14px 0;}
+.check-box h3{margin-top:0;color:#166534;}
+.st-done{display:inline-block;margin-left:10px;font-weight:700;color:#166534;}
+.checkpoint{border:2px dashed var(--warn-b);background:var(--warn-bg);border-radius:var(--radius);padding:12px 16px;margin:14px 0;}
+.checkpoint h3{margin-top:0;}
+.cp-opts{display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:8px 0;}
+.cp-opts .btn.picked{background:var(--accent-light);border-width:2.5px;}
+.cp-opts .btn.picked::before{content:"✔ ";}
+details.star{border:1.5px dashed var(--accent-muted);border-radius:var(--radius);padding:8px 14px;margin:14px 0;background:var(--surface);}
+details.star summary{cursor:pointer;font-weight:700;color:var(--accent-hover);}
+details.star[open] summary{margin-bottom:8px;}
+.sim-box{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;background:var(--surface-warm);margin:12px 0;}
+.sim-box input[type=range]{width:100%;accent-color:var(--accent);margin:8px 0;}
+.sl-planets{display:flex;flex-wrap:wrap;gap:6px;}
+.sl-out{margin-top:10px;color:var(--text);}
+.sl-bar{height:18px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-full);overflow:hidden;}
+.sl-fill{height:100%;background:var(--accent);width:25%;transition:width .2s;}
+.chart-fig{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px;}
+.temp-svg{width:100%;height:auto;display:block;}
+.quiz-score{font-weight:700;color:var(--text);}
+.reset-line{margin-top:18px;}
+@media print{ .lp-status,.reset-line,#cp-banner,#cp-banner-end{display:none !important;} details.star{display:block;} }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Sonne2026">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 10 · LB3 · Kosmos, Erde und Mensch</div>
+    <h1>Lernpfad: Die Sonne</h1>
+    <div class="goal">🎯 Du erklärst Aufbau und Energiequelle der Sonne, indem du den Lernpfad Station für Station bearbeitest, die Leuchtkraft der Sonne aus der Solarkonstante berechnest und deine Ergebnisse nach jeder Station selbst kontrollierst.</div>
+    <div class="lp-status" aria-live="polite">
+      <span class="lp-clock" id="lp-clock">⏱ Lernzeit: noch nicht gestartet</span>
+      <span class="lp-chip" id="lpc1">Station 1 · offen</span>
+      <span class="lp-chip" id="lpc2">Station 2 · offen</span>
+      <span class="lp-chip" id="lpc3">Station 3 · offen</span>
+      <span class="lp-chip" id="lpc4">Station 4 · offen</span>
+      <span class="lp-chip" id="lpc5">Station 5 · offen</span>
+    </div>
+  </header>
+
+  <div class="callout callout-warn" id="cp-banner" hidden>⏱ <span><strong>Checkpoint – etwa 45 Minuten sind um.</strong> Halte kurz an: Hast du Station 1 und 2 abgeschlossen? Wenn nicht, öffne jetzt die Hilfestellungen oder melde dich bei deiner Lehrkraft. Teile dir die restliche Zeit so ein, dass du auch Station 3 bis 5 schaffst. <button class="btn btn-ghost btn-sm" onclick="cpDismiss('cp45')">Verstanden</button></span></div>
+  <div class="callout callout-warn" id="cp-banner-end" hidden>🏁 <span><strong>Die Zeit für den Lernpfad ist fast um.</strong> Wechsle jetzt zur Sicherung und bearbeite das Abschlussquiz. <button class="btn btn-ghost btn-sm" onclick="cpDismiss('cp85')">Verstanden</button></span></div>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Start</span>Ein Stern?</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Station 1</span>Aufbau</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Station 2</span>Leuchtkraft</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Station 3</span>Kernfusion</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Station 4</span>Zonen</button>
+  <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Station 5</span>Phänomene</button>
+  <button class="pnav" id="pn6" onclick="showPhase(6)"><span class="pnum">Sicherung</span>Quiz &amp; Exit-Ticket</button>
+  </nav>
+
+<!-- =========================================================== START -->
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Ein ganz gewöhnlicher Stern?</h2>
+    <figure class="fig-wide">
+      <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/sonne.jpg" alt="Die Sonne im extremen Ultraviolett: eine leuchtende, von Plasmabögen überzogene Kugel">
+      <figcaption>Die Sonne im Ultraviolett-Licht · Quelle: NASA</figcaption>
+    </figure>
+    <p>In der Sonne stecken <strong>99,8&nbsp;%</strong> der gesamten Masse unseres Sonnensystems. Ohne sie gäbe es auf der Erde weder Licht noch Wärme noch Leben. Und trotzdem ist sie für Astronomen nur ein ganz durchschnittlicher Stern.</p>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Steckbrief</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · So läuft der Lernpfad</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <h3>Steckbrief der Sonne</h3>
+      <table class="data-tbl">
+        <tr><th scope="row">Durchmesser</th><td>1&nbsp;392&nbsp;700&nbsp;km (etwa 109 Erddurchmesser)</td></tr>
+        <tr><th scope="row">Umfang</th><td>4&nbsp;379&nbsp;000&nbsp;km</td></tr>
+        <tr><th scope="row">eine Umdrehung</th><td>etwa 25&nbsp;Tage (am Äquator)</td></tr>
+        <tr><th scope="row">Temperatur</th><td>ca. 5&nbsp;500&nbsp;°C an der Oberfläche · ca. 15,6&nbsp;Millionen&nbsp;°C im Inneren</td></tr>
+        <tr><th scope="row">Bestandteile</th><td>vorwiegend Wasserstoff, etwa ein Viertel Helium</td></tr>
+        <tr><th scope="row">Masseanteil</th><td>fast 99,8&nbsp;% der Masse des Sonnensystems</td></tr>
+      </table>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Ist die Sonne ein Stern?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('stern', this, 'w')">Nein – Sterne sieht man nur nachts am Himmel.</button>
+          <button class="quiz-btn" onclick="quizCheck('stern', this, 'c')">Ja – sie leuchtet aus eigener Kraft, weil in ihrem Inneren Energie freigesetzt wird.</button>
+          <button class="quiz-btn" onclick="quizCheck('stern', this, 'w')">Nein – sie ist ein Planet aus glühendem Gestein.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-stern"></div>
+      </div>
+
+      <div class="poe-box" id="poe-energie">
+        <div class="poe-label">🤔 Was vermutest du: Woher nimmt die Sonne seit Milliarden Jahren ihre Energie?</div>
+        <textarea id="poe-energie-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-energie')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-energie-out" hidden></div>
+      </div>
+      <p class="connector-text">Behalte deine Vermutung im Kopf – in Station 1 und 3 findest du heraus, ob sie stimmt. Vorher: Wie funktioniert der Lernpfad?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Wie läuft der Lernpfad ab? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <h3>So läuft der Lernpfad</h3>
+      <div class="plan-grid">
+        <div class="plan-card"><strong>Pflicht</strong><span>Station 1 bis 5</span><small>Aufbau, Leuchtkraft, Kernfusion, Zonen, Phänomene</small></div>
+        <div class="plan-card plan-star"><strong>★ Für Profis</strong><span>Zusatzaufgaben</span><small>freiwillige Vertiefungen innerhalb der Stationen</small></div>
+        <div class="plan-card"><strong>⏱ Checkpoint</strong><span>nach ca. 45&nbsp;min</span><small>Station 1 und 2 sollten dann fertig sein</small></div>
+        <div class="plan-card"><strong>🔗 Quelle zuerst</strong><span>am Anfang jeder Station</span><small>Quelle öffnen und lesen, dann Aufgaben – am Ende Stations-Check</small></div>
+      </div>
+      <div class="callout">📒 <span>Dein <strong>Booklet</strong> bleibt dein Heft: Trage die Lösungen dort ein, nachdem du sie hier geprüft hast. Die QR-Codes im Booklet führen zu Webseiten. Hier öffnest du bei jeder Station <strong>zuerst die 🔗 Quelle</strong> – erst dann werden die Aufgaben freigeschaltet. Für die Quellen brauchst du Internet.</span></div>
+      <div class="callout">🆘 <span><strong>Hilfestellungen:</strong> Bei vielen Aufgaben gibt es den Button „Hilfestellungen“. Sobald du ihn anklickst, läuft eine Uhr: Tipp 1 kommt nach 2 Minuten, Tipp 2 nach 4, Tipp 3 nach 6 und die Musterlösung nach 10 Minuten. Probier es also erst selbst!</span></div>
+      <p>Starte die Lernzeit-Uhr. Nach 45&nbsp;Minuten meldet sich die Seite mit dem Checkpoint – so behältst du dein Tempo im Blick.</p>
+      <button class="btn btn-primary" onclick="lpStart()">▶ Lernpfad starten</button>
+      <small class="lp-started" id="lp-started" hidden>Uhr läuft – oben siehst du deine Lernzeit.</small>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Los geht's: Woraus besteht die Sonne? →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== STATION 1 -->
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Station 1 · Der Aufbau der Sonne</h2>
+    <p>Die Sonne ist weder fest noch flüssig – und auch kein gewöhnliches Gas. Sie besteht aus einem vierten Zustand der Materie, den es auf der Erde fast nur in Blitzen, Leuchtstoffröhren und Polarlichtern gibt.</p>
+    <p class="booklet-ref">📒 Booklet · Aufgabe 1</p>
+    <div class="src-gate" id="gate-1">
+      <div class="src-gate-head">🔗 Zuerst: Öffne die Quelle</div>
+      <p>Lies dir die Seite in Ruhe durch. Erst danach werden die Aufgaben dieser Station freigeschaltet.</p>
+      <a class="btn btn-primary src-link" href="https://www.leifiphysik.de/astronomie/sonne/grundwissen/aufbau-der-sonne" target="_blank" rel="noopener" onclick="srcOpen(1)">LEIFIphysik – Aufbau der Sonne öffnen ↗</a>
+      <div class="src-ok" id="src-ok-1" hidden>✅ Quelle geöffnet – die Aufgaben sind freigeschaltet. Über den Button kannst du die Quelle jederzeit wieder öffnen.</div>
+      <div class="src-lock" id="src-lock-1">🔒 Die Aufgaben erscheinen, sobald du die Quelle geöffnet hast.</div>
+    </div>
+
+    <div class="gate-content locked" id="gate-c-1">
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Plasma &amp; Energie</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Schichten</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Stations-Check</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <h3>Eine Kugel aus Plasma</h3>
+      <p>In einem <span class="tt" tabindex="0" data-tip="Gas, in dem Atomkerne und Elektronen getrennt und frei beweglich sind">Plasma</span> sind Atomkerne und Elektronen nicht mehr zu Atomen verbunden. Die Teilchen sind so schnell, dass sie sich bei jedem Zusammenstoß sofort wieder trennen. Die meisten Atomkerne in der Sonne sind Protonen – also Wasserstoffkerne.</p>
+      <p><strong>Ergänze den Text.</strong> Klicke ein Wort an und dann die passende Lücke.</p>
+      <div class="baustein" data-type="dtw" id="dtw-aufbau">
+        <div class="dtw-pool">
+          <span class="dtw-word" data-w="Geschwindigkeit" onclick="dtwSelect(this)">Geschwindigkeit</span>
+          <span class="dtw-word" data-w="6" onclick="dtwSelect(this)">6</span>
+          <span class="dtw-word" data-w="Kernfusion" onclick="dtwSelect(this)">Kernfusion</span>
+          <span class="dtw-word" data-w="Elektronen" onclick="dtwSelect(this)">Elektronen</span>
+          <span class="dtw-word" data-w="Strahlungsenergie" onclick="dtwSelect(this)">Strahlungsenergie</span>
+          <span class="dtw-word" data-w="Plasma" onclick="dtwSelect(this)">Plasma</span>
+          <span class="dtw-word" data-w="Helium" onclick="dtwSelect(this)">Helium</span>
+        </div>
+        <p class="dtw-text">Die Sonne ist eine riesige Kugel aus
+          <span class="dtw-gap" data-answer="Plasma" onclick="dtwPlace(this)">______</span>. In diesem besonderen Zustand sind die Atomkerne und
+          <span class="dtw-gap" data-answer="Elektronen" onclick="dtwPlace(this)">______</span> frei beweglich. Das liegt daran, dass die Teilchen eine sehr hohe
+          <span class="dtw-gap" data-answer="Geschwindigkeit" onclick="dtwPlace(this)">______</span> haben und bei Zusammenstößen sofort wieder getrennt werden.
+          Im Zentrum der Sonne findet die sogenannte
+          <span class="dtw-gap" data-answer="Kernfusion" onclick="dtwPlace(this)">______</span> statt. Dabei verschmelzen Wasserstoffkerne (Protonen) zu
+          <span class="dtw-gap" data-answer="Helium" onclick="dtwPlace(this)">______</span>. Bei diesem Prozess wird Bindungsenergie in
+          <span class="dtw-gap" data-answer="Strahlungsenergie" onclick="dtwPlace(this)">______</span> umgewandelt. Diese Energie erreicht die Erde schließlich als Sonnenstrahlung. Obwohl die Sonne schon etwa 4,6&nbsp;Milliarden Jahre alt ist, hat sie bisher erst etwa
+          <span class="dtw-gap" data-answer="6" onclick="dtwPlace(this)">______</span> Prozent ihres Wasserstoffs verbraucht.</p>
+        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-aufbau">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Lies den Abschnitt „Eine Kugel aus Plasma“ oben noch einmal – drei Lücken stehen dort fast wörtlich.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die einzige Zahl im Wortspeicher gehört in die letzte Lücke. „Verschmelzen“ ist das Schlüsselwort für die Energiequelle.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Aus Wasserstoff entsteht ein anderes Element – das zweitleichteste. Die Energie verlässt die Sonne als Strahlung.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Plasma · Elektronen · Geschwindigkeit · Kernfusion · Helium · Strahlungsenergie · 6</div></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Viele denken: „Die Sonne brennt wie ein riesiges Feuer.“ Was spricht dagegen?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('feuer', this, 'w')">Nichts – die Sonne verbrennt Wasserstoff mit Sauerstoff, wie ein Gasherd.</button>
+          <button class="quiz-btn" onclick="quizCheck('feuer', this, 'c')">Bei einem Feuer reagieren Atomhüllen chemisch miteinander. In der Sonne verschmelzen Atomkerne – dabei wird ungleich mehr Energie frei.</button>
+          <button class="quiz-btn" onclick="quizCheck('feuer', this, 'w')">Die Sonne ist gar nicht heiß, sie leuchtet nur hell.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-feuer"></div>
+      </div>
+      <p class="connector-text">Die Energie entsteht also tief im Inneren. Doch zwischen Kern und Oberfläche liegen Hunderttausende Kilometer – aus welchen Schichten besteht die Sonne?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Schicht für Schicht nach außen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <h3>Schicht für Schicht</h3>
+      <p><strong>Beschrifte die Abbildung.</strong> Ordne jeder Nummer den richtigen Begriff zu (Begriff anklicken oder ziehen, dann Feld anklicken).</p>
+      <figure class="aufbau-fig">
+        <div class="aufbau-wrap">
+          <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/aufbau.png" alt="Schnittbild der Sonne mit Kern, Strahlungszone, Konvektionszone, Oberfläche mit Sonnenflecken, Korona und einer Protuberanz; die Stellen sind mit Nummern 1 bis 7 markiert">
+          <span class="pin" style="left:96.5%;top:28%">1</span>
+          <span class="pin" style="left:96.5%;top:40.5%">2</span>
+          <span class="pin" style="left:96.5%;top:51.5%">3</span>
+          <span class="pin" style="left:96.5%;top:85%">4</span>
+          <span class="pin" style="left:1.8%;top:55%">5</span>
+          <span class="pin" style="left:1.8%;top:74%">6</span>
+          <span class="pin" style="left:1.8%;top:92.5%">7</span>
+        </div>
+        <figcaption>Innerer Aufbau der Sonne · basierend auf Pbroks13, CC BY-SA 3.0, via Wikimedia Commons, geändert von Stefan Richtberg</figcaption>
+      </figure>
+      <div class="baustein" data-type="match" id="match-aufbau">
+        <div class="m-pool">
+          <span class="m-chip" data-id="kern" onclick="matchSelect(this)">Kern</span>
+          <span class="m-chip" data-id="sz" onclick="matchSelect(this)">Strahlungszone</span>
+          <span class="m-chip" data-id="kz" onclick="matchSelect(this)">Konvektionszone</span>
+          <span class="m-chip" data-id="ph" onclick="matchSelect(this)">Photosphäre (Oberfläche)</span>
+          <span class="m-chip" data-id="fl" onclick="matchSelect(this)">Sonnenflecken</span>
+          <span class="m-chip" data-id="ko" onclick="matchSelect(this)">Korona</span>
+          <span class="m-chip" data-id="pr" onclick="matchSelect(this)">Protuberanz</span>
+        </div>
+        <div class="m-zone" data-correct="kz" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 1 – äußerste Schicht des Inneren</span></div>
+        <div class="m-zone" data-correct="sz" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 2 – mittlere Schicht des Inneren</span></div>
+        <div class="m-zone" data-correct="kern" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 3 – das hell leuchtende Zentrum</span></div>
+        <div class="m-zone" data-correct="pr" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 4 – Bogen, der über den Rand hinausragt</span></div>
+        <div class="m-zone" data-correct="fl" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 5 – dunkle Stellen</span></div>
+        <div class="m-zone" data-correct="ph" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 6 – die sichtbare Oberfläche</span></div>
+        <div class="m-zone" data-correct="ko" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Nummer 7 – der Strahlenkranz um die Sonne</span></div>
+        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+      <h3>Von innen nach außen</h3>
+      <div class="callout">🧠 <span>Eselsbrücke: „<strong>K</strong>luge <strong>S</strong>chüler <strong>k</strong>ochen <strong>p</strong>erfekte <strong>C</strong>hili-(<strong>U</strong>don)-<strong>K</strong>reationen.“</span></div>
+      <p><strong>Sortiere die Schichten</strong> vom Zentrum nach außen.</p>
+      <div class="baustein" data-type="sort" id="sort-schichten">
+        <div class="sort-list">
+          <div class="sort-item" data-v="4"><span>Photosphäre</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="7"><span>Korona</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="2"><span>Strahlungszone</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="5"><span>Chromosphäre</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="1"><span>Kern</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="6"><span>Übergangsregion</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="3"><span>Konvektionszone</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Aufbau der Sonne</div>
+        <p><strong>Plasma:</strong> Zustand, in dem Atomkerne und Elektronen frei beweglich sind. Die Sonne ist eine Plasmakugel.</p>
+        <p><strong>Energiequelle:</strong> Im Kern verschmelzen Wasserstoffkerne zu Helium (Kernfusion). Die frei werdende Energie verlässt die Sonne als Strahlung.</p>
+        <p><strong>Schichten von innen nach außen:</strong> Kern – Strahlungszone – Konvektionszone (Inneres) · Photosphäre – Chromosphäre – Übergangsregion – Korona („Atmosphäre“).</p>
+      </div>
+      <p class="connector-text">Bevor du weitergehst: Hast du alles verstanden? Prüfe dich selbst.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Zum Stations-Check ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <div class="check-box">
+        <h3>✅ Stations-Check 1</h3>
+        <div class="quiz-item">
+          <div class="quiz-q">Warum gibt es im Sonneninneren kaum vollständige Atome?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c1a', this, 'w')">Weil der Sonne der Sauerstoff fehlt.</button>
+            <button class="quiz-btn" onclick="quizCheck('c1a', this, 'c')">Weil die Teilchen so schnell sind, dass Elektronen bei Stößen sofort wieder abgetrennt werden.</button>
+            <button class="quiz-btn" onclick="quizCheck('c1a', this, 'w')">Weil alle Elektronen schon zu Helium verschmolzen sind.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c1a"></div>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Welche Schicht sehen wir, wenn wir (mit Schutzfilter!) auf die Sonne schauen?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c1b', this, 'w')">den Kern</button>
+            <button class="quiz-btn" onclick="quizCheck('c1b', this, 'c')">die Photosphäre</button>
+            <button class="quiz-btn" onclick="quizCheck('c1b', this, 'w')">die Korona</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c1b"></div>
+        </div>
+        <div class="callout callout-warn">⚠️ <span>Schau nie ohne zugelassenen Sonnenfilter in die Sonne – auch nicht kurz und nicht durch ein Fernglas. Das kann deine Augen dauerhaft schädigen.</span></div>
+        <p>Übertrage die geprüften Lösungen in dein Booklet. Dann schließe die Station ab.</p>
+        <button class="btn btn-primary" onclick="stationDone(1)">✅ Station 1 abschließen</button>
+        <span class="st-done" id="st-done-1" hidden>Station 1 geschafft ✓</span>
+      </div>
+      <p class="connector-text">Die Sonne strahlt Energie ab – aber wie viel eigentlich? Das lässt sich überraschend einfach von der Erde aus bestimmen.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zu Station 2: Leuchtkraft →</button></div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== STATION 2 -->
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Station 2 · Die Leuchtkraft der Sonne</h2>
+    <p>Hältst du oberhalb der Erdatmosphäre eine Fläche von 1&nbsp;m² senkrecht zur Sonne, treffen darauf in jeder Sekunde rund 1&nbsp;360&nbsp;J Strahlungsenergie. Die Sonne strahlt aber nicht nur zur Erde, sondern in alle Richtungen. Wie viel Energie gibt sie insgesamt pro Sekunde ab?</p>
+    <p class="booklet-ref">📒 Booklet · Aufgabe 2 und 2.1</p>
+    <div class="src-gate" id="gate-2">
+      <div class="src-gate-head">🔗 Zuerst: Öffne die Quelle</div>
+      <p>Lies dir die Seite in Ruhe durch. Erst danach werden die Aufgaben dieser Station freigeschaltet.</p>
+      <a class="btn btn-primary src-link" href="https://www.zum.de/Faecher/Materialien/gebhardt/astronomie/leuchtkraft.html" target="_blank" rel="noopener" onclick="srcOpen(2)">ZUM (Gebhardt) – Leuchtkraft öffnen ↗</a>
+      <div class="src-ok" id="src-ok-2" hidden>✅ Quelle geöffnet – die Aufgaben sind freigeschaltet. Über den Button kannst du die Quelle jederzeit wieder öffnen.</div>
+      <div class="src-lock" id="src-lock-2">🔒 Die Aufgaben erscheinen, sobald du die Quelle geöffnet hast.</div>
+    </div>
+
+    <div class="gate-content locked" id="gate-c-2">
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="4">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Begriff</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Abstand</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Berechnung</button>
+      <button class="substep-chip locked" onclick="revealSub(2,4)">4 · Check &amp; Checkpoint</button>
+      <button class="substep-all" onclick="revealSub(2,4)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <h3>Was ist die Leuchtkraft?</h3>
+      <div class="baustein" data-type="dtw" id="dtw-leuchtkraft">
+        <div class="dtw-pool">
+          <span class="dtw-word" data-w="Strahlungsleistung" onclick="dtwSelect(this)">Strahlungsleistung</span>
+          <span class="dtw-word" data-w="Zeit" onclick="dtwSelect(this)">Zeit</span>
+          <span class="dtw-word" data-w="Richtungen" onclick="dtwSelect(this)">Richtungen</span>
+          <span class="dtw-word" data-w="Watt" onclick="dtwSelect(this)">Watt</span>
+          <span class="dtw-word" data-w="L" onclick="dtwSelect(this)"><i>L</i></span>
+        </div>
+        <p class="dtw-text">Die <strong>Leuchtkraft</strong>
+          <span class="dtw-gap" data-answer="L" onclick="dtwPlace(this)">______</span> ist die gesamte
+          <span class="dtw-gap" data-answer="Strahlungsleistung" onclick="dtwPlace(this)">______</span> eines Sterns: die Energie pro
+          <span class="dtw-gap" data-answer="Zeit" onclick="dtwPlace(this)">______</span>, die der Stern in Form von Strahlung in alle
+          <span class="dtw-gap" data-answer="Richtungen" onclick="dtwPlace(this)">______</span> und über alle Wellenlängenbereiche abgibt. Ihre Einheit ist das
+          <span class="dtw-gap" data-answer="Watt" onclick="dtwPlace(this)">______</span> (1&nbsp;W&nbsp;=&nbsp;1&nbsp;J/s).</p>
+        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <h3>Die Solarkonstante – auf der Erde messbar</h3>
+      <div class="two-col">
+        <div>
+          <p>Die <span class="tt" tabindex="0" data-tip="Strahlungsleistung der Sonne pro Quadratmeter im Abstand 1 AE, senkrecht zur Strahlung, ohne Atmosphäre">Solarkonstante</span> <i>S</i> gibt an, wie viel Strahlungsenergie in einer Sekunde auf 1&nbsp;m² trifft – im mittleren Abstand Erde–Sonne, der <span class="tt" tabindex="0" data-tip="Astronomische Einheit: mittlerer Abstand Erde–Sonne, 1 AE = 1,496 · 10¹¹ m">1&nbsp;AE</span>.</p>
+          <p>Man kann sie messen, indem man z.&nbsp;B. Wasser in einem geschwärzten Gefäß von der Sonne erwärmen lässt:</p>
+          <div class="formula"><i>S</i> = <span class="frac"><span class="num"><i>ΔE</i></span><span class="den"><i>Δt</i> · <i>A</i></span></span> = <span class="frac"><span class="num"><i>c</i> · <i>m</i> · <i>ΔT</i></span><span class="den"><i>A</i> · <i>Δt</i></span></span></div>
+          <div class="formula"><i>S</i> ≈ 1,36 · 10<sup>3</sup>&nbsp;<span class="frac"><span class="num"><span class="unit">W</span></span><span class="den"><span class="unit">m²</span></span></span></div>
+        </div>
+        <figure>
+          <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/leuchtkraft.png" alt="Sonne im Mittelpunkt einer gedachten Kugel; die Strahlung verteilt sich gleichmäßig auf die Kugeloberfläche, auf der die Erde liegt">
+          <figcaption>Die Strahlung verteilt sich auf eine Kugeloberfläche mit Radius 1&nbsp;AE · nach zum.de (Gebhardt)</figcaption>
+        </figure>
+      </div>
+      <div class="callout callout-info">📐 <span>Wir nehmen an, die Sonne ist ein <strong>idealer Strahler</strong>: Sie strahlt gleichmäßig in alle Richtungen. Sonnenflecken oder Flares werden nicht berücksichtigt.</span></div>
+      <p class="connector-text">Wenn die Strahlung sich auf eine Kugel verteilt – was passiert dann, wenn du weiter von der Sonne weg bist?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Weiter weg von der Sonne ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <h3>Doppelt so weit weg – halb so viel?</h3>
+      <div class="poe-box" id="poe-abstand">
+        <div class="poe-label">🤔 Der Mars ist rund 1,5-mal so weit von der Sonne entfernt wie die Erde. Stell dir einen Planeten vor, der doppelt so weit weg ist wie die Erde. Wie viel Strahlung kommt dort pro Quadratmeter an?</div>
+        <textarea id="poe-abstand-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-abstand')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-abstand-out" hidden></div>
+      </div>
+      <p>Prüfe deine Vermutung mit dem Regler. <small>(Modell: ideale Kugelstrahlung, <i>S</i> = <i>L</i>&nbsp;/&nbsp;(4π<i>r</i>²))</small></p>
+      <div class="sim-box">
+        <label for="sl-r">Abstand zur Sonne: <strong id="sl-rv">1,00</strong>&nbsp;AE</label>
+        <input type="range" id="sl-r" min="0.3" max="5.5" step="0.01" value="1" oninput="slUpdate()">
+        <div class="sl-planets">
+          <button class="btn btn-ghost btn-sm" onclick="slSet(0.39)">Merkur</button>
+          <button class="btn btn-ghost btn-sm" onclick="slSet(0.72)">Venus</button>
+          <button class="btn btn-ghost btn-sm" onclick="slSet(1)">Erde</button>
+          <button class="btn btn-ghost btn-sm" onclick="slSet(1.52)">Mars</button>
+          <button class="btn btn-ghost btn-sm" onclick="slSet(2)">2&nbsp;AE</button>
+          <button class="btn btn-ghost btn-sm" onclick="slSet(5.2)">Jupiter</button>
+        </div>
+        <p class="sl-out">Pro Quadratmeter und Sekunde: <strong id="sl-s">1&nbsp;360</strong>&nbsp;<span class="unit">W/m²</span> – das ist das <strong id="sl-f">1,00</strong>-Fache des Werts an der Erde.</p>
+        <div class="sl-bar" aria-hidden="true"><div class="sl-fill" id="sl-fill"></div></div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Der Abstand zur Sonne verdoppelt sich. Wie ändert sich die Strahlung pro Quadratmeter?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('abst', this, 'w')">Sie halbiert sich.</button>
+          <button class="quiz-btn" onclick="quizCheck('abst', this, 'c')">Sie sinkt auf ein Viertel.</button>
+          <button class="quiz-btn" onclick="quizCheck('abst', this, 'w')">Sie bleibt gleich – die Sonne strahlt ja immer gleich stark.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-abst"></div>
+      </div>
+      <p class="connector-text">Genau diese Kugel ist der Schlüssel: Kennst du die Strahlung auf einem Quadratmeter und die Größe der ganzen Kugel, kennst du die Leuchtkraft.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Leuchtkraft berechnen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <h3>Die Leuchtkraft der Sonne berechnen</h3>
+      <div class="formula"><i>L</i> = <i>S</i> · <i>A</i><sub>Kugel</sub> = <i>S</i> · 4π<i>r</i>²</div>
+      <p>Gegeben: <i>S</i> = 1,36 · 10<sup>3</sup>&nbsp;W/m², <i>r</i> = 1&nbsp;AE = 1,496 · 10<sup>11</sup>&nbsp;m. Man nimmt den Radius 1&nbsp;AE, weil die Solarkonstante in diesem Abstand – an der Erde – gemessen wird.</p>
+      <p>① Kugeloberfläche: <i>A</i> = 4π<i>r</i>² = <input class="inp inp-s" id="lk-a" aria-label="Kugeloberfläche Vorfaktor"> · 10<sup>23</sup>&nbsp;<span class="unit">m²</span></p>
+      <p>② Leuchtkraft: <i>L</i> = <i>S</i> · <i>A</i> = <input class="inp inp-s" id="lk-l" aria-label="Leuchtkraft Vorfaktor"> · 10<sup>26</sup>&nbsp;<span class="unit">W</span></p>
+      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['lk-a', 2.81, 0.05], ['lk-l', 3.82, 0.08]])">✓ Prüfen</button>
+      <div class="fb grp-fb"></div>
+      <div class="hs" id="hs-leuchtkraft">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Erst die Kugeloberfläche, dann mit der Solarkonstante multiplizieren. Rechne mit Zehnerpotenzen.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>(1,496 · 10<sup>11</sup>&nbsp;m)² = 2,238 · 10<sup>22</sup>&nbsp;m². Jetzt noch mal 4π.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden><i>A</i> ≈ 2,81 · 10<sup>23</sup>&nbsp;m². Multipliziere mit 1,36 · 10<sup>3</sup>&nbsp;W/m² – die Einheit m² kürzt sich weg.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><i>A</i> = 4π · (1,496 · 10<sup>11</sup>&nbsp;m)² = 4π · 2,238 · 10<sup>22</sup>&nbsp;m² ≈ 2,81 · 10<sup>23</sup>&nbsp;m²<br>
+        <i>L</i> = 1,36 · 10<sup>3</sup>&nbsp;W/m² · 2,81 · 10<sup>23</sup>&nbsp;m² ≈ 3,82 · 10<sup>26</sup>&nbsp;W<br>
+        <small>Der Literaturwert beträgt 3,83 · 10<sup>26</sup>&nbsp;W; in Station 3 rechnen wir gerundet mit 3,85 · 10<sup>26</sup>&nbsp;W.</small></div></div>
+        </div>
+      </div>
+
+      <h3>2.1 · Wie weit ist der Exoplanet von seinem Stern entfernt?</h3>
+      <div class="task">
+        <p>Auf einen <span class="tt" tabindex="0" data-tip="Planet, der einen anderen Stern als die Sonne umkreist">Exoplaneten</span> treffen je Sekunde 500&nbsp;kW/m² Strahlung seines Zentralgestirns. Die Leuchtkraft des Sterns wurde <span class="tt" tabindex="0" data-tip="Messung von Licht so, wie das menschliche Auge die Helligkeit wahrnimmt">photometrisch</span> zu 3,3 · 10<sup>25</sup>&nbsp;W bestimmt.</p>
+        <p><strong>Berechne den Abstand <i>r</i> des Planeten vom Stern.</strong></p>
+      </div>
+      <p>Umgestellt nach <i>r</i>:</p><div class="formula"><i>r</i> = <span class="sqrt"><svg class="rad" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 62 L2.6 57 L5.2 98 L10 1.5" /></svg><span class="radicand"><span class="sr-only">Wurzel aus </span><span class="frac"><span class="num"><i>L</i></span><span class="den">4π · <i>S</i></span></span></span></span></div>
+      <p><i>r</i> = <input class="inp inp-s" id="ab-r" aria-label="Abstand Vorfaktor"> · 10<sup>9</sup>&nbsp;<span class="unit">m</span></p>
+      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['ab-r', 2.29, 0.05]])">✓ Prüfen</button>
+      <div class="fb grp-fb"></div>
+      <div class="hs" id="hs-abstand">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Rechne zuerst 500&nbsp;kW/m² in W/m² um.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>500&nbsp;kW/m² = 5,00 · 10<sup>5</sup>&nbsp;W/m². Berechne jetzt 4π · <i>S</i>.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>4π · 5,00 · 10<sup>5</sup>&nbsp;W/m² ≈ 6,28 · 10<sup>6</sup>&nbsp;W/m². Teile <i>L</i> dadurch und ziehe die Wurzel.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><span class="fline"><i>r</i> = <span class="sqrt"><svg class="rad" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 62 L2.6 57 L5.2 98 L10 1.5" /></svg><span class="radicand"><span class="sr-only">Wurzel aus </span><span class="frac"><span class="num">3,3 · 10<sup>25</sup>&nbsp;W</span><span class="den">4π · 5,00 · 10<sup>5</sup>&nbsp;<span class="frac"><span class="num">W</span><span class="den">m²</span></span></span></span></span></span> = <span class="sqrt"><svg class="rad" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 62 L2.6 57 L5.2 98 L10 1.5" /></svg><span class="radicand"><span class="sr-only">Wurzel aus </span>5,25 · 10<sup>18</sup>&nbsp;m²</span></span> ≈ 2,3 · 10<sup>9</sup>&nbsp;m</span></div></div>
+        </div>
+      </div>
+      <details class="star">
+        <summary>★ Für Profis: Wie nah ist das – verglichen mit unserem Sonnensystem?</summary>
+        <p>Merkur ist im Mittel 5,79 · 10<sup>10</sup>&nbsp;m von der Sonne entfernt. <strong>Vergleiche</strong> diesen Abstand mit dem Ergebnis und <strong>beurteile</strong>, ob auf dem Exoplaneten Leben, wie wir es kennen, möglich wäre.</p>
+        <div class="hs" id="hs-ab2">
+          <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+          <div class="hs-panel" hidden>
+            <div class="hs-title">Hilfestellung</div>
+            <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden>5,79 · 10<sup>10</sup>&nbsp;m / 2,3 · 10<sup>9</sup>&nbsp;m ≈ 25: Der Planet ist etwa 25-mal näher an seinem Stern als Merkur an der Sonne. Mit 500&nbsp;kW/m² erhält er rund 370-mal so viel Strahlung pro Quadratmeter wie die Erde – flüssiges Wasser ist dort nicht möglich.</div></div>
+          </div>
+        </div>
+      </details>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Leuchtkraft der Sonne</div>
+        <p><strong>Leuchtkraft:</strong> gesamte Strahlungsleistung eines Sterns (Energie pro Zeit, in alle Richtungen).</p>
+        <p><strong>Solarkonstante:</strong> Strahlungsleistung pro Fläche im Abstand 1&nbsp;AE: <i>S</i> ≈ 1,36 · 10<sup>3</sup>&nbsp;W/m²</p>
+        <p class="fline"><i>L</i> = <i>S</i> · 4π<i>r</i>² ≈ 3,8 · 10<sup>26</sup>&nbsp;W</p>
+        <table>
+          <tr><td><i>L</i></td><td>Leuchtkraft</td><td>Watt (W)</td></tr>
+          <tr><td><i>S</i></td><td>Solarkonstante (Bestrahlungsstärke)</td><td>W/m²</td></tr>
+          <tr><td><i>r</i></td><td>Abstand zum Stern</td><td>Meter (m)</td></tr>
+          <tr><td><i>A</i></td><td>Kugeloberfläche 4π<i>r</i>²</td><td>m²</td></tr>
+        </table>
+        <p>Doppelter Abstand → ein Viertel der Strahlung pro Fläche.</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,4)">Zum Stations-Check ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-4">
+      <div class="check-box">
+        <h3>✅ Stations-Check 2</h3>
+        <div class="quiz-item">
+          <div class="quiz-q">Welche Einheit hat die Leuchtkraft?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c2a', this, 'w')">W/m²</button>
+            <button class="quiz-btn" onclick="quizCheck('c2a', this, 'c')">W</button>
+            <button class="quiz-btn" onclick="quizCheck('c2a', this, 'w')">J</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c2a"></div>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Warum rechnet man mit einer Kugeloberfläche vom Radius 1&nbsp;AE und nicht mit der Oberfläche der Sonne?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c2b', this, 'c')">Weil die Solarkonstante an der Erde gemessen wird – und durch diese Kugel geht die gesamte Strahlung.</button>
+            <button class="quiz-btn" onclick="quizCheck('c2b', this, 'w')">Weil die Sonne selbst keine Kugel ist.</button>
+            <button class="quiz-btn" onclick="quizCheck('c2b', this, 'w')">Weil man so ein kleineres Ergebnis bekommt.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c2b"></div>
+        </div>
+        <button class="btn btn-primary" onclick="stationDone(2)">✅ Station 2 abschließen</button>
+        <span class="st-done" id="st-done-2" hidden>Station 2 geschafft ✓</span>
+      </div>
+
+      <div class="checkpoint">
+        <h3>⏱ Checkpoint: Wo stehst du?</h3>
+        <p>Nach etwa 45&nbsp;Minuten solltest du hier sein. Schätze dich ehrlich ein:</p>
+        <div class="cp-opts" role="radiogroup" aria-label="Selbsteinschätzung Checkpoint">
+          <button class="btn btn-ghost btn-sm" onclick="cpSelf(this,'g')">🟢 Station 1 und 2 sind fertig und geprüft.</button>
+          <button class="btn btn-ghost btn-sm" onclick="cpSelf(this,'y')">🟡 Ich bin fertig, war mir aber oft unsicher.</button>
+          <button class="btn btn-ghost btn-sm" onclick="cpSelf(this,'r')">🔴 Ich hänge noch an Station 1 oder 2.</button>
+        </div>
+        <div class="callout" id="cp-self-fb" hidden>👉 <span id="cp-self-txt"></span></div>
+      </div>
+      <p class="connector-text">3,8 · 10<sup>26</sup>&nbsp;Joule – in jeder einzelnen Sekunde. Und das seit Milliarden Jahren. Welcher Prozess kann so viel Energie liefern?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zu Station 3: Kernfusion →</button></div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== STATION 3 -->
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Station 3 · Die Kernfusion</h2>
+    <p>Die Sonne wird in jeder Sekunde leichter – um mehrere Millionen Tonnen. Trotzdem schleudert sie diese Masse nicht als Material ins All. Wohin verschwindet sie?</p>
+    <p class="booklet-ref">📒 Booklet · Aufgabe 3 und 3.1</p>
+    <div class="src-gate" id="gate-3">
+      <div class="src-gate-head">🔗 Zuerst: Öffne die Quelle</div>
+      <p>Lies dir die Seite in Ruhe durch. Erst danach werden die Aufgaben dieser Station freigeschaltet.</p>
+      <a class="btn btn-primary src-link" href="https://www.leifiphysik.de/kern-teilchenphysik/kernspaltung-und-kernfusion/ausblick/proton-proton-i-kette" target="_blank" rel="noopener" onclick="srcOpen(3)">LEIFIphysik – Proton-Proton-I-Kette öffnen ↗</a>
+      <div class="src-ok" id="src-ok-3" hidden>✅ Quelle geöffnet – die Aufgaben sind freigeschaltet. Über den Button kannst du die Quelle jederzeit wieder öffnen.</div>
+      <div class="src-lock" id="src-lock-3">🔒 Die Aufgaben erscheinen, sobald du die Quelle geöffnet hast.</div>
+    </div>
+
+    <div class="gate-content locked" id="gate-c-3">
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Proton-Proton-Kette</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Massenverlust</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Stations-Check</button>
+      <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <div class="two-col two-col-fig">
+        <div>
+          <h3>Die Proton-Proton-I-Kette</h3>
+          <p><strong>Ergänze den Text</strong> mithilfe der Abbildung.</p>
+          <div class="baustein" data-type="dtw" id="dtw-fusion">
+            <div class="dtw-pool">
+              <span class="dtw-word" data-w="He4" onclick="dtwSelect(this)">Helium-4</span>
+              <span class="dtw-word" data-w="Massendefekt" onclick="dtwSelect(this)">Massendefekt</span>
+              <span class="dtw-word" data-w="Formel" onclick="dtwSelect(this)"><i>ΔE</i> = <i>Δm</i> · <i>c</i>²</span>
+              <span class="dtw-word" data-w="Wasserstoffkernen" onclick="dtwSelect(this)">Wasserstoffkernen</span>
+              <span class="dtw-word" data-w="Paarvernichtung" onclick="dtwSelect(this)">Paarvernichtung</span>
+              <span class="dtw-word" data-w="Deuterium" onclick="dtwSelect(this)">Deuterium</span>
+              <span class="dtw-word" data-w="meiste" onclick="dtwSelect(this)">meiste</span>
+              <span class="dtw-word" data-w="MeV" onclick="dtwSelect(this)">26,7&nbsp;MeV</span>
+              <span class="dtw-word" data-w="Positron" onclick="dtwSelect(this)">Positron</span>
+              <span class="dtw-word" data-w="He3" onclick="dtwSelect(this)">Helium-3</span>
+            </div>
+            <p class="dtw-text">Bei der Proton-Proton-I-Kette entsteht aus vier
+              <span class="dtw-gap" data-answer="Wasserstoffkernen" onclick="dtwPlace(this)">______</span> letztendlich ein Heliumkern. Die Energie, die dabei insgesamt frei wird, beträgt
+              <span class="dtw-gap" data-answer="MeV" onclick="dtwPlace(this)">______</span>. Diese Energie lässt sich über den sogenannten
+              <span class="dtw-gap" data-answer="Massendefekt" onclick="dtwPlace(this)">______</span> berechnen, also den Unterschied der Massen vor und nach der Reaktion. Die passende Formel lautet
+              <span class="dtw-gap" data-answer="Formel" onclick="dtwPlace(this)">______</span>.</p>
+            <p class="dtw-text">① Zuerst fusionieren zwei Protonen zu
+              <span class="dtw-gap" data-answer="Deuterium" onclick="dtwPlace(this)">______</span>. Dabei entsteht auch ein
+              <span class="dtw-gap" data-answer="Positron" onclick="dtwPlace(this)">______</span>, das Antiteilchen zum Elektron. Treffen die beiden aufeinander, kommt es zur
+              <span class="dtw-gap" data-answer="Paarvernichtung" onclick="dtwPlace(this)">______</span>, wobei Gammastrahlung entsteht.<br>
+              ② Im zweiten Schritt verschmelzen Deuterium und ein Proton zu
+              <span class="dtw-gap" data-answer="He3" onclick="dtwPlace(this)">______</span>.<br>
+              ③ Im letzten Schritt reagieren zwei Helium-3-Kerne miteinander. Dabei entstehen zwei Protonen und ein
+              <span class="dtw-gap" data-answer="He4" onclick="dtwPlace(this)">______</span>-Kern. Dieser letzte Schritt setzt von allen drei Reaktionen die
+              <span class="dtw-gap" data-answer="meiste" onclick="dtwPlace(this)">______</span> Energie frei.</p>
+            <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+            <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+        </div>
+        <figure>
+          <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/pp_kette.png" alt="Schema der Proton-Proton-Kette: je zwei Protonen verschmelzen zu Deuterium unter Aussendung von Positron und Neutrino; Deuterium und Proton bilden Helium-3 unter Aussendung von Gammastrahlung; zwei Helium-3-Kerne bilden Helium-4 und zwei Protonen">
+          <figcaption>Proton-Proton-I-Kette · Borb, CC BY-SA 3.0, via Wikimedia Commons</figcaption>
+        </figure>
+      </div>
+      <div class="hs" id="hs-fusion">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Schau dir die Abbildung an: Welche Teilchen stehen ganz oben, welcher Kern ganz unten?</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Das Antiteilchen des Elektrons ist positiv geladen. Treffen Teilchen und Antiteilchen aufeinander, vernichten sie sich gegenseitig.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Reihenfolge der Kerne: Protonen → Deuterium → Helium-3 → Helium-4. Die Energie berechnet man mit Einsteins Formel aus dem Massenunterschied.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Wasserstoffkernen · 26,7&nbsp;MeV · Massendefekt · <i>ΔE</i> = <i>Δm</i> · <i>c</i>² · Deuterium · Positron · Paarvernichtung · Helium-3 · Helium-4 · meiste</div></div>
+        </div>
+      </div>
+      <p><strong>Bringe die Schritte in die richtige Reihenfolge.</strong></p>
+      <div class="baustein" data-type="sort" id="sort-fusion">
+        <div class="sort-list">
+          <div class="sort-item" data-v="3"><span>Deuterium und ein Proton verschmelzen zu Helium-3; Gammastrahlung wird frei.</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="1"><span>Zwei Protonen verschmelzen zu Deuterium; ein Positron und ein Neutrino entstehen.</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="4"><span>Zwei Helium-3-Kerne verschmelzen zu Helium-4; zwei Protonen werden frei.</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+          <div class="sort-item" data-v="2"><span>Positron und Elektron vernichten sich gegenseitig; Gammastrahlung entsteht.</span><span class="sort-btns"><button aria-label="nach oben" onclick="sortMove(this,-1)">▲</button><button aria-label="nach unten" onclick="sortMove(this,1)">▼</button></span></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <details class="star">
+        <summary>★ Für Profis: Woher kommen die 26,7&nbsp;MeV?</summary>
+        <p>Ein Wasserstoffatom hat die Masse 1,007825&nbsp;u, ein Heliumatom 4,002603&nbsp;u. Die Masse 1&nbsp;u entspricht einer Energie von 931,5&nbsp;MeV.</p>
+        <p><strong>Berechne</strong> den Massendefekt für 4&nbsp;H → He und die frei werdende Energie.</p>
+        <p><i>Δm</i> = <input class="inp inp-s" id="md-m" aria-label="Massendefekt in u">&nbsp;<span class="unit">u</span> &nbsp;&nbsp; <i>ΔE</i> = <input class="inp inp-s" id="md-e" aria-label="Energie in MeV">&nbsp;<span class="unit">MeV</span></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['md-m', 0.0287, 0.0003], ['md-e', 26.7, 0.2]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-md">
+          <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+          <div class="hs-panel" hidden>
+            <div class="hs-title">Hilfestellung</div>
+            <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><i>Δm</i> = 4 · 1,007825&nbsp;u − 4,002603&nbsp;u = 0,028697&nbsp;u ≈ 0,0287&nbsp;u<br><i>ΔE</i> = 0,028697 · 931,5&nbsp;MeV ≈ 26,7&nbsp;MeV. Das sind nur etwa 0,7&nbsp;% der Ausgangsmasse!</div></div>
+          </div>
+        </div>
+      </details>
+      <p class="connector-text">Bei jeder Fusion verschwindet also ein winziges bisschen Masse. Bei 3,85 · 10<sup>26</sup>&nbsp;Joule pro Sekunde kommt da einiges zusammen …</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Wie viel Masse verliert die Sonne? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <h3>3.1 · Massenverlust der Sonne</h3>
+      <div class="poe-box" id="poe-masse">
+        <div class="poe-label">🤔 Schätze: Wie viele Autos (je 2&nbsp;t) wiegt die Masse, die die Sonne pro Sekunde verliert?</div>
+        <textarea id="poe-masse-in" rows="1" placeholder="Deine Schätzung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-masse')">Schätzung festhalten</button>
+        <div class="poe-locked" id="poe-masse-out" hidden></div>
+      </div>
+      <p>Nach Einsteins Formel gilt:</p>
+      <div class="formula"><i>ΔE</i> = <i>Δm</i> · <i>c</i>² &nbsp;&nbsp;⇔&nbsp;&nbsp; <i>Δm</i> = <span class="frac"><span class="num"><i>ΔE</i></span><span class="den"><i>c</i>²</span></span></div>
+      <p>Pro Sekunde strahlt die Sonne <i>ΔE</i> = 3,85 · 10<sup>26</sup>&nbsp;J ab; <i>c</i> = 3,0 · 10<sup>8</sup>&nbsp;m/s.</p>
+      <p>① <i>Δm</i> = <input class="inp inp-s" id="mv-m" aria-label="Massenverlust Vorfaktor"> · 10<sup>9</sup>&nbsp;<span class="unit">kg</span> pro Sekunde</p>
+      <p>② Das sind <input class="inp inp-s" id="mv-a" aria-label="Autos Vorfaktor"> · 10<sup>6</sup> Autos pro Sekunde (1&nbsp;Auto ≈ 2&nbsp;t).</p>
+      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['mv-m', 4.28, 0.06], ['mv-a', 2.14, 0.04]])">✓ Prüfen</button>
+      <div class="fb grp-fb"></div>
+      <div class="hs" id="hs-masse">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Quadriere zuerst die Lichtgeschwindigkeit – mit Einheit.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden><i>c</i>² = 9,0 · 10<sup>16</sup>&nbsp;m²/s². Und 1&nbsp;J = 1&nbsp;kg · m²/s².</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>3,85 / 9,0 ≈ 0,428 und 10<sup>26</sup> / 10<sup>16</sup> = 10<sup>10</sup>. Für die Autos: 2&nbsp;t = 2&nbsp;000&nbsp;kg.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><span class="fline"><i>Δm</i> = <span class="frac"><span class="num">3,85 · 10<sup>26</sup>&nbsp;J</span><span class="den">(3,0 · 10<sup>8</sup>&nbsp;<span class="frac"><span class="num">m</span><span class="den">s</span></span>)²</span></span> = <span class="frac"><span class="num">3,85 · 10<sup>26</sup>&nbsp;<span class="frac"><span class="num">kg · m²</span><span class="den">s²</span></span></span><span class="den">9,0 · 10<sup>16</sup>&nbsp;<span class="frac"><span class="num">m²</span><span class="den">s²</span></span></span></span> ≈ 4,3 · 10<sup>9</sup>&nbsp;kg</span>
+        Das sind rund 4,3 Millionen Tonnen pro Sekunde – bzw. 4,28 · 10<sup>9</sup>&nbsp;kg / 2&nbsp;000&nbsp;kg ≈ 2,1 · 10<sup>6</sup> Autos pro Sekunde.</div></div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Wodurch verliert die Sonne bei der Kernfusion Masse?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('masse', this, 'w')">Bei der Fusion werden Teilchen mit großer Wucht ins All geschleudert.</button>
+          <button class="quiz-btn" onclick="quizCheck('masse', this, 'c')">Der Heliumkern ist leichter als die vier Protonen – die Massendifferenz wird als Energie abgestrahlt.</button>
+          <button class="quiz-btn" onclick="quizCheck('masse', this, 'w')">Wasserstoff verbrennt, und die Abgase entweichen.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-masse"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Kernfusion in der Sonne</div>
+        <p><strong>Proton-Proton-I-Kette:</strong> 4 Wasserstoffkerne → 1 Heliumkern (Helium-4) + Energie (26,7&nbsp;MeV)</p>
+        <p>① p + p → Deuterium + Positron + Neutrino (Positron + Elektron → Gammastrahlung) ② Deuterium + p → Helium-3 ③ Helium-3 + Helium-3 → Helium-4 + 2 p</p>
+        <p><strong>Massendefekt:</strong> Die Masse der Produkte ist kleiner als die der Ausgangsteilchen; die Differenz wird als Energie frei: <i>ΔE</i> = <i>Δm</i> · <i>c</i>²</p>
+        <p>Die Sonne verliert so pro Sekunde rund 4,3 · 10<sup>9</sup>&nbsp;kg Masse.</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Zum Stations-Check ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-3">
+      <div class="check-box">
+        <h3>✅ Stations-Check 3</h3>
+        <div class="quiz-item">
+          <div class="quiz-q">Welches Teilchen ist das Antiteilchen zum Elektron?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c3a', this, 'w')">das Neutrino</button>
+            <button class="quiz-btn" onclick="quizCheck('c3a', this, 'w')">das Proton</button>
+            <button class="quiz-btn" onclick="quizCheck('c3a', this, 'c')">das Positron</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c3a"></div>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Warum findet Kernfusion nur im Kern der Sonne statt?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c3b', this, 'c')">Nur dort sind Druck und Temperatur hoch genug, damit sich Protonen trotz ihrer Abstoßung nahe genug kommen.</button>
+            <button class="quiz-btn" onclick="quizCheck('c3b', this, 'w')">Weil es nur im Kern Wasserstoff gibt.</button>
+            <button class="quiz-btn" onclick="quizCheck('c3b', this, 'w')">Weil die Strahlung von außen den Kern anzündet.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c3b"></div>
+        </div>
+        <p>Vergleiche jetzt mit deiner Vermutung vom Start: Woher nimmt die Sonne ihre Energie?</p>
+        <button class="btn btn-primary" onclick="stationDone(3)">✅ Station 3 abschließen</button>
+        <span class="st-done" id="st-done-3" hidden>Station 3 geschafft ✓</span>
+      </div>
+      <p class="connector-text">Weiter geht's: In Station 4 wartet ein Rätsel, das Forschende bis heute beschäftigt: Warum ist die Sonne außen heißer als an ihrer Oberfläche?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zu Station 4: Zonen →</button></div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== STATION 4 -->
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Station 4 · Die Zonen der Sonne</h2>
+    <p>Eine Herdplatte ist in der Mitte am heißesten und wird nach außen immer kühler. Die Sonne hat ihre Energiequelle ebenfalls in der Mitte. Wird sie also auch nach außen hin immer kälter?</p>
+    <p class="booklet-ref">📒 Booklet · Aufgabe 4</p>
+    <div class="src-gate" id="gate-4">
+      <div class="src-gate-head">🔗 Zuerst: Öffne die Quelle</div>
+      <p>Lies dir die Seite in Ruhe durch. Erst danach werden die Aufgaben dieser Station freigeschaltet.</p>
+      <a class="btn btn-primary src-link" href="https://www.astronomie.de/das-sonnensystem/die-sonne/basiswissen/innerer-aufbau-der-sonne" target="_blank" rel="noopener" onclick="srcOpen(4)">astronomie.de – Innerer Aufbau der Sonne öffnen ↗</a>
+      <div class="src-ok" id="src-ok-4" hidden>✅ Quelle geöffnet – die Aufgaben sind freigeschaltet. Über den Button kannst du die Quelle jederzeit wieder öffnen.</div>
+      <div class="src-lock" id="src-lock-4">🔒 Die Aufgaben erscheinen, sobald du die Quelle geöffnet hast.</div>
+    </div>
+
+    <div class="gate-content locked" id="gate-c-4">
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Zonen zuordnen</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Dichte &amp; Temperatur</button>
+      <button class="substep-chip locked" onclick="revealSub(4,3)">3 · Stations-Check</button>
+      <button class="substep-all" onclick="revealSub(4,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="poe-box" id="poe-temp">
+        <div class="poe-label">🤔 Was vermutest du: Wie verändert sich die Temperatur vom Kern bis zur Korona?</div>
+        <textarea id="poe-temp-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-temp')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-temp-out" hidden></div>
+      </div>
+      <p><strong>Ordne jeder Zone die passende Beschreibung zu.</strong></p>
+      <div class="baustein" data-type="match" id="match-zonen">
+        <div class="m-pool">
+          <span class="m-chip" data-id="kern" onclick="matchSelect(this)">Kern</span>
+          <span class="m-chip" data-id="sz" onclick="matchSelect(this)">Strahlungszone</span>
+          <span class="m-chip" data-id="kz" onclick="matchSelect(this)">Konvektionszone</span>
+          <span class="m-chip" data-id="ph" onclick="matchSelect(this)">Photosphäre</span>
+          <span class="m-chip" data-id="ch" onclick="matchSelect(this)">Chromosphäre</span>
+          <span class="m-chip" data-id="ue" onclick="matchSelect(this)">Übergangsregion</span>
+          <span class="m-chip" data-id="ko" onclick="matchSelect(this)">Korona</span>
+        </div>
+        <div class="m-zone" data-correct="sz" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… wird Energie durch das ständige Absorbieren und Emittieren von Photonen weitergegeben.</span></div>
+        <div class="m-zone" data-correct="ch" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… ist eine dünne, rötlich leuchtende Gasschicht über der Photosphäre.</span></div>
+        <div class="m-zone" data-correct="kern" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… entsteht Energie durch die Fusion von Wasserstoff zu Helium.</span></div>
+        <div class="m-zone" data-correct="ko" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… ist die extrem heiße, dünne äußere Atmosphäre der Sonne, die weit ins All reicht.</span></div>
+        <div class="m-zone" data-correct="ph" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… ist die sichtbare Oberfläche der Sonne, von der das meiste Licht ausgesendet wird.</span></div>
+        <div class="m-zone" data-correct="kz" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… wird Energie durch auf- und absteigendes heißes Plasma transportiert.</span></div>
+        <div class="m-zone" data-correct="ue" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">… steigt die Temperatur innerhalb einer kurzen Strecke stark an.</span></div>
+        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <p>Zwei Arten, Energie zu transportieren: In der <span class="tt" tabindex="0" data-tip="Energie wird von Photonen getragen, die ständig absorbiert und neu ausgesendet werden">Strahlungszone</span> braucht ein Photon zwischen etwa 10&nbsp;000 und 170&nbsp;000 Jahren für den Weg nach außen. In der <span class="tt" tabindex="0" data-tip="Energietransport durch Strömung: heißes Plasma steigt auf, abgekühltes sinkt ab – wie in einem Topf mit kochendem Wasser">Konvektionszone</span> steigt heißes Plasma auf und sinkt abgekühlt wieder ab.</p>
+      <p class="connector-text">Jetzt wird es spannend: Stimmt deine Vermutung zur Temperatur?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Dichte und Temperatur ansehen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <h3>Dichte und Temperatur der Zonen</h3>
+      <p><strong>Recherchiere</strong> Dichte und Temperatur mit der 🔗 Quelle oben (astronomie.de) und trage deine Werte ins Booklet ein. Die Richtwerte zum Vergleich findest du nach 10 Minuten unter „Hilfestellungen → Musterlösung“.</p>
+      <div class="hs" id="hs-zonen">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><table class="data-tbl">
+          <tr><th>Zone</th><th>Dichte (Richtwert)</th><th>Temperatur (Richtwert)</th></tr>
+          <tr><td>Kern</td><td>bis ca. 150&nbsp;g/cm³</td><td>ca. 1,5 · 10<sup>7</sup>&nbsp;K</td></tr>
+          <tr><td>Strahlungszone</td><td>ca. 20 bis 0,2&nbsp;g/cm³</td><td>ca. 7 · 10<sup>6</sup> bis 2 · 10<sup>6</sup>&nbsp;K</td></tr>
+          <tr><td>Konvektionszone</td><td>ca. 0,2 bis 10<sup>−7</sup>&nbsp;g/cm³</td><td>ca. 2 · 10<sup>6</sup> bis 6&nbsp;000&nbsp;K</td></tr>
+          <tr><td>Photosphäre</td><td>ca. 3 · 10<sup>−7</sup>&nbsp;g/cm³</td><td>ca. 4&nbsp;850 bis 6&nbsp;000&nbsp;K</td></tr>
+          <tr><td>Chromosphäre</td><td>ca. 10<sup>−12</sup>&nbsp;g/cm³</td><td>ca. 4&nbsp;000 bis 10&nbsp;000&nbsp;K</td></tr>
+          <tr><td>Übergangsregion</td><td>ca. 10<sup>−14</sup>&nbsp;g/cm³</td><td>ca. 10<sup>4</sup> bis 10<sup>6</sup>&nbsp;K</td></tr>
+          <tr><td>Korona</td><td>ca. 10<sup>8</sup> bis 10<sup>9</sup>&nbsp;Teilchen/cm³</td><td>über 10<sup>6</sup>&nbsp;K</td></tr>
+        </table>
+        <small>Zum Vergleich: Blei hat eine Dichte von 11,34&nbsp;g/cm³, Eisen 7,87&nbsp;g/cm³. Die Werte sind gerundete Richtwerte; je nach Quelle weichen sie etwas ab.</small></div></div>
+        </div>
+      </div>
+      <figure class="chart-fig">
+        <svg viewBox="0 0 720 360" role="img" aria-labelledby="tsvg-t" class="temp-svg" xmlns="http://www.w3.org/2000/svg">
+<title id="tsvg-t">Temperaturverlauf der Sonne von innen nach außen: vom Kern mit etwa 15 Millionen Kelvin sinkt die Temperatur bis zur Photosphäre auf etwa 5000 Kelvin und steigt dann über Chromosphäre und Übergangsregion auf über eine Million Kelvin in der Korona.</title>
+<rect x="78.0" y="20" width="88.9" height="270" fill="#FBF3EE"/>
+<rect x="166.9" y="20" width="88.9" height="270" fill="#FFFFFF"/>
+<rect x="255.7" y="20" width="88.9" height="270" fill="#FBF3EE"/>
+<rect x="344.6" y="20" width="88.9" height="270" fill="#FFFFFF"/>
+<rect x="433.4" y="20" width="88.9" height="270" fill="#FBF3EE"/>
+<rect x="522.3" y="20" width="88.9" height="270" fill="#FFFFFF"/>
+<rect x="611.1" y="20" width="88.9" height="270" fill="#FBF3EE"/>
+<line x1="78" y1="290.0" x2="700" y2="290.0" stroke="#E5DFD6" stroke-width="1"/>
+<text x="70" y="295.0" text-anchor="end" font-size="14" fill="#4A4542">10<tspan dy="-6" font-size="10">3</tspan></text>
+<line x1="78" y1="230.0" x2="700" y2="230.0" stroke="#E5DFD6" stroke-width="1"/>
+<text x="70" y="235.0" text-anchor="end" font-size="14" fill="#4A4542">10<tspan dy="-6" font-size="10">4</tspan></text>
+<line x1="78" y1="170.0" x2="700" y2="170.0" stroke="#E5DFD6" stroke-width="1"/>
+<text x="70" y="175.0" text-anchor="end" font-size="14" fill="#4A4542">10<tspan dy="-6" font-size="10">5</tspan></text>
+<line x1="78" y1="110.0" x2="700" y2="110.0" stroke="#E5DFD6" stroke-width="1"/>
+<text x="70" y="115.0" text-anchor="end" font-size="14" fill="#4A4542">10<tspan dy="-6" font-size="10">6</tspan></text>
+<line x1="78" y1="50.0" x2="700" y2="50.0" stroke="#E5DFD6" stroke-width="1"/>
+<text x="70" y="55.0" text-anchor="end" font-size="14" fill="#4A4542">10<tspan dy="-6" font-size="10">7</tspan></text>
+<line x1="78" y1="20" x2="78" y2="290" stroke="#4A4542" stroke-width="1.5"/>
+<line x1="78" y1="290" x2="700" y2="290" stroke="#4A4542" stroke-width="1.5"/>
+<text x="18" y="155.0" transform="rotate(-90 18 155.0)" text-anchor="middle" font-size="14" fill="#111111"><tspan font-style="italic">T</tspan> in K</text>
+<text x="122.4" y="310" text-anchor="middle" font-size="13" fill="#111111">Kern</text>
+<text x="211.3" y="310" text-anchor="middle" font-size="13" fill="#111111">Strahlungs-</text>
+<text x="211.3" y="326" text-anchor="middle" font-size="13" fill="#111111">zone</text>
+<text x="300.1" y="310" text-anchor="middle" font-size="13" fill="#111111">Konvektions-</text>
+<text x="300.1" y="326" text-anchor="middle" font-size="13" fill="#111111">zone</text>
+<text x="389.0" y="310" text-anchor="middle" font-size="13" fill="#111111">Photo-</text>
+<text x="389.0" y="326" text-anchor="middle" font-size="13" fill="#111111">sphäre</text>
+<text x="477.9" y="310" text-anchor="middle" font-size="13" fill="#111111">Chromo-</text>
+<text x="477.9" y="326" text-anchor="middle" font-size="13" fill="#111111">sphäre</text>
+<text x="566.7" y="310" text-anchor="middle" font-size="13" fill="#111111">Übergangs-</text>
+<text x="566.7" y="326" text-anchor="middle" font-size="13" fill="#111111">region</text>
+<text x="655.6" y="310" text-anchor="middle" font-size="13" fill="#111111">Korona</text>
+<text x="389.0" y="354" text-anchor="middle" font-size="13" fill="#4A4542">von innen nach außen →</text>
+<polyline points="82.0,39.4 162.9,59.3 170.9,59.3 251.7,91.9 259.7,91.9 340.6,243.3 348.6,243.3 429.4,248.6 437.4,248.6 518.3,230.0 526.3,230.0 607.1,110.0 615.1,110.0 696.0,91.9" fill="none" stroke="#B25A38" stroke-width="3.5" stroke-linejoin="round"/>
+</svg>
+        <figcaption>Schaubild mit Richtwerten, Temperaturachse logarithmisch (jede Linie = Faktor 10).</figcaption>
+      </figure>
+      <div class="quiz-item">
+        <div class="quiz-q">Wo ist es heißer – in der Photosphäre oder in der Korona?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('korona', this, 'w')">In der Photosphäre – sie liegt näher am Kern.</button>
+          <button class="quiz-btn" onclick="quizCheck('korona', this, 'c')">In der Korona – sie ist über 100-mal heißer als die Photosphäre.</button>
+          <button class="quiz-btn" onclick="quizCheck('korona', this, 'w')">Beide sind gleich heiß.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-korona"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Temperatur der Sonnenzonen</div>
+        <p><strong>Merksatz:</strong> Die Temperatur der Sonne folgt nicht der Entfernung zum Kern, sondern dem Ort der Energieerzeugung und der Art des Energietransports.</p>
+        <p>Im Inneren ist es wegen der Kernfusion sehr heiß (ca. 1,5 · 10<sup>7</sup>&nbsp;K); zur Oberfläche hin kühlt die Sonne ab (ca. 6&nbsp;000&nbsp;K). Ab der Chromosphäre wird sie durch Magnetfelder wieder aufgeheizt – die Korona hat über 10<sup>6</sup>&nbsp;K (Korona-Heizungsproblem).</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,3)">Zum Stations-Check ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-3">
+      <div class="check-box">
+        <h3>✅ Stations-Check 4</h3>
+        <div class="quiz-item">
+          <div class="quiz-q">Wie wird die Energie in der Konvektionszone transportiert?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c4a', this, 'w')">durch Photonen, die ständig absorbiert und wieder ausgesendet werden</button>
+            <button class="quiz-btn" onclick="quizCheck('c4a', this, 'c')">durch auf- und absteigendes heißes Plasma</button>
+            <button class="quiz-btn" onclick="quizCheck('c4a', this, 'w')">durch Wärmeleitung in festem Gestein</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c4a"></div>
+        </div>
+        <button class="btn btn-primary" onclick="stationDone(4)">✅ Station 4 abschließen</button>
+        <span class="st-done" id="st-done-4" hidden>Station 4 geschafft ✓</span>
+      </div>
+      <p class="connector-text">Die Magnetfelder, die die Korona aufheizen, sieht man auch direkt auf der Sonnenoberfläche – als dunkle Flecken und gewaltige Bögen.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Weiter zu Station 5: Phänomene →</button></div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== STATION 5 -->
+<section class="phase" id="ph5">
+  <div class="card">
+    <h2>Station 5 · Phänomene auf der Sonnenoberfläche</h2>
+    <p>Im Mai 2024 konnte man sogar in Sachsen Polarlichter am Himmel sehen – normalerweise gibt es sie nur hoch im Norden. Ausgelöst wurden sie von Vorgängen auf der Sonne, 150 Millionen Kilometer entfernt.</p>
+    <p class="booklet-ref">📒 Booklet · Aufgabe 5</p>
+    <div class="src-gate" id="gate-5">
+      <div class="src-gate-head">🔗 Zuerst: Öffne die Quelle</div>
+      <p>Lies dir die Seite in Ruhe durch. Erst danach werden die Aufgaben dieser Station freigeschaltet.</p>
+      <a class="btn btn-primary src-link" href="https://www.mps.mpg.de/sonnenstuerme-sonnenaktivitaet-faq/4" target="_blank" rel="noopener" onclick="srcOpen(5)">Max-Planck-Institut für Sonnensystemforschung – Sonnenstürme und Sonnenaktivität öffnen ↗</a>
+      <div class="src-ok" id="src-ok-5" hidden>✅ Quelle geöffnet – die Aufgaben sind freigeschaltet. Über den Button kannst du die Quelle jederzeit wieder öffnen.</div>
+      <div class="src-lock" id="src-lock-5">🔒 Die Aufgaben erscheinen, sobald du die Quelle geöffnet hast.</div>
+    </div>
+
+    <div class="gate-content locked" id="gate-c-5">
+    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(5,1)">1 · Sonnenflecken</button>
+      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · Protuberanzen</button>
+      <button class="substep-chip locked" onclick="revealSub(5,3)">3 · Auswirkungen &amp; Check</button>
+      <button class="substep-all" onclick="revealSub(5,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph5-sub-1">
+      <h3>5.1 · Sonnenflecken</h3>
+      <figure class="fig-wide">
+        <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/sonnenflecken.jpg" alt="Nahaufnahme einer Sonnenfleckengruppe: dunkle Kerne, umgeben von helleren, fadenförmigen Rändern auf der körnigen Sonnenoberfläche">
+        <figcaption>Sonnenfleckengruppe · Quelle: DLR – Credit: NASA Goddard Space Flight Center, Solar Archipelago</figcaption>
+      </figure>
+      <div class="baustein" data-type="dtw" id="dtw-flecken">
+        <div class="dtw-pool">
+          <span class="dtw-word" data-w="1500" onclick="dtwSelect(this)">1&nbsp;500</span>
+          <span class="dtw-word" data-w="dunkle" onclick="dtwSelect(this)">dunkle</span>
+          <span class="dtw-word" data-w="Magnetfelder" onclick="dtwSelect(this)">Magnetfelder</span>
+          <span class="dtw-word" data-w="kühler" onclick="dtwSelect(this)">kühler</span>
+          <span class="dtw-word" data-w="paarweise" onclick="dtwSelect(this)">paarweise</span>
+        </div>
+        <p class="dtw-text">Sonnenflecken sind
+          <span class="dtw-gap" data-answer="dunkle" onclick="dtwPlace(this)">______</span> Stellen auf der Photosphäre, die
+          <span class="dtw-gap" data-answer="kühler" onclick="dtwPlace(this)">______</span> als ihre Umgebung sind und daher weniger sichtbares Licht abstrahlen. Ihre Temperatur ist um etwa
+          <span class="dtw-gap" data-answer="1500" onclick="dtwPlace(this)">______</span>&nbsp;K niedriger. Sie entstehen dort, wo starke
+          <span class="dtw-gap" data-answer="Magnetfelder" onclick="dtwPlace(this)">______</span> die Konvektion bremsen – so gelangt weniger Wärme an die Oberfläche. Weil jeder Magnetfeldbogen einen Austritts- und einen Eintrittspunkt hat, treten Sonnenflecken
+          <span class="dtw-gap" data-answer="paarweise" onclick="dtwPlace(this)">______</span> auf.</p>
+        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <p><strong>Ordne zu:</strong></p>
+      <div class="baustein" data-type="match" id="match-umbra">
+        <div class="m-pool">
+          <span class="m-chip" data-id="u" onclick="matchSelect(this)">Umbra</span>
+          <span class="m-chip" data-id="p" onclick="matchSelect(this)">Penumbra</span>
+        </div>
+        <div class="m-zone" data-correct="u" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">der dunkle Kern eines Sonnenflecks</span></div>
+        <div class="m-zone" data-correct="p" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">der hellere Rand mit radialer, fadenförmiger Struktur</span></div>
+        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <div class="callout callout-info">🔄 <span><strong>Warum verdrehen sich die Magnetfelder?</strong> Die Sonne rotiert nicht wie ein fester Körper: Am Äquator braucht sie für eine Umdrehung etwa 25&nbsp;Tage, in Polnähe über 30&nbsp;Tage. Dadurch wird das innere Magnetfeld verzerrt, lokale Feldbögen brechen durch die Photosphäre.</span></div>
+      <div class="callout">📈 <span><strong>Solarzyklus:</strong> Die Zahl der Sonnenflecken schwankt mit einer mittleren Periode von 11,1&nbsp;Jahren. Der aktuelle 25. Zyklus begann im Dezember 2019 und erreichte um Oktober 2024 sein Maximum.</span></div>
+      <div class="quiz-item">
+        <div class="quiz-q">Warum erscheinen Sonnenflecken dunkel?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('fleck', this, 'w')">Dort ist die Sonne schon ausgebrannt.</button>
+          <button class="quiz-btn" onclick="quizCheck('fleck', this, 'w')">Es sind Löcher, durch die man ins dunkle Innere sieht.</button>
+          <button class="quiz-btn" onclick="quizCheck('fleck', this, 'c')">Sie sind kühler als ihre Umgebung und strahlen deshalb weniger Licht ab.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-fleck"></div>
+      </div>
+      <p class="connector-text">Magnetfelder bremsen nicht nur – sie können Plasma auch weit über die Oberfläche hinaus tragen.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Zu den Protuberanzen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph5-sub-2">
+      <h3>5.2 · Protuberanzen</h3>
+      <figure class="fig-wide">
+        <img src="K10%20-%20LB3%20-%20Lernpfad_Die_Sonne-IMG/protuberanz.jpg" alt="Riesiger leuchtender Plasmabogen am Sonnenrand; zum Größenvergleich ist die Erde als winziger Punkt eingezeichnet">
+        <figcaption>Protuberanz – oben links die Erde im gleichen Maßstab · Quelle: NASA</figcaption>
+      </figure>
+      <div class="baustein" data-type="dtw" id="dtw-protu">
+        <div class="dtw-pool">
+          <span class="dtw-word" data-w="Magnetfeldlinien" onclick="dtwSelect(this)">Magnetfeldlinien</span>
+          <span class="dtw-word" data-w="Plasmaboegen" onclick="dtwSelect(this)">Plasmabögen</span>
+          <span class="dtw-word" data-w="Plasma" onclick="dtwSelect(this)">Plasma</span>
+        </div>
+        <p class="dtw-text">Heißes
+          <span class="dtw-gap" data-answer="Plasma" onclick="dtwPlace(this)">______</span> wird entlang der
+          <span class="dtw-gap" data-answer="Magnetfeldlinien" onclick="dtwPlace(this)">______</span> nach oben geleitet. So entstehen große, leuchtende
+          <span class="dtw-gap" data-answer="Plasmaboegen" onclick="dtwPlace(this)">______</span>, die als Protuberanzen sichtbar sind.</p>
+        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <p><span class="tt" tabindex="0" data-tip="Bogen aus Plasma, der von Magnetfeldern über der Sonnenoberfläche gehalten wird">Protuberanzen</span> erreichen im Durchschnitt etwa 40&nbsp;000&nbsp;km Höhe; die Bögen können bis zu 200&nbsp;000&nbsp;km lang werden – mehr als 15 Erddurchmesser. Ihr Plasma hat etwa 15&nbsp;000&nbsp;K.</p>
+      <p class="connector-text">Manchmal reißen solche Magnetfeldstrukturen auf – dann schleudert die Sonne Plasma bis zur Erde. Was bedeutet das für uns?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,3)">Auswirkungen auf die Erde ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph5-sub-3">
+      <h3>5.3 · Auswirkungen der Sonnenaktivität auf die Erde</h3>
+      <p><strong>Markiere alle Auswirkungen, die für uns ein Problem sein können.</strong></p>
+      <div class="baustein" data-type="mark" id="mark-auswirkungen">
+        <p class="mark-text">
+          <span class="mw" data-correct="0" onclick="markToggle(this)">Polarlichter</span>
+          <span class="mw" data-correct="1" onclick="markToggle(this)">Störungen von Satelliten</span>
+          <span class="mw" data-correct="1" onclick="markToggle(this)">Störungen im Funkverkehr</span>
+          <span class="mw" data-correct="1" onclick="markToggle(this)">Störungen in Stromnetzen</span>
+          <span class="mw" data-correct="1" onclick="markToggle(this)">erhöhte Strahlenbelastung für Astronauten</span>
+        </p>
+        <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+        <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+        <div class="fb grp-fb"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Sonnenaktivität</div>
+        <p><strong>Sonnenflecken:</strong> dunkle, um ca. 1&nbsp;500&nbsp;K kühlere Stellen der Photosphäre; starke Magnetfelder bremsen dort die Konvektion. Dunkler Kern: Umbra, fadenförmiger Rand: Penumbra. Solarzyklus: ca. 11&nbsp;Jahre.</p>
+        <p><strong>Protuberanzen:</strong> Heißes Plasma wird entlang der Magnetfeldlinien nach oben geleitet und bildet große, leuchtende Plasmabögen.</p>
+        <p><strong>Auswirkungen auf die Erde:</strong> positiv: Polarlichter · negativ: Störungen von Satelliten, Funkverkehr und Stromnetzen, erhöhte Strahlenbelastung für Astronauten.</p>
+      </div>
+      <div class="check-box">
+        <h3>✅ Stations-Check 5</h3>
+        <div class="quiz-item">
+          <div class="quiz-q">Was haben Sonnenflecken und Protuberanzen gemeinsam?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('c5a', this, 'c')">Beide entstehen durch starke Magnetfelder der Sonne.</button>
+            <button class="quiz-btn" onclick="quizCheck('c5a', this, 'w')">Beide sind heißer als die Korona.</button>
+            <button class="quiz-btn" onclick="quizCheck('c5a', this, 'w')">Beide entstehen im Kern der Sonne.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-c5a"></div>
+        </div>
+        <button class="btn btn-primary" onclick="stationDone(5)">✅ Station 5 abschließen</button>
+        <span class="st-done" id="st-done-5" hidden>Station 5 geschafft ✓ – du hast den ganzen Lernpfad bearbeitet!</span>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(6)">Zur Sicherung →</button></div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== SICHERUNG -->
+<section class="phase" id="ph6">
+  <div class="card">
+    <h2>Sicherung · Was bleibt hängen?</h2>
+    <p>Zwei Fragen stehen im Mittelpunkt: <strong>Woher kommt die Energie der Sonne – und wie viel strahlt sie ab?</strong> Dazu kommen der Temperaturverlauf und die Magnetfelder an der Oberfläche.</p>
+
+    <div class="substep-nav" id="ph6-stepper" data-phase="6" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(6,1)">1 · Abschlussquiz</button>
+      <button class="substep-chip locked" onclick="revealSub(6,2)">2 · Begriffe wiederholen</button>
+      <button class="substep-chip locked" onclick="revealSub(6,3)">3 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(6,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph6-sub-1">
+      <h3>Abschlussquiz</h3>
+      <p class="quiz-score" id="quiz-score" aria-live="polite">Beantworte alle sieben Fragen. Dein Stand: 0 von 7 beantwortet.</p>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">1 · Woher stammt die Energie der Sonne?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s1', this, 'w')">aus der Verbrennung von Wasserstoff mit Sauerstoff</button>
+          <button class="quiz-btn" onclick="finalQuiz('s1', this, 'c')">aus der Verschmelzung von Wasserstoffkernen zu Helium im Kern</button>
+          <button class="quiz-btn" onclick="finalQuiz('s1', this, 'w')">aus der Wärme, die die Sonne bei ihrer Entstehung gespeichert hat</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s1"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">2 · Bei der Fusion von 4 Wasserstoffkernen zu 1 Heliumkern …</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s2', this, 'w')">bleibt die Masse genau gleich.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s2', this, 'w')">nimmt die Masse zu.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s2', this, 'c')">nimmt die Masse ab; die Differenz wird als Energie frei.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s2"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">3 · Was beschreibt die Solarkonstante?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s3', this, 'c')">die Strahlungsleistung pro Quadratmeter im Abstand der Erde (1&nbsp;AE)</button>
+          <button class="quiz-btn" onclick="finalQuiz('s3', this, 'w')">die gesamte Strahlungsleistung der Sonne</button>
+          <button class="quiz-btn" onclick="finalQuiz('s3', this, 'w')">die Temperatur der Sonnenoberfläche</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s3"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">4 · Wie bestimmt man aus der Solarkonstante die Leuchtkraft?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s4', this, 'w')"><i>L</i> = <i>S</i> · 4π<i>R</i>² mit dem Sonnenradius <i>R</i></button>
+          <button class="quiz-btn" onclick="finalQuiz('s4', this, 'c')"><i>L</i> = <i>S</i> · 4π<i>r</i>² mit dem Abstand Erde–Sonne <i>r</i></button>
+          <button class="quiz-btn" onclick="finalQuiz('s4', this, 'w')"><i>L</i> = <i>S</i> / <i>r</i></button>
+        </div>
+        <div class="quiz-fb" id="qfb-s4"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">5 · Die Sonne ist eine Kugel aus Plasma. Das bedeutet:</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s5', this, 'w')">Sie besteht aus flüssigem, glühendem Metall.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s5', this, 'c')">Atomkerne und Elektronen sind nicht zu Atomen verbunden, sondern frei beweglich.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s5', this, 'w')">Sie besteht aus festen Gesteinsbrocken, die sehr heiß sind.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s5"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">6 · Wie verläuft die Temperatur von der Photosphäre zur Korona?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s6', this, 'w')">Sie sinkt weiter ab, weil die Korona am weitesten vom Kern entfernt ist.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s6', this, 'c')">Sie steigt stark an – die Korona hat über 10<sup>6</sup>&nbsp;K.</button>
+          <button class="quiz-btn" onclick="finalQuiz('s6', this, 'w')">Sie bleibt bei etwa 6&nbsp;000&nbsp;K.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s6"></div>
+      </div>
+      <div class="quiz-item" data-final="1">
+        <div class="quiz-q">7 · Was ist die Ursache für Sonnenflecken und Protuberanzen?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="finalQuiz('s7', this, 'w')">Einschläge von Kometen auf der Sonnenoberfläche</button>
+          <button class="quiz-btn" onclick="finalQuiz('s7', this, 'w')">Stellen, an denen die Kernfusion schon beendet ist</button>
+          <button class="quiz-btn" onclick="finalQuiz('s7', this, 'c')">starke Magnetfelder der Sonne</button>
+        </div>
+        <div class="quiz-fb" id="qfb-s7"></div>
+      </div>
+      <p class="connector-text">Die Kernideen sitzen? Dann festige noch die wichtigsten Begriffe.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(6,2)">Begriffe wiederholen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph6-sub-2">
+      <h3>Begriffe wiederholen</h3>
+      <p>Klicke auf die Karte, um sie umzudrehen.</p>
+      <div class="baustein" data-type="flashcards" id="fc-sonne"
+           data-cards='[["Plasma","Zustand, in dem Atomkerne und Elektronen frei beweglich sind"],["Kernfusion","Verschmelzen leichter Atomkerne (in der Sonne: Wasserstoff zu Helium) unter Freisetzung von Energie"],["Massendefekt","Die Produkte sind leichter als die Ausgangsteilchen; die Differenz wird als Energie frei: ΔE = Δm · c²"],["Leuchtkraft L","gesamte Strahlungsleistung eines Sterns, Sonne: ca. 3,8 · 10²⁶ W"],["Solarkonstante S","Strahlungsleistung pro Fläche im Abstand 1 AE: ca. 1,36 · 10³ W/m²"],["Photosphäre","sichtbare Oberfläche der Sonne, ca. 6 000 K"],["Korona","extrem heiße, dünne äußere Atmosphäre der Sonne, über 10⁶ K"],["Sonnenfleck","kühlere, dunkle Stelle der Photosphäre, verursacht durch starke Magnetfelder"],["Protuberanz","leuchtender Plasmabogen entlang von Magnetfeldlinien"]]'>
+        <div class="fc-card" onclick="fcFlip(this)"><span class="fc-face">Plasma</span></div>
+        <div class="fc-controls">
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
+          <span class="caption fc-count">1 / 9</span>
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)">weiter →</button>
+        </div>
+      </div>
+      <details class="star">
+        <summary>★ Zusatz: Wortsuche</summary>
+        <div class="baustein" data-type="wordsearch" id="ws-sonne" data-words="PLASMA,KORONA,HELIUM,FUSION,PHOTON,KERN,FLECK" data-size="11">
+          <div class="ws-grid"></div>
+          <div class="ws-words"></div>
+          <button class="btn btn-ghost btn-sm" onclick="wsShuffle(this)">🔀 Neues Rätsel</button>
+          <div class="fb grp-fb"></div>
+        </div>
+      </details>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(6,3)">Zum Exit-Ticket ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph6-sub-3">
+      <h3>🎟 Exit-Ticket</h3>
+      <div class="task">
+        <p><strong>1.</strong> Erkläre in zwei Sätzen, woher die Sonne ihre Energie bekommt. Verwende die Begriffe <em>Kernfusion</em> und <em>Massendefekt</em>.</p>
+        <div class="poe-box" id="exit-1">
+          <textarea id="exit-1-in" rows="3" placeholder="Deine Erklärung …"></textarea>
+          <button class="btn btn-primary btn-sm" onclick="lockPredict('exit-1')">Antwort abgeben</button>
+          <div class="poe-locked" id="exit-1-out" hidden></div>
+        </div>
+        <div class="hs" id="hs-exit1">
+          <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+          <div class="hs-panel" hidden>
+            <div class="hs-title">Hilfestellung</div>
+            <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Im Kern der Sonne verschmelzen durch Kernfusion vier Wasserstoffkerne zu einem Heliumkern. Der Heliumkern ist leichter als die Ausgangsteilchen; dieser Massendefekt wird nach <i>ΔE</i> = <i>Δm</i> · <i>c</i>² als Energie frei und als Strahlung abgegeben.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="task">
+        <p><strong>2.</strong> Der Mars ist 1,52&nbsp;AE von der Sonne entfernt. Berechne, wie viel Strahlung pro Quadratmeter dort ankommt (<i>S</i><sub>Erde</sub> = 1&nbsp;360&nbsp;W/m²).</p>
+        <p><i>S</i><sub>Mars</sub> = <input class="inp inp-s" id="exit-mars" aria-label="Bestrahlungsstärke Mars">&nbsp;<span class="unit">W/m²</span></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['exit-mars', 589, 8]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-exit2">
+          <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+          <div class="hs-panel" hidden>
+            <div class="hs-title">Hilfestellung</div>
+            <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><span class="fline"><i>S</i><sub>Mars</sub> = <span class="frac"><span class="num">1&nbsp;360&nbsp;W/m²</span><span class="den">1,52²</span></span> = <span class="frac"><span class="num">1&nbsp;360&nbsp;W/m²</span><span class="den">2,31</span></span> ≈ 589&nbsp;W/m²</span> – also weniger als die Hälfte des Werts an der Erde.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="task">
+        <p><strong>3.</strong> Wie sicher fühlst du dich jetzt? Markiere für dich:</p>
+        <div class="cp-opts">
+          <button class="btn btn-ghost btn-sm" onclick="selfRate(this)">😊 Ich kann Aufbau, Leuchtkraft und Kernfusion erklären.</button>
+          <button class="btn btn-ghost btn-sm" onclick="selfRate(this)">🙂 Das meiste sitzt, bei einer Station bin ich unsicher.</button>
+          <button class="btn btn-ghost btn-sm" onclick="selfRate(this)">😕 Ich brauche noch Hilfe – das sage ich meiner Lehrkraft.</button>
+        </div>
+      </div>
+
+      <div class="lehrer-only" hidden>
+        <div class="callout callout-info">🧑‍🏫 <span><strong>Sicherung im Plenum (Ziel ≤ 20 min):</strong> ① Abschlussquiz gemeinsam auflösen, nur Fragen mit vielen Fehlern besprechen (5 min). ② Kernfusion: Proton-Proton-Kette an der Tafel/Folie in drei Schritten, Massendefekt erklären lassen (7 min). ③ Leuchtkraft: Rechenweg <i>L</i> = <i>S</i> · 4π<i>r</i>² von einem Schüler vorstellen lassen (5 min). ④ Exit-Ticket 1 von zwei SuS vorlesen lassen (3 min). Lückentexte und Zuordnungen nicht erneut besprechen – sie sind durch die Stations-Checks bereits kontrolliert. Stationen 4 und 5 über die Heftereinträge und die Quizfragen 6 und 7 aufgreifen.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Die Sonne ist eine Plasmakugel mit Schichtaufbau</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Kern – Strahlungszone – Konvektionszone bilden das Innere, Photosphäre – Chromosphäre – Übergangsregion – Korona die „Atmosphäre“.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Die Leuchtkraft folgt aus der Solarkonstante</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner"><i>L</i> = <i>S</i> · 4π<i>r</i>² ≈ 3,8 · 10<sup>26</sup>&nbsp;W. Bei doppeltem Abstand kommt nur ein Viertel der Strahlung pro Fläche an.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Kernfusion wandelt Masse in Energie um</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">In der Proton-Proton-Kette entsteht aus 4 Wasserstoffkernen ein Heliumkern; der Massendefekt wird als Energie frei (26,7&nbsp;MeV). Die Sonne verliert dadurch rund 4,3 · 10<sup>9</sup>&nbsp;kg pro Sekunde.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Magnetfelder formen die Sonnenoberfläche</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Sonnenflecken, Protuberanzen und die heiße Korona gehen auf Magnetfelder zurück. Sonnenaktivität erzeugt Polarlichter, kann aber auch Satelliten, Funk und Stromnetze stören.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt erklären, woher die Sonne ihre Energie hat und wie viel sie davon abstrahlt.</span></div>
+    <p class="connector-text">Die Sonne ist nur einer von Milliarden Sternen. Als Nächstes rechnen wir weiter mit der Leuchtkraft und orientieren uns am Sternenhimmel: Wie findet man andere „Sonnen“ – und wie weit sind sie entfernt?</p>
+    <details class="quellen" open>
+      <summary>🔗 Quellen</summary>
+      <ul>
+        <li>Station 1: <a href="https://www.leifiphysik.de/astronomie/sonne/grundwissen/aufbau-der-sonne" target="_blank" rel="noopener">LEIFIphysik – Aufbau der Sonne</a></li>
+        <li>Station 2: <a href="https://www.zum.de/Faecher/Materialien/gebhardt/astronomie/leuchtkraft.html" target="_blank" rel="noopener">ZUM (Gebhardt) – Die Leuchtkraft der Sonne</a></li>
+        <li>Station 3: <a href="https://www.leifiphysik.de/kern-teilchenphysik/kernspaltung-und-kernfusion/ausblick/proton-proton-i-kette" target="_blank" rel="noopener">LEIFIphysik – Proton-Proton-I-Kette</a></li>
+        <li>Station 4: <a href="https://www.astronomie.de/das-sonnensystem/die-sonne/basiswissen/innerer-aufbau-der-sonne" target="_blank" rel="noopener">astronomie.de – Innerer Aufbau der Sonne</a></li>
+        <li>Station 5: <a href="https://www.mps.mpg.de/sonnenstuerme-sonnenaktivitaet-faq/4" target="_blank" rel="noopener">Max-Planck-Institut für Sonnensystemforschung – Sonnenstürme und Sonnenaktivität</a></li>
+        <li>Bilder: Sonne und Protuberanz – NASA · Sonnenflecken – DLR / NASA Goddard Space Flight Center, Solar Archipelago · Aufbau der Sonne – nach Pbroks13, CC BY-SA 3.0, Wikimedia Commons, geändert von Stefan Richtberg · Proton-Proton-Kette – Borb, CC BY-SA 3.0, Wikimedia Commons · Leuchtkraft-Skizze – nach ZUM (Gebhardt)</li>
+      </ul>
+    </details>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+    <p class="reset-line"><button class="btn btn-ghost btn-sm" onclick="lpReset()">↺ Fortschritt und Lernzeit zurücksetzen</button></p>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  'stern': { ok:'✅ <strong>Richtig!</strong> Sterne leuchten aus eigener Kraft – die Sonne ist der Stern, der uns am nächsten ist.', ng:'❌ <strong>Nicht ganz.</strong> Die Sonne leuchtet selbst – genau das macht einen Stern aus. Planeten werfen nur Licht zurück.', hint:'Überlege: Woher kommt das Licht der Sonne – von ihr selbst oder von woanders?' },
+  'feuer': { ok:'✅ <strong>Richtig!</strong> Chemische Verbrennung würde die Sonne nur einige Tausend Jahre leuchten lassen. Kernfusion reicht für Milliarden Jahre.', ng:'❌ <strong>Nicht ganz.</strong> Ein Feuer ist eine chemische Reaktion der Atomhüllen. In der Sonne verschmelzen Atomkerne – ein ganz anderer, viel ergiebigerer Prozess.', hint:'Denk an den Lückentext: Was genau verschmilzt im Zentrum der Sonne – Hüllen oder Kerne?' },
+  'c1a': { ok:'✅ <strong>Richtig!</strong> Die hohen Geschwindigkeiten trennen Elektronen bei jedem Stoß wieder ab – das ist Plasma.', ng:'❌ <strong>Nicht ganz.</strong> Es liegt an der Bewegung der Teilchen, nicht an fehlendem Sauerstoff oder an der Fusion.', hint:'Was passiert, wenn sehr schnelle Teilchen zusammenstoßen?' },
+  'c1b': { ok:'✅ <strong>Richtig!</strong> Die Photosphäre ist die sichtbare Oberfläche – von ihr kommt das meiste Licht.', ng:'❌ <strong>Nicht ganz.</strong> Den Kern kann man nicht sehen, und die Korona ist so lichtschwach, dass man sie nur bei totaler Sonnenfinsternis sieht.', hint:'Der Name verrät es: „Photo“ bedeutet Licht.' },
+  'abst': { ok:'✅ <strong>Richtig!</strong> Die Strahlung verteilt sich auf eine Kugeloberfläche 4πr². Doppelter Radius → vierfache Fläche → ein Viertel pro m².', ng:'❌ <strong>Nicht ganz.</strong> Die Sonne strahlt zwar gleich stark, aber die Strahlung verteilt sich auf eine immer größere Kugelfläche – und die wächst mit r².', hint:'Probiere den Regler: Stell 1 AE und dann 2 AE ein und vergleiche die Werte.' },
+  'c2a': { ok:'✅ <strong>Richtig!</strong> Die Leuchtkraft ist eine Leistung: Energie pro Zeit, also Watt.', ng:'❌ <strong>Nicht ganz.</strong> W/m² ist die Einheit der Solarkonstante (pro Fläche). Joule ist eine Energie, keine Leistung.', hint:'Leuchtkraft = Energie pro Zeit. Welche Einheit hat eine Leistung?' },
+  'c2b': { ok:'✅ <strong>Richtig!</strong> Durch die gedachte Kugel mit Radius 1 AE geht die gesamte Strahlung – und auf ihr kennen wir den Wert pro m².', ng:'❌ <strong>Nicht ganz.</strong> Die Solarkonstante wird an der Erde gemessen. Sie gilt deshalb für die Kugel mit dem Radius Erde–Sonne.', hint:'Wo wird die Solarkonstante gemessen?' },
+  'masse': { ok:'✅ <strong>Richtig!</strong> Das ist der Massendefekt: Die fehlende Masse steckt in der abgestrahlten Energie, ΔE = Δm · c².', ng:'❌ <strong>Nicht ganz.</strong> Bei der Fusion wird nichts ausgestoßen und nichts verbrannt – die Masse selbst wird in Energie umgewandelt.', hint:'Vergleiche die Masse von vier Protonen mit der eines Heliumkerns.' },
+  'c3a': { ok:'✅ <strong>Richtig!</strong> Das Positron hat die gleiche Masse wie das Elektron, aber eine positive Ladung.', ng:'❌ <strong>Nicht ganz.</strong> Das Antiteilchen hat die gleiche Masse wie das Elektron, aber die entgegengesetzte Ladung.', hint:'Der Name des Teilchens erinnert an seine Ladung.' },
+  'c3b': { ok:'✅ <strong>Richtig!</strong> Protonen stoßen sich elektrisch ab. Nur bei rund 15 Millionen Kelvin und enormem Druck kommen sie sich nahe genug.', ng:'❌ <strong>Nicht ganz.</strong> Wasserstoff gibt es in der ganzen Sonne – entscheidend sind die Bedingungen im Kern.', hint:'Protonen sind positiv geladen. Was brauchen sie, um trotzdem zu verschmelzen?' },
+  'korona': { ok:'✅ <strong>Richtig!</strong> Die Korona hat über 10⁶ K, die Photosphäre nur rund 6 000 K. Warum das so ist, erforscht man bis heute (Korona-Heizungsproblem).', ng:'❌ <strong>Nicht ganz.</strong> Hier versagt die Herdplatten-Vorstellung: Die Korona ist viel heißer, obwohl sie weiter außen liegt.', hint:'Schau im Schaubild auf die ganz rechte Zone.' },
+  'c4a': { ok:'✅ <strong>Richtig!</strong> Heißes Plasma steigt auf, kühlt ab und sinkt wieder – Konvektion.', ng:'❌ <strong>Nicht ganz.</strong> Photonen transportieren die Energie in der Strahlungszone. Festes Gestein gibt es in der Sonne nicht.', hint:'Denk an einen Topf mit kochendem Wasser.' },
+  'fleck': { ok:'✅ <strong>Richtig!</strong> Sonnenflecken sind immer noch über 4 000 K heiß – sie wirken nur neben der helleren Umgebung dunkel.', ng:'❌ <strong>Nicht ganz.</strong> Sonnenflecken sind weder ausgebrannt noch Löcher. Sie sind kühler und strahlen deshalb weniger Licht ab.', hint:'Was hat Temperatur mit Helligkeit zu tun?' },
+  'c5a': { ok:'✅ <strong>Richtig!</strong> Starke Magnetfelder bremsen die Konvektion (Flecken) und führen Plasma nach oben (Protuberanzen).', ng:'❌ <strong>Nicht ganz.</strong> Beide entstehen an der Oberfläche – durch dieselbe Ursache.', hint:'Welches Wort kam in 5.1 und 5.2 vor?' },
+  's6': { ok:'✅ <strong>Richtig!</strong> Ab der Chromosphäre steigt die Temperatur wieder – die Korona hat über eine Million Kelvin.', ng:'❌ <strong>Nicht ganz.</strong> Hier täuscht die Herdplatten-Vorstellung: Die Korona ist viel heißer als die Photosphäre.', hint:'Station 4, Schaubild: ganz rechts.' },
+  's7': { ok:'✅ <strong>Richtig!</strong> Starke Magnetfelder bremsen die Konvektion (Flecken) und leiten Plasma nach oben (Protuberanzen).', ng:'❌ <strong>Nicht ganz.</strong> Beide Phänomene haben dieselbe Ursache an der Oberfläche der Sonne.', hint:'Station 5: Welches Wort kam bei Flecken und Protuberanzen vor?' },
+  's1': { ok:'✅ <strong>Richtig!</strong> Kernfusion von Wasserstoff zu Helium im Sonnenkern.', ng:'❌ <strong>Nicht ganz.</strong> Chemisch verbrennen kann die Sonne nicht, und gespeicherte Wärme wäre längst aufgebraucht.', hint:'Station 1 und 3: Was verschmilzt im Kern?' },
+  's2': { ok:'✅ <strong>Richtig!</strong> Der Massendefekt wird als Energie frei.', ng:'❌ <strong>Nicht ganz.</strong> Die Masse nimmt ab – genau diese Differenz ist die Energiequelle der Sonne.', hint:'Denk an den Massenverlust von Millionen Tonnen pro Sekunde.' },
+  's3': { ok:'✅ <strong>Richtig!</strong> Die Solarkonstante gilt pro Quadratmeter im Abstand der Erde.', ng:'❌ <strong>Nicht ganz.</strong> Die gesamte Strahlungsleistung ist die Leuchtkraft. Die Solarkonstante bezieht sich auf 1 m².', hint:'Achte auf die Einheit W/m².' },
+  's4': { ok:'✅ <strong>Richtig!</strong> Man nimmt die Kugel, auf der die Solarkonstante gemessen wird – Radius 1 AE.', ng:'❌ <strong>Nicht ganz.</strong> Die Solarkonstante gilt im Abstand der Erde, nicht an der Sonnenoberfläche.', hint:'Wo wurde S gemessen?' },
+  's5': { ok:'✅ <strong>Richtig!</strong> Im Plasma sind Atomkerne und Elektronen frei beweglich.', ng:'❌ <strong>Nicht ganz.</strong> Die Sonne ist weder fest noch flüssig, sondern ein Plasma.', hint:'Station 1, erster Satz.' },
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- Gestufte Hilfe: Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel||zone.classList.contains('filled'))return; zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.add('filled'); sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement; if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').textContent = s._back?cards[i][1]:cards[i][0]; s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  host.querySelectorAll('.ws-cell').forEach(cell=>cell.addEventListener('click',function(){ wsClick(cell); }));
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsClick(cell){ const s=bs(cell); if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const sr=+s._start.dataset.r,sc=+s._start.dataset.c,er=+cell.dataset.r,ec=+cell.dataset.c; s._start.classList.remove('ws-start'); s._start=null;
+  const straight=(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc)); if(!straight)return;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),steps=Math.max(Math.abs(er-sr),Math.abs(ec-sc)); let letters='',cells=[];
+  for(let i=0;i<=steps;i++){ const rr=sr+dr*i,cc=sc+dc*i; letters+=s._grid[rr][cc]; cells.push([rr,cc]); }
+  const rev=letters.split('').reverse().join(''); const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word); cells.forEach(rc=>{ const el=s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); if(el)el.classList.add('ws-found'); }); wsWordList(s); if(s._found.length===s._words.length){ setFb(s,'🎉 Alle Wörter gefunden!',true); } } }
+
+/* 2b Zuordnung per Drag & Drop (zusätzlich zum Klicken; Klick bleibt die
+   barrierearme Grundbedienung, Drag & Drop ist eine reine Zusatzoption) */
+function initMatchDnD(s){
+  const pool=s.querySelector('.m-pool'); if(!pool||pool.dataset.dnd)return; pool.dataset.dnd='1';
+  pool.querySelectorAll('.m-chip').forEach(chip=>{
+    chip.setAttribute('draggable','true');
+    chip.addEventListener('dragstart',function(e){ if(chip.classList.contains('used')){e.preventDefault();return;}
+      s._dragChip=chip; chip.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
+    chip.addEventListener('dragend',function(){ chip.classList.remove('dragging'); s._dragChip=null; });
+  });
+  s.querySelectorAll('.m-zone').forEach(zone=>{
+    zone.addEventListener('dragover',function(e){ if(!s._dragChip)return; e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave',function(){ zone.classList.remove('dragover'); });
+    zone.addEventListener('drop',function(e){ e.preventDefault(); zone.classList.remove('dragover');
+      const chip=s._dragChip; if(!chip)return; s._sel=chip; matchPlace(zone); s._dragChip=null; });
+  });
+}
+
+/* 3b Sortieren per Drag & Drop (zusätzlich zu den ▲▼-Tasten, die als
+   barrierearme/tastaturbedienbare Grundbedienung erhalten bleiben) */
+function sortDragAfter(list,y){
+  const els=[...list.querySelectorAll('.sort-item:not(.dragging)')];
+  return els.reduce(function(best,child){
+    const box=child.getBoundingClientRect(), offset=y-box.top-box.height/2;
+    return (offset<0 && offset>best.offset) ? {offset:offset,element:child} : best;
+  }, {offset:-Infinity,element:null}).element;
+}
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd)return; list.dataset.dnd='1';
+  list.querySelectorAll('.sort-item').forEach(item=>{
+    item.setAttribute('draggable','true');
+    item.addEventListener('dragstart',function(e){ item.classList.add('dragging'); try{e.dataTransfer.setData('text/plain','');}catch(err){} });
+    item.addEventListener('dragend',function(){ item.classList.remove('dragging'); });
+  });
+  list.addEventListener('dragover',function(e){
+    const dragging=list.querySelector('.sort-item.dragging'); if(!dragging)return; e.preventDefault();
+    const after=sortDragAfter(list,e.clientY);
+    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging,after);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+
+/* ---------- Lernpfad Sonne: Lernzeit, Checkpoint, Stationen ---------- */
+const LP_START='sonne_lp_start';
+function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+function lpStart(){ if(!lsGet(LP_START)) lsSet(LP_START,String(Date.now()));
+  const s=document.getElementById('lp-started'); if(s) s.hidden=false; lpTick(); }
+function lpTick(){
+  const st=parseInt(lsGet(LP_START)||'0',10), el=document.getElementById('lp-clock');
+  if(!st){ if(el) el.textContent='⏱ Lernzeit: noch nicht gestartet'; return; }
+  const min=Math.floor((Date.now()-st)/60000);
+  if(el) el.textContent='⏱ Lernzeit: '+min+' min von 90';
+  const b45=document.getElementById('cp-banner'), b85=document.getElementById('cp-banner-end');
+  if(b45) b45.hidden=!(min>=45 && !lsGet('sonne_cp45'));
+  if(b85) b85.hidden=!(min>=85 && !lsGet('sonne_cp85'));
+}
+function cpDismiss(k){ lsSet('sonne_'+k,'1'); lpTick(); }
+function stationDone(n){ lsSet('sonne_done_'+n,'1'); renderProgress(); }
+function renderProgress(){
+  for(let n=1;n<=5;n++){
+    const done=lsGet('sonne_done_'+n)==='1';
+    const chip=document.getElementById('lpc'+n);
+    if(chip){ chip.classList.toggle('done',done);
+      chip.textContent='Station '+n+' · '+(done?'erledigt ✓':'offen'); }
+    const nav=document.getElementById('pn'+n); if(nav) nav.classList.toggle('st-done',done);
+    const msg=document.getElementById('st-done-'+n); if(msg) msg.hidden=!done;
+  }
+}
+function cpSelf(btn,lvl){
+  btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('picked')); btn.classList.add('picked');
+  const t={g:'Super – weiter mit Station 3. Für Station 3 bis 5 bleiben dir jetzt etwa 45 Minuten.',
+           y:'Gut, dass du ehrlich bist. Wiederhole kurz die Stations-Checks 1 und 2, dann weiter mit Station 3.',
+           r:'Kein Problem: Nutze die Hilfestellungen in Station 1 und 2 und melde dich bei deiner Lehrkraft. Danach geht es zügig mit Station 3 weiter.'}[lvl];
+  const box=document.getElementById('cp-self-fb'), txt=document.getElementById('cp-self-txt');
+  if(txt) txt.textContent=t; if(box) box.hidden=false; lsSet('sonne_cpself',lvl);
+}
+function selfRate(btn){ btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('picked')); btn.classList.add('picked'); }
+function lpReset(){
+  if(!confirm('Lernzeit, abgeschlossene Stationen und Aufdeck-Fortschritt zurücksetzen?')) return;
+  try{ Object.keys(localStorage).filter(k=>k.startsWith('sonne_')||k.startsWith('subreveal_ph')||k.startsWith('predict_')||k.startsWith('hilfe')).forEach(k=>localStorage.removeItem(k)); }catch(e){}
+  location.reload();
+}
+/* ---------- Abstands-Regler ---------- */
+function slUpdate(){
+  const r=parseFloat(document.getElementById('sl-r').value), S=1360/(r*r);
+  document.getElementById('sl-rv').textContent=r.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('sl-s').textContent=Math.round(S).toLocaleString('de-DE').replace(/\./g,'\u00a0');
+  document.getElementById('sl-f').textContent=(1/(r*r)).toLocaleString('de-DE',{maximumFractionDigits:2,minimumFractionDigits:2});
+  document.getElementById('sl-fill').style.width=Math.min(100,S/15112*100)+'%';
+}
+function slSet(v){ document.getElementById('sl-r').value=v; slUpdate(); }
+/* ---------- Abschlussquiz mit Zählung ---------- */
+function finalQuiz(id,el,verdict){
+  quizCheck(id,el,verdict);
+  const items=[...document.querySelectorAll('.quiz-item[data-final]')];
+  const doneN=items.filter(it=>[...it.querySelectorAll('.quiz-btn')].every(b=>b.disabled)).length;
+  const okN=items.filter(it=>{const f=it.querySelector('.quiz-fb'); return f && f.classList.contains('ok');}).length;
+  const s=document.getElementById('quiz-score');
+  if(s) s.textContent=(doneN<items.length?'Dein Stand: '+doneN+' von '+items.length+' beantwortet – davon '+okN+' richtig.':'Fertig! '+okN+' von '+items.length+' richtig. '+(okN>=items.length-1?'Stark – die Kernideen sitzen.':'Schau dir die Heftereinträge zu den Stationen noch einmal an, bei denen du falsch lagst.'));
+}
+
+/* Lernkarten: Vorder-/Rückseite kennzeichnen */
+(function(){ if(typeof fcRender!=='function') return; const _fcR=fcRender;
+  fcRender=function(s){ _fcR(s); const c=s.querySelector('.fc-card'); if(c) c.classList.toggle('fc-back',!!s._back); }; })();
+
+
+/* ---------- Hilfestellungen: Tipps nach 2/4/6 min, Musterlösung nach 10 min ---------- */
+function hsOpen(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel'), open=panel.hidden;
+  panel.hidden=!open; btn.setAttribute('aria-expanded',String(open));
+  if(open && !lsGet('sonne_hs_'+box.id)) lsSet('sonne_hs_'+box.id,String(Date.now()));
+  hsTick();
+}
+function hsTick(){
+  let teach=false; try{ teach=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  document.querySelectorAll('.hs').forEach(box=>{
+    const st=parseInt(lsGet('sonne_hs_'+box.id)||'0',10);
+    box.querySelectorAll('.hs-item').forEach(it=>{
+      const need=(+it.dataset.min)*60000, left=st?need-(Date.now()-st):need, free=teach||(st>0&&left<=0);
+      const head=it.querySelector('.hs-head'), t=it.querySelector('.hs-t'), body=it.querySelector('.hs-body');
+      head.disabled=!free; it.classList.toggle('free',free);
+      if(free){ t.textContent=''; }
+      else { const sec=Math.ceil(left/1000); t.textContent='(in '+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')+')';
+             body.hidden=true; head.classList.remove('open'); }
+    });
+  });
+}
+function hsToggle(h){ if(h.disabled) return; const b=h.parentElement.querySelector('.hs-body'); b.hidden=!b.hidden; h.classList.toggle('open',!b.hidden); h.setAttribute('aria-expanded',String(!b.hidden)); }
+/* ---------- Quelle zuerst öffnen, dann Aufgaben ---------- */
+function srcOpen(n){ lsSet('sonne_src_'+n,'1'); setTimeout(srcRender,50); }
+function srcRender(){
+  let teach=false; try{ teach=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  for(let n=1;n<=5;n++){
+    const open=lsGet('sonne_src_'+n)==='1', unlocked=open||teach;
+    const c=document.getElementById('gate-c-'+n); if(c) c.classList.toggle('locked',!unlocked);
+    const ok=document.getElementById('src-ok-'+n); if(ok) ok.hidden=!open;
+    const lk=document.getElementById('src-lock-'+n); if(lk) lk.hidden=unlocked;
+  }
+}
+(function(){ if(typeof teachSetUI!=='function') return; const _t=teachSetUI;
+  teachSetUI=function(active){ _t(active); setTimeout(srcRender,0); setTimeout(hsTick,0); }; })();
+function initLernpfad(){ srcRender(); hsTick(); setInterval(hsTick,1000); renderProgress(); lpTick(); if(lsGet(LP_START)){const s=document.getElementById('lp-started'); if(s) s.hidden=false;}
+  if(document.getElementById('sl-r')) slUpdate(); setInterval(lpTick,20000); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initLernpfad); } else { initLernpfad(); }
+
+</script>
+</body>
+</html>
