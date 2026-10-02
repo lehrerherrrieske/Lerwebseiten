@@ -275,6 +275,8 @@ body.suchmodus .kategorie-body > p,body.suchmodus .kategorie-body > .callout{dis
 .niveau{margin-top:14px;}
 .niveau:first-of-type{margin-top:10px;}
 .niveau p{margin:0;}
+.niveau ul{margin:6px 0 0 24px;color:var(--text-2);}
+.niveau li{margin:2px 0;}
 .aufgaben-nr{font-weight:700;color:var(--accent-hover);margin-right:4px;}
 
 /* ── Übungsaufgaben: Hilfestellung mit Zeitschaltung ── */
@@ -1087,6 +1089,78 @@ else:                          # sonst ...
         </div>
       </div>
 
+      <!-- ---------- Mehrfachverzweigung mit elif ---------- -->
+      <div class="card" id="def-elif" data-suchtext="elif mehrfachverzweigung mehrere bedingungen verzweigung if else algorithmische grundstrukturen kontrollstruktur">
+        <div class="card-head">
+          <h3>Mehrfachverzweigung <code>if</code> / <code>elif</code> / <code>else</code></h3>
+          <span class="badge">Grundbaustein</span>
+          <span class="tag-neu">❗ Neu</span>
+        </div>
+        <div class="hefter-box">
+          <div class="hefter-label">Erklärung</div>
+          <p>Bei einer <code>if</code>-Bedingung kann man <strong>zusätzliche Bedingungen</strong> mit <code>elif</code> anfügen. Python prüft die Bedingungen <strong>von oben nach unten</strong>. Nur der erste Zweig, dessen Bedingung <code>True</code> ist, wird ausgeführt. Alle weiteren werden übersprungen. Der <code>else</code>-Zweig läuft nur, wenn keine einzige Bedingung <code>True</code> war.</p>
+        </div>
+        <p class="code-label">Kommentierter Quellcode</p>
+        <div class="code-wrap">
+          <div class="code">farbe = input("Ampelfarbe: ")   # Eingabe (str)
+
+if farbe == "rot":              # 1. Bedingung
+    print("Stehen bleiben")
+elif farbe == "gelb":           # nur geprüft, wenn 1. False
+    print("Achtung")
+elif farbe == "grün":           # nur geprüft, wenn 1. und 2. False
+    print("Gehen")
+else:                           # keine Bedingung war True
+    print("Unbekannte Farbe")</div>
+          <button class="code-copy-btn">kopieren</button>
+        </div>
+        <p class="code-label">Darstellung im PAP</p>
+        <div class="pap-diagramm breit">
+                  <svg viewBox="0 0 555 612" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PAP einer Mehrfachverzweigung: Eingabe farbe; farbe gleich rot: Ausgabe Stehen bleiben; sonst farbe gleich gelb: Ausgabe Achtung; sonst farbe gleich grün: Ausgabe Gehen; sonst Ausgabe Unbekannte Farbe; Ende">
+                    <defs><marker id="pap-pfeil-elif" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                    <rect x="60" y="10" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="34" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                    <line x1="125" y1="50" x2="125" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <polygon points="26,72 240,72 224,112 10,112" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="96" text-anchor="middle" font-size="12" fill="var(--text)">farbe = Eingabe()</text>
+                    <line x1="125" y1="112" x2="125" y2="132" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <polygon points="125,134 225,180 125,226 25,180" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="184" text-anchor="middle" font-size="11" fill="var(--text)">farbe == "rot"</text>
+                    <line x1="225" y1="180" x2="277" y2="180" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="252" y="172" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,160 521,160 505,200 271,200" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="184" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Stehen bleiben")</text>
+                    <line x1="125" y1="226" x2="125" y2="254" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="149" y="244" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="125,256 225,302 125,348 25,302" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="306" text-anchor="middle" font-size="11" fill="var(--text)">farbe == "gelb"</text>
+                    <line x1="225" y1="302" x2="277" y2="302" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="252" y="294" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,282 521,282 505,322 271,322" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="306" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Achtung")</text>
+                    <line x1="125" y1="348" x2="125" y2="376" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="149" y="366" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="125,378 225,424 125,470 25,424" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="428" text-anchor="middle" font-size="11" fill="var(--text)">farbe == "grün"</text>
+                    <line x1="225" y1="424" x2="277" y2="424" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="252" y="416" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,404 521,404 505,444 271,444" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="428" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Gehen")</text>
+                    <line x1="125" y1="470" x2="125" y2="498" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <text x="149" y="488" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="26,500 240,500 224,540 10,540" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="524" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Unbekannte Farbe")</text>
+                    <line x1="125" y1="540" x2="125" y2="560" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <rect x="60" y="562" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="586" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                    <polyline points="513,180 543,180 543,582 192,582" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <polyline points="513,302 543,302 543,582 192,582" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                    <polyline points="513,424 543,424 543,582 192,582" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-elif)"/>
+                  </svg>
+                  </div>
+        <div class="callout callout-warn"><span>Die <strong>Reihenfolge</strong> der Bedingungen ist wichtig: Sobald eine Bedingung <code>True</code> ist, werden alle folgenden nicht mehr geprüft.</span></div>
+      </div>
+
       <!-- ---------- Schleife ---------- -->
       <div class="card" id="def-schleife" data-suchtext="schleife while wiederholung wiederholen bedingung zähler zaehler algorithmische grundstrukturen grundlagen kontrollstruktur">
         <div class="card-head">
@@ -1611,16 +1685,353 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
     </section>
 
     <!-- ============================================================
-         KATEGORIE: Implementieren von Programmablaufplänen
+         KATEGORIE: Grundlagen – Verzweigungen
          ============================================================ -->
-    <section class="kategorie" id="kat-uebung-pap">
-      <h2>Implementieren von Programmablaufplänen</h2>
+    <section class="kategorie" id="kat-uebung-verzweigungen">
+      <h2>Grundlagen – Verzweigungen <span class="tag-neu">❗ Neu</span></h2>
 
       <!-- ---------- Aufgabe 4 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>4. Einen PAP beschreiben</span><span class="acc-icon">▼</span>
+            <span>4. Der Mini-Taschenrechner <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Du programmierst einen kleinen Taschenrechner für die Konsole.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">4.1</span>Schreibe ein Programm, das zwei Zahlen und eine Rechenoperation (<code>+</code> oder <code>-</code>) vom Benutzer einliest.</p>
+              <ul><li>Falls <code>+</code> eingegeben wird, berechne die Summe.</li><li>Falls <code>-</code> eingegeben wird, berechne die Differenz.</li><li>Falls etwas anderes eingegeben wird, gib aus: „Ungültige Operation.“</li><li>Nutze für die Datentypkonvertierung <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">float()</a>.</li></ul>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">4.2</span>Teste dein Programm mit den Zahlen <code>7</code> und <code>2</code> und nacheinander mit den Operationen <code>+</code>, <code>-</code> und <code>*</code>. Warum steht im Ergebnis <code>9.0</code> und nicht <code>9</code>?</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">4.3</span>Erweitere deinen Taschenrechner um die Operationen <code>*</code> und <code>/</code>. Was passiert, wenn du bei <code>/</code> als zweite Zahl <code>0</code> eingibst?</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Mehrfachverzweigung mit <code>if</code>, <code>elif</code> und <code>else</code> umsetzen und dabei Strings miteinander vergleichen.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a4">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Du brauchst drei Eingaben mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a>. Die beiden Zahlen wandelst du mit <code>float()</code> um. Die Rechenoperation bleibt ein <a class="fach" href="#def-str" onclick="gotoBegriff(event,0,'def-str')" data-tip="String: speichert Text, steht immer in Anführungszeichen.">String</a>, denn <code>+</code> und <code>-</code> sind Zeichen und keine Zahlen.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Es gibt drei Fälle, also brauchst du <code>if</code>, <a class="fach" href="#def-elif" onclick="gotoBegriff(event,0,'def-elif')" data-tip="elif: hängt an eine if-Bedingung weitere Bedingungen an. Python prüft sie von oben nach unten.">elif</a> und <code>else</code>. Zeichen vergleichst du in Anführungszeichen: <code>if op == "+":</code></div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Das Gerüst sieht so aus:<div class="code">if op == "+":
+    ...
+elif op == "-":
+    ...
+else:
+    print("Ungültige Operation.")</div>Zu 4.2: Welchen Datentyp liefert <code>float()</code>?</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><div class="pap-diagramm breit">
+                  <svg viewBox="0 0 555 614" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Mini-Taschenrechner: Eingabe zahl1, zahl2 und op; op gleich plus: Ausgabe Summe; sonst op gleich minus: Ausgabe Differenz; sonst Ausgabe Ungültige Operation; Ende">
+                    <defs><marker id="pap-pfeil-v4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                    <rect x="60" y="10" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="34" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                    <line x1="125" y1="50" x2="125" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <polygon points="26,72 240,72 224,112 10,112" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="96" text-anchor="middle" font-size="12" fill="var(--text)">zahl1 = Eingabe()</text>
+                    <line x1="125" y1="112" x2="125" y2="132" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <polygon points="26,134 240,134 224,174 10,174" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="158" text-anchor="middle" font-size="12" fill="var(--text)">zahl2 = Eingabe()</text>
+                    <line x1="125" y1="174" x2="125" y2="194" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <polygon points="26,196 240,196 224,236 10,236" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="220" text-anchor="middle" font-size="12" fill="var(--text)">op = Eingabe()</text>
+                    <line x1="125" y1="236" x2="125" y2="256" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <polygon points="125,258 225,304 125,350 25,304" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="308" text-anchor="middle" font-size="11" fill="var(--text)">op == "+"</text>
+                    <line x1="225" y1="304" x2="277" y2="304" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <text x="252" y="296" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,284 521,284 505,324 271,324" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="308" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(zahl1 + zahl2)</text>
+                    <line x1="125" y1="350" x2="125" y2="378" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <text x="149" y="368" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="125,380 225,426 125,472 25,426" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="430" text-anchor="middle" font-size="11" fill="var(--text)">op == "-"</text>
+                    <line x1="225" y1="426" x2="277" y2="426" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <text x="252" y="418" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,406 521,406 505,446 271,446" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="430" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe(zahl1 - zahl2)</text>
+                    <line x1="125" y1="472" x2="125" y2="500" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <text x="149" y="490" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="26,502 240,502 224,542 10,542" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="526" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Ungültige Operation.")</text>
+                    <line x1="125" y1="542" x2="125" y2="562" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <rect x="60" y="564" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="588" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                    <polyline points="513,304 543,304 543,584 192,584" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                    <polyline points="513,426 543,426 543,584 192,584" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v4)"/>
+                  </svg>
+                  </div>
+                  <div class="code"># Mini-Taschenrechner
+zahl1 = float(input("Gib die erste Zahl ein: "))
+zahl2 = float(input("Gib die zweite Zahl ein: "))
+op = input("Wähle eine Operation (+ oder -): ")
+
+if op == "+":
+    print("Ergebnis:", zahl1 + zahl2)
+elif op == "-":
+    print("Ergebnis:", zahl1 - zahl2)
+else:
+    print("Ungültige Operation.")</div>
+                  <p>4.2: <code>+</code> ergibt „Ergebnis: 9.0“, <code>-</code> ergibt „Ergebnis: 5.0“, <code>*</code> ergibt „Ungültige Operation.“ Das Ergebnis hat eine Nachkommastelle, weil beide Zahlen mit <code>float()</code> zu Kommazahlen umgewandelt wurden.</p>
+                  <p>4.3: Zwei weitere <code>elif</code>-Zweige vor dem <code>else</code>:</p>
+                  <div class="code">if op == "+":
+    print("Ergebnis:", zahl1 + zahl2)
+elif op == "-":
+    print("Ergebnis:", zahl1 - zahl2)
+elif op == "*":
+    print("Ergebnis:", zahl1 * zahl2)
+elif op == "/":
+    print("Ergebnis:", zahl1 / zahl2)
+else:
+    print("Ungültige Operation.")</div>
+                  <p>Bei <code>/</code> mit der zweiten Zahl <code>0</code> bricht das Programm mit <code>ZeroDivisionError: float division by zero</code> ab, denn durch 0 kann man nicht teilen.</p></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ---------- Aufgabe 5 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>5. Was ziehe ich an? <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Eine Wetter-App soll dir je nach Temperatur einen Tipp für die passende Kleidung geben.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.1</span>Schreibe ein Programm, das die Temperatur in Grad Celsius vom Benutzer einliest und je nach Wert eine passende Rückmeldung gibt:</p>
+              <ul><li>Unter 0 °C → Ausgabe: „Es friert, zieh dich warm an!“</li><li>0 °C bis 20 °C → Ausgabe: „Es ist kühl, eine Jacke reicht.“</li><li>Über 20 °C → Ausgabe: „Angenehm warm, T-Shirt-Wetter!“</li><li>Nutze für die Datentypkonvertierung <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">int()</a>.</li></ul>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.2</span>Teste dein Programm mit den Werten <code>-5</code>, <code>0</code>, <code>20</code> und <code>21</code>. Warum sind gerade <code>0</code>, <code>20</code> und <code>21</code> wichtige Testwerte?</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">5.3</span>Ergänze eine vierte Rückmeldung: Über 30 °C soll „Hitze! Viel trinken und Schatten suchen.“ erscheinen. An welcher Stelle muss die neue Bedingung stehen, damit sie überhaupt erreicht wird?</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> Wertebereiche mit <code>elif</code> abgrenzen und Grenzwerte gezielt testen.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a5">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Lies die Temperatur mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle sie direkt mit <code>int()</code> um. Es gibt drei Bereiche, also brauchst du <code>if</code>, <a class="fach" href="#def-elif" onclick="gotoBegriff(event,0,'def-elif')" data-tip="elif: hängt an eine if-Bedingung weitere Bedingungen an. Python prüft sie von oben nach unten.">elif</a> und <code>else</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Prüfe zuerst <code>temperatur &lt; 0</code>. Im <code>elif</code> musst du nur noch die obere Grenze prüfen, also <code>temperatur &lt;= 20</code>. Werte unter 0 kommen dort gar nicht mehr an, weil sie schon vom ersten Zweig erfasst wurden.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zu 5.2: An den Grenzen eines Bereichs passieren die meisten Fehler, zum Beispiel wenn <code>&lt;</code> und <code>&lt;=</code> verwechselt werden. Zu 5.3: Python prüft von oben nach unten. Eine Bedingung, die hinter dem <code>else</code> steht, wird nie erreicht.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><div class="pap-diagramm breit">
+                  <svg viewBox="0 0 555 508" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Temperaturabfrage: Eingabe temperatur; temperatur kleiner 0: Ausgabe Es friert; sonst temperatur kleiner gleich 20: Ausgabe Es ist kühl; sonst Ausgabe Angenehm warm; Ende">
+                    <defs><marker id="pap-pfeil-v5" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                    <rect x="60" y="10" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="34" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                    <line x1="125" y1="50" x2="125" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <polygon points="26,72 240,72 224,112 10,112" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="96" text-anchor="middle" font-size="12" fill="var(--text)">temperatur = Eingabe()</text>
+                    <line x1="125" y1="112" x2="125" y2="132" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <polygon points="125,134 225,180 125,226 25,180" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="184" text-anchor="middle" font-size="11" fill="var(--text)">temperatur &lt; 0</text>
+                    <line x1="225" y1="180" x2="277" y2="180" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <text x="252" y="172" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,151 521,151 505,209 271,209" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="175" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Es friert,</text>
+                    <text x="396" y="193" text-anchor="middle" font-size="12" fill="var(--text)">zieh dich warm an!")</text>
+                    <line x1="125" y1="226" x2="125" y2="254" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <text x="149" y="244" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="125,256 225,302 125,348 25,302" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="306" text-anchor="middle" font-size="11" fill="var(--text)">temperatur &lt;= 20</text>
+                    <line x1="225" y1="302" x2="277" y2="302" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <text x="252" y="294" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,273 521,273 505,331 271,331" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="297" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Es ist kühl,</text>
+                    <text x="396" y="315" text-anchor="middle" font-size="12" fill="var(--text)">eine Jacke reicht.")</text>
+                    <line x1="125" y1="348" x2="125" y2="376" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <text x="149" y="366" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="26,378 240,378 224,436 10,436" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="402" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Angenehm warm,</text>
+                    <text x="125" y="420" text-anchor="middle" font-size="12" fill="var(--text)">T-Shirt-Wetter!")</text>
+                    <line x1="125" y1="436" x2="125" y2="456" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <rect x="60" y="458" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="482" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                    <polyline points="513,180 543,180 543,478 192,478" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                    <polyline points="513,302 543,302 543,478 192,478" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v5)"/>
+                  </svg>
+                  </div>
+                  <div class="code"># Programm zur Temperaturabfrage
+
+# Eingabe
+temperatur = int(input("Bitte gib die Temperatur in °C ein: "))
+
+# Verzweigung
+if temperatur &lt; 0:
+    print("Es friert, zieh dich warm an!")
+elif temperatur &lt;= 20:
+    print("Es ist kühl, eine Jacke reicht.")
+else:
+    print("Angenehm warm, T-Shirt-Wetter!")</div>
+                  <p>5.2: <code>-5</code> → „Es friert …“, <code>0</code> → „Es ist kühl …“, <code>20</code> → „Es ist kühl …“, <code>21</code> → „Angenehm warm …“. Die Werte 0, 20 und 21 liegen genau an den Bereichsgrenzen. Dort zeigt sich, ob <code>&lt;</code> und <code>&lt;=</code> richtig gewählt sind.</p>
+                  <p>5.3: Die neue Bedingung muss vor dem <code>else</code> stehen. Der T-Shirt-Bereich endet dann bei 30 °C:</p>
+                  <div class="code">if temperatur &lt; 0:
+    print("Es friert, zieh dich warm an!")
+elif temperatur &lt;= 20:
+    print("Es ist kühl, eine Jacke reicht.")
+elif temperatur &lt;= 30:
+    print("Angenehm warm, T-Shirt-Wetter!")
+else:
+    print("Hitze! Viel trinken und Schatten suchen.")</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ---------- Aufgabe 6 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>6. Die Achterbahn <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner">
+
+            <p><strong>Situation:</strong> Am Eingang einer Achterbahn im Freizeitpark steht ein Automat, der prüft, wer mitfahren darf. Dabei gelten zwei Regeln: Wer kleiner als 130 cm ist, darf aus Sicherheitsgründen gar nicht mitfahren. Kinder unter 12 Jahren dürfen nur mit einer erwachsenen Begleitperson einsteigen. Alle anderen dürfen allein fahren.</p>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.1</span>Schreibe ein Programm, das die Körpergröße in cm und das Alter in Jahren einliest und je nach Fall eine der drei Rückmeldungen ausgibt:</p>
+              <ul><li>„Leider zu klein für diese Achterbahn.“</li><li>„Einsteigen nur mit einer erwachsenen Begleitperson.“</li><li>„Viel Spaß bei der Fahrt!“</li><li>Nutze für die Datentypkonvertierung <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">int()</a>.</li></ul>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.2</span>Teste dein Programm mit diesen Werten: <code>140</code> cm / <code>15</code> Jahre, <code>140</code> cm / <code>10</code> Jahre, <code>125</code> cm / <code>15</code> Jahre und <code>125</code> cm / <code>10</code> Jahre. Welche Ausgabe erscheint beim letzten Test und warum nur diese eine?</p>
+            </div>
+
+            <div class="niveau">
+              <p><span class="aufgaben-nr">6.3</span>Vertausche die Reihenfolge der beiden Bedingungen. Teste erneut mit <code>125</code> cm und <code>10</code> Jahren. Was ändert sich, und warum ist das an einer echten Achterbahn gefährlich?</p>
+            </div>
+
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> in einer Mehrfachverzweigung zwei verschiedene Variablen prüfen und begründen, warum die Reihenfolge der Bedingungen das Ergebnis bestimmt.</span></div>
+
+            <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
+            <div class="hilfe-box" data-aufgabe="a6">
+              <div class="hilfe-label">Hilfestellung</div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Du brauchst zwei Eingaben, beide mit <code>int()</code> umgewandelt. Danach folgt eine Verzweigung mit <code>if</code>, <a class="fach" href="#def-elif" onclick="gotoBegriff(event,0,'def-elif')" data-tip="elif: hängt an eine if-Bedingung weitere Bedingungen an. Python prüft sie von oben nach unten.">elif</a> und <code>else</code>. Anders als in Aufgabe 5 prüfst du in den beiden Bedingungen <strong>unterschiedliche</strong> Variablen.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Die Größe ist eine Sicherheitsregel, die für alle gilt, auch mit Begleitperson. Deshalb wird sie zuerst geprüft: <code>if groesse &lt; 130:</code>. Erst danach kommt <code>elif alter &lt; 12:</code>.</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text">Zu 6.2 und 6.3: Python führt nur den <strong>ersten</strong> Zweig aus, dessen Bedingung <code>True</code> ist. Ein 10-jähriges Kind mit 125 cm erfüllt beide Bedingungen. Welche wird zuerst geprüft?</div>
+              </div>
+              <div class="hilfe-item">
+                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <div class="hilfe-text"><div class="pap-diagramm breit">
+                  <svg viewBox="0 0 555 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Achterbahn: Eingabe groesse und alter; groesse kleiner 130: Ausgabe Leider zu klein; sonst alter kleiner 12: Ausgabe Nur mit Begleitperson; sonst Ausgabe Viel Spaß; Ende">
+                    <defs><marker id="pap-pfeil-v6" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
+                    <rect x="60" y="10" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="34" text-anchor="middle" font-size="13" fill="var(--text)">Start</text>
+                    <line x1="125" y1="50" x2="125" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <polygon points="26,72 240,72 224,112 10,112" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="96" text-anchor="middle" font-size="12" fill="var(--text)">groesse = Eingabe()</text>
+                    <line x1="125" y1="112" x2="125" y2="132" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <polygon points="26,134 240,134 224,174 10,174" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="158" text-anchor="middle" font-size="12" fill="var(--text)">alter = Eingabe()</text>
+                    <line x1="125" y1="174" x2="125" y2="194" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <polygon points="125,196 225,242 125,288 25,242" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="246" text-anchor="middle" font-size="11" fill="var(--text)">groesse &lt; 130</text>
+                    <line x1="225" y1="242" x2="277" y2="242" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <text x="252" y="234" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,213 521,213 505,271 271,271" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="237" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Leider zu klein</text>
+                    <text x="396" y="255" text-anchor="middle" font-size="12" fill="var(--text)">für diese Achterbahn.")</text>
+                    <line x1="125" y1="288" x2="125" y2="316" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <text x="149" y="306" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="125,318 225,364 125,410 25,364" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="368" text-anchor="middle" font-size="11" fill="var(--text)">alter &lt; 12</text>
+                    <line x1="225" y1="364" x2="277" y2="364" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <text x="252" y="356" text-anchor="middle" font-size="11" fill="var(--text-3)">True</text>
+                    <polygon points="287,335 521,335 505,393 271,393" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="396" y="359" text-anchor="middle" font-size="11" fill="var(--text)">Ausgabe("Einsteigen nur mit einer</text>
+                    <text x="396" y="377" text-anchor="middle" font-size="11" fill="var(--text)">erwachsenen Begleitperson.")</text>
+                    <line x1="125" y1="410" x2="125" y2="438" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <text x="149" y="428" text-anchor="middle" font-size="11" fill="var(--text-3)">False</text>
+                    <polygon points="26,440 240,440 224,498 10,498" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="464" text-anchor="middle" font-size="12" fill="var(--text)">Ausgabe("Viel Spaß</text>
+                    <text x="125" y="482" text-anchor="middle" font-size="12" fill="var(--text)">bei der Fahrt!")</text>
+                    <line x1="125" y1="498" x2="125" y2="518" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <rect x="60" y="520" width="130" height="40" rx="20" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="2"/>
+                    <text x="125" y="544" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
+                    <polyline points="513,242 543,242 543,540 192,540" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                    <polyline points="513,364 543,364 543,540 192,540" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#pap-pfeil-v6)"/>
+                  </svg>
+                  </div>
+                  <div class="code">groesse = int(input("Körpergröße in cm: "))    # Eingabe, in int umwandeln
+alter = int(input("Alter in Jahren: "))
+
+if groesse &lt; 130:                               # zuerst die Sicherheitsregel prüfen
+    print("Leider zu klein für diese Achterbahn.")
+elif alter &lt; 12:
+    print("Einsteigen nur mit einer erwachsenen Begleitperson.")
+else:
+    print("Viel Spaß bei der Fahrt!")</div>
+                  <p>6.2: 140 cm / 15 Jahre → „Viel Spaß bei der Fahrt!“ · 140 cm / 10 Jahre → „Einsteigen nur mit einer erwachsenen Begleitperson.“ · 125 cm / 15 Jahre → „Leider zu klein …“ · 125 cm / 10 Jahre → „Leider zu klein …“. Beim letzten Test sind zwar beide Bedingungen <code>True</code>, aber Python führt nur den ersten passenden Zweig aus und überspringt den Rest.</p>
+                  <p>6.3: Mit vertauschter Reihenfolge erscheint für 125 cm / 10 Jahre „Einsteigen nur mit einer erwachsenen Begleitperson.“ Das Kind dürfte also mit Begleitung einsteigen, obwohl es zu klein ist. Die Sicherheitsregel wird nie geprüft.</p>
+                  <div class="code">if alter &lt; 12:                                  # Reihenfolge vertauscht
+    print("Einsteigen nur mit einer erwachsenen Begleitperson.")
+elif groesse &lt; 130:
+    print("Leider zu klein für diese Achterbahn.")
+else:
+    print("Viel Spaß bei der Fahrt!")</div></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         KATEGORIE: Implementieren von Programmablaufplänen
+         ============================================================ -->
+    <section class="kategorie" id="kat-uebung-pap">
+      <h2>Implementieren von Programmablaufplänen</h2>
+
+      <!-- ---------- Aufgabe 7 ---------- -->
+      <div class="acc">
+        <div class="acc-item">
+          <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+            <span>7. Einen PAP beschreiben</span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
@@ -1659,10 +2070,10 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">4.1</span>Beschreibe den PAP: Ziehe jede Aussage auf die Nummer des passenden Elements. Eine Aussage passt zu keinem Element und bleibt übrig.</p>
+              <p><span class="aufgaben-nr">7.1</span>Beschreibe den PAP: Ziehe jede Aussage auf die Nummer des passenden Elements. Eine Aussage passt zu keinem Element und bleibt übrig.</p>
             </div>
 
-            <div class="dnd" id="dnd-a4">
+            <div class="dnd" id="dnd-a7">
               <div class="dnd-pool" aria-label="Aussagen">
                 <span class="dnd-chip" draggable="true" data-id="e3" tabindex="0">Es wird geprüft, ob der Variablenwert der Variable temperatur über 20 ist.</span>
                 <span class="dnd-chip" draggable="true" data-id="e6" tabindex="0">Der Algorithmus wird beendet.</span>
@@ -1689,13 +2100,13 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">4.2</span>Ändere in Gedanken den Wert auf <code>temperatur = 20</code>. Welche Ausgabe erscheint jetzt? Begründe mit der Bedingung.</p>
+              <p><span class="aufgaben-nr">7.2</span>Ändere in Gedanken den Wert auf <code>temperatur = 20</code>. Welche Ausgabe erscheint jetzt? Begründe mit der Bedingung.</p>
             </div>
 
             <div class="callout callout-info"><span><strong>Lernziel:</strong> die Elemente eines Programmablaufplans erkennen und seinen Ablauf in eigenen Worten beschreiben.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a4">
+            <div class="hilfe-box" data-aufgabe="a7">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -1707,14 +2118,14 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Zu 4.2: Die Bedingung lautet <code>temperatur &gt; 20</code>, also „echt größer als 20". Ist 20 größer als 20?</div>
+                <div class="hilfe-text">Zu 7.2: Die Bedingung lautet <code>temperatur &gt; 20</code>, also „echt größer als 20". Ist 20 größer als 20?</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
                 <div class="hilfe-text">
-                  <p>4.1: 1 – Der Algorithmus beginnt. · 2 – Die Variable temperatur wird mit dem Variablenwert 25 belegt. · 3 – Es wird geprüft, ob der Variablenwert der Variable temperatur über 20 ist. · 4 – Es wird eine Nutzerausgabe „T-Shirt anziehen“ getätigt. · 5 – Es wird eine Nutzerausgabe „Jacke anziehen“ getätigt. · 6 – Der Algorithmus wird beendet.</p>
+                  <p>7.1: 1 – Der Algorithmus beginnt. · 2 – Die Variable temperatur wird mit dem Variablenwert 25 belegt. · 3 – Es wird geprüft, ob der Variablenwert der Variable temperatur über 20 ist. · 4 – Es wird eine Nutzerausgabe „T-Shirt anziehen“ getätigt. · 5 – Es wird eine Nutzerausgabe „Jacke anziehen“ getätigt. · 6 – Der Algorithmus wird beendet.</p>
                   <p>Übrig bleibt „Die Anweisung wird wiederholt …“ — das beschreibt eine <strong>Schleife</strong>, dieser PAP enthält aber nur eine <strong>Verzweigung</strong>.</p>
-                  <p>4.2: Es erscheint „Jacke anziehen“. <code>20 &gt; 20</code> ist <code>False</code>, weil 20 nicht echt größer als 20 ist. Deshalb läuft der False-Zweig.</p>
+                  <p>7.2: Es erscheint „Jacke anziehen“. <code>20 &gt; 20</code> ist <code>False</code>, weil 20 nicht echt größer als 20 ist. Deshalb läuft der False-Zweig.</p>
                 </div>
               </div>
             </div>
@@ -1723,11 +2134,11 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
         </div>
       </div>
 
-      <!-- ---------- Aufgabe 5 ---------- -->
+      <!-- ---------- Aufgabe 8 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>5. Einen gegebenen PAP implementieren</span><span class="acc-icon">▼</span>
+            <span>8. Einen gegebenen PAP implementieren</span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
@@ -1765,23 +2176,23 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">5.1</span>Implementiere den Programmablaufplan in Python. Übernimm dazu die Werte, baue die Verzweigung mit <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">if / else</a> und gib <code>v</code> aus.</p>
+              <p><span class="aufgaben-nr">8.1</span>Implementiere den Programmablaufplan in Python. Übernimm dazu die Werte, baue die Verzweigung mit <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">if / else</a> und gib <code>v</code> aus.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">5.2</span>Beschreibe, was der Algorithmus berechnet. Was bedeuten <code>a</code>, <code>b</code> und <code>c</code>, und warum gibt es zwei verschiedene Rechenwege für <code>v</code>?</p>
+              <p><span class="aufgaben-nr">8.2</span>Beschreibe, was der Algorithmus berechnet. Was bedeuten <code>a</code>, <code>b</code> und <code>c</code>, und warum gibt es zwei verschiedene Rechenwege für <code>v</code>?</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">5.3</span>Fehlerdetektiv: Übernimm die Bedingung <code>(a == b) == c</code> und die Rechnung <code>v = a^3</code> wörtlich in Python. Teste dein Programm danach mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code>. Welches Ergebnis erwartest du, welches bekommst du? Finde die beiden Stolperstellen und verbessere sie.</p>
+              <p><span class="aufgaben-nr">8.3</span>Fehlerdetektiv: Übernimm die Bedingung <code>(a == b) == c</code> und die Rechnung <code>v = a^3</code> wörtlich in Python. Teste dein Programm danach mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code>. Welches Ergebnis erwartest du, welches bekommst du? Finde die beiden Stolperstellen und verbessere sie.</p>
             </div>
 
-            <div class="callout callout-info"><span><strong>Lernziel:</strong> einen Programmablaufplan Symbol für Symbol in Python-Code übersetzen und eine Verzweigung mit <code>if</code> / <code>else</code> umsetzen. Aufgabe 5.3 zeigt, dass eine wörtliche Übersetzung nicht immer das Gemeinte tut.</span></div>
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> einen Programmablaufplan Symbol für Symbol in Python-Code übersetzen und eine Verzweigung mit <code>if</code> / <code>else</code> umsetzen. Aufgabe 8.3 zeigt, dass eine wörtliche Übersetzung nicht immer das Gemeinte tut.</span></div>
 
             <div class="callout callout-warn"><span><strong>Hinweis für die Besprechung:</strong> Mit <code>a = b = c = 5</code> liefern beide Zweige <code>125</code> — der Fehler fällt dort gar nicht auf. Erst andere Testwerte decken ihn auf. Warum ist gutes Testen deshalb so wichtig?</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a5">
+            <div class="hilfe-box" data-aufgabe="a8">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -1789,7 +2200,7 @@ print("Bis zum 80. Geburtstag:", round(lebenszeit_jahre, 1), "Jahre Lebenszeit")
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Nach <code>if Bedingung:</code> und nach <code>else:</code> steht jeweils ein Doppelpunkt, die Rechnung darunter wird eingerückt. Weil beide Zweige im PAP zur selben Ausgabe führen, steht <code>print(v)</code> <strong>nicht</strong> eingerückt ganz am Ende. Zu 5.2: Überlege, welche Formel <code>a * b * c</code> aus dem Mathematikunterricht ist.</div>
+                <div class="hilfe-text">Nach <code>if Bedingung:</code> und nach <code>else:</code> steht jeweils ein Doppelpunkt, die Rechnung darunter wird eingerückt. Weil beide Zweige im PAP zur selben Ausgabe führen, steht <code>print(v)</code> <strong>nicht</strong> eingerückt ganz am Ende. Zu 8.2: Überlege, welche Formel <code>a * b * c</code> aus dem Mathematikunterricht ist.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
@@ -1811,8 +2222,8 @@ else:
 
 # Ausgabe (gehört zu beiden Zweigen, daher nicht eingerückt)
 print(v)</div>
-                  <p>5.2: Der Algorithmus berechnet das <strong>Volumen eines Quaders</strong> mit den Kantenlängen <code>a</code>, <code>b</code> und <code>c</code>. Sind alle drei Kanten gleich lang, ist der Quader ein <strong>Würfel</strong> und das Volumen ist <code>a</code> hoch 3.</p>
-                  <p>5.3: Wörtlich übersetzt ergibt sich mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code> der Wert <code>0</code> statt <code>9</code>. Grund: <code>(3 == 3) == 1</code> wird zu <code>True == 1</code>, und das ist in Python <code>True</code>. Danach rechnet <code>3^3</code> nicht „hoch", sondern ergibt <code>0</code>.</p>
+                  <p>8.2: Der Algorithmus berechnet das <strong>Volumen eines Quaders</strong> mit den Kantenlängen <code>a</code>, <code>b</code> und <code>c</code>. Sind alle drei Kanten gleich lang, ist der Quader ein <strong>Würfel</strong> und das Volumen ist <code>a</code> hoch 3.</p>
+                  <p>8.3: Wörtlich übersetzt ergibt sich mit <code>a = 3</code>, <code>b = 3</code>, <code>c = 1</code> der Wert <code>0</code> statt <code>9</code>. Grund: <code>(3 == 3) == 1</code> wird zu <code>True == 1</code>, und das ist in Python <code>True</code>. Danach rechnet <code>3^3</code> nicht „hoch", sondern ergibt <code>0</code>.</p>
                 </div>
               </div>
             </div>
@@ -1822,11 +2233,11 @@ print(v)</div>
       </div>
 
 
-      <!-- ---------- Aufgabe 6 ---------- -->
+      <!-- ---------- Aufgabe 9 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>6. Das Kinoticket</span><span class="acc-icon">▼</span>
+            <span>9. Das Kinoticket</span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
@@ -1862,33 +2273,33 @@ print(v)</div>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">6.1</span>Implementiere den Programmablaufplan in Python mit einer <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">Verzweigung</a>. Gib den Preis in einem Satz aus, z. B. <code>Dein Ticket kostet 6.5 €</code>.</p>
+              <p><span class="aufgaben-nr">9.1</span>Implementiere den Programmablaufplan in Python mit einer <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="if prüft die Bedingung; der eingerückte Block läuft bei True, der else-Block bei False.">Verzweigung</a>. Gib den Preis in einem Satz aus, z. B. <code>Dein Ticket kostet 6.5 €</code>.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">6.2</span>Teste dein Programm mit <code>alter = 14</code>. Welchen Preis erwartest du, welchen gibt das Programm aus? Erkläre das Ergebnis.</p>
+              <p><span class="aufgaben-nr">9.2</span>Teste dein Programm mit <code>alter = 14</code>. Welchen Preis erwartest du, welchen gibt das Programm aus? Erkläre das Ergebnis.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">6.3</span>Am Kinotag kostet jedes Ticket 2 € weniger. Lege dafür eine Variable <code>kinotag</code> vom Typ <a class="fach" href="#def-bool" onclick="gotoBegriff(event,0,'def-bool')" data-tip="Boolean: ein Wahrheitswert, entweder True oder False.">bool</a> an und ergänze dein Programm um eine zweite Verzweigung. Zeichne die Ergänzung auch in den PAP ein.</p>
+              <p><span class="aufgaben-nr">9.3</span>Am Kinotag kostet jedes Ticket 2 € weniger. Lege dafür eine Variable <code>kinotag</code> vom Typ <a class="fach" href="#def-bool" onclick="gotoBegriff(event,0,'def-bool')" data-tip="Boolean: ein Wahrheitswert, entweder True oder False.">bool</a> an und ergänze dein Programm um eine zweite Verzweigung. Zeichne die Ergänzung auch in den PAP ein.</p>
             </div>
 
-            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Verzweigung aus einem PAP selbstständig implementieren und mit Grenzwerten testen. Aufgabe 6.3 kombiniert zwei Verzweigungen nacheinander.</span></div>
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Verzweigung aus einem PAP selbstständig implementieren und mit Grenzwerten testen. Aufgabe 9.3 kombiniert zwei Verzweigungen nacheinander.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a6">
+            <div class="hilfe-box" data-aufgabe="a9">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Gehe vor wie in Aufgabe 5: Übersetze den PAP Symbol für Symbol. Die Raute wird zu <code>if alter &lt; 14:</code>, der False-Zweig zu <code>else:</code>.</div>
+                <div class="hilfe-text">Gehe vor wie in Aufgabe 8: Übersetze den PAP Symbol für Symbol. Die Raute wird zu <code>if alter &lt; 14:</code>, der False-Zweig zu <code>else:</code>.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="4" disabled onclick="toggleHilfe(this)">Tipp 2 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">In beiden Zweigen wird nur <code>preis</code> festgelegt. Die Ausgabe gehört zu beiden Zweigen und steht deshalb <strong>nicht</strong> eingerückt am Ende. Zu 6.2: Ist 14 kleiner als 14?</div>
+                <div class="hilfe-text">In beiden Zweigen wird nur <code>preis</code> festgelegt. Die Ausgabe gehört zu beiden Zweigen und steht deshalb <strong>nicht</strong> eingerückt am Ende. Zu 9.2: Ist 14 kleiner als 14?</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Zu 6.3: Die zweite Verzweigung kommt <strong>nach</strong> der ersten und vor der Ausgabe. Weil <code>kinotag</code> schon <code>True</code> oder <code>False</code> ist, reicht <code>if kinotag:</code>. Im True-Zweig verringerst du den Preis mit <code>preis = preis - 2</code>. Einen else-Zweig brauchst du hier nicht.</div>
+                <div class="hilfe-text">Zu 9.3: Die zweite Verzweigung kommt <strong>nach</strong> der ersten und vor der Ausgabe. Weil <code>kinotag</code> schon <code>True</code> oder <code>False</code> ist, reicht <code>if kinotag:</code>. Im True-Zweig verringerst du den Preis mit <code>preis = preis - 2</code>. Einen else-Zweig brauchst du hier nicht.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
@@ -1908,8 +2319,8 @@ if kinotag:
 
 # Ausgabe (gehört zu allen Zweigen, daher nicht eingerückt)
 print("Dein Ticket kostet", preis, "€")</div>
-                  <p>6.2: Mit <code>alter = 14</code> kostet das Ticket 9.00 €. <code>14 &lt; 14</code> ist <code>False</code>, denn 14 ist nicht kleiner als 14. Wer genau 14 ist, zahlt also schon den Normalpreis.</p>
-                  <p>6.3: Im PAP folgt nach dem Zusammenlaufen der beiden Preis-Zweige eine zweite Raute <code>kinotag ?</code>. Ihr True-Zweig führt zu <code>preis = preis - 2</code>, ihr False-Zweig direkt weiter. Beide laufen dann in <code>Ausgabe(preis)</code>.</p>
+                  <p>9.2: Mit <code>alter = 14</code> kostet das Ticket 9.00 €. <code>14 &lt; 14</code> ist <code>False</code>, denn 14 ist nicht kleiner als 14. Wer genau 14 ist, zahlt also schon den Normalpreis.</p>
+                  <p>9.3: Im PAP folgt nach dem Zusammenlaufen der beiden Preis-Zweige eine zweite Raute <code>kinotag ?</code>. Ihr True-Zweig führt zu <code>preis = preis - 2</code>, ihr False-Zweig direkt weiter. Beide laufen dann in <code>Ausgabe(preis)</code>.</p>
                 </div>
               </div>
             </div>
@@ -1918,11 +2329,11 @@ print("Dein Ticket kostet", preis, "€")</div>
         </div>
       </div>
 
-      <!-- ---------- Aufgabe 7 ---------- -->
+      <!-- ---------- Aufgabe 10 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>7. Der Schul-Login</span><span class="acc-icon">▼</span>
+            <span>10. Der Schul-Login</span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
@@ -1965,21 +2376,21 @@ print("Dein Ticket kostet", preis, "€")</div>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">7.1</span>Implementiere den Programmablaufplan in Python. Achte darauf, an welcher Stelle die zweite Verzweigung beginnt.</p>
+              <p><span class="aufgaben-nr">10.1</span>Implementiere den Programmablaufplan in Python. Achte darauf, an welcher Stelle die zweite Verzweigung beginnt.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">7.2</span>Teste dein Programm so, dass jede der drei Ausgaben genau einmal erscheint. Notiere für jeden Test die Werte von <code>benutzername</code> und <code>passwort</code>, die du verwendet hast.</p>
+              <p><span class="aufgaben-nr">10.2</span>Teste dein Programm so, dass jede der drei Ausgaben genau einmal erscheint. Notiere für jeden Test die Werte von <code>benutzername</code> und <code>passwort</code>, die du verwendet hast.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">7.3</span>Setze <code>passwort = "info123"</code> (kleines i). Welche Ausgabe erscheint? Erkläre, was das über den Vergleich von Strings in Python aussagt, und warum das bei Passwörtern sinnvoll ist.</p>
+              <p><span class="aufgaben-nr">10.3</span>Setze <code>passwort = "info123"</code> (kleines i). Welche Ausgabe erscheint? Erkläre, was das über den Vergleich von Strings in Python aussagt, und warum das bei Passwörtern sinnvoll ist.</p>
             </div>
 
-            <div class="callout callout-info"><span><strong>Lernziel:</strong> zwei ineinander liegende Verzweigungen implementieren und Strings mit <code>==</code> vergleichen. Aufgabe 7.3 zeigt, dass Python beim Vergleich Groß- und Kleinschreibung unterscheidet.</span></div>
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> zwei ineinander liegende Verzweigungen implementieren und Strings mit <code>==</code> vergleichen. Aufgabe 10.3 zeigt, dass Python beim Vergleich Groß- und Kleinschreibung unterscheidet.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a7">
+            <div class="hilfe-box" data-aufgabe="a10">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -1997,7 +2408,7 @@ else:
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Zu 7.2: Für „Benutzer unbekannt“ reicht ein anderer Benutzername, das Passwort ist dann egal. Für „Falsches Passwort“ muss der Benutzername stimmen, das Passwort aber nicht. Zu 7.3: Für Python ist <code>"i"</code> ein anderes Zeichen als <code>"I"</code>.</div>
+                <div class="hilfe-text">Zu 10.2: Für „Benutzer unbekannt“ reicht ein anderer Benutzername, das Passwort ist dann egal. Für „Falsches Passwort“ muss der Benutzername stimmen, das Passwort aber nicht. Zu 10.3: Für Python ist <code>"i"</code> ein anderes Zeichen als <code>"I"</code>.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
@@ -2011,8 +2422,8 @@ if benutzername == "mia":            # 1. Verzweigung: Gibt es den Benutzer?
         print("Falsches Passwort")   # Benutzer stimmt, Passwort nicht
 else:
     print("Benutzer unbekannt")      # Benutzer stimmt nicht</div>
-                  <p>7.2: z. B. <code>"mia"</code> / <code>"Info123"</code> → Willkommen, Mia! · <code>"mia"</code> / <code>"abc"</code> → Falsches Passwort · <code>"tom"</code> / beliebig → Benutzer unbekannt.</p>
-                  <p>7.3: Es erscheint „Falsches Passwort“. Python vergleicht Strings Zeichen für Zeichen und unterscheidet dabei Groß- und Kleinschreibung: <code>"info123" == "Info123"</code> ist <code>False</code>. Bei Passwörtern ist das gewollt, weil es mehr mögliche Passwörter gibt und sie schwerer zu erraten sind.</p></div>
+                  <p>10.2: z. B. <code>"mia"</code> / <code>"Info123"</code> → Willkommen, Mia! · <code>"mia"</code> / <code>"abc"</code> → Falsches Passwort · <code>"tom"</code> / beliebig → Benutzer unbekannt.</p>
+                  <p>10.3: Es erscheint „Falsches Passwort“. Python vergleicht Strings Zeichen für Zeichen und unterscheidet dabei Groß- und Kleinschreibung: <code>"info123" == "Info123"</code> ist <code>False</code>. Bei Passwörtern ist das gewollt, weil es mehr mögliche Passwörter gibt und sie schwerer zu erraten sind.</p></div>
               </div>
             </div>
 
@@ -2028,30 +2439,30 @@ else:
     <section class="kategorie" id="kat-uebung-pap-erstellen">
       <h2>Erstellen eines PaP</h2>
 
-      <!-- ---------- Aufgabe 8 ---------- -->
+      <!-- ---------- Aufgabe 11 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>8. Der Getränkeautomat <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+            <span>11. Der Getränkeautomat <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
             <p><strong>Situation:</strong> Ein Getränk aus dem Automaten in der Schulmensa kostet 1.50 €. Zuerst legt der Automat den Preis fest. Danach fordert er dazu auf, das eingeworfene Guthaben einzugeben, zum Beispiel 2.00. Anschließend prüft er, ob das Guthaben mindestens so groß ist wie der Preis. Ist das der Fall, berechnet er das Wechselgeld, zeigt „Getränk kommt“ an und gibt anschließend das Wechselgeld aus. Reicht das Guthaben nicht, zeigt er „Guthaben zu gering“ an. In beiden Fällen ist der Vorgang danach beendet.</p>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">8.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
+              <p><span class="aufgaben-nr">11.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
             </div>
             <p><a class="extern-link" href="https://app.diagrams.net/" target="_blank" rel="noopener noreferrer">draw.io öffnen (app.diagrams.net)</a></p>
             <div class="niveau">
-              <p><span class="aufgaben-nr">8.2</span>Markiere in deinem PAP farbig, welche Teile eine <a class="fach" href="#def-sequenz" onclick="gotoBegriff(event,0,'def-sequenz')" data-tip="Sequenz: Anweisungen werden nacheinander von oben nach unten ausgeführt.">Sequenz</a> sind und wo die <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="Verzweigung: prüft eine Bedingung und führt je nach True oder False einen von zwei Programmteilen aus.">Verzweigung</a> liegt.</p>
+              <p><span class="aufgaben-nr">11.2</span>Markiere in deinem PAP farbig, welche Teile eine <a class="fach" href="#def-sequenz" onclick="gotoBegriff(event,0,'def-sequenz')" data-tip="Sequenz: Anweisungen werden nacheinander von oben nach unten ausgeführt.">Sequenz</a> sind und wo die <a class="fach" href="#def-verzweigung" onclick="gotoBegriff(event,0,'def-verzweigung')" data-tip="Verzweigung: prüft eine Bedingung und führt je nach True oder False einen von zwei Programmteilen aus.">Verzweigung</a> liegt.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">8.3</span>Implementiere deinen PAP in Python. Lies das Guthaben mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle es mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">float()</a> um. Teste mit den Eingaben <code>2.00</code> und <code>1.00</code>.</p>
+              <p><span class="aufgaben-nr">11.3</span>Implementiere deinen PAP in Python. Lies das Guthaben mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle es mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">float()</a> um. Teste mit den Eingaben <code>2.00</code> und <code>1.00</code>.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">8.4</span>Fehlerdetektiv: Gib beim Testen <code>2,00</code> mit Komma ein. Was passiert? Erkläre die Fehlermeldung.</p>
+              <p><span class="aufgaben-nr">11.4</span>Fehlerdetektiv: Gib beim Testen <code>2,00</code> mit Komma ein. Was passiert? Erkläre die Fehlermeldung.</p>
             </div>
 
             <div class="callout callout-info"><span><strong>So geht's in draw.io:</strong> Beim ersten Öffnen „Gerät“ als Speicherort wählen und „Leeres Diagramm“ erstellen. Die PAP-Symbole findest du links in der Formenbibliothek unter <strong>Flussdiagramm</strong>. Zum Abgeben über <strong>Datei → Exportieren als → PNG</strong> ein Bild speichern.</span></div>
@@ -2059,7 +2470,7 @@ else:
             <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Situation in Alltagssprache in einen Programmablaufplan übertragen, darin Sequenz und Verzweigung erkennen und eine Nutzereingabe mit Datentypkonvertierung umsetzen.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a8">
+            <div class="hilfe-box" data-aufgabe="a11">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -2071,7 +2482,7 @@ else:
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Im PAP steht nur <code>Eingabe()</code>. In Python liefert <code>input()</code> aber einen String, mit dem man nicht rechnen kann. Schreibe deshalb <code>guthaben = float(input("Guthaben in €: "))</code>. Zu 8.4: Python erwartet bei Kommazahlen einen Punkt.</div>
+                <div class="hilfe-text">Im PAP steht nur <code>Eingabe()</code>. In Python liefert <code>input()</code> aber einen String, mit dem man nicht rechnen kann. Schreibe deshalb <code>guthaben = float(input("Guthaben in €: "))</code>. Zu 11.4: Python erwartet bei Kommazahlen einen Punkt.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
@@ -2109,7 +2520,7 @@ else:
                     <text x="400" y="546" text-anchor="middle" font-size="13" fill="var(--text)">Ende</text>
                   </svg>
                   </div>
-                  <p>8.2: Sequenzen sind das Festlegen des Preises mit der Eingabe des Guthabens sowie die drei aufeinanderfolgenden Schritte im True-Zweig. Die Verzweigung ist die Raute <code>guthaben &gt;= preis</code>.</p>
+                  <p>11.2: Sequenzen sind das Festlegen des Preises mit der Eingabe des Guthabens sowie die drei aufeinanderfolgenden Schritte im True-Zweig. Die Verzweigung ist die Raute <code>guthaben &gt;= preis</code>.</p>
                   <div class="code">preis = 1.50                                  # Sequenz: Preis festlegen
 guthaben = float(input("Guthaben in €: "))    # Eingabe, sofort in float umwandeln
 
@@ -2119,40 +2530,40 @@ if guthaben &gt;= preis:                         # Verzweigung
     print("Wechselgeld:", round(wechselgeld, 2), "€")
 else:
     print("Guthaben zu gering")               # False-Zweig</div>
-                  <p>8.3: Mit der Eingabe <code>2.00</code> erscheinen „Getränk kommt“ und „Wechselgeld: 0.5 €“, mit <code>1.00</code> erscheint „Guthaben zu gering“. <code>round(…, 2)</code> rundet auf zwei Nachkommastellen.</p>
-                  <p>8.4: Das Programm bricht mit <code>ValueError: could not convert string to float: '2,00'</code> ab. <code>float()</code> versteht nur den Punkt als Dezimaltrennzeichen.</p></div>
+                  <p>11.3: Mit der Eingabe <code>2.00</code> erscheinen „Getränk kommt“ und „Wechselgeld: 0.5 €“, mit <code>1.00</code> erscheint „Guthaben zu gering“. <code>round(…, 2)</code> rundet auf zwei Nachkommastellen.</p>
+                  <p>11.4: Das Programm bricht mit <code>ValueError: could not convert string to float: '2,00'</code> ab. <code>float()</code> versteht nur den Punkt als Dezimaltrennzeichen.</p></div>
               </div>
             </div>
           </div></div>
         </div>
       </div>
 
-      <!-- ---------- Aufgabe 9 ---------- -->
+      <!-- ---------- Aufgabe 12 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>9. Der Akku-Check <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+            <span>12. Der Akku-Check <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
             <p><strong>Situation:</strong> Vor der Klassenfahrt willst du wissen, wie lange dein Handyakku beim Videostreamen noch hält. Das Programm fordert dazu auf, den aktuellen Akkustand in Prozent als ganze Zahl einzugeben. Beim Streamen verbraucht das Handy 8 Prozent pro Stunde. Das Programm berechnet daraus die verbleibende Laufzeit in Stunden und gibt sie aus. Danach prüft es, ob der Akkustand unter 20 Prozent liegt. Wenn ja, gibt es „Bitte jetzt laden!“ aus, sonst „Akku reicht noch.“</p>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">9.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
+              <p><span class="aufgaben-nr">12.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
             </div>
             <p><a class="extern-link" href="https://app.diagrams.net/" target="_blank" rel="noopener noreferrer">draw.io öffnen (app.diagrams.net)</a></p>
             <div class="niveau">
-              <p><span class="aufgaben-nr">9.2</span>Implementiere deinen PAP in Python. Lies den Akkustand mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle ihn mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">int()</a> um. Teste mit den Eingaben <code>50</code>, <code>12</code> und <code>20</code>.</p>
+              <p><span class="aufgaben-nr">12.2</span>Implementiere deinen PAP in Python. Lies den Akkustand mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle ihn mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">int()</a> um. Teste mit den Eingaben <code>50</code>, <code>12</code> und <code>20</code>.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">9.3</span>Fehlerdetektiv: Gib einmal <code>50%</code> und einmal <code>50.5</code> ein. Erkläre die Fehlermeldung. Welche Umwandlungsfunktion würde für <code>50.5</code> funktionieren?</p>
+              <p><span class="aufgaben-nr">12.3</span>Fehlerdetektiv: Gib einmal <code>50%</code> und einmal <code>50.5</code> ein. Erkläre die Fehlermeldung. Welche Umwandlungsfunktion würde für <code>50.5</code> funktionieren?</p>
             </div>
 
             <div class="callout callout-info"><span><strong>Lernziel:</strong> aus einer Situationsbeschreibung einen PAP mit Eingabe, Berechnung und Verzweigung erstellen und die Eingabe passend in eine ganze Zahl umwandeln.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a9">
+            <div class="hilfe-box" data-aufgabe="a12">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -2164,7 +2575,7 @@ else:
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">In Python: <code>akku = int(input("Akkustand in Prozent: "))</code>. Zu 9.3: <code>int()</code> kann nur Text umwandeln, der ausschließlich aus Ziffern besteht. Das Prozentzeichen und der Punkt gehören nicht dazu.</div>
+                <div class="hilfe-text">In Python: <code>akku = int(input("Akkustand in Prozent: "))</code>. Zu 12.3: <code>int()</code> kann nur Text umwandeln, der ausschließlich aus Ziffern besteht. Das Prozentzeichen und der Punkt gehören nicht dazu.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
@@ -2207,40 +2618,40 @@ if akku &lt; 20:                                   # Verzweigung
     print("Bitte jetzt laden!")
 else:
     print("Akku reicht noch.")</div>
-                  <p>9.2: <code>50</code> ergibt „Restlaufzeit: 6.25 Stunden“ und „Akku reicht noch.“ <code>12</code> ergibt „Restlaufzeit: 1.5 Stunden“ und „Bitte jetzt laden!“ <code>20</code> ergibt „Restlaufzeit: 2.5 Stunden“ und „Akku reicht noch.“, weil 20 nicht kleiner als 20 ist.</p>
-                  <p>9.3: Beide Eingaben führen zu <code>ValueError: invalid literal for int() with base 10</code>. <code>int()</code> kann weder das Zeichen <code>%</code> noch eine Kommazahl umwandeln. Für <code>50.5</code> funktioniert <code>float()</code>.</p></div>
+                  <p>12.2: <code>50</code> ergibt „Restlaufzeit: 6.25 Stunden“ und „Akku reicht noch.“ <code>12</code> ergibt „Restlaufzeit: 1.5 Stunden“ und „Bitte jetzt laden!“ <code>20</code> ergibt „Restlaufzeit: 2.5 Stunden“ und „Akku reicht noch.“, weil 20 nicht kleiner als 20 ist.</p>
+                  <p>12.3: Beide Eingaben führen zu <code>ValueError: invalid literal for int() with base 10</code>. <code>int()</code> kann weder das Zeichen <code>%</code> noch eine Kommazahl umwandeln. Für <code>50.5</code> funktioniert <code>float()</code>.</p></div>
               </div>
             </div>
           </div></div>
         </div>
       </div>
 
-      <!-- ---------- Aufgabe 10 ---------- -->
+      <!-- ---------- Aufgabe 13 ---------- -->
       <div class="acc">
         <div class="acc-item">
           <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
-            <span>10. Die Test-Auswertung <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
+            <span>13. Die Test-Auswertung <span class="tag-neu">❗ Neu</span></span><span class="acc-icon">▼</span>
           </button>
           <div class="acc-body"><div class="acc-body-inner">
 
             <p><strong>Situation:</strong> Nach einem Test möchtest du schnell wissen, wie gut du warst. Das Programm fordert zuerst dazu auf, die erreichten Punkte einzugeben, danach die maximal mögliche Punktzahl. Beides können auch halbe Punkte sein. Es berechnet daraus den Prozentsatz und gibt ihn in einem Satz aus, zum Beispiel „Du hast 75.0 % erreicht.“ Liegt der Prozentsatz bei mindestens 50, erscheint „Ziel erreicht!“, sonst „Weiter üben!“.</p>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">10.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
+              <p><span class="aufgaben-nr">13.1</span>Erstelle zu dieser Situation einen Programmablaufplan mit draw.io. Halte dich an die <a class="fach" href="#kat-pap-regeln" onclick="gotoBegriff(event,1,'kat-pap-regeln')" data-tip="Genau ein Start und ein Ende, jede Verzweigung hat genau zwei Ausgänge True/False, alle Elemente außer Verbindungen werden beschriftet.">Regeln des PAP</a>.</p>
             </div>
             <p><a class="extern-link" href="https://app.diagrams.net/" target="_blank" rel="noopener noreferrer">draw.io öffnen (app.diagrams.net)</a></p>
             <div class="niveau">
-              <p><span class="aufgaben-nr">10.2</span>Implementiere deinen PAP in Python. Lies beide Werte mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle sie mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">float()</a> um. Baue den Antwortsatz mit <code>+</code> zusammen und wandle den Prozentsatz dafür mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">str()</a> um. Teste mit <code>18</code> von <code>24</code> und mit <code>10.5</code> von <code>30</code> Punkten.</p>
+              <p><span class="aufgaben-nr">13.2</span>Implementiere deinen PAP in Python. Lies beide Werte mit <a class="fach" href="#def-input" onclick="gotoBegriff(event,0,'def-input')" data-tip="input(): liest eine Eingabe über die Tastatur ein und liefert immer einen String.">input()</a> ein und wandle sie mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">float()</a> um. Baue den Antwortsatz mit <code>+</code> zusammen und wandle den Prozentsatz dafür mit <a class="fach" href="#def-konvertierung" onclick="gotoBegriff(event,0,'def-konvertierung')" data-tip="Datentypkonvertierung: int(), float() und str() wandeln einen Wert in einen anderen Datentyp um.">str()</a> um. Teste mit <code>18</code> von <code>24</code> und mit <code>10.5</code> von <code>30</code> Punkten.</p>
             </div>
 
             <div class="niveau">
-              <p><span class="aufgaben-nr">10.3</span>Gib als maximale Punktzahl <code>0</code> ein. Was passiert? Ergänze deinen PAP und dein Programm um eine weitere Verzweigung, die diesen Fall abfängt.</p>
+              <p><span class="aufgaben-nr">13.3</span>Gib als maximale Punktzahl <code>0</code> ein. Was passiert? Ergänze deinen PAP und dein Programm um eine weitere Verzweigung, die diesen Fall abfängt.</p>
             </div>
 
-            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Situation mit zwei Eingaben in einen PAP übertragen und dabei alle drei Umwandlungsfunktionen gezielt einsetzen. Aufgabe 10.3 ergänzt eine zweite Verzweigung.</span></div>
+            <div class="callout callout-info"><span><strong>Lernziel:</strong> eine Situation mit zwei Eingaben in einen PAP übertragen und dabei alle drei Umwandlungsfunktionen gezielt einsetzen. Aufgabe 13.3 ergänzt eine zweite Verzweigung.</span></div>
 
             <button class="btn btn-ghost hilfe-trigger" onclick="zeigeHilfe(this)">Hilfestellungen</button>
-            <div class="hilfe-box" data-aufgabe="a10">
+            <div class="hilfe-box" data-aufgabe="a13">
               <div class="hilfe-label">Hilfestellung</div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="2" disabled onclick="toggleHilfe(this)">Tipp 1 <span class="hilfe-timer"></span></button>
@@ -2252,7 +2663,7 @@ else:
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="6" disabled onclick="toggleHilfe(this)">Tipp 3 <span class="hilfe-timer"></span></button>
-                <div class="hilfe-text">Zu 10.3: Durch 0 kann man nicht teilen. Prüfe deshalb <strong>vor</strong> der Berechnung mit einer Raute <code>max_punkte == 0</code>. Nur im False-Zweig wird gerechnet, und dort folgt die bekannte zweite Raute.</div>
+                <div class="hilfe-text">Zu 13.3: Durch 0 kann man nicht teilen. Prüfe deshalb <strong>vor</strong> der Berechnung mit einer Raute <code>max_punkte == 0</code>. Nur im False-Zweig wird gerechnet, und dort folgt die bekannte zweite Raute.</div>
               </div>
               <div class="hilfe-item">
                 <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
@@ -2301,8 +2712,8 @@ if prozent &gt;= 50:                                   # Verzweigung
     print("Ziel erreicht!")
 else:
     print("Weiter üben!")</div>
-                  <p>10.2: <code>18</code> von <code>24</code> ergibt „Du hast 75.0 % erreicht.“ und „Ziel erreicht!“. <code>10.5</code> von <code>30</code> ergibt „Du hast 35.0 % erreicht.“ und „Weiter üben!“.</p>
-                  <p>10.3: Das Programm bricht mit <code>ZeroDivisionError: float division by zero</code> ab. Mögliche Lösung:</p>
+                  <p>13.2: <code>18</code> von <code>24</code> ergibt „Du hast 75.0 % erreicht.“ und „Ziel erreicht!“. <code>10.5</code> von <code>30</code> ergibt „Du hast 35.0 % erreicht.“ und „Weiter üben!“.</p>
+                  <p>13.3: Das Programm bricht mit <code>ZeroDivisionError: float division by zero</code> ab. Mögliche Lösung:</p>
                   <div class="code">punkte = float(input("Erreichte Punkte: "))
 max_punkte = float(input("Maximale Punktzahl: "))
 
