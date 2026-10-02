@@ -296,6 +296,10 @@ body.suchmodus .kategorie-body > p,body.suchmodus .kategorie-body > .callout{dis
 .hilfe-text{display:none;margin-top:8px;padding:10px 14px;background:var(--surface);
   border-left:3px solid var(--accent);border-radius:8px;color:var(--text-2);font-size:var(--fs-base);}
 .hilfe-text.on{display:block;}
+.gesperrt-hinweis{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;
+  background:var(--err-bg, #fbe9e7);color:var(--err);font-size:var(--fs-sm);font-weight:700;}
+.hilfe-btn[data-gesperrt] .hilfe-timer{display:none;}
+body.lehrermodus-aktiv .gesperrt-hinweis{display:none;}
 
 /* ── PAP-Symbolkarten (Form + Erklärung) ── */
 .pap-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
@@ -1736,7 +1740,7 @@ else:
     print("Ungültige Operation.")</div>Zu 4.2: Welchen Datentyp liefert <code>float()</code>?</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 555 614" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Mini-Taschenrechner: Eingabe zahl1, zahl2 und op; op gleich plus: Ausgabe Summe; sonst op gleich minus: Ausgabe Differenz; sonst Ausgabe Ungültige Operation; Ende">
                     <defs><marker id="pap-pfeil-v4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -1848,7 +1852,7 @@ else:
                 <div class="hilfe-text">Zu 5.2: An den Grenzen eines Bereichs passieren die meisten Fehler, zum Beispiel wenn <code>&lt;</code> und <code>&lt;=</code> verwechselt werden. Zu 5.3: Python prüft von oben nach unten. Eine Bedingung, die hinter dem <code>else</code> steht, wird nie erreicht.</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 555 508" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Temperaturabfrage: Eingabe temperatur; temperatur kleiner 0: Ausgabe Es friert; sonst temperatur kleiner gleich 20: Ausgabe Es ist kühl; sonst Ausgabe Angenehm warm; Ende">
                     <defs><marker id="pap-pfeil-v5" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -1955,7 +1959,7 @@ else:
                 <div class="hilfe-text">Zu 6.2 und 6.3: Python führt nur den <strong>ersten</strong> Zweig aus, dessen Bedingung <code>True</code> ist. Ein 10-jähriges Kind mit 125 cm erfüllt beide Bedingungen. Welche wird zuerst geprüft?</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 555 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Achterbahn: Eingabe groesse und alter; groesse kleiner 130: Ausgabe Leider zu klein; sonst alter kleiner 12: Ausgabe Nur mit Begleitperson; sonst Ausgabe Viel Spaß; Ende">
                     <defs><marker id="pap-pfeil-v6" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -2485,7 +2489,7 @@ else:
                 <div class="hilfe-text">Im PAP steht nur <code>Eingabe()</code>. In Python liefert <code>input()</code> aber einen String, mit dem man nicht rechnen kann. Schreibe deshalb <code>guthaben = float(input("Guthaben in €: "))</code>. Zu 11.4: Python erwartet bei Kommazahlen einen Punkt.</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 520 572" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Getränkeautomat: Start, preis = 1.50, Eingabe guthaben, Verzweigung guthaben größer gleich preis; True: wechselgeld berechnen, Ausgabe Getränk kommt, Ausgabe wechselgeld; False: Ausgabe Guthaben zu gering; Ende">
                     <defs><marker id="pap-pfeil-a8" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -2578,7 +2582,7 @@ else:
                 <div class="hilfe-text">In Python: <code>akku = int(input("Akkustand in Prozent: "))</code>. Zu 12.3: <code>int()</code> kann nur Text umwandeln, der ausschließlich aus Ziffern besteht. Das Prozentzeichen und der Punkt gehören nicht dazu.</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 520 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Akku-Check: Start, Eingabe akku, laufzeit = akku / 8, Ausgabe laufzeit, Verzweigung akku kleiner 20; True: Ausgabe Bitte jetzt laden; False: Ausgabe Akku reicht noch; Ende">
                     <defs><marker id="pap-pfeil-a9" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -2666,7 +2670,7 @@ else:
                 <div class="hilfe-text">Zu 13.3: Durch 0 kann man nicht teilen. Prüfe deshalb <strong>vor</strong> der Berechnung mit einer Raute <code>max_punkte == 0</code>. Nur im False-Zweig wird gerechnet, und dort folgt die bekannte zweite Raute.</div>
               </div>
               <div class="hilfe-item">
-                <button class="hilfe-btn" data-min="10" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span></button>
+                <button class="hilfe-btn" data-min="10" data-gesperrt="1" disabled onclick="toggleHilfe(this)">Musterlösung <span class="hilfe-timer"></span><span class="gesperrt-hinweis">🔒 Aufgrund von Leistungserhebung gesperrt</span></button>
                 <div class="hilfe-text"><div class="pap-diagramm breit">
                   <svg viewBox="0 0 560 590" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Muster-PAP Test-Auswertung: Start, Eingabe punkte, Eingabe max_punkte, prozent berechnen, Ausgabe Du hast prozent Prozent erreicht, Verzweigung prozent größer gleich 50; True: Ausgabe Ziel erreicht; False: Ausgabe Weiter üben; Ende">
                     <defs><marker id="pap-pfeil-a10" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" fill="var(--accent)"/></marker></defs>
@@ -2901,6 +2905,7 @@ function updateHilfe(box){
   box.querySelectorAll('.hilfe-btn').forEach(btn=>{
     const need=parseFloat(btn.dataset.min);
     const timer=btn.querySelector('.hilfe-timer');
+    if(istGesperrt(btn)){ btn.disabled=true; return; }
     if(elapsedMin>=need){
       btn.disabled=false; timer.textContent='';
     } else {
@@ -2912,8 +2917,12 @@ function updateHilfe(box){
   });
   if(alleFrei && box._hilfeInterval){ clearInterval(box._hilfeInterval); box._hilfeInterval=null; }
 }
+/* Musterlösungen mit data-gesperrt nur im Lehrermodus (Leistungserhebung) */
+function istGesperrt(btn){
+  return btn.hasAttribute('data-gesperrt') && !document.body.classList.contains('lehrermodus-aktiv');
+}
 function toggleHilfe(btn){
-  if(btn.disabled) return;
+  if(btn.disabled || istGesperrt(btn)) return;
   const text=btn.nextElementSibling.classList.contains('hilfe-text') ? btn.nextElementSibling : btn.parentElement.querySelector('.hilfe-text');
   const open=text.classList.toggle('on');
   btn.setAttribute('aria-expanded', open);
