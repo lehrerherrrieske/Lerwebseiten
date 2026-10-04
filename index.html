@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lernportal · Physik &amp; Informatik</title>
+<title>Lernportal</title>
 <!--
   ============================================================================
   LERNPORTAL – Startseite für GitHub Pages
   ============================================================================
   Diese Seite ist die Startseite des Repos (index.html im Root). Sie führt
   SuS in drei Schritten zur passenden Lernseite:
-    1) Fach wählen (Physik / Informatik)
+    1) Fach wählen (Liste FAECHER, z. B. Physik / Informatik / Biologie / Englisch)
     2) Klassenstufe wählen
     3) Liste der Lernseiten dieser Klassenstufe, gruppiert nach Lernbereich
 
@@ -19,9 +19,25 @@
     /Physik/K7 - LB1 - ....html
     /Physik/K8 - LB2 - ....html
     /Informatik/K10 - LB1 - ....html
+    /Biologie/...
+    /Englisch/...
     ...
   Die Lernseiten liegen unverändert in Fach-Ordnern, genau mit dem
   Dateinamen, den das lernhtml-Skript erzeugt.
+
+  NEUES FACH HINZUFÜGEN (2 Schritte):
+    1) Im Array FAECHER (Abschnitt "// >>> FÄCHER") eine Zeile ergänzen, z. B.:
+         { id:"chemie", name:"Chemie", icon:"🧪", farbe:"#8A6A1F" },
+       id    : kleingeschrieben, ohne Leerzeichen/Umlaute – wird in SEITEN
+               als "fach" benutzt
+       name  : Anzeigename auf der Startseite
+       icon  : ein Emoji
+       farbe : Akzentfarbe als Hex-Wert (helle Töne werden automatisch berechnet)
+       text  : optional, eigener Beschreibungstext auf der Karte
+    2) In KLASSEN einen Block mit derselben id anlegen, z. B.:
+         chemie: [ {id:"7", label:"7", ordner:"Chemie/Klasse_7"}, ... ]
+       (Fehlt der Block, zeigt die Seite einen Hinweis statt eines Fehlers.)
+  Die Fach-Karten, Farben und der Untertitel im Kopf entstehen automatisch.
 
   NEUE SEITE EINTRAGEN:
   Im Array SEITEN weiter unten (Abschnitt "// >>> HIER EINTRAGEN") einfach
@@ -31,7 +47,7 @@
       titel:"Stromstärke, Spannung, Widerstand",
       datei:"Physik/K8 - LB2 - Stromstaerke_Spannung_Widerstand.html" }
 
-  fach   : "physik" oder "informatik"
+  fach   : eine id aus FAECHER, z. B. "physik", "informatik", "biologie", "englisch"
   klasse : muss zu einer id aus KLASSEN (weiter unten) passen, z.B. "7",
            "11GK", "11LK", "12GK", "12LK"
   lb     : beliebiger kurzer Lernbereichs-Name, wird als Gruppen-Überschrift
@@ -57,13 +73,10 @@
     --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
     --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
 
-    --color-physik:#3F5E8C;
-    --color-physik-light:color-mix(in srgb, var(--color-physik) 12%, white);
-    --color-physik-hover:color-mix(in srgb, var(--color-physik) 82%, black);
-
-    --color-informatik:#1C7168;
-    --color-informatik-light:color-mix(in srgb, var(--color-informatik) 12%, white);
-    --color-informatik-hover:color-mix(in srgb, var(--color-informatik) 82%, black);
+    /* Fachfarben werden aus der Liste FAECHER (im Skript) gesetzt */
+    --fach:var(--color-accent);
+    --fach-light:color-mix(in srgb, var(--fach) 12%, white);
+    --fach-hover:color-mix(in srgb, var(--fach) 82%, black);
 
     --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
     --shadow-md:0 6px 20px rgba(44,42,40,.10);
@@ -114,9 +127,11 @@
 
   /* ── Fachauswahl ── */
   .lead{font-size:var(--fs-lg);color:var(--color-text-secondary);margin-bottom:26px;}
-  .fach-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .fach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
   @media (max-width:600px){.fach-grid{grid-template-columns:1fr;}}
   .fach-card{
+    --fc-accent:var(--fach);
+    --fc-light:color-mix(in srgb, var(--fach) 12%, white);
     cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius-lg);
     background:var(--color-surface);padding:34px 26px;text-align:left;
     display:flex;flex-direction:column;gap:12px;transition:.18s;box-shadow:var(--shadow);
@@ -127,8 +142,6 @@
     width:56px;height:56px;border-radius:var(--radius);display:flex;align-items:center;
     justify-content:center;font-size:1.8rem;background:var(--fc-light);
   }
-  .fach-card[data-fach="physik"]{--fc-accent:var(--color-physik);--fc-light:var(--color-physik-light);}
-  .fach-card[data-fach="informatik"]{--fc-accent:var(--color-informatik);--fc-light:var(--color-informatik-light);}
   .fach-card h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--fc-accent);}
   .fach-card p{color:var(--color-text-muted);font-size:var(--fs-sm);}
   .fach-card .arrow{margin-top:6px;font-weight:700;color:var(--fc-accent);font-size:var(--fs-sm);}
@@ -194,11 +207,11 @@
   footer{border-top:1px solid var(--color-border);padding:20px 0;text-align:center;
     color:var(--color-text-muted);font-size:var(--fs-sm);}
 
-  /* Fachspezifische Laufvariablen, werden per JS am <body> gesetzt */
-  body[data-fach="physik"]{--sc-accent:var(--color-physik);--kb-accent:var(--color-physik);
-    --kb-accent-hover:var(--color-physik-hover);--kb-light:var(--color-physik-light);}
-  body[data-fach="informatik"]{--sc-accent:var(--color-informatik);--kb-accent:var(--color-informatik);
-    --kb-accent-hover:var(--color-informatik-hover);--kb-light:var(--color-informatik-light);}
+  /* Fachspezifische Laufvariablen – --fach wird per JS am <body> gesetzt */
+  body{--sc-accent:var(--fach);--kb-accent:var(--fach);
+    --kb-accent-hover:color-mix(in srgb, var(--fach) 82%, black);
+    --kb-light:color-mix(in srgb, var(--fach) 12%, white);}
+  .fach-hinweis{margin-top:14px;font-size:var(--fs-sm);color:var(--color-text-muted);}
 </style>
 </head>
 <body>
@@ -209,7 +222,7 @@
       <div class="brand-mark">📚</div>
       <div>
         <h1>Lernportal</h1>
-        <p>Physik &amp; Informatik — Material zum Nacharbeiten und Üben</p>
+        <p id="subtitle">Material zum Nacharbeiten und Üben</p>
       </div>
     </div>
     <div class="crumbbar" id="crumbbar">
@@ -224,20 +237,8 @@
   <!-- Schritt 1: Fach -->
   <section class="view active" id="view-fach">
     <p class="lead">Wähle zuerst dein Fach:</p>
-    <div class="fach-grid">
-      <button class="fach-card" data-fach="physik">
-        <div class="icon">⚛️</div>
-        <h2>Physik</h2>
-        <p>Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe.</p>
-        <span class="arrow">Zu Physik →</span>
-      </button>
-      <button class="fach-card" data-fach="informatik">
-        <div class="icon">💻</div>
-        <h2>Informatik</h2>
-        <p>Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe.</p>
-        <span class="arrow">Zu Informatik →</span>
-      </button>
-    </div>
+    <!-- Die Fach-Karten werden automatisch aus der Liste FAECHER erzeugt -->
+    <div class="fach-grid" id="fachGrid"></div>
   </section>
 
   <!-- Schritt 2: Klasse -->
@@ -260,6 +261,16 @@
 /* ============================================================
    KONFIGURATION – hier anpassen
    ============================================================ */
+
+// >>> FÄCHER: eine Zeile pro Fach – Reihenfolge = Reihenfolge der Karten.
+// Neues Fach? Zeile ergänzen UND unten in KLASSEN einen Block mit derselben id anlegen.
+const FAECHER = [
+  { id:"physik",     name:"Physik",     icon:"⚛️", farbe:"#3F5E8C" },
+  { id:"informatik", name:"Informatik", icon:"💻", farbe:"#1C7168" },
+  { id:"biologie",   name:"Biologie",   icon:"🌱", farbe:"#5B7F2E" },
+  { id:"englisch",   name:"Englisch",   icon:"🗣️", farbe:"#9A3F5C" },
+  // { id:"chemie",  name:"Chemie",     icon:"🧪", farbe:"#8A6A1F" },
+];
 
 // Verfügbare Klassenstufen je Fach (id = wird auch für "klasse" in
 // SEITEN benutzt; label = Anzeige auf dem Button)
@@ -287,6 +298,30 @@ const KLASSEN = {
     {id:"11LK", label:"11", sub:"LK", ordner:"Informatik/Klasse_11_LK"},
     {id:"12GK", label:"12", sub:"GK", ordner:"Informatik/Klasse_12_GK"},
     {id:"12LK", label:"12", sub:"LK", ordner:"Informatik/Klasse_12_LK"},
+  ],
+  biologie: [
+    {id:"5",  label:"5",  ordner:"Biologie/Klasse_5"},
+    {id:"6",  label:"6",  ordner:"Biologie/Klasse_6"},
+    {id:"7",  label:"7",  ordner:"Biologie/Klasse_7"},
+    {id:"8",  label:"8",  ordner:"Biologie/Klasse_8"},
+    {id:"9",  label:"9",  ordner:"Biologie/Klasse_9"},
+    {id:"10", label:"10", ordner:"Biologie/Klasse_10"},
+    {id:"11GK", label:"11", sub:"GK", ordner:"Biologie/Klasse_11_GK"},
+    {id:"11LK", label:"11", sub:"LK", ordner:"Biologie/Klasse_11_LK"},
+    {id:"12GK", label:"12", sub:"GK", ordner:"Biologie/Klasse_12_GK"},
+    {id:"12LK", label:"12", sub:"LK", ordner:"Biologie/Klasse_12_LK"},
+  ],
+  englisch: [
+    {id:"5",  label:"5",  ordner:"Englisch/Klasse_5"},
+    {id:"6",  label:"6",  ordner:"Englisch/Klasse_6"},
+    {id:"7",  label:"7",  ordner:"Englisch/Klasse_7"},
+    {id:"8",  label:"8",  ordner:"Englisch/Klasse_8"},
+    {id:"9",  label:"9",  ordner:"Englisch/Klasse_9"},
+    {id:"10", label:"10", ordner:"Englisch/Klasse_10"},
+    {id:"11GK", label:"11", sub:"GK", ordner:"Englisch/Klasse_11_GK"},
+    {id:"11LK", label:"11", sub:"LK", ordner:"Englisch/Klasse_11_LK"},
+    {id:"12GK", label:"12", sub:"GK", ordner:"Englisch/Klasse_12_GK"},
+    {id:"12LK", label:"12", sub:"LK", ordner:"Englisch/Klasse_12_LK"},
   ]
 };
 
@@ -371,13 +406,56 @@ const SEITEN = [
   // =================Klasse LK11=================
 
   // =================Klasse LK12=================
+
+  // ==========================================================
+  // =================Biologie=================================
+  // ==========================================================
+  // Beispiel: { fach:"biologie", klasse:"7", lb:"LB1 - ...", titel:"...", datei:"K7 - LB1 - ....html" },
+
+  // ==========================================================
+  // =================Englisch=================================
+  // ==========================================================
+  // Beispiel: { fach:"englisch", klasse:"8", lb:"Unit 1", titel:"...", datei:"K8 - Unit1 - ....html" },
+
 ];
 
 /* ============================================================
    LOGIK – muss normalerweise nicht angepasst werden
    ============================================================ */
-const FACHNAME = {physik:"Physik", informatik:"Informatik"};
+const FACH = {};               // id -> Fach-Objekt
+FAECHER.forEach(f => FACH[f.id] = f);
+const FACHNAME = {};
+FAECHER.forEach(f => FACHNAME[f.id] = f.name);
 let currentFach = null, currentKlasse = null;
+
+// Untertitel im Kopf: "Physik, Informatik, Biologie & Englisch — …"
+(function(){
+  const namen = FAECHER.map(f => f.name);
+  const liste = namen.length > 1
+    ? namen.slice(0, -1).join(", ") + " & " + namen[namen.length - 1]
+    : (namen[0] || "");
+  document.getElementById("subtitle").textContent =
+    (liste ? liste + " — " : "") + "Material zum Nacharbeiten und Üben";
+})();
+
+// Fach-Karten aus FAECHER erzeugen
+(function(){
+  const grid = document.getElementById("fachGrid");
+  FAECHER.forEach(f => {
+    const anzahl = SEITEN.filter(s => s.fach === f.id && !s.wip).length;
+    const card = document.createElement("button");
+    card.className = "fach-card";
+    card.dataset.fach = f.id;
+    card.style.setProperty("--fach", f.farbe || "var(--color-accent)");
+    card.innerHTML = `
+      <div class="icon">${f.icon || "📘"}</div>
+      <h2>${f.name}</h2>
+      <p>${f.text || "Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe."}</p>
+      <span class="arrow">${anzahl ? anzahl + " Seite" + (anzahl === 1 ? "" : "n") + " · " : ""}Zu ${f.name} →</span>`;
+    card.addEventListener("click", () => goKlasse(f.id));
+    grid.appendChild(card);
+  });
+})();
 
 const viewFach = document.getElementById("view-fach");
 const viewKlasse = document.getElementById("view-klasse");
@@ -394,6 +472,7 @@ function showView(view){
 function goFach(){
   currentFach = null; currentKlasse = null;
   document.body.removeAttribute("data-fach");
+  document.body.style.removeProperty("--fach");
   crumbbar.classList.remove("active");
   showView(viewFach);
 }
@@ -401,11 +480,19 @@ function goFach(){
 function goKlasse(fach){
   currentFach = fach; currentKlasse = null;
   document.body.setAttribute("data-fach", fach);
+  document.body.style.setProperty("--fach", (FACH[fach] && FACH[fach].farbe) || "var(--color-accent)");
   document.getElementById("klasseTitle").textContent = FACHNAME[fach] + " — Klassenstufe wählen";
 
   const grid = document.getElementById("klasseGrid");
   grid.innerHTML = "";
-  KLASSEN[fach].forEach(k => {
+  const stufen = KLASSEN[fach] || [];
+  if (stufen.length === 0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <div class="em-icon">🗂️</div>
+        Für ${FACHNAME[fach]} sind noch keine Klassenstufen eingerichtet.
+      </div>`;
+  }
+  stufen.forEach(k => {
     const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id && !s.wip).length;
     const btn = document.createElement("button");
     btn.className = "klasse-btn";
@@ -425,7 +512,7 @@ function goSeiten(fach, klasseId, klasseLabel){
   currentKlasse = klasseId;
   document.getElementById("seitenTitle").textContent = FACHNAME[fach] + " — Klasse " + klasseLabel;
 
-  const klasseInfo = KLASSEN[fach].find(k => k.id === klasseId);
+  const klasseInfo = (KLASSEN[fach] || []).find(k => k.id === klasseId);
   const ordner = klasseInfo ? klasseInfo.ordner : "";
 
   const treffer = SEITEN.filter(s => s.fach === fach && s.klasse === klasseId);
@@ -477,9 +564,6 @@ function goSeiten(fach, klasseId, klasseLabel){
   showView(viewSeiten);
 }
 
-document.querySelectorAll(".fach-card").forEach(card => {
-  card.addEventListener("click", () => goKlasse(card.dataset.fach));
-});
 </script>
 </body>
 </html>
