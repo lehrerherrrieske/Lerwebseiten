@@ -56,7 +56,15 @@
   datei  : relativer Pfad zur .html-Datei im Repo
   neu    : optional, true setzt ein "Neu"-Badge
   wip    : optional, true zeigt die Karte ausgegraut und nicht anklickbar
-           mit Badge "In Arbeit" (für Seiten, die noch nicht fertig sind)
+           mit Badge "In Arbeit" (für Seiten, die noch nicht fertig sind).
+           Im Lehrermodus sind diese Seiten trotzdem anklickbar.
+  pw     : optional, Passwort des Lehrermodus DIESER Lernseite – wird nur im
+           Lehrermodus des Portals auf der Karte angezeigt
+
+  LEHRERMODUS DES PORTALS:
+  Versteckt: Klick auf das 📚 neben "Lernportal" lässt die Leiste ausfahren.
+  Passwort steht oben im HTML bei <div class="teachbar" ... data-pw="Lehrer2026">.
+  Aktiv: WIP-Seiten öffnen, Seiten-Passwörter sehen, Seitenzahlen inkl. WIP.
 
   Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
   automatisch einen freundlichen Platzhaltertext – kein Fehler.
@@ -198,6 +206,15 @@
     border:1px solid var(--color-border);
   }
 
+  /* ── Lehrermodus: WIP-Seiten anklickbar, Passwörter sichtbar ── */
+  .seite-card.wip-lehrer{border-style:dashed;background:var(--color-surface-warm);}
+  .seite-card.wip-lehrer .seite-titel{color:var(--color-text);}
+  .seite-pw{display:inline-block;margin-top:4px;font-size:var(--fs-sm);color:var(--color-text-secondary);
+    background:#E8EEF5;border:1px solid #C9D5E3;border-radius:6px;padding:1px 8px;}
+  .seite-pw code{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:#33475B;}
+  .lehrer-hinweis{background:#E8F5EE;border:1.5px solid #A7D7BC;border-radius:var(--radius);
+    padding:10px 16px;margin-bottom:20px;font-size:var(--fs-sm);color:#14532D;}
+
   .empty-state{
     border:1px dashed var(--color-border);border-radius:var(--radius-lg);
     padding:44px 24px;text-align:center;color:var(--color-text-muted);
@@ -212,14 +229,56 @@
     --kb-accent-hover:color-mix(in srgb, var(--fach) 82%, black);
     --kb-light:color-mix(in srgb, var(--fach) 12%, white);}
   .fach-hinweis{margin-top:14px;font-size:var(--fs-sm);color:var(--color-text-muted);}
+
+  /* ── Lehrermodus-Leiste: fester Look (identisch zu den Lernseiten) ── */
+  .teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+    background:var(--color-bg-warm);border:1.5px solid var(--color-border);
+    border-radius:var(--radius);padding:9px 16px;margin-bottom:22px;font-size:var(--fs-sm);}
+  .teachbar.active{background:#E8F5EE;border-color:#A7D7BC;}
+  .teachbar-label{font-weight:700;color:var(--color-text);}
+  .teachbar-pw{font-family:var(--font-body);font-size:var(--fs-sm);border:1.5px solid var(--color-border);
+    border-radius:6px;padding:5px 9px;width:12ch;background:var(--color-surface);}
+  .teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+  .teachbar-pw.err{border-color:#B91C1C;background:#FDECEC;}
+  .teachbar-on{font-family:var(--font-body);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+    color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+  .teachbar-on:hover{background:#283A4B;}
+  .teachbar-off{font-family:var(--font-body);font-size:var(--fs-sm);font-weight:600;background:transparent;
+    color:#33475B;border:1.5px solid var(--color-border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+  .teachbar-off:hover{background:var(--color-surface-warm);}
+  .teachbar-status{font-weight:700;margin-left:auto;}
+  .teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--color-text-muted);}
+  [hidden]{display:none !important;}
+
+  /* ── Versteckter Zugang: Leiste fährt erst nach Klick aufs 📚 aus ── */
+  .teach-slide{display:grid;grid-template-rows:0fr;opacity:0;
+    transition:grid-template-rows .35s ease, opacity .3s ease;}
+  .teach-slide > .teach-slide-inner{overflow:hidden;min-height:0;}
+  .teach-slide.open{grid-template-rows:1fr;opacity:1;}
+  .teach-slide:not(.open) .teachbar{visibility:hidden;}   /* nicht per Tab erreichbar */
+  .brand-mark{cursor:default;user-select:none;-webkit-tap-highlight-color:transparent;}
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap">
+    <!-- Lehrermodus: Passwort steht in data-pw (Klartext – nur Schutz vor
+         versehentlichem Zeigen, kein echter Zugriffsschutz).
+         Versteckt: Die Leiste fährt erst nach einem Klick auf das 📚-Symbol
+         neben "Lernportal" aus (nochmal klicken = wieder einfahren). -->
+    <div class="teach-slide" id="teachSlide"><div class="teach-slide-inner">
+    <div class="teachbar" id="teachbar" data-pw="Informatik ist die Zukunft">
+      <span class="teachbar-label">Lehrermodus</span>
+      <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+             onkeydown="if(event.key==='Enter'){teachActivate();}">
+      <button class="teachbar-on" id="teachbar-on-btn" onclick="teachActivate()">Aktivieren</button>
+      <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+      <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+    </div>
+    </div></div>
     <div class="brand">
-      <div class="brand-mark">📚</div>
+      <div class="brand-mark" id="brandMark">📚</div>
       <div>
         <h1>Lernportal</h1>
         <p id="subtitle">Material zum Nacharbeiten und Üben</p>
@@ -233,6 +292,12 @@
 </header>
 
 <main class="wrap">
+
+  <div class="lehrer-hinweis lehrer-only" hidden>
+    🧑‍🏫 <strong>Lehrermodus aktiv:</strong> Seiten „In Arbeit“ sind anklickbar, die Passwörter
+    der Lernseiten werden angezeigt. Der Modus gilt auch auf den Lernseiten, die du von hier
+    aus öffnest (bis zum Schließen des Tabs).
+  </div>
 
   <!-- Schritt 1: Fach -->
   <section class="view active" id="view-fach">
@@ -348,10 +413,10 @@ const SEITEN = [
 
   // =================Klasse 7=================
   // passwort : Physik6
-  { fach:"physik", klasse:"7", lb:"LB0 - Grundlagen", titel:"Übungswebseite :  Rechnen in der Physik \n Themen Klasse 6 und Beginn Klasse 7", datei:"K7 - LB1 - Rechnen_in_der_Physik.html" },
+  { fach:"physik", klasse:"7", lb:"LB0 - Grundlagen", titel:"Übungswebseite :  Rechnen in der Physik \n Themen Klasse 6 und Beginn Klasse 7", datei:"K7 - LB1 - Rechnen_in_der_Physik.html", pw:"Physik6" },
   
   // Passwort : feder2026 
-  { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", titel:"Hookesches Gesetz", datei:"K7 - LB1 - Hookesches_Gesetz.html" },
+  { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", titel:"Hookesches Gesetz", datei:"K7 - LB1 - Hookesches_Gesetz.html", pw:"feder2026" },
   
   // Klasse 8=================
   { fach:"physik", klasse:"8", lb:"LB1 - Mechanik der Flüssigkeiten und Gase", titel:"Druck – Hydraulik (Vertiefung)", datei:"K8 - LB1 - Druck Hydraulik Vertiefung.html" },
@@ -363,7 +428,7 @@ const SEITEN = [
 
   // =================Klasse 10 =================
   // Passwort:Sonne2026
-  { fach:"physik", klasse:"10", lb:"LB3 - Kosmos, Erde und Mensch", titel:"Lernpfad : Die Sonne", datei:"K10 - LB3 - Lernpfad_Die_Sonne.html"},
+  { fach:"physik", klasse:"10", lb:"LB3 - Kosmos, Erde und Mensch", titel:"Lernpfad : Die Sonne", datei:"K10 - LB3 - Lernpfad_Die_Sonne.html", pw:"Sonne2026" },
   // =================Klasse GK11=================
 
   // =================Klasse GK12=================
@@ -385,22 +450,19 @@ const SEITEN = [
   // Passwort :
   { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"ERD aus Text erstellen", datei:"K9 - LB1 - ERD_aus_Text_erstellen.html" },
   // Passwort : Ü_ERD01
-  { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"Übungsaufgabe - ERD aus Text erstellen", datei:"K9 - LB1 - Uebungsaufgaben ER_Modell_erstellen.html" },
-  // Passwort : Informatik9
-  { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"ÜSQL Cheat Cheat", datei:"K9 - LB2 - SQL Cheat Cheat.html" },
+  { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"Übungsaufgabe - ERD aus Text erstellen", datei:"K9 - LB1 - Uebungsaufgaben ER_Modell_erstellen.html", pw:"Ü_ERD01" },
 
   // =================Klasse 10=================
   // Passwort : InfoIstCool
-  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen ", titel:"Befehlssammlung Programmierung in Python ", datei:"K10 - Hefter.html" },
-  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen ", titel:"Quiz - Grundlagen Programmierung", datei:"cyberAbfrage_k10_python_pap.html" },
+  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen ", titel:"Befehlssammlung Programmierung in Python ", datei:"K10 - Hefter.html", pw:"InfoIstCool" },
 
   // =================Klasse GK11=================
   // Passwort :
   { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Schaltalgebra & Schaltnetze – Übungen", datei:"K11GK - LB1 - Schaltalgebra_Schaltnetze_Uebungen.html" },
   // Passwort : Gk_Inf_11
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Prozessoren – Kernaufgaben", datei:"K11GK - LB1 - Prozessoren_Kernaufgaben.html", wip : true },
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Prozessoren – Kernaufgaben", datei:"K11GK - LB1 - Prozessoren_Kernaufgaben.html", wip : true, pw:"Gk_Inf_11" },
   // Passwort : Gk_Inf_11
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Speichersysteme – Kernthemen", datei:"K11GK - LB1 - Speichersysteme_Kernthemen.html", wip : true },
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Speichersysteme – Kernthemen", datei:"K11GK - LB1 - Speichersysteme_Kernthemen.html", wip : true, pw:"Gk_Inf_11" },
   
 
   // =================Klasse GK12=================
@@ -413,14 +475,11 @@ const SEITEN = [
   // =================Biologie=================================
   // ==========================================================
   // Beispiel: { fach:"biologie", klasse:"7", lb:"LB1 - ...", titel:"...", datei:"K7 - LB1 - ....html" },
-  // Passwort : Biologie9
-  { fach:"biologie", klasse:"9", lb:"LB1 1: Anatomie und Physiologie der Samenpflanzen", titel:"Mendelsche Regeln", datei:"K9 - LB1 - Mendelsche_Regeln.html"},
-  
-  
+
   // ==========================================================
   // =================Englisch=================================
   // ==========================================================
-  // Beispiel: { fach:"englisch", klasse:"8", lb:"Unit 1", titel:"...", datei:"K8 - Unit1 - ....html" },
+  { fach:"biologie", klasse:"9", lb:"LB1 1: Anatomie und Physiologie der Samenpflanzen", titel:"Mendelsche Regeln", datei:"K9 - LB1 - Mendelsche_Regeln.html",pw:"Biologie9"},
 
 ];
 
@@ -443,11 +502,18 @@ let currentFach = null, currentKlasse = null;
     (liste ? liste + " — " : "") + "Material zum Nacharbeiten und Üben";
 })();
 
+// Lehrermodus-Zustand (wird unten durch initTeachbar gesetzt)
+let teach = false;
+// Sichtbar/zählbar: im Schülermodus nur fertige Seiten, im Lehrermodus alle
+const sichtbar = s => teach || !s.wip;
+const seitenText = n => n + " Seite" + (n === 1 ? "" : "n");
+
 // Fach-Karten aus FAECHER erzeugen
-(function(){
+function renderFaecher(){
   const grid = document.getElementById("fachGrid");
+  grid.innerHTML = "";
   FAECHER.forEach(f => {
-    const anzahl = SEITEN.filter(s => s.fach === f.id && !s.wip).length;
+    const anzahl = SEITEN.filter(s => s.fach === f.id && sichtbar(s)).length;
     const card = document.createElement("button");
     card.className = "fach-card";
     card.dataset.fach = f.id;
@@ -456,11 +522,11 @@ let currentFach = null, currentKlasse = null;
       <div class="icon">${f.icon || "📘"}</div>
       <h2>${f.name}</h2>
       <p>${f.text || "Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe."}</p>
-      <span class="arrow">${anzahl ? anzahl + " Seite" + (anzahl === 1 ? "" : "n") + " · " : ""}Zu ${f.name} →</span>`;
+      <span class="arrow">${anzahl ? seitenText(anzahl) + " · " : ""}Zu ${f.name} →</span>`;
     card.addEventListener("click", () => goKlasse(f.id));
     grid.appendChild(card);
   });
-})();
+}
 
 const viewFach = document.getElementById("view-fach");
 const viewKlasse = document.getElementById("view-klasse");
@@ -468,6 +534,7 @@ const viewSeiten = document.getElementById("view-seiten");
 const crumbbar = document.getElementById("crumbbar");
 const crumbPath = document.getElementById("crumbPath");
 const btnBack = document.getElementById("btnBack");
+let currentKlasseLabel = null;
 
 function showView(view){
   [viewFach, viewKlasse, viewSeiten].forEach(v => v.classList.remove("active"));
@@ -498,11 +565,11 @@ function goKlasse(fach){
       </div>`;
   }
   stufen.forEach(k => {
-    const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id && !s.wip).length;
+    const anzahl = SEITEN.filter(s => s.fach === fach && s.klasse === k.id && sichtbar(s)).length;
     const btn = document.createElement("button");
     btn.className = "klasse-btn";
     btn.innerHTML = `Klasse ${k.label}${k.sub ? `<small>${k.sub}</small>` : ""}`
-      + (anzahl ? `<span class="count">${anzahl} Seite${anzahl === 1 ? "" : "n"}</span>` : "");
+      + (anzahl ? `<span class="count">${seitenText(anzahl)}</span>` : "");
     btn.addEventListener("click", () => goSeiten(fach, k.id, k.label + (k.sub ? " " + k.sub : "")));
     grid.appendChild(btn);
   });
@@ -514,7 +581,7 @@ function goKlasse(fach){
 }
 
 function goSeiten(fach, klasseId, klasseLabel){
-  currentKlasse = klasseId;
+  currentFach = fach; currentKlasse = klasseId; currentKlasseLabel = klasseLabel;
   document.getElementById("seitenTitle").textContent = FACHNAME[fach] + " — Klasse " + klasseLabel;
 
   const klasseInfo = (KLASSEN[fach] || []).find(k => k.id === klasseId);
@@ -546,15 +613,20 @@ function goSeiten(fach, klasseId, klasseLabel){
       heading.textContent = g.lb;
       block.appendChild(heading);
       g.items.forEach(s => {
-        const el = document.createElement(s.wip ? "div" : "a");
-        el.className = "seite-card" + (s.wip ? " wip" : "");
-        if (!s.wip){
+        const offen = sichtbar(s);               // WIP nur im Lehrermodus anklickbar
+        const el = document.createElement(offen ? "a" : "div");
+        el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "");
+        if (offen){
           el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
         } else {
           el.setAttribute("aria-disabled", "true");
         }
+        const badge = s.wip ? '<span class="badge-wip">In Arbeit</span>'
+                            : (s.neu ? '<span class="badge-neu">Neu</span>' : "");
+        const pwInfo = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code></div>` : "";
         el.innerHTML = `<div>
-            <div class="seite-titel">${s.titel}${s.wip ? '<span class="badge-wip">In Arbeit</span>' : (s.neu ? '<span class="badge-neu">Neu</span>' : "")}</div>
+            <div class="seite-titel">${s.titel}${badge}</div>
+            ${pwInfo}
           </div>
           <div class="goto">→</div>`;
         block.appendChild(el);
@@ -568,6 +640,58 @@ function goSeiten(fach, klasseId, klasseLabel){
   btnBack.onclick = () => goKlasse(fach);
   showView(viewSeiten);
 }
+
+// Aktuelle Ansicht neu zeichnen (nach Wechsel des Lehrermodus)
+function rerender(){
+  renderFaecher();
+  if (viewSeiten.classList.contains("active") && currentFach) goSeiten(currentFach, currentKlasse, currentKlasseLabel);
+  else if (viewKlasse.classList.contains("active") && currentFach) goKlasse(currentFach);
+}
+
+/* ---------- Lehrermodus (gleicher Code/Look wie auf den Lernseiten).
+   Zustand nur für die Sitzung (sessionStorage, Schlüssel "teachmode") –
+   derselbe Schlüssel wie auf den Lernseiten: Lernseiten, die im selben Tab
+   geöffnet werden, starten dadurch ebenfalls im Lehrermodus.
+   Kein Sicherheitsmechanismus, nur Schutz vor versehentlichem Zeigen am Beamer.
+   Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  teach = active;
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const on=document.getElementById('teachbar-on-btn'); if(on) on.hidden=active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  if(active) teachSlide(true);   /* aktiver Modus: Leiste sichtbar lassen, damit man abmelden kann */
+  rerender();
+}
+/* Versteckter Zugang: Klick aufs 📚 fährt die Leiste aus bzw. wieder ein */
+function teachSlide(open){
+  const sl=document.getElementById('teachSlide'); if(!sl)return;
+  sl.classList.toggle('open',open);
+  if(open && !teach){ const pw=document.getElementById('teachbar-pw'); if(pw) setTimeout(()=>pw.focus(),200); }
+}
+document.getElementById('brandMark').addEventListener('click',()=>{
+  const sl=document.getElementById('teachSlide');
+  teachSlide(!sl.classList.contains('open'));
+});
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); teachSlide(false); }
+function initTeachbar(){
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+initTeachbar();
 
 </script>
 </body>
