@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Rieske Maximilian">
+<title>Klasse 9 · LB2 · SQL-Befehlsglossar</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+/* Buttons (aus bausteine.css) */
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+
+/* ============================================================
+   Seitenspezifisch: SQL-Glossar
+   ============================================================ */
+.tools{position:sticky;top:0;z-index:15;background:var(--color-bg);padding:10px 0 6px;margin-bottom:6px;}
+.tools-inner{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;}
+.search{position:relative;}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none;}
+.search input{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:10px 92px 10px 42px;
+  border:1.5px solid var(--border);border-radius:var(--radius-full);background:var(--surface-2);color:var(--text);}
+.search input:focus ~ kbd,.search input:not(:placeholder-shown) ~ kbd{display:none;}
+.search input:focus{outline:none;border-color:var(--accent);background:var(--surface);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);}
+.search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);
+  font-size:var(--fs-sm);color:var(--text-3);border:1px solid var(--border);border-bottom-width:2px;
+  border-radius:6px;padding:0 7px;background:var(--surface);}
+.filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.fchip{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:var(--radius-full);
+  border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:var(--fs-sm);
+  font-weight:700;color:var(--text-2);cursor:pointer;transition:background .15s,border-color .15s;}
+.fchip:hover{border-color:var(--accent-muted);background:var(--accent-light);}
+.fchip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.fchip .dot{width:9px;height:9px;border-radius:50%;background:var(--cat,var(--text-3));flex:none;}
+.fchip.active .dot{box-shadow:0 0 0 2px #fff;}
+.fchip .cnt{font-family:var(--mono);font-weight:600;opacity:.7;}
+.result-count{margin-left:auto;font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 0;color:var(--text-2);}
+.legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:6px;vertical-align:middle;}
+
+/* Kategorie-Farben (immer zusätzlich mit Textlabel) */
+[data-cat="DQL"]{--cat:var(--color-actor-3);}
+[data-cat="DML"]{--cat:var(--color-actor-2);}
+[data-cat="DDL"]{--cat:var(--color-actor-1);}
+[data-cat="AGG"]{--cat:var(--color-actor-5);}
+
+.glossar{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:10px;}
+.gcard{position:relative;display:flex;flex-direction:column;background:var(--surface);
+  border:1.5px solid var(--border);border-top:5px solid var(--cat);border-radius:var(--radius);
+  padding:16px 18px 18px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease;
+  animation:popin .3s ease both;}
+.gcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+@keyframes popin{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.gcard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.cat-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-sm);
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);
+  background:color-mix(in srgb,var(--cat) 12%,white);border:1px solid color-mix(in srgb,var(--cat) 40%,white);
+  border-radius:var(--radius-full);padding:1px 10px;}
+.cat-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cat);}
+.ext{font-size:var(--fs-sm);font-weight:600;color:var(--text-3);text-decoration:none;white-space:nowrap;}
+.ext:hover{color:var(--accent);text-decoration:underline;}
+.gcard h3{font-family:var(--font-mono);font-size:var(--fs-lg);font-weight:700;color:var(--text);margin:4px 0 6px;}
+.gcard .desc{flex-grow:1;margin-bottom:12px;}
+.gcard mark{background:color-mix(in srgb,var(--color-actor-4) 45%,white);color:inherit;border-radius:3px;padding:0 2px;}
+
+.code{background:var(--color-bg-code);border-radius:8px;overflow:hidden;}
+.code-bar{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 5px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:var(--fs-sm);color:#7F849C;letter-spacing:.06em;}
+.code pre{margin:0;font-family:var(--mono);font-size:var(--fs-sm);line-height:1.65;color:#CDD6F4;
+  white-space:pre-wrap;word-break:break-word;padding:10px 14px 12px;}
+.code .k{color:#CBA6F7;font-weight:700;} .code .f{color:#89B4FA;} .code .s{color:#A6E3A1;}
+.code .n{color:#FAB387;} .code .p{color:#9399B2;}
+.copy{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;
+  background:rgba(255,255,255,.08);color:#CDD6F4;border:1px solid rgba(255,255,255,.18);
+  border-radius:6px;padding:2px 9px;cursor:pointer;}
+.copy:hover{background:rgba(255,255,255,.16);}
+.copy.done{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+.empty{display:none;text-align:center;padding:30px 20px;color:var(--text-2);}
+.empty.on{display:block;}
+.empty .big{font-family:var(--mono);font-size:var(--fs-h2);color:var(--text-3);margin-bottom:6px;}
+
+/* Easter Egg */
+@keyframes shake{0%{transform:translate(1px,1px) rotate(0)}20%{transform:translate(-1px,-2px) rotate(-1deg)}
+  40%{transform:translate(-3px,0) rotate(1deg)}60%{transform:translate(3px,2px) rotate(0)}
+  80%{transform:translate(1px,-1px) rotate(1deg)}100%{transform:translate(-1px,2px) rotate(-1deg)}}
+.gcard.shake{animation:shake .45s infinite;}
+.gcard.gone{transition:opacity .45s ease,transform .45s ease;opacity:0;transform:scale(.4) rotate(-6deg);}
+.dropped{display:none;margin-top:16px;} .dropped.on{display:block;}
+.dropped .term{background:var(--color-bg-code);color:#CDD6F4;font-family:var(--mono);border-radius:var(--radius);
+  padding:14px 18px;margin-bottom:10px;line-height:1.7;}
+.dropped .term .err{color:#F38BA8;font-weight:700;} .dropped .term .ok{color:#A6E3A1;}
+
+.sitefoot{margin-top:40px;padding:22px;text-align:center;border-top:3px solid var(--accent);
+  background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);}
+.sitefoot strong{font-family:var(--font-display);color:var(--accent-hover);}
+.sitefoot p{margin:2px 0;}
+@media print{.tools{position:static;} .copy,.search,.filter-row{display:none !important;}
+  .gcard{animation:none;break-inside:avoid;box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Informatik9">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Gibt jemand <code class="math">DROP</code> oder <code class="math">DELETE</code> allein ins Suchfeld ein, „löscht“ sich das Glossar mit Wackel-Animation selbst. Mit dem Button <em>ROLLBACK</em> kommt alles zurück — ein guter Anlass, über die Wirkung dieser Befehle und fehlende Sicherheitsabfragen zu sprechen.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 9 · LB2 · Datenbanken</div>
+    <h1>SQL-Befehlsglossar</h1>
+    <p>Alle wichtigen SQL-Befehle auf einen Blick — mit kurzer Erklärung und einem Beispiel zum Kopieren. Über <strong>mehr ↗</strong> gelangst du zur ausführlichen Erklärung bei W3Schools.</p>
+    <div class="goal">🎯 Du formulierst eigene SQL-Abfragen, indem du passende Befehle hier nachschlägst und die Beispiele auf deine Tabellen überträgst.</div>
+    <div class="legend">
+      <span data-cat="DQL"><span class="dot"></span><span class="tt" tabindex="0" data-tip="Data Query Language — Befehle, die Daten nur lesen und nichts verändern.">DQL</span> = Daten abfragen</span>
+      <span data-cat="DML"><span class="dot"></span><span class="tt" tabindex="0" data-tip="Data Manipulation Language — Befehle, die Datensätze einfügen, ändern oder löschen.">DML</span> = Daten verändern</span>
+      <span data-cat="DDL"><span class="dot"></span><span class="tt" tabindex="0" data-tip="Data Definition Language — Befehle, die die Struktur der Tabellen selbst anlegen oder ändern.">DDL</span> = Struktur festlegen</span>
+      <span data-cat="AGG"><span class="dot"></span><span class="tt" tabindex="0" data-tip="Aggregatfunktionen fassen viele Zeilen zu einem einzigen Wert zusammen, z. B. eine Anzahl oder einen Durchschnitt.">Aggregate</span> = zusammenfassen</span>
+    </div>
+    <p class="caption" style="margin:10px 0 0;">Erklärungen nach dem <a href="https://www.datacamp.com/de/tutorial/sql-commands-glossaryan-overview-of-25-most-popular-sql-commands" target="_blank" rel="noopener">SQL-Befehlsglossar von DataCamp</a>.</p>
+  </header>
+
+  <div class="tools">
+    <div class="tools-inner">
+      <div class="search">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input type="search" id="q" placeholder="Befehl, Beschreibung oder Beispiel suchen …" aria-label="Glossar durchsuchen" autocomplete="off">
+        <kbd title="Drücke / zum Suchen">/</kbd>
+      </div>
+      <div class="filter-row" id="filters" role="group" aria-label="Nach Kategorie filtern">
+        <button class="fchip active" data-f="all" aria-pressed="true">Alle <span class="cnt"></span></button>
+        <button class="fchip" data-f="DQL" data-cat="DQL" aria-pressed="false"><span class="dot"></span>Abfrage · DQL <span class="cnt"></span></button>
+        <button class="fchip" data-f="DML" data-cat="DML" aria-pressed="false"><span class="dot"></span>Manipulation · DML <span class="cnt"></span></button>
+        <button class="fchip" data-f="DDL" data-cat="DDL" aria-pressed="false"><span class="dot"></span>Struktur · DDL <span class="cnt"></span></button>
+        <button class="fchip" data-f="AGG" data-cat="AGG" aria-pressed="false"><span class="dot"></span>Aggregate <span class="cnt"></span></button>
+        <span class="result-count" id="count" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="glossar" id="grid"></div>
+
+  <div class="card empty" id="empty">
+    <div class="big">0 rows returned</div>
+    <p>Kein Befehl passt zu deiner Suche. Prüfe die Schreibweise oder setze den Filter auf <strong>Alle</strong>.</p>
+  </div>
+
+  <div class="dropped" id="dropped">
+    <div class="term">
+      <div>sql&gt; DROP TABLE glossar;</div>
+      <div class="err">⚠ Tabelle 'glossar' wurde gelöscht. 26 Zeilen entfernt.</div>
+      <div class="ok">-- Kleiner Scherz. Zum Glück gibt es Transaktionen …</div>
+    </div>
+    <div class="callout callout-warn">⚠️ <span><code class="math">DROP</code> und <code class="math">DELETE</code> fragen in einer echten Datenbank <strong>nicht</strong> nach, ob du sicher bist. Was weg ist, ist weg — außer es gibt eine Sicherung. Deshalb bei <code class="math">DELETE</code> immer eine <code class="math">WHERE</code>-Bedingung setzen!</span></div>
+    <button class="btn btn-primary" id="rollback">↩ ROLLBACK — Glossar wiederherstellen</button>
+  </div>
+
+  <footer class="sitefoot">
+    <p><strong>GDC – Dresden</strong></p>
+    <p class="caption">SQL-Befehlsglossar ~ RIM</p>
+  </footer>
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+
+/* ============================================================
+   SQL-Glossar
+   ============================================================ */
+const W3 = 'https://www.w3schools.com/sql/';
+const DATA = [
+  { name:"SELECT", cat:"DQL", desc:"Wird verwendet, um Daten aus einer Datenbank abzufragen.", code:"SELECT spalte1, spalte2\nFROM tabelle;", url:"sql_select.asp" },
+  { name:"FROM", cat:"DQL", desc:"Gibt die Tabelle an, aus der die Daten abgerufen werden sollen.", code:"SELECT *\nFROM tabelle_name;", url:"sql_select.asp" },
+  { name:"DISTINCT", cat:"DQL", desc:"Wird zusammen mit SELECT verwendet, um Duplikate zu entfernen.", code:"SELECT DISTINCT land\nFROM kunden;", url:"sql_distinct.asp" },
+  { name:"WHERE", cat:"DQL", desc:"Wird verwendet, um Datensätze nach einer bestimmten Bedingung zu filtern.", code:"SELECT *\nFROM produkte\nWHERE preis > 50;", url:"sql_where.asp" },
+  { name:"ORDER BY", cat:"DQL", desc:"Wird verwendet, um die Ergebnismenge in aufsteigender oder absteigender Reihenfolge zu sortieren.", code:"SELECT *\nFROM nutzer\nORDER BY name ASC;", url:"sql_orderby.asp" },
+  { name:"INSERT INTO", cat:"DML", desc:"Wird verwendet, um neue Datensätze in eine Tabelle einzufügen.", code:"INSERT INTO kunden (name, stadt)\nVALUES ('Max', 'Berlin');", url:"sql_insert.asp" },
+  { name:"UPDATE", cat:"DML", desc:"Wird verwendet, um bestehende Datensätze in einer Tabelle zu ändern.", code:"UPDATE kunden\nSET stadt = 'München'\nWHERE id = 1;", url:"sql_update.asp" },
+  { name:"DELETE", cat:"DML", desc:"Wird verwendet, um Datensätze aus einer Tabelle zu löschen.", code:"DELETE FROM kunden\nWHERE id = 10;", url:"sql_delete.asp" },
+  { name:"GROUP BY", cat:"AGG", desc:"Wird verwendet, um Zeilen zu gruppieren, die in bestimmten Spalten dieselben Werte haben.", code:"SELECT stadt, COUNT(*)\nFROM kunden\nGROUP BY stadt;", url:"sql_groupby.asp" },
+  { name:"HAVING", cat:"AGG", desc:"Wird anstelle von WHERE verwendet, wenn du nach einer Aggregatfunktion filterst.", code:"SELECT stadt\nFROM kunden\nGROUP BY stadt\nHAVING COUNT(*) > 5;", url:"sql_having.asp" },
+  { name:"INNER JOIN", cat:"DQL", desc:"Gibt Datensätze zurück, die in beiden Tabellen übereinstimmende Werte haben.", code:"SELECT *\nFROM a\nINNER JOIN b ON a.id = b.id;", url:"sql_join_inner.asp" },
+  { name:"LEFT JOIN", cat:"DQL", desc:"Gibt alle Datensätze aus der linken Tabelle und die übereinstimmenden Datensätze aus der rechten Tabelle zurück.", code:"SELECT *\nFROM a\nLEFT JOIN b ON a.id = b.id;", url:"sql_join_left.asp" },
+  { name:"UNION", cat:"DQL", desc:"Wird verwendet, um die Ergebnismenge von zwei oder mehr SELECT-Anweisungen zu kombinieren.", code:"SELECT name FROM lehrer\nUNION\nSELECT name FROM schüler;", url:"sql_union.asp" },
+  { name:"AS", cat:"DQL", desc:"Wird verwendet, um einer Spalte oder einer Tabelle einen temporären Namen zu geben.", code:"SELECT name AS kunden_name\nFROM kunden;", url:"sql_alias.asp" },
+  { name:"LIKE", cat:"DQL", desc:"Wird in einer WHERE-Klausel verwendet, um nach einem bestimmten Muster in einer Spalte zu suchen.", code:"SELECT *\nFROM kunden\nWHERE name LIKE 'A%';", url:"sql_like.asp" },
+  { name:"CREATE TABLE", cat:"DDL", desc:"Wird verwendet, um eine neue Tabelle in einer Datenbank zu erstellen.", code:"CREATE TABLE nutzer (\n  id INT,\n  name TEXT\n);", url:"sql_create_table.asp" },
+  { name:"ALTER TABLE", cat:"DDL", desc:"Wird verwendet, um Spalten in einer bestehenden Tabelle hinzuzufügen, zu löschen oder zu ändern.", code:"ALTER TABLE kunden\nADD email TEXT;", url:"sql_alter.asp" },
+  { name:"DROP TABLE", cat:"DDL", desc:"Wird verwendet, um eine Tabelle aus einer Datenbank zu löschen.", code:"DROP TABLE alte_tabelle;", url:"sql_drop_table.asp" },
+  { name:"COUNT()", cat:"AGG", desc:"Gibt die Anzahl der Zeilen zurück, die einem bestimmten Kriterium entsprechen.", code:"SELECT COUNT(*)\nFROM bestellungen;", url:"sql_count.asp" },
+  { name:"SUM()", cat:"AGG", desc:"Gibt die Gesamtsumme einer numerischen Spalte zurück.", code:"SELECT SUM(umsatz)\nFROM verkäufe;", url:"sql_sum.asp" },
+  { name:"AVG()", cat:"AGG", desc:"Gibt den Durchschnittswert einer numerischen Spalte zurück.", code:"SELECT AVG(preis)\nFROM produkte;", url:"sql_avg.asp" },
+  { name:"MIN() / MAX()", cat:"AGG", desc:"Gibt den kleinsten bzw. größten Wert einer Spalte zurück.", code:"SELECT MIN(preis), MAX(preis)\nFROM produkte;", url:"sql_min_max.asp" },
+  { name:"CASE", cat:"AGG", desc:"Wird verwendet, um Bedingungen zu erstellen und unterschiedliche Werte basierend auf dem Ergebnis zurückzugeben.", code:"SELECT name,\n  CASE WHEN alter >= 18 THEN 'Erwachsen'\n  ELSE 'Kind' END\nFROM nutzer;", url:"sql_case.asp" },
+  { name:"BETWEEN", cat:"DQL", desc:"Wird verwendet, um Werte innerhalb eines bestimmten Bereichs auszuwählen.", code:"SELECT *\nFROM produkte\nWHERE preis BETWEEN 10 AND 20;", url:"sql_between.asp" },
+  { name:"IN", cat:"DQL", desc:"Ermöglicht es dir, mehrere Werte in einer WHERE-Klausel anzugeben.", code:"SELECT *\nFROM kunden\nWHERE stadt IN ('Berlin', 'Hamburg');", url:"sql_in.asp" },
+  { name:"IS NULL", cat:"DQL", desc:"Wird verwendet, um nach leeren Werten zu suchen.", code:"SELECT *\nFROM kunden\nWHERE telefon IS NULL;", url:"sql_null_values.asp" }
+];
+const CAT_LABEL = { DQL:'DQL · Abfrage', DML:'DML · Manipulation', DDL:'DDL · Struktur', AGG:'Aggregat' };
+
+const KW = new Set(('SELECT FROM WHERE DISTINCT ORDER BY ASC DESC INSERT INTO VALUES UPDATE SET DELETE GROUP HAVING '+
+  'INNER LEFT RIGHT JOIN ON UNION AS LIKE CREATE TABLE ALTER ADD DROP CASE WHEN THEN ELSE END BETWEEN AND OR NOT IN IS NULL INT TEXT').split(' '));
+const FN = new Set(['COUNT','SUM','AVG','MIN','MAX']);
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* Einfaches SQL-Highlighting: Strings, Zahlen, Schlüsselwörter, Funktionen */
+function highlight(code){
+  return code.replace(/('[^']*')|(\b\d+\b)|([A-Za-zÄÖÜäöüß_][\wÄÖÜäöüß]*)|([*(),;=<>%]+)|([^'\w*(),;=<>%]+)/g,
+    (m, str, num, word, punct, rest) => {
+      if(str)  return '<span class="s">'+esc(str)+'</span>';
+      if(num)  return '<span class="n">'+num+'</span>';
+      if(word){ const u = word.toUpperCase();
+        if(FN.has(u)) return '<span class="f">'+esc(word)+'</span>';
+        if(KW.has(u)) return '<span class="k">'+esc(word)+'</span>';
+        return esc(word); }
+      if(punct) return '<span class="p">'+esc(punct)+'</span>';
+      return esc(rest);
+    });
+}
+
+/* Suchtreffer im Klartext markieren (nur außerhalb von Tags) */
+function mark(text, term){
+  const safe = esc(text);
+  if(!term) return safe;
+  const t = esc(term).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return safe.replace(new RegExp('('+t+')','gi'),'<mark>$1</mark>');
+}
+
+let currentCat = 'all';
+const $ = id => document.getElementById(id);
+
+function matches(item, term){
+  if(!term) return true;
+  const t = term.toLowerCase();
+  return item.name.toLowerCase().includes(t) || item.desc.toLowerCase().includes(t) || item.code.toLowerCase().includes(t);
+}
+
+function render(){
+  const term = $('q').value.trim();
+  const list = DATA.filter(it => (currentCat==='all' || it.cat===currentCat) && matches(it, term));
+
+  $('grid').innerHTML = list.map((it, i) => `
+    <article class="gcard" data-cat="${it.cat}" style="animation-delay:${Math.min(i,12)*25}ms">
+      <div class="gcard-top">
+        <span class="cat-tag">${CAT_LABEL[it.cat]}</span>
+        <a class="ext" href="${W3+it.url}" target="_blank" rel="noopener" aria-label="Mehr zu ${esc(it.name)} bei W3Schools">mehr ↗</a>
+      </div>
+      <h3>${mark(it.name, term)}</h3>
+      <p class="desc">${mark(it.desc, term)}</p>
+      <div class="code">
+        <div class="code-bar"><span>SQL</span><button class="copy" data-i="${DATA.indexOf(it)}" aria-label="Beispiel zu ${esc(it.name)} kopieren">⧉ Kopieren</button></div>
+        <pre><code>${highlight(it.code)}</code></pre>
+      </div>
+    </article>`).join('');
+
+  $('empty').classList.toggle('on', list.length===0 && !$('dropped').classList.contains('on'));
+  $('count').textContent = list.length + ' von ' + DATA.length + ' Befehlen';
+
+  /* Trefferzahlen an den Filterchips (berücksichtigen die Suche) */
+  document.querySelectorAll('.fchip').forEach(b => {
+    const f = b.dataset.f;
+    b.querySelector('.cnt').textContent = DATA.filter(it => (f==='all'||it.cat===f) && matches(it, term)).length;
+  });
+}
+
+/* Kopieren mit Fallback für ältere Browser / file:// */
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try{ ok = document.execCommand('copy'); }catch(_){}
+    ta.remove(); return ok;
+  }
+}
+$('grid').addEventListener('click', async e => {
+  const b = e.target.closest('.copy'); if(!b) return;
+  const ok = await copyText(DATA[+b.dataset.i].code);
+  b.textContent = ok ? '✓ Kopiert' : 'Markieren + Strg+C';
+  b.classList.toggle('done', ok);
+  setTimeout(() => { b.textContent = '⧉ Kopieren'; b.classList.remove('done'); }, 1600);
+});
+
+/* Filter */
+$('filters').addEventListener('click', e => {
+  const b = e.target.closest('.fchip'); if(!b) return;
+  currentCat = b.dataset.f;
+  document.querySelectorAll('.fchip').forEach(x => { const on = x===b; x.classList.toggle('active', on); x.setAttribute('aria-pressed', on); });
+  render();
+});
+
+/* Suche + Easter Egg (DROP / DELETE allein im Suchfeld) */
+let eggTimer = null, dropped = false;
+$('q').addEventListener('input', () => {
+  if(dropped) return;
+  render();
+  clearTimeout(eggTimer);
+  const v = $('q').value.trim().toUpperCase();
+  if(v==='DROP' || v==='DELETE') eggTimer = setTimeout(dropGlossar, 700);
+});
+function dropGlossar(){
+  dropped = true;
+  const cards = [...document.querySelectorAll('.gcard')];
+  cards.forEach(c => c.classList.add('shake'));
+  cards.forEach((c, i) => setTimeout(() => { c.classList.remove('shake'); c.classList.add('gone'); }, 900 + i*90));
+  setTimeout(() => {
+    $('grid').innerHTML = '';
+    $('dropped').classList.add('on');
+    $('count').textContent = '0 von 0 Befehlen';
+    document.querySelectorAll('.fchip .cnt').forEach(c => c.textContent = '0');
+  }, 1400 + cards.length*90);
+}
+$('rollback').addEventListener('click', () => {
+  dropped = false;
+  $('dropped').classList.remove('on');
+  render();
+  $('q').focus();
+});
+
+/* Tastatur: / fokussiert die Suche, Esc leert sie */
+document.addEventListener('keydown', e => {
+  if(e.key==='/' && document.activeElement.tagName!=='INPUT'){ e.preventDefault(); $('q').focus(); }
+  if(e.key==='Escape' && document.activeElement===$('q') && !dropped){ $('q').value=''; render(); }
+});
+
+render();
+</script>
+</body>
+</html>
