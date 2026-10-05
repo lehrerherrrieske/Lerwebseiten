@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 11GK · LB1 · Größenordnungen – vom Atom zur Galaxie</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+/* ---------- Seitenspezifisch: Größenordnungen ---------- */
+.tab{border-collapse:collapse;width:100%;margin:10px 0 14px;}
+.tab th,.tab td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:middle;}
+.tab th{background:var(--surface-2);font-weight:700;}
+.ex .tab{margin-top:4px;}
+.key{display:inline-block;font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;line-height:1.5;
+  border:1.5px solid #8A93A0;border-bottom-width:3px;border-radius:6px;padding:0 7px;margin:1px 2px;
+  background:#F4F5F7;color:#1F2933;white-space:nowrap;}
+.lcd{font-family:var(--mono);background:#E3EADB;border:2px solid #9DAA92;border-radius:8px;color:#1F2A1A;}
+.lcd .E{font-size:var(--fs-sm);font-weight:700;padding:0 1px;}
+.lcd-hero{display:inline-block;padding:8px 18px;margin:6px 0 10px;}
+.lcd-hero .out{font-size:var(--fs-h2);font-weight:700;}
+.lcd-inline{display:inline-block;padding:0 8px;font-weight:700;white-space:nowrap;}
+.lcd-sim{display:block;max-width:360px;padding:10px 14px;margin:8px 0;}
+.lcd-sim .in{min-height:1.4em;}
+.lcd-sim .out{text-align:right;font-size:var(--fs-lg);font-weight:700;min-height:1.4em;}
+.inp.inp-m{width:5.5em;} .inp.inp-e{width:3.6em;}
+sup .inp{vertical-align:baseline;}
+.ks-box{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:8px 0;}
+.ks-num{font-family:var(--mono);font-size:var(--fs-lg);font-weight:700;overflow-wrap:anywhere;margin:6px 0;}
+.ks-num .ks-comma{color:var(--accent);}
+.cp-sim select{font-family:var(--font);font-size:var(--fs-base);padding:4px 6px;border:1.5px solid var(--border);border-radius:6px;}
+.cp-sim label{margin-right:10px;} .cp-sim .inp{width:12em;}
+.quellen p{margin:6px 0;}
+@media print{ #cp-unlock{display:none !important;} .cp-sim{display:block !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Physik11GK">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 11GK · LB1</div>
+    <h1>Größenordnungen – vom Atom zur Galaxie</h1>
+    <div class="goal">🎯 Die Lernenden stellen sehr große und sehr kleine Messwerte übersichtlich dar, indem sie Vorsätze und Zehnerpotenzen umrechnen und Werte in E-Schreibweise auf dem ClassPad II eingeben und ablesen.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Vom Atom zur Galaxie</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Vorsätze</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Zehnerpotenzen</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Phase 3</span>ClassPad &amp; E-Schreibweise</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Sicherung</span>Exit-Ticket</button>
+  </nav>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Vom Atom zur Galaxie</h2>
+    <p>Dein direkt wahrnehmbarer Lebensbereich – Tische, Fahrräder, Häuser – heißt <span class="tt" data-tip="Bereich der Größen, die wir mit unseren Sinnen direkt erfassen: etwa Millimeter bis Kilometer">Mesokosmos</span>. Physik spielt sich aber auch im <span class="tt" data-tip="Welt der Atome, Atomkerne und Elementarteilchen">Mikrokosmos</span> und im <span class="tt" data-tip="Welt der Planeten, Sterne und Galaxien">Makrokosmos</span> ab: Ein Atom hat einen Durchmesser von ungefähr 0,000&nbsp;000&nbsp;000&nbsp;1&nbsp;m, die Milchstraße einen von rund 1&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;m. Wer mit solchen Zahlen rechnet, zählt Nullen – und verzählt sich. Heute frischst du auf, wie Physikerinnen und Physiker das elegant lösen.</p>
+    <p class="caption">Grundlage dieses Abschnitts: Physik Libre, Abschnitt 2.4 „Größenordnungen“ (CC&nbsp;BY-SA&nbsp;4.0, Quellenangabe am Seitenende).</p>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Ordnen &amp; schätzen</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Auflösung</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <div class="ex">
+        <p><strong>Aufgabe 1:</strong> Bring die Objekte in die richtige Reihenfolge – vom kleinsten zum größten. Ziehe die Karten oder nutze ▲▼.</p>
+        <div class="baustein" data-type="sort" id="sort-objekte">
+          <div class="sort-list">
+            <div class="sort-item" data-v="6"><span>Körpergröße eines Menschen</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="2"><span>Durchmesser eines Atoms</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="9"><span>Durchmesser der Milchstraße</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="4"><span>Durchmesser eines roten Blutkörperchens</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="7"><span>Durchmesser der Erde</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="1"><span>Durchmesser eines Atomkerns</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="5"><span>Dicke eines Haares</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="8"><span>Abstand Erde – Sonne</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="3"><span>Größe eines Grippevirus</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-sort">
+          <div data-tipp>Teile die Objekte zuerst grob in drei Gruppen: unsichtbar klein, „menschlich“, astronomisch groß.</div>
+          <div data-tipp>In der kleinen Gruppe gilt: Atomkern steckt im Atom, Atome bilden Viren, Viren sind viel kleiner als Zellen.</div>
+          <div data-tipp>In der großen Gruppe: Die Erde passt viele tausend Mal zwischen Erde und Sonne; die Milchstraße enthält Milliarden Sonnensysteme.</div>
+          <div data-muster>
+            <table class="tab">
+              <tr><th>Objekt</th><th>ungefähre Größe</th></tr>
+              <tr><td>Atomkern</td><td>10<sup>−15</sup>&nbsp;m</td></tr>
+              <tr><td>Atom</td><td>10<sup>−10</sup>&nbsp;m</td></tr>
+              <tr><td>Grippevirus</td><td>1·10<sup>−7</sup>&nbsp;m (100&nbsp;nm)</td></tr>
+              <tr><td>rotes Blutkörperchen</td><td>7,5·10<sup>−6</sup>&nbsp;m (7,5&nbsp;µm)</td></tr>
+              <tr><td>Haar</td><td>7·10<sup>−5</sup>&nbsp;m (70&nbsp;µm)</td></tr>
+              <tr><td>Mensch</td><td>1,7&nbsp;m</td></tr>
+              <tr><td>Erddurchmesser</td><td>1,3·10<sup>7</sup>&nbsp;m</td></tr>
+              <tr><td>Erde – Sonne</td><td>1,5·10<sup>11</sup>&nbsp;m</td></tr>
+              <tr><td>Milchstraße</td><td>1·10<sup>21</sup>&nbsp;m</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="poe-box" id="poe-atome">
+        <div class="poe-label">🤔 Was schätzt du? Wie viele Atome (Durchmesser etwa 0,1&nbsp;nm) passen nebeneinander auf eine Strecke von 1&nbsp;mm?</div>
+        <textarea id="poe-atome-in" rows="2" placeholder="Deine Schätzung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-atome')">Schätzung festhalten</button>
+        <div class="poe-locked" id="poe-atome-out" hidden></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Prüf deine Schätzung nach ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <div class="ex">
+        <p><strong>Aufgabe 2:</strong> Berechne, wie viele Atome mit dem Durchmesser <i>d</i> = 0,000&nbsp;000&nbsp;000&nbsp;1&nbsp;m nebeneinander auf <i>s</i> = 0,001&nbsp;m passen. Vergleiche mit deiner Schätzung.</p>
+        <p><i>N</i> = <input class="inp" id="atome" inputmode="decimal" aria-label="Anzahl der Atome">
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['atome', 1e7]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-atome')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-atome"><i>N</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>d</i></span></span> = <span class="frac"><span class="fn">0,001&nbsp;m</span><span class="fd">0,000&nbsp;000&nbsp;000&nbsp;1&nbsp;m</span></span> = 10&nbsp;000&nbsp;000 – also <strong>zehn Millionen</strong> Atome auf einem einzigen Millimeter.</div>
+        <div class="hs" id="hs-atome">
+          <div data-tipp>Wie oft passt der Durchmesser eines Atoms in die Strecke?</div>
+          <div data-tipp>Teile die Strecke durch den Atomdurchmesser: <i>N</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>d</i></span></span>.</div>
+          <div data-tipp>Zähle die Nachkommastellen: 0,001 hat 3, 0,000&nbsp;000&nbsp;000&nbsp;1 hat 10. Der Unterschied sind 7 Stellen – also eine 1 mit 7 Nullen.</div>
+          <div data-muster><p class="heft">geg.: <i>s</i> = 0,001&nbsp;m, <i>d</i> = 0,000&nbsp;000&nbsp;000&nbsp;1&nbsp;m · ges.: <i>N</i><br><i>N</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>d</i></span></span> = <span class="frac"><span class="fn">0,001&nbsp;m</span><span class="fd">0,000&nbsp;000&nbsp;000&nbsp;1&nbsp;m</span></span><br><u><i>N</i> = 10&nbsp;000&nbsp;000</u></p><p>Auf 1&nbsp;mm passen etwa zehn Millionen Atome nebeneinander.</p></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Atomkern: 10<sup>−15</sup>&nbsp;m – Atom: 10<sup>−10</sup>&nbsp;m. Wie viele <em>Größenordnungen</em> liegen dazwischen?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('go1', this, 'w')">25</button>
+          <button class="quiz-btn" onclick="quizCheck('go1', this, 'c')">5</button>
+          <button class="quiz-btn" onclick="quizCheck('go1', this, 'w')">−5</button>
+          <button class="quiz-btn" onclick="quizCheck('go1', this, 'w')">10<sup>5</sup></button>
+        </div>
+        <div class="quiz-fb" id="qfb-go1"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Größenordnungen</div>
+        <p><strong>Größenordnung:</strong> Zwei Werte unterscheiden sich um eine Größenordnung, wenn einer etwa 10-mal so groß ist wie der andere. Physikalische Längen reichen vom Atomkern (≈ 10<sup>−15</sup>&nbsp;m) bis zur Milchstraße (≈ 10<sup>21</sup>&nbsp;m) – das sind 36 Größenordnungen.</p>
+        <p>Darstellungsmöglichkeiten für sehr große und sehr kleine Werte: <strong>Vorsätze</strong> (z.&nbsp;B. 4,7&nbsp;nF), <strong>Zehnerpotenzen</strong> (4,7·10<sup>−9</sup>&nbsp;F) und auf dem Taschenrechner die <strong>E-Schreibweise</strong> (4.7E-9).</p>
+      </div>
+      <p class="connector-text">Zehn Millionen Atome – die Zahl hast du gerade mit sieben Nullen geschrieben. Geht das kürzer? Die erste Abkürzung kennst du aus dem Alltag: „Kilo“.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zu den Vorsätzen →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Vorsätze für Maßeinheiten</h2>
+    <p>Wenn du „ein Dutzend Eier“ sagst, meinst du 12 Eier – „Dutzend“ ist einfach ein Wort für eine feste Zahl. Genauso arbeiten die <span class="tt" data-tip="auch Vorsilben oder Präfixe (engl. prefix): Abkürzung für eine feste Zehnerpotenz vor einer Einheit">Vorsätze</span> der Physik: Das „k“ in km steht für nichts anderes als die Zahl 1000.</p>
+    <p class="caption">Grundlage: Physik Libre, Abschnitte 2.4.1 und 2.4.2 (CC&nbsp;BY-SA&nbsp;4.0), für den Grundkurs um Tera, Zenti und Piko ergänzt.</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Die Vorsätze</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Umrechnen</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Rechnen &amp; kürzen</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <table class="tab">
+        <tr><th>Name</th><th>Zeichen</th><th>Zahl</th><th>Zehnerpotenz</th><th>Beispiel aus der Physik</th></tr>
+        <tr><td>Tera</td><td>T</td><td>1&nbsp;000&nbsp;000&nbsp;000&nbsp;000</td><td>10<sup>12</sup></td><td>Jahresenergie eines Kraftwerks in TWh</td></tr>
+        <tr><td>Giga</td><td>G</td><td>1&nbsp;000&nbsp;000&nbsp;000</td><td>10<sup>9</sup></td><td>Kraftwerksleistung: 1,4&nbsp;GW</td></tr>
+        <tr><td>Mega</td><td>M</td><td>1&nbsp;000&nbsp;000</td><td>10<sup>6</sup></td><td>Feldstärke beim Blitz: 3&nbsp;MV/m</td></tr>
+        <tr><td>Kilo</td><td>k</td><td>1000</td><td>10<sup>3</sup></td><td>Hochspannung: 380&nbsp;kV</td></tr>
+        <tr><td>Zenti</td><td>c</td><td>0,01</td><td>10<sup>−2</sup></td><td>Plattenabstand: 2&nbsp;cm</td></tr>
+        <tr><td>Milli</td><td>m</td><td>0,001</td><td>10<sup>−3</sup></td><td>Stromstärke: 20&nbsp;mA</td></tr>
+        <tr><td>Mikro</td><td>µ</td><td>0,000&nbsp;001</td><td>10<sup>−6</sup></td><td>Ladung: 5&nbsp;µC</td></tr>
+        <tr><td>Nano</td><td>n</td><td>0,000&nbsp;000&nbsp;001</td><td>10<sup>−9</sup></td><td>Kapazität: 4,7&nbsp;nF</td></tr>
+        <tr><td>Piko</td><td>p</td><td>0,000&nbsp;000&nbsp;000&nbsp;001</td><td>10<sup>−12</sup></td><td>Kapazität: 100&nbsp;pF</td></tr>
+      </table>
+      <div class="callout callout-warn">⚠️ <span>Groß- und Kleinschreibung zählt: <strong>M</strong> (Mega, 10<sup>6</sup>) und <strong>m</strong> (Milli, 10<sup>−3</sup>) liegen neun Größenordnungen auseinander!</span></div>
+      <div class="callout">💡 <span><strong>Eselsbrücke über die Wortherkunft:</strong> kilo- kommt vom griechischen Wort für „tausend“, milli- vom lateinischen „der Tausendste“. Mega und mikro stammen aus dem Griechischen für „groß“ und „klein“, Giga und nano für „Riese“ und „Zwerg“. Die Gegensätze passen also auch zahlenmäßig zusammen: 10<sup>6</sup> ↔ 10<sup>−6</sup>, 10<sup>9</sup> ↔ 10<sup>−9</sup>.</span></div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 3:</strong> Memory – finde zu jedem Vorsatz die passende Zehnerpotenz.</p>
+        <div class="baustein" data-type="memory" id="mem-vorsaetze"
+             data-pairs='[["Giga (G)","10⁹"],["Mega (M)","10⁶"],["Kilo (k)","10³"],["Milli (m)","10⁻³"],["Mikro (µ)","10⁻⁶"],["Nano (n)","10⁻⁹"]]'>
+          <div class="mem-grid"></div>
+          <button class="btn btn-ghost btn-sm" onclick="memShuffle(this)">🔀 Neu mischen</button>
+        </div>
+        <div class="hs" id="hs-memory">
+          <div data-tipp>Vorsätze mit Großbuchstaben (G, M) machen Werte größer, die meisten mit Kleinbuchstaben (m, µ, n) machen sie kleiner.</div>
+          <div data-tipp>Die Hochzahlen springen in Dreierschritten: 3, 6, 9 nach oben und −3, −6, −9 nach unten.</div>
+          <div data-tipp>Kilo ist 10<sup>3</sup> – Mega ist „1000 Kilo“, also 10<sup>6</sup>. Milli ist 10<sup>−3</sup> – Mikro ist „ein Tausendstel Milli“, also 10<sup>−6</sup>.</div>
+          <div data-muster><p>Giga = 10<sup>9</sup> · Mega = 10<sup>6</sup> · Kilo = 10<sup>3</sup> · Milli = 10<sup>−3</sup> · Mikro = 10<sup>−6</sup> · Nano = 10<sup>−9</sup></p></div>
+        </div>
+      </div>
+      <p class="connector-text">Die Tabelle sitzt? Dann kommt der eigentliche Trick: Vorsätze lassen sich wie Zahlen behandeln – man kann sie einsetzen und herausziehen.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Wie rechnet man um? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <h3>Umrechnen in beide Richtungen</h3>
+      <p><strong>Vorsatz auflösen:</strong> Ersetze den Buchstaben durch die Zahl, für die er steht.</p>
+      <div class="formula">0,2&nbsp;km = 0,2 · 1000&nbsp;m = 200&nbsp;m &nbsp;&nbsp;·&nbsp;&nbsp; 500&nbsp;ms = 500 · 0,001&nbsp;s = 0,5&nbsp;s</div>
+      <p><strong>Vorsatz einführen:</strong> Teile die Maßzahl durch den Wert des Vorsatzes.</p>
+      <div class="formula">0,008&nbsp;N = <span class="frac"><span class="fn">0,008</span><span class="fd">0,001</span></span>&nbsp;mN = 8&nbsp;mN &nbsp;&nbsp;·&nbsp;&nbsp; 35&nbsp;400&nbsp;000&nbsp;000&nbsp;J = <span class="frac"><span class="fn">35&nbsp;400&nbsp;000&nbsp;000</span><span class="fd">1&nbsp;000&nbsp;000&nbsp;000</span></span>&nbsp;GJ = 35,4&nbsp;GJ</div>
+      <div class="callout">💡 <span><strong>Praxisregel:</strong> Wähle den Vorsatz so, dass die Maßzahl zwischen 1 und 999 liegt: 200&nbsp;nm statt 0,2&nbsp;µm, 30&nbsp;MW statt 0,03&nbsp;GW, 7&nbsp;GW statt 7000&nbsp;MW.</span></div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 4:</strong> Werte aus der Elektrostatik – rechne um.</p>
+        <p>a) 4,7&nbsp;nF = <input class="inp" id="u-a" inputmode="decimal" aria-label="a in Farad"> <span class="unit">F</span> &nbsp; (als Dezimalzahl)</p>
+        <p>b) 0,025&nbsp;C = <input class="inp" id="u-b" inputmode="decimal" aria-label="b in Millicoulomb"> <span class="unit">mC</span></p>
+        <p>c) 3&nbsp;000&nbsp;000&nbsp;V/m = <input class="inp" id="u-c" inputmode="decimal" aria-label="c in Megavolt pro Meter"> <span class="unit">MV/m</span></p>
+        <p>d) 0,000&nbsp;016&nbsp;C = <input class="inp" id="u-d" inputmode="decimal" aria-label="d in Mikrocoulomb"> <span class="unit">µC</span></p>
+        <p><button class="btn btn-primary btn-sm" onclick="pruefe(this, [['u-a',4.7e-9],['u-b',25],['u-c',3],['u-d',16]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-umr')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-umr">a) 4,7&nbsp;nF = 4,7 · 0,000&nbsp;000&nbsp;001&nbsp;F = 0,000&nbsp;000&nbsp;004&nbsp;7&nbsp;F<br>b) 0,025&nbsp;C = <span class="frac"><span class="fn">0,025</span><span class="fd">0,001</span></span>&nbsp;mC = 25&nbsp;mC<br>c) 3&nbsp;000&nbsp;000&nbsp;V/m = <span class="frac"><span class="fn">3&nbsp;000&nbsp;000</span><span class="fd">1&nbsp;000&nbsp;000</span></span>&nbsp;MV/m = 3&nbsp;MV/m<br>d) 0,000&nbsp;016&nbsp;C = <span class="frac"><span class="fn">0,000&nbsp;016</span><span class="fd">0,000&nbsp;001</span></span>&nbsp;µC = 16&nbsp;µC</div>
+        <div class="hs" id="hs-umr">
+          <div data-tipp>Bei a) steht ein Vorsatz da, der verschwinden soll. Bei b) bis d) soll ein Vorsatz neu hinein. Welche der beiden Regeln brauchst du jeweils?</div>
+          <div data-tipp>Vorsatz weg: Buchstabe durch Zahl ersetzen (n = 0,000&nbsp;000&nbsp;001). Vorsatz hinein: Maßzahl durch den Wert des Vorsatzes teilen (m = 0,001; M = 1&nbsp;000&nbsp;000; µ = 0,000&nbsp;001).</div>
+          <div data-tipp>a) 4,7 · 0,000&nbsp;000&nbsp;001 – schiebe das Komma 9 Stellen nach links. b) <span class="frac"><span class="fn">0,025</span><span class="fd">0,001</span></span> – wie oft passt ein Tausendstel in 0,025?</div>
+          <div data-muster><p class="heft">a) 4,7&nbsp;nF = 4,7 · 10<sup>−9</sup>&nbsp;F = 0,000&nbsp;000&nbsp;004&nbsp;7&nbsp;F<br>b) 0,025&nbsp;C = <span class="frac"><span class="fn">0,025</span><span class="fd">0,001</span></span>&nbsp;mC = 25&nbsp;mC<br>c) 3&nbsp;000&nbsp;000&nbsp;V/m = 3&nbsp;MV/m<br>d) 0,000&nbsp;016&nbsp;C = 16&nbsp;µC</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 5:</strong> Markiere alle Angaben, die nach der Praxisregel (Maßzahl zwischen 1 und 999) sinnvoll geschrieben sind.</p>
+        <div class="baustein" data-type="mark" id="mark-praxis">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">200&nbsp;nm</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">0,2&nbsp;µm</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">30&nbsp;MW</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">0,03&nbsp;GW</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">7000&nbsp;MW</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">7&nbsp;GW</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">380&nbsp;kV</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">4500&nbsp;mV</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">4,5&nbsp;V</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-praxis">
+          <div data-tipp>Schau nur auf die Maßzahl vor der Einheit – nicht auf den Vorsatz.</div>
+          <div data-tipp>Liegt die Maßzahl unter 1 oder über 999, gibt es einen passenderen Vorsatz.</div>
+          <div data-tipp>0,2&nbsp;µm, 0,03&nbsp;GW, 7000&nbsp;MW und 4500&nbsp;mV fallen heraus – überlege, wie man sie besser schreibt.</div>
+          <div data-muster><p>Sinnvoll: 200&nbsp;nm, 30&nbsp;MW, 7&nbsp;GW, 380&nbsp;kV, 4,5&nbsp;V.<br>Besser umschreiben: 0,2&nbsp;µm → 200&nbsp;nm · 0,03&nbsp;GW → 30&nbsp;MW · 7000&nbsp;MW → 7&nbsp;GW · 4500&nbsp;mV → 4,5&nbsp;V.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Umrechnen klappt. Doch was passiert, wenn in einer Rechnung zwei verschiedene Vorsätze aufeinandertreffen?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Vorsätze in Rechnungen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <h3>Mit Vorsätzen rechnen</h3>
+      <p>Weil ein Vorsatz nur ein Platzhalter für eine Zahl ist, darfst du ihn kürzen – aber nur, wenn oben und unten <em>derselbe</em> Vorsatz steht:</p>
+      <div class="formula"><span class="frac"><span class="fn">1&nbsp;MJ</span><span class="fd">4&nbsp;Ms</span></span> = <span class="frac"><span class="fn">1&nbsp;J</span><span class="fd">4&nbsp;s</span></span> = 0,25&nbsp;J/s</div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Eine Kugel trägt 6&nbsp;µC, eine zweite 2&nbsp;mC. Wie groß ist das Verhältnis <span class="frac"><span class="fn">6&nbsp;µC</span><span class="fd">2&nbsp;mC</span></span>?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('vk1', this, 'w')">3</button>
+          <button class="quiz-btn" onclick="quizCheck('vk1', this, 'c')">0,003</button>
+          <button class="quiz-btn" onclick="quizCheck('vk1', this, 'w')">3000</button>
+          <button class="quiz-btn" onclick="quizCheck('vk1', this, 'w')">3&nbsp;µC/mC – das lässt sich nicht weiter vereinfachen</button>
+        </div>
+        <div class="quiz-fb" id="qfb-vk1"></div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Vorsätze</div>
+        <p><strong>Vorsatz:</strong> Abkürzung für eine feste Zehnerpotenz vor einer Einheit.</p>
+        <table>
+          <tr><td>T</td><td>Tera</td><td>10<sup>12</sup></td><td>m</td><td>Milli</td><td>10<sup>−3</sup></td></tr>
+          <tr><td>G</td><td>Giga</td><td>10<sup>9</sup></td><td>µ</td><td>Mikro</td><td>10<sup>−6</sup></td></tr>
+          <tr><td>M</td><td>Mega</td><td>10<sup>6</sup></td><td>n</td><td>Nano</td><td>10<sup>−9</sup></td></tr>
+          <tr><td>k</td><td>Kilo</td><td>10<sup>3</sup></td><td>p</td><td>Piko</td><td>10<sup>−12</sup></td></tr>
+        </table>
+        <p><strong>Vorsatz auflösen:</strong> Buchstaben durch Zahl ersetzen (0,2&nbsp;km = 0,2 · 1000&nbsp;m = 200&nbsp;m).<br><strong>Vorsatz einführen:</strong> Maßzahl durch den Wert des Vorsatzes teilen (0,008&nbsp;N = 8&nbsp;mN).<br><strong>Praxisregel:</strong> Maßzahl zwischen 1 und 999. Kürzen nur bei gleichen Vorsätzen.</p>
+      </div>
+      <p class="connector-text">Vorsätze gibt es nur in Dreierschritten – für 10<sup>21</sup>&nbsp;m (Milchstraße) oder 1,602·10<sup>−19</sup>&nbsp;C (Elementarladung) braucht man ein allgemeineres Werkzeug.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zu den Zehnerpotenzen →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Wissenschaftliche Notation</h2>
+    <p>Der Durchmesser der Milchstraße beträgt etwa 1&nbsp;040&nbsp;680&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;m. Schneller lesbar: <strong>1,04068·10<sup>21</sup>&nbsp;m</strong>. In der <span class="tt" data-tip="engl. scientific notation: genau eine von null verschiedene Ziffer vor dem Komma, der Rest steckt in einer Zehnerpotenz">wissenschaftlichen Notation</span> steht immer genau <em>eine</em> von null verschiedene Ziffer vor dem Komma – den Rest erledigt die Zehnerpotenz.</p>
+    <p class="caption">Grundlage: Physik Libre, Abschnitt 2.4.3 (CC&nbsp;BY-SA&nbsp;4.0); Potenzgesetze als Ergänzung für den Grundkurs.</p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Komma schieben</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Umwandeln</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Rechnen</button>
+      <button class="substep-all" onclick="revealSub(2,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <p>Im Dezimalsystem gilt:</p>
+      <ul>
+        <li><strong>Mal 10</strong> heißt: Komma um <em>eine</em> Stelle nach <strong>rechts</strong>.</li>
+        <li><strong>Durch 10</strong> heißt: Komma um <em>eine</em> Stelle nach <strong>links</strong>.</li>
+      </ul>
+      <p>Damit der Wert gleich bleibt, gleicht die Zehnerpotenz jede Verschiebung aus: Die <strong>Anzahl der Stellen</strong>, um die du das Komma verschiebst, ist die <strong>Hochzahl</strong>. Große Zahlen (≥ 10) bekommen eine positive, Zahlen kleiner als 1 eine negative Hochzahl.</p>
+
+      <div class="ex">
+        <p><strong>Aufgabe 6:</strong> Kommaschieber – wähle eine Zahl und schiebe das Komma, bis genau eine von null verschiedene Ziffer davor steht. Beobachte, was mit der Hochzahl passiert.</p>
+        <p class="ks-presets">
+          <button class="btn btn-ghost btn-sm" onclick="ksLoad('602',21,'Avogadro-Konstante in 1/mol')">Avogadro-Konstante</button>
+          <button class="btn btn-ghost btn-sm" onclick="ksLoad('1602',-22,'Elementarladung in C')">Elementarladung</button>
+          <button class="btn btn-ghost btn-sm" onclick="ksLoad('6371',3,'Erdradius in m')">Erdradius</button>
+          <button class="btn btn-ghost btn-sm" onclick="ksLoad('65',-8,'Wellenlänge von rotem Licht in m')">Rotes Licht</button>
+        </p>
+        <div class="ks-box" id="ks" aria-live="polite">
+          <div class="caption" id="ks-label">Avogadro-Konstante in 1/mol</div>
+          <div class="ks-num" id="ks-num"></div>
+          <p>
+            <button class="btn btn-primary btn-sm" onclick="ksShift(-1)">← Komma nach links</button>
+            <button class="btn btn-primary btn-sm" onclick="ksShift(1)">Komma nach rechts →</button>
+          </p>
+          <div class="fb" id="ks-fb"></div>
+        </div>
+        <div class="hs" id="hs-schieber">
+          <div data-tipp>Ziel: genau eine Ziffer von 1 bis 9 vor dem Komma, zum Beispiel 6,02… oder 1,602…</div>
+          <div data-tipp>Bei großen Zahlen musst du das Komma nach links schieben, bei Zahlen kleiner als 1 nach rechts.</div>
+          <div data-tipp>Jeder Klick nach links erhöht die Hochzahl um 1, jeder Klick nach rechts senkt sie um 1 – der Wert der Zahl bleibt dabei immer gleich.</div>
+          <div data-muster><p>Avogadro-Konstante: 6,02·10<sup>23</sup>&nbsp;1/mol (23 Stellen nach links)<br>Elementarladung: 1,602·10<sup>−19</sup>&nbsp;C (19 Stellen nach rechts)<br>Erdradius: 6,371·10<sup>6</sup>&nbsp;m (6 Stellen nach links)<br>Rotes Licht: 6,5·10<sup>−7</sup>&nbsp;m (7 Stellen nach rechts)</p></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Was bedeutet das Minuszeichen in 6,5·10<sup>−7</sup>&nbsp;m?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('neg1', this, 'w')">Die Länge ist negativ.</button>
+          <button class="quiz-btn" onclick="quizCheck('neg1', this, 'c')">Die Zahl ist kleiner als 1: 6,5 wird siebenmal durch 10 geteilt.</button>
+          <button class="quiz-btn" onclick="quizCheck('neg1', this, 'w')">Von 6,5 werden 10<sup>7</sup> abgezogen.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-neg1"></div>
+      </div>
+      <p class="connector-text">Mit dem Schieber geht es von allein – kannst du es auch auf dem Papier?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Selbst umwandeln ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <div class="ex">
+        <p><strong>Aufgabe 7:</strong> Schreibe in wissenschaftlicher Notation (Ziffer vor dem Komma 1 bis 9).</p>
+        <p>a) Lichtgeschwindigkeit 300&nbsp;000&nbsp;000&nbsp;m/s = <input class="inp inp-m" id="w-a-m" inputmode="decimal" aria-label="a Vorfaktor"> · 10<sup><input class="inp inp-e" id="w-a-e" inputmode="numeric" aria-label="a Hochzahl"></sup>&nbsp;m/s</p>
+        <p>b) Elementarladung 0,000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;160&nbsp;2&nbsp;C = <input class="inp inp-m" id="w-b-m" inputmode="decimal" aria-label="b Vorfaktor"> · 10<sup><input class="inp inp-e" id="w-b-e" inputmode="numeric" aria-label="b Hochzahl"></sup>&nbsp;C</p>
+        <p>c) Erdradius 6&nbsp;371&nbsp;000&nbsp;m = <input class="inp inp-m" id="w-c-m" inputmode="decimal" aria-label="c Vorfaktor"> · 10<sup><input class="inp inp-e" id="w-c-e" inputmode="numeric" aria-label="c Hochzahl"></sup>&nbsp;m</p>
+        <p>d) Wellenlänge 0,000&nbsp;000&nbsp;65&nbsp;m = <input class="inp inp-m" id="w-d-m" inputmode="decimal" aria-label="d Vorfaktor"> · 10<sup><input class="inp inp-e" id="w-d-e" inputmode="numeric" aria-label="d Hochzahl"></sup>&nbsp;m</p>
+        <p><button class="btn btn-primary btn-sm" onclick="pruefe(this, [['w-a-m',3],['w-a-e',8,0],['w-b-m',1.602],['w-b-e',-19,0],['w-c-m',6.371],['w-c-e',6,0],['w-d-m',6.5],['w-d-e',-7,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-wiss')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-wiss">a) Komma 8 Stellen nach links: 3·10<sup>8</sup>&nbsp;m/s<br>b) Komma 19 Stellen nach rechts: 1,602·10<sup>−19</sup>&nbsp;C<br>c) Komma 6 Stellen nach links: 6,371·10<sup>6</sup>&nbsp;m<br>d) Komma 7 Stellen nach rechts: 6,5·10<sup>−7</sup>&nbsp;m</div>
+        <div class="hs" id="hs-wiss">
+          <div data-tipp>Suche zuerst die erste Ziffer, die nicht null ist. Dahinter kommt das neue Komma.</div>
+          <div data-tipp>Zähle, um wie viele Stellen das Komma wandern muss. Nach links → positive Hochzahl, nach rechts → negative Hochzahl.</div>
+          <div data-tipp>Tipp zum Zählen bei b): Hinter dem Komma stehen sechs Dreiergruppen Nullen (18 Nullen), dann folgt die 1 als 19. Stelle.</div>
+          <div data-muster><p class="heft">a) 300&nbsp;000&nbsp;000&nbsp;m/s = 3·10<sup>8</sup>&nbsp;m/s<br>b) 0,000…0001602&nbsp;C = 1,602·10<sup>−19</sup>&nbsp;C<br>c) 6&nbsp;371&nbsp;000&nbsp;m = 6,371·10<sup>6</sup>&nbsp;m<br>d) 0,000&nbsp;000&nbsp;65&nbsp;m = 6,5·10<sup>−7</sup>&nbsp;m</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 8:</strong> Und zurück – schreibe als Dezimalzahl.</p>
+        <p>a) 4,8·10<sup>−3</sup>&nbsp;m = <input class="inp" id="r-a" inputmode="decimal" aria-label="a als Dezimalzahl"> <span class="unit">m</span> &nbsp;&nbsp; b) 7,2·10<sup>5</sup>&nbsp;J = <input class="inp" id="r-b" inputmode="decimal" aria-label="b als Dezimalzahl"> <span class="unit">J</span></p>
+        <p><button class="btn btn-primary btn-sm" onclick="pruefe(this, [['r-a',0.0048],['r-b',720000]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-rueck')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-rueck">a) Komma 3 Stellen nach links: 0,0048&nbsp;m · b) Komma 5 Stellen nach rechts: 720&nbsp;000&nbsp;J</div>
+        <div class="hs" id="hs-rueck">
+          <div data-tipp>Jetzt läuft alles rückwärts: Die Hochzahl sagt dir, wie weit das Komma wandert.</div>
+          <div data-tipp>Negative Hochzahl → Komma nach links (Zahl wird kleiner), positive → nach rechts (Zahl wird größer). Fehlende Stellen mit Nullen auffüllen.</div>
+          <div data-tipp>a) 4,8 → 0,48 → 0,048 → … (noch ein Schritt). b) 7,2 → 72 → 720 → … (noch drei Schritte).</div>
+          <div data-muster><p class="heft">a) 4,8·10<sup>−3</sup>&nbsp;m = 0,0048&nbsp;m<br>b) 7,2·10<sup>5</sup>&nbsp;J = 720&nbsp;000&nbsp;J</p></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Lea schreibt die Ladung 25&nbsp;µC als 25·10<sup>−6</sup>&nbsp;C. Was sagst du dazu?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('wn1', this, 'w')">Falsch – der Wert stimmt nicht.</button>
+          <button class="quiz-btn" onclick="quizCheck('wn1', this, 'c')">Der Wert stimmt, ist aber keine wissenschaftliche Notation; die wäre 2,5·10<sup>−5</sup>&nbsp;C.</button>
+          <button class="quiz-btn" onclick="quizCheck('wn1', this, 'w')">Richtig, und es ist bereits die wissenschaftliche Notation.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-wn1"></div>
+      </div>
+      <p class="connector-text">Umwandeln sitzt. In der Physik musst du mit solchen Zahlen aber auch rechnen – zum Glück helfen dabei zwei einfache Regeln.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Mit Zehnerpotenzen rechnen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <h3>Potenzgesetze für Zehnerpotenzen</h3>
+      <div class="formula">10<sup><i>a</i></sup> · 10<sup><i>b</i></sup> = 10<sup><i>a</i>+<i>b</i></sup> &nbsp;&nbsp;&nbsp;&nbsp; <span class="frac"><span class="fn">10<sup><i>a</i></sup></span><span class="fd">10<sup><i>b</i></sup></span></span> = 10<sup><i>a</i>−<i>b</i></sup></div>
+      <p>Vorfaktoren werden ganz normal multipliziert bzw. dividiert, die Hochzahlen addiert bzw. subtrahiert. Liegt der neue Vorfaktor nicht zwischen 1 und 10, wird er anschließend <em>normiert</em>.</p>
+
+      <div class="ex">
+        <p><strong>Aufgabe 9:</strong> Rechne ohne Taschenrechner und gib das Ergebnis in wissenschaftlicher Notation an.</p>
+        <p>a) (3·10<sup>8</sup>) · (2·10<sup>−3</sup>) = <input class="inp inp-m" id="p-a-m" inputmode="decimal" aria-label="a Vorfaktor"> · 10<sup><input class="inp inp-e" id="p-a-e" inputmode="numeric" aria-label="a Hochzahl"></sup></p>
+        <p>b) <span class="frac"><span class="fn">6·10<sup>−6</sup></span><span class="fd">2·10<sup>−3</sup></span></span> = <input class="inp inp-m" id="p-b-m" inputmode="decimal" aria-label="b Vorfaktor"> · 10<sup><input class="inp inp-e" id="p-b-e" inputmode="numeric" aria-label="b Hochzahl"></sup></p>
+        <p>c) (4·10<sup>5</sup>) · (5·10<sup>4</sup>) = <input class="inp inp-m" id="p-c-m" inputmode="decimal" aria-label="c Vorfaktor"> · 10<sup><input class="inp inp-e" id="p-c-e" inputmode="numeric" aria-label="c Hochzahl"></sup></p>
+        <p><button class="btn btn-primary btn-sm" onclick="pruefe(this, [['p-a-m',6],['p-a-e',5,0],['p-b-m',3],['p-b-e',-3,0],['p-c-m',2],['p-c-e',10,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-potenz')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-potenz">a) 3 · 2 = 6; 8 + (−3) = 5 → 6·10<sup>5</sup><br>b) <span class="frac"><span class="fn">6</span><span class="fd">2</span></span> = 3; −6 − (−3) = −3 → 3·10<sup>−3</sup><br>c) 4 · 5 = 20; 5 + 4 = 9 → 20·10<sup>9</sup> = 2·10<sup>10</sup> (normiert!)</div>
+        <div class="hs" id="hs-potenz">
+          <div data-tipp>Trenne Vorfaktoren und Zehnerpotenzen – sie werden getrennt verrechnet.</div>
+          <div data-tipp>Malnehmen: Vorfaktoren multiplizieren, Hochzahlen addieren. Teilen: Vorfaktoren dividieren, Hochzahlen subtrahieren.</div>
+          <div data-tipp>Bei b) gilt −6 − (−3) = −6 + 3. Bei c) ist 20 kein zulässiger Vorfaktor: 20 = 2·10<sup>1</sup>.</div>
+          <div data-muster><p class="heft">a) (3·10<sup>8</sup>)·(2·10<sup>−3</sup>) = 6·10<sup>8−3</sup> = 6·10<sup>5</sup><br>b) <span class="frac"><span class="fn">6·10<sup>−6</sup></span><span class="fd">2·10<sup>−3</sup></span></span> = 3·10<sup>−6+3</sup> = 3·10<sup>−3</sup><br>c) (4·10<sup>5</sup>)·(5·10<sup>4</sup>) = 20·10<sup>9</sup> = 2·10<sup>10</sup></p></div>
+        </div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Wissenschaftliche Notation</div>
+        <p><strong>Wissenschaftliche Notation:</strong> Genau eine von null verschiedene Ziffer vor dem Komma, der Rest als Zehnerpotenz, z.&nbsp;B. 1,602·10<sup>−19</sup>&nbsp;C.</p>
+        <p><strong>Umwandeln:</strong> Anzahl der Stellen, um die das Komma verschoben wird = Hochzahl. Komma nach links (große Zahl) → positive Hochzahl; Komma nach rechts (Zahl &lt; 1) → negative Hochzahl.</p>
+        <p><strong>Rechnen:</strong> 10<sup><i>a</i></sup> · 10<sup><i>b</i></sup> = 10<sup><i>a</i>+<i>b</i></sup>; danach Vorfaktor normieren.</p>
+      </div>
+      <p class="connector-text">Auf dem Papier schreibst du 10<sup>−19</sup> hochgestellt. Doch wie bekommst du so eine Zahl in deinen ClassPad – und was zeigt er dir zurück?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zum ClassPad →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>E-Schreibweise auf dem ClassPad II</h2>
+    <p>Auf einem Taschenrechner-Display lassen sich hochgestellte Hochzahlen nicht immer darstellen. Deshalb nutzen Rechner und viele Computerprogramme die <span class="tt" data-tip="engl. e-notation: Das E steht für „mal zehn hoch“ und trennt den Vorfaktor (Mantisse) von der Hochzahl">E-Schreibweise</span>: Die Avogadro-Konstante 6,02·10<sup>23</sup> erscheint als</p>
+    <div class="lcd lcd-hero"><div class="out">6.02<span class="E">E</span>+23</div></div>
+    <p>Das <strong>E</strong> liest du als <strong>„mal zehn hoch“</strong>. Davor steht die <span class="tt" data-tip="der Vorfaktor vor der Zehnerpotenz, z. B. 6,02 in 6,02·10^23">Mantisse</span>, dahinter die Hochzahl.</p>
+    <p class="caption">Grundlage: Physik Libre, Abschnitt 2.4.4 (CC&nbsp;BY-SA&nbsp;4.0); Bedienschritte nach der CASIO-Bedienungsanleitung ClassPad II fx-CP400.</p>
+
+    <div class="lehrer-only" hidden>
+      <div class="callout callout-info">🧑‍🏫 <span>Hinweis für die Lehrkraft: Tastenbezeichnungen und Menüpfade folgen der CASIO-Bedienungsanleitung (englische Menüs wie „Basic Format“ und „Number Format“). Je nach Spracheinstellung und Betriebssystemversion können Beschriftungen abweichen – bitte einmal am eigenen Gerät gegenprüfen. Der Anzeige-Simulator ist eine vereinfachte Nachbildung.</span></div>
+    </div>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Eingeben</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Anzeige einstellen</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Rechnen</button>
+      <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <h3>Zehnerpotenzen eingeben: die Taste <span class="key">EXP</span></h3>
+      <p>Auf der Gerätetastatur des ClassPad II findest du in der untersten Reihe neben <span class="key">0</span> und <span class="key">.</span> die Taste <span class="key">EXP</span>. Auf der Software-Tastatur gibt es dieselbe Funktion als Taste <span class="key">E</span> im Tastensatz [Number]. Arbeite im <strong>Main</strong>-Menü.</p>
+      <table class="tab">
+        <tr><th>Wert</th><th>Tastenfolge</th><th>Anzeige</th></tr>
+        <tr><td>6,02·10<sup>23</sup></td><td><span class="key">6</span><span class="key">.</span><span class="key">0</span><span class="key">2</span><span class="key">EXP</span><span class="key">2</span><span class="key">3</span><span class="key">EXE</span></td><td><span class="lcd lcd-inline">6.02<span class="E">E</span>+23</span></td></tr>
+        <tr><td>1,602·10<sup>−19</sup></td><td><span class="key">1</span><span class="key">.</span><span class="key">6</span><span class="key">0</span><span class="key">2</span><span class="key">EXP</span><span class="key">(−)</span><span class="key">1</span><span class="key">9</span><span class="key">EXE</span></td><td><span class="lcd lcd-inline">1.602<span class="E">E</span>-19</span></td></tr>
+      </table>
+      <div class="callout callout-warn">⚠️ <span><strong>Drei Stolperfallen:</strong> (1) Der ClassPad zeigt einen Dezimal<em>punkt</em> – ins Heft schreibst du ein Komma. (2) Nach <span class="key">EXP</span> <em>kein</em> „mal 10“ mehr eintippen: <span class="key">EXP</span> enthält das „·10“ schon. (3) Das E der E-Schreibweise hat nichts mit der Eulerschen Zahl <i>e</i> ≈ 2,718 oder der Taste <i>e</i><sup>■</sup> im Tastensatz [Math1] zu tun.</span></div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 10:</strong> Welche Eingaben liefern auf dem ClassPad den Wert 3·10<sup>8</sup>? Markiere alle richtigen.</p>
+        <div class="baustein" data-type="mark" id="mark-eingabe">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">3 EXP 8</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">3 × 10 EXP 8</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">3 × 10^8</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">3 × <i>e</i>^8</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">30 EXP 7</span> ·
+            <span class="mw" data-correct="1" onclick="markToggle(this)" tabindex="0">0.3 EXP 9</span> ·
+            <span class="mw" data-correct="0" onclick="markToggle(this)" tabindex="0">3 EXP (−)8</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-eingabe">
+          <div data-tipp>Lies jede Eingabe laut, indem du EXP durch „mal zehn hoch“ ersetzt.</div>
+          <div data-tipp>„3 × 10 EXP 8“ bedeutet 3 · 10 · 10<sup>8</sup>. Rechne das aus. Und <i>e</i>^8 ist eine ganz andere Zahl.</div>
+          <div data-tipp>30·10<sup>7</sup> und 0,3·10<sup>9</sup> sind zwar nicht normiert, haben aber denselben Wert wie 3·10<sup>8</sup>.</div>
+          <div data-muster><p>Richtig: 3 EXP 8 · 3 × 10^8 · 30 EXP 7 · 0.3 EXP 9.<br>Falsch: 3 × 10 EXP 8 = 3·10<sup>9</sup> (eine Zehn zu viel) · 3 × <i>e</i><sup>8</sup> ≈ 8943 (Eulersche Zahl!) · 3 EXP (−)8 = 3·10<sup>−8</sup> (Vorzeichen der Hochzahl vertauscht).</p></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">Dein ClassPad zeigt <span class="lcd lcd-inline">3<span class="E">E</span>-4</span>. Welcher Wert ist das?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'w')">−12</button>
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'w')">3 − 4 = −1</button>
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'c')">0,0003</button>
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'w')">30&nbsp;000</button>
+        </div>
+        <div class="quiz-fb" id="qfb-e1"></div>
+      </div>
+      <p class="connector-text">Eingeben klappt. Aber manchmal zeigt der ClassPad 0.005, manchmal 5E-3, manchmal einen Bruch – woran liegt das?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Die Anzeige verstehen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <h3>Wie der ClassPad Ergebnisse anzeigt</h3>
+      <p><strong>Schritt 1 – Dezimalmodus:</strong> Unten in der Statusleiste des Main-Menüs steht entweder „Standard“ oder „Decimal“. Im Standard-Modus rechnet der ClassPad exakt und zeigt Ergebnisse oft als Bruch oder Wurzel (aus 2.5E-3 wird dann z.&nbsp;B. <span class="frac"><span class="fn">1</span><span class="fd">400</span></span>). Für Physik-Aufgaben stellst du auf <strong>„Decimal“</strong> (Eintrag in der Statusleiste antippen). Einzelne Ergebnisse kannst du auch mit der Umschalt-Schaltfläche Bruch ⇔ Dezimalzahl in der Symbolleiste umwandeln.</p>
+      <p><strong>Schritt 2 – Zahlenformat:</strong> Über das Menü oben links (O-Menü) → <em>Basic Format</em> → <em>Number Format</em> legst du fest, wann die E-Schreibweise erscheint:</p>
+      <table class="tab">
+        <tr><th>Einstellung</th><th>Wirkung</th><th>Beispiel: 50 ÷ 4</th></tr>
+        <tr><td>Normal 1 (Werkseinstellung)</td><td>E-Schreibweise automatisch, wenn |<i>x</i>| &lt; 10<sup>−2</sup> oder |<i>x</i>| ≥ 10<sup>10</sup></td><td><span class="lcd lcd-inline">12.5</span></td></tr>
+        <tr><td>Normal 2</td><td>E-Schreibweise automatisch, wenn |<i>x</i>| &lt; 10<sup>−9</sup> oder |<i>x</i>| ≥ 10<sup>10</sup></td><td><span class="lcd lcd-inline">12.5</span></td></tr>
+        <tr><td>Fix 0 … Fix 9</td><td>feste Anzahl von Nachkommastellen</td><td>Fix 3: <span class="lcd lcd-inline">12.500</span></td></tr>
+        <tr><td>Sci 0 … Sci 9</td><td>immer E-Schreibweise mit fester Anzahl gültiger Ziffern</td><td>Sci 3: <span class="lcd lcd-inline">1.25<span class="E">E</span>+1</span></td></tr>
+      </table>
+      <div class="callout">💡 <span><strong>Empfehlung für Physik:</strong> „Sci 3“ oder „Sci 4“ liefert sofort die wissenschaftliche Notation mit sinnvoll vielen gültigen Ziffern. Zum Abschreiben ersetzt du nur das E durch „·10“ und den Punkt durch ein Komma.</span></div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 11:</strong> Welche Anzeige gehört zu welchem Wert und welcher Einstellung? Ordne zu (Dezimalmodus).</p>
+        <div class="baustein" data-type="match" id="match-anzeige">
+          <div class="m-pool">
+            <span class="m-chip" data-id="a" onclick="matchSelect(this)">5E-3</span>
+            <span class="m-chip" data-id="b" onclick="matchSelect(this)">0.005</span>
+            <span class="m-chip" data-id="c" onclick="matchSelect(this)">1.25E+1</span>
+            <span class="m-chip" data-id="d" onclick="matchSelect(this)">12.500</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">2.5E+10</span>
+          </div>
+          <div class="m-zone" data-correct="a" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">0,005 bei Normal 1</span></div>
+          <div class="m-zone" data-correct="b" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">0,005 bei Normal 2</span></div>
+          <div class="m-zone" data-correct="c" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">12,5 bei Sci 3</span></div>
+          <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">12,5 bei Fix 3</span></div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">25&nbsp;000&nbsp;000&nbsp;000 bei Normal 2</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-anzeige">
+          <div data-tipp>Schau in die Tabelle: Ab welchen Grenzen schalten Normal 1 und Normal 2 auf E-Schreibweise um?</div>
+          <div data-tipp>0,005 ist kleiner als 10<sup>−2</sup> = 0,01, aber größer als 10<sup>−9</sup>. 25&nbsp;000&nbsp;000&nbsp;000 = 2,5·10<sup>10</sup> ist mindestens 10<sup>10</sup>.</div>
+          <div data-tipp>Fix 3 bedeutet drei Nachkommastellen, Sci 3 bedeutet drei gültige Ziffern in E-Schreibweise.</div>
+          <div data-muster><p>0,005 bei Normal 1 → 5E-3 · 0,005 bei Normal 2 → 0.005 · 12,5 bei Sci 3 → 1.25E+1 · 12,5 bei Fix 3 → 12.500 · 25&nbsp;000&nbsp;000&nbsp;000 bei Normal 2 → 2.5E+10</p></div>
+        </div>
+      </div>
+
+      <p><button class="btn btn-ghost btn-sm" id="cp-unlock" onclick="cpUnlock()">🔓 Zur Kontrolle: ClassPad-Anzeige-Simulator öffnen</button></p>
+      <div class="cp-sim" id="cp-sim" hidden>
+        <p class="caption">Vereinfachte Nachbildung der Ergebnisanzeige im Dezimalmodus – kein Ersatz für das echte Gerät. Zahlen mit Komma oder Punkt eingeben, Zehnerpotenzen als <code>e</code> (z.&nbsp;B. <code>1,602e-19</code>); eine einfache Division wie <code>50÷4</code> oder <code>1/600</code> geht auch.</p>
+        <p>
+          <label>Wert: <input class="inp" id="cp-in" value="0,005" aria-label="Wert für den Simulator"></label>
+          <label>Format:
+            <select id="cp-fmt" aria-label="Zahlenformat">
+              <option value="n1">Normal 1</option><option value="n2">Normal 2</option>
+              <option value="f2">Fix 2</option><option value="f3">Fix 3</option>
+              <option value="s3">Sci 3</option><option value="s4">Sci 4</option>
+            </select></label>
+          <button class="btn btn-primary btn-sm" onclick="cpShow()">Anzeigen</button>
+        </p>
+        <div class="lcd lcd-sim"><div class="in" id="cp-line"></div><div class="out" id="cp-out"></div></div>
+      </div>
+      <p class="connector-text">Jetzt weißt du, was der ClassPad dir zeigt. Zeit für echte Physik: Rechnungen, bei denen du ohne E-Schreibweise verloren wärst.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Rechnen mit dem ClassPad ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-3">
+      <h3>Rechnen mit dem ClassPad</h3>
+      <div class="callout callout-warn">⚠️ <span><strong>Klammerfalle:</strong> Tippst du „6 × 10^23 ÷ 2 × 10^3“ ohne Klammern, rechnet der Rechner von links nach rechts (6·10<sup>23</sup> ÷ 2) · 10<sup>3</sup> = 3·10<sup>26</sup> – falsch! Mit <span class="key">EXP</span> ist jede Zahl ein geschlossener Block: „6 EXP 23 ÷ 2 EXP 3“ liefert korrekt 3E+20. Das ist der große Vorteil der E-Eingabe.</span></div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 12:</strong> Ein Elektron (Ladung <i>e</i> = 1,602·10<sup>−19</sup>&nbsp;C) befindet sich in einem elektrischen Feld der Feldstärke <i>E</i> = 2,5·10<sup>4</sup>&nbsp;N/C. Berechne den Betrag der Kraft <i>F</i> = <i>e</i> · <i>E</i>.</p>
+        <p><i>F</i> = <input class="inp inp-m" id="k-m" inputmode="decimal" aria-label="Vorfaktor der Kraft"> · 10<sup><input class="inp inp-e" id="k-e" inputmode="numeric" aria-label="Hochzahl der Kraft"></sup>&nbsp;N
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['k-m',4.005,0.012],['k-e',-15,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-kraft')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-kraft">ClassPad: <span class="key">1</span><span class="key">.</span><span class="key">6</span><span class="key">0</span><span class="key">2</span><span class="key">EXP</span><span class="key">(−)</span><span class="key">1</span><span class="key">9</span><span class="key">×</span><span class="key">2</span><span class="key">.</span><span class="key">5</span><span class="key">EXP</span><span class="key">4</span><span class="key">EXE</span> → <span class="lcd lcd-inline">4.005<span class="E">E</span>-15</span>, also <i>F</i> ≈ 4,0·10<sup>−15</sup>&nbsp;N.</div>
+        <div class="hs" id="hs-kraft">
+          <div data-tipp>Beide Werte enthalten Zehnerpotenzen – gib sie mit EXP ein.</div>
+          <div data-tipp>Rechne <i>F</i> = <i>e</i> · <i>E</i>; die Einheit ergibt sich aus C · N/C = N. Zur Kontrolle im Kopf: 1,602 · 2,5 ≈ 4 und −19 + 4 = −15.</div>
+          <div data-tipp>Tastenfolge: 1.602 EXP (−)19 × 2.5 EXP 4 EXE.</div>
+          <div data-muster><p class="heft">geg.: <i>e</i> = 1,602·10<sup>−19</sup>&nbsp;C, <i>E</i> = 2,5·10<sup>4</sup>&nbsp;N/C · ges.: <i>F</i><br><i>F</i> = <i>e</i> · <i>E</i> = 1,602·10<sup>−19</sup>&nbsp;C · 2,5·10<sup>4</sup>&nbsp;N/C<br><u><i>F</i> ≈ 4,0·10<sup>−15</sup>&nbsp;N</u></p><p>Auf das Elektron wirkt eine Kraft von etwa 4,0·10<sup>−15</sup>&nbsp;N.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 13:</strong> Eine Metallkugel ist mit <i>Q</i> = 3,2&nbsp;nC negativ geladen. Wie viele überschüssige Elektronen trägt sie? <i>N</i> = <span class="frac"><span class="fn"><i>Q</i></span><span class="fd"><i>e</i></span></span></p>
+        <p><i>N</i> ≈ <input class="inp inp-m" id="n-m" inputmode="decimal" aria-label="Vorfaktor der Anzahl"> · 10<sup><input class="inp inp-e" id="n-e" inputmode="numeric" aria-label="Hochzahl der Anzahl"></sup>
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['n-m',2.0,0.03],['n-e',10,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-anzahl')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-anzahl">3,2&nbsp;nC = 3,2·10<sup>−9</sup>&nbsp;C. ClassPad: <span class="key">3</span><span class="key">.</span><span class="key">2</span><span class="key">EXP</span><span class="key">(−)</span><span class="key">9</span><span class="key">÷</span><span class="key">1</span><span class="key">.</span><span class="key">6</span><span class="key">0</span><span class="key">2</span><span class="key">EXP</span><span class="key">(−)</span><span class="key">1</span><span class="key">9</span><span class="key">EXE</span> → <span class="lcd lcd-inline">1.997503121<span class="E">E</span>+10</span> (Normal 1), also <i>N</i> ≈ 2,0·10<sup>10</sup>.</div>
+        <div class="hs" id="hs-anzahl">
+          <div data-tipp>Zuerst den Vorsatz auflösen: Was bedeutet „n“ als Zehnerpotenz?</div>
+          <div data-tipp>3,2&nbsp;nC = 3,2·10<sup>−9</sup>&nbsp;C. Dann <i>N</i> = <span class="frac"><span class="fn">3,2·10<sup>−9</sup>&nbsp;C</span><span class="fd">1,602·10<sup>−19</sup>&nbsp;C</span></span> – Coulomb kürzt sich, <i>N</i> ist eine reine Zahl.</div>
+          <div data-tipp>Mit EXP brauchst du keine Klammern: 3.2 EXP (−)9 ÷ 1.602 EXP (−)19 EXE. Überschlag: −9 − (−19) = 10.</div>
+          <div data-muster><p class="heft">geg.: <i>Q</i> = 3,2&nbsp;nC = 3,2·10<sup>−9</sup>&nbsp;C, <i>e</i> = 1,602·10<sup>−19</sup>&nbsp;C · ges.: <i>N</i><br><i>N</i> = <span class="frac"><span class="fn"><i>Q</i></span><span class="fd"><i>e</i></span></span> = <span class="frac"><span class="fn">3,2·10<sup>−9</sup>&nbsp;C</span><span class="fd">1,602·10<sup>−19</sup>&nbsp;C</span></span><br><u><i>N</i> ≈ 2,0·10<sup>10</sup></u></p><p>Die Kugel trägt rund 20 Milliarden überschüssige Elektronen.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 14:</strong> Sonnenlicht legt bis zur Erde <i>s</i> = 1,496·10<sup>11</sup>&nbsp;m mit <i>c</i> = 3,00·10<sup>8</sup>&nbsp;m/s zurück. Wie lange ist es unterwegs?</p>
+        <p><i>t</i> ≈ <input class="inp" id="t-licht" inputmode="decimal" aria-label="Zeit in Sekunden"> <span class="unit">s</span>
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['t-licht',498.7,0.008]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-licht')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-licht"><i>t</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>c</i></span></span> = <span class="frac"><span class="fn">1,496·10<sup>11</sup>&nbsp;m</span><span class="fd">3,00·10<sup>8</sup>&nbsp;m/s</span></span>; ClassPad: 1.496 EXP 11 ÷ 3 EXP 8 EXE → <span class="lcd lcd-inline">498.6666667</span>, also <i>t</i> ≈ 499&nbsp;s ≈ 8,3&nbsp;min.</div>
+        <div class="hs" id="hs-licht">
+          <div data-tipp>Bei gleichförmiger Bewegung hängen Weg, Geschwindigkeit und Zeit über eine bekannte Formel zusammen.</div>
+          <div data-tipp><i>v</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>t</i></span></span> umgestellt: <i>t</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>v</i></span></span>, hier mit <i>v</i> = <i>c</i>.</div>
+          <div data-tipp>Eingabe: 1.496 EXP 11 ÷ 3 EXP 8 EXE. Überschlag: 11 − 8 = 3, also etwa 0,5·10<sup>3</sup>&nbsp;s.</div>
+          <div data-muster><p class="heft">geg.: <i>s</i> = 1,496·10<sup>11</sup>&nbsp;m, <i>c</i> = 3,00·10<sup>8</sup>&nbsp;m/s · ges.: <i>t</i><br><i>t</i> = <span class="frac"><span class="fn"><i>s</i></span><span class="fd"><i>c</i></span></span> = <span class="frac"><span class="fn">1,496·10<sup>11</sup>&nbsp;m</span><span class="fd">3,00·10<sup>8</sup>&nbsp;m/s</span></span><br><u><i>t</i> ≈ 499&nbsp;s ≈ 8,3&nbsp;min</u></p><p>Das Sonnenlicht ist gut acht Minuten zur Erde unterwegs.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>★ Aufgabe 15 (freiwillig):</strong> Der Atomkern hat einen Durchmesser von etwa 10<sup>−15</sup>&nbsp;m, die Milchstraße etwa 10<sup>21</sup>&nbsp;m. Um welchen Faktor ist die Milchstraße größer? Gib die Hochzahl an: 10<sup><input class="inp inp-e" id="stern" inputmode="numeric" aria-label="Hochzahl des Faktors"></sup>
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['stern',36,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-stern')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-stern"><span class="frac"><span class="fn">10<sup>21</sup>&nbsp;m</span><span class="fd">10<sup>−15</sup>&nbsp;m</span></span> = 10<sup>21−(−15)</sup> = 10<sup>36</sup> – das sind 36 Größenordnungen. Der ClassPad zeigt für 1 EXP 21 ÷ 1 EXP (−)15 die Anzeige 1E+36.</div>
+        <div class="hs" id="hs-stern">
+          <div data-tipp>„Um welchen Faktor größer“ heißt: großen Wert durch kleinen Wert teilen.</div>
+          <div data-tipp>Beim Teilen von Zehnerpotenzen werden die Hochzahlen subtrahiert.</div>
+          <div data-tipp>21 − (−15) = 21 + 15.</div>
+          <div data-muster><p class="heft"><span class="frac"><span class="fn">10<sup>21</sup>&nbsp;m</span><span class="fd">10<sup>−15</sup>&nbsp;m</span></span> = 10<sup>21+15</sup> = <u>10<sup>36</sup></u></p><p>Die Milchstraße ist 10<sup>36</sup>-mal so groß wie ein Atomkern – 36 Größenordnungen.</p></div>
+        </div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — E-Schreibweise am ClassPad II</div>
+        <p><strong>E-Schreibweise:</strong> Das E steht für „mal zehn hoch“: 1.602E-19 = 1,602·10<sup>−19</sup>.</p>
+        <p><strong>Eingabe:</strong> Mantisse, Taste <strong>EXP</strong> (Software-Tastatur: E im Tastensatz [Number]), Hochzahl; negative Hochzahl mit (−). Kein zusätzliches „×10“ eingeben!</p>
+        <p><strong>Einstellungen:</strong> Statusleiste auf „Decimal“; O-Menü → Basic Format → Number Format: Normal 1 (Standard), Normal 2, Fix n (n Nachkommastellen), Sci n (n gültige Ziffern, immer E-Schreibweise).</p>
+        <p><strong>Vorteil:</strong> Jede EXP-Zahl ist ein geschlossener Block – Klammerfehler bei Divisionen werden vermieden. E ≠ Eulersche Zahl <i>e</i>.</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Zum Exit-Ticket →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Exit-Ticket</h2>
+    <p>Vier kurze Aufgaben zeigen dir, ob du fit für das elektrische Feld bist – dort warten Ladungen in nC und Feldstärken in kV/m auf dich.</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Exit-Ticket</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Zusammenfassung</button>
+      <button class="substep-all" onclick="revealSub(4,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="ex">
+        <p><strong>E1:</strong> 0,000&nbsp;47&nbsp;A = <input class="inp" id="x1" inputmode="decimal" aria-label="in Mikroampere"> <span class="unit">µA</span>
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['x1',470]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x1')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-x1">0,000&nbsp;47&nbsp;A = <span class="frac"><span class="fn">0,000&nbsp;47</span><span class="fd">0,000&nbsp;001</span></span>&nbsp;µA = 470&nbsp;µA</div>
+        <div class="hs" id="hs-x1">
+          <div data-tipp>Ein Vorsatz soll hinein – welche Regel gilt dafür?</div>
+          <div data-tipp>Maßzahl durch den Wert des Vorsatzes teilen; µ = 0,000&nbsp;001.</div>
+          <div data-tipp>Durch 0,000&nbsp;001 teilen heißt: Komma 6 Stellen nach rechts.</div>
+          <div data-muster><p class="heft">0,000&nbsp;47&nbsp;A = <span class="frac"><span class="fn">0,000&nbsp;47</span><span class="fd">0,000&nbsp;001</span></span>&nbsp;µA = <u>470&nbsp;µA</u></p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>E2:</strong> Ein Blitz setzt 5&nbsp;600&nbsp;000&nbsp;000&nbsp;J frei. Schreibe den Wert in wissenschaftlicher Notation und mit passendem Vorsatz.</p>
+        <p><input class="inp inp-m" id="x2-m" inputmode="decimal" aria-label="Vorfaktor"> · 10<sup><input class="inp inp-e" id="x2-e" inputmode="numeric" aria-label="Hochzahl"></sup>&nbsp;J = <input class="inp" id="x2-g" inputmode="decimal" aria-label="in Gigajoule"> <span class="unit">GJ</span>
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['x2-m',5.6],['x2-e',9,0],['x2-g',5.6]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x2')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-x2">Komma 9 Stellen nach links: 5,6·10<sup>9</sup>&nbsp;J; Giga = 10<sup>9</sup>, also 5,6&nbsp;GJ.</div>
+        <div class="hs" id="hs-x2">
+          <div data-tipp>Wie viele Stellen muss das Komma wandern, bis nur noch die 5 davor steht?</div>
+          <div data-tipp>Zähle die Ziffern nach der 5: Ihre Anzahl ist die Hochzahl. Welcher Vorsatz gehört zu genau dieser Hochzahl?</div>
+          <div data-tipp>Es sind 9 Stellen – und 10<sup>9</sup> heißt Giga.</div>
+          <div data-muster><p class="heft">5&nbsp;600&nbsp;000&nbsp;000&nbsp;J = <u>5,6·10<sup>9</sup>&nbsp;J</u> = <u>5,6&nbsp;GJ</u></p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>E3:</strong> Dein ClassPad zeigt <span class="lcd lcd-inline">2.5<span class="E">E</span>-4</span>. Schreibe den Wert als Dezimalzahl: <input class="inp" id="x3" inputmode="decimal" aria-label="Dezimalzahl">
+          <button class="btn btn-primary btn-sm" onclick="pruefe(this, [['x3',0.00025]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x3')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-x3">2.5E-4 = 2,5·10<sup>−4</sup> = 0,000&nbsp;25</div>
+        <div class="hs" id="hs-x3">
+          <div data-tipp>Was bedeutet das E?</div>
+          <div data-tipp>2.5E-4 = 2,5·10<sup>−4</sup>. Negative Hochzahl → Komma nach links.</div>
+          <div data-tipp>Vier Stellen nach links: 2,5 → 0,25 → 0,025 → …</div>
+          <div data-muster><p class="heft">2.5E-4 = 2,5·10<sup>−4</sup> = <u>0,000&nbsp;25</u></p></div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q"><strong>E4:</strong> Mit welcher Tastenfolge gibst du die Ladung 4,2&nbsp;µC (in Coulomb) richtig in den ClassPad ein?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('x4', this, 'w')">4.2 × 10 EXP (−)6</button>
+          <button class="quiz-btn" onclick="quizCheck('x4', this, 'c')">4.2 EXP (−)6</button>
+          <button class="quiz-btn" onclick="quizCheck('x4', this, 'w')">4.2 EXP (−)3</button>
+          <button class="quiz-btn" onclick="quizCheck('x4', this, 'w')">4.2 × <i>e</i>^(−6)</button>
+        </div>
+        <div class="quiz-fb" id="qfb-x4"></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Zur Zusammenfassung ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <div class="ex">
+        <p><strong>Lückentext:</strong> Fasse die Stunde zusammen.</p>
+        <div class="baustein" data-type="dtw" id="dtw-zusammenfassung">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Vorsatz" onclick="dtwSelect(this)">Vorsatz</span>
+            <span class="dtw-word" data-w="eine" onclick="dtwSelect(this)">eine</span>
+            <span class="dtw-word" data-w="Hochzahl" onclick="dtwSelect(this)">Hochzahl</span>
+            <span class="dtw-word" data-w="negative" onclick="dtwSelect(this)">negative</span>
+            <span class="dtw-word" data-w="EXP" onclick="dtwSelect(this)">EXP</span>
+            <span class="dtw-word" data-w="Decimal" onclick="dtwSelect(this)">Decimal</span>
+          </div>
+          <p class="dtw-text">Ein <span class="dtw-gap" data-answer="Vorsatz" onclick="dtwPlace(this)">______</span> wie „k“ oder „µ“ steht für eine feste Zehnerpotenz. In wissenschaftlicher Notation steht genau
+            <span class="dtw-gap" data-answer="eine" onclick="dtwPlace(this)">______</span> von null verschiedene Ziffer vor dem Komma. Die Anzahl der Stellen, um die das Komma verschoben wird, ist die
+            <span class="dtw-gap" data-answer="Hochzahl" onclick="dtwPlace(this)">______</span>; Zahlen kleiner als 1 bekommen eine
+            <span class="dtw-gap" data-answer="negative" onclick="dtwPlace(this)">______</span> Hochzahl. Am ClassPad gibst du Zehnerpotenzen mit der Taste
+            <span class="dtw-gap" data-answer="EXP" onclick="dtwPlace(this)">______</span> ein; damit Ergebnisse als Dezimalzahl erscheinen, steht in der Statusleiste
+            <span class="dtw-gap" data-answer="Decimal" onclick="dtwPlace(this)">______</span>.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-lueckentext">
+          <div data-tipp>Die Sätze folgen der Reihenfolge der Stunde: Vorsätze → Zehnerpotenzen → ClassPad.</div>
+          <div data-tipp>Zwei Lücken drehen sich um das Kommaverschieben, zwei um den ClassPad.</div>
+          <div data-tipp>Die Statusleiste zeigt „Standard“ oder „…“ – das zweite Wort ist gesucht.</div>
+          <div data-muster><p>Vorsatz · eine · Hochzahl · negative · EXP · Decimal</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Vorsätze</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Vorsätze (T, G, M, k, c, m, µ, n, p) sind Abkürzungen für Zehnerpotenzen. Auflösen: Buchstabe durch Zahl ersetzen. Einführen: Maßzahl durch den Wert des Vorsatzes teilen. Praxisregel: Maßzahl zwischen 1 und 999.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Wissenschaftliche Notation</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Eine Ziffer (1 bis 9) vor dem Komma, der Rest als Zehnerpotenz. Stellen der Kommaverschiebung = Hochzahl. Beim Multiplizieren Hochzahlen addieren, beim Dividieren subtrahieren, dann normieren.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>E-Schreibweise am ClassPad II</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">E heißt „mal zehn hoch“. Eingabe mit EXP, negative Hochzahl mit (−). Dezimalmodus „Decimal“ wählen; Zahlenformat unter Basic Format → Number Format (Normal 1/2, Fix, Sci). E ist nicht die Eulersche Zahl.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt sehr große und sehr kleine Werte umrechnen, sauber notieren und sicher in deinen ClassPad eingeben.</span></div>
+    <p class="connector-text">Nächster Halt: das elektrische Feld. Dort trägt ein einzelnes Elektron nur 1,602·10<sup>−19</sup>&nbsp;C – und trotzdem reicht ein Kamm, der durchs Haar gezogen wird, um Milliarden davon zu verschieben. Wie stark ist das Feld, das dabei entsteht?</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+
+  <div class="card quellen">
+    <h3>Quellen und Lizenz</h3>
+    <p>Die Erklärtexte in den Abschnitten „Vom Atom zur Galaxie“, „Vorsätze“, „Wissenschaftliche Notation“ und „E-Schreibweise“ beruhen auf: <strong>Michael A. Rundel et al.: <em>Physik Libre</em> – Freies Physikbuch für die Sekundarstufe II</strong>, Kapitel 2.4 „Größenordnungen“ (Abschnitte 2.4.1 bis 2.4.4), abrufbar unter physikbuch.schule. Lizenz: Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 International (CC&nbsp;BY-SA&nbsp;4.0), creativecommons.org/licenses/by-sa/4.0/deed.de.</p>
+    <p><strong>Änderungen:</strong> Texte gekürzt und umformuliert, Vorsatztabelle um Tera, Zenti und Piko ergänzt, Potenzgesetze, Aufgaben, Hilfestellungen, interaktive Übungen und Hinweise zum CASIO ClassPad II hinzugefügt. Abbildungen des Originals wurden nicht übernommen.</p>
+    <p><strong>Weitergabe:</strong> Diese Lernseite ist eine Bearbeitung und steht daher ebenfalls unter CC&nbsp;BY-SA&nbsp;4.0.</p>
+    <p>Angaben zur Bedienung des Rechners nach: CASIO Computer Co., Ltd.: <em>ClassPad II fx-CP400 – Bedienungsanleitung</em> (sinngemäß wiedergegeben).</p>
+  </div>
+
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+</script>
+<script>
+/* ============================================================
+   Seitenspezifisch: Größenordnungen (K11GK · LB1)
+   ============================================================ */
+
+/* ---------- Eingaben lesen: Komma, Punkt, Leerzeichen, E-Schreibweise, ·10^ ---------- */
+function leseZahl(txt){
+  let t=String(txt||'').trim().replace(/[\s  ]/g,'').replace(/−/g,'-').replace(/,/g,'.');
+  t=t.replace(/(·|\*|x|×)10\^/gi,'e');
+  if(t==='') return NaN;
+  let v=Number(t); if(!isFinite(v)) v=parseFloat(t);
+  return v;
+}
+
+/* ---------- Prüfen mit relativer Toleranz ----------
+   spec: [[id, soll, tolRel]] — tolRel fehlt: 0,5 %; tolRel = 0: exakt (Hochzahlen) */
+function pruefe(btn, spec){
+  const scope=btn.closest('.ex')||btn.parentElement;
+  let ok=0, unnormiert=false;
+  spec.forEach(([id,soll,tol])=>{
+    const el=document.getElementById(id); if(!el) return;
+    const ist=leseZahl(el.value);
+    const rel=(tol===undefined)?0.005:tol;
+    const good=isFinite(ist) && (rel===0 ? Math.abs(ist-soll)<1e-9 : Math.abs(ist-soll)<=Math.abs(soll)*rel+1e-30);
+    el.classList.toggle('ok',good); el.classList.toggle('err',!good);
+    if(good) ok++;
+    if(/-m$/.test(id) && isFinite(ist) && ist!==0 && (Math.abs(ist)<1 || Math.abs(ist)>=10)) unnormiert=true;
+  });
+  const fb=scope.querySelector('.grp-fb');
+  if(fb){
+    let msg=ok+' von '+spec.length+' richtig.';
+    if(ok===spec.length) msg='✓ Alles richtig – '+msg;
+    else if(unnormiert) msg+=' Achtung: Der Vorfaktor muss zwischen 1 und 10 liegen.';
+    fb.textContent=msg; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err');
+  }
+  const sb=scope.querySelector('.solbtn'); if(sb) sb.hidden=false;
+  return ok===spec.length;
+}
+
+/* ---------- Kommaschieber ---------- */
+const ks={s:'602',p:21,n:0,label:'Avogadro-Konstante in 1/mol',klicks:0};
+function ksGruppe(int,frac){
+  const g=int.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  const f=frac?frac.replace(/(\d{3})(?=\d)/g,'$1 '):'';
+  return {g,f};
+}
+function ksDez(s,q){
+  let int, frac='';
+  if(q>=0){ int=s+'0'.repeat(q); }
+  else { const k=s.length+q;
+    if(k>0){ int=s.slice(0,k); frac=s.slice(k); } else { int='0'; frac='0'.repeat(-k)+s; } }
+  int=int.replace(/^0+(?=\d)/,'');
+  return {int,frac};
+}
+function ksRender(){
+  const d=ksDez(ks.s, ks.p-ks.n), gr=ksGruppe(d.int,d.frac);
+  let html=gr.g+(gr.f?'<span class="ks-comma">,</span>'+gr.f:'');
+  html+=' · 10<sup>'+String(ks.n).replace('-','−')+'</sup>';
+  document.getElementById('ks-num').innerHTML=html;
+  document.getElementById('ks-label').textContent=ks.label;
+  const fb=document.getElementById('ks-fb');
+  const fertig=d.int.length===1 && d.int!=='0';
+  if(fertig && ks.klicks>0){
+    fb.innerHTML='✓ Geschafft: genau eine Ziffer ungleich null vor dem Komma. Das Komma ist '+Math.abs(ks.n)+' Stellen nach '+(ks.n>0?'links':'rechts')+' gewandert – die Hochzahl ist '+String(ks.n).replace('-','−')+'.';
+    fb.className='fb ok';
+  } else { fb.textContent=ks.klicks>0?('Verschiebungen bisher: '+ks.klicks+'. Der Wert der Zahl bleibt dabei immer gleich.'):''; fb.className='fb'; }
+}
+function ksLoad(s,p,label){ ks.s=s; ks.p=p; ks.n=0; ks.label=label; ks.klicks=0; ksRender(); }
+function ksShift(dir){                  /* dir -1: Komma nach links (Hochzahl +1), +1: nach rechts (Hochzahl −1) */
+  const neu=ks.n-dir; if(Math.abs(neu)>30) return;
+  ks.n=neu; ks.klicks++; ksRender();
+}
+
+/* ---------- ClassPad-Anzeige-Simulator (vereinfacht, Dezimalmodus) ---------- */
+function cpStrip(m){ return m.indexOf('.')>=0 ? m.replace(/0+$/,'').replace(/\.$/,'') : m; }
+function cpExp(x,stellen,nullenBehalten){
+  const t=x.toExponential(Math.max(stellen-1,0)).split('e');
+  let m=nullenBehalten?t[0]:cpStrip(t[0]); const e=parseInt(t[1],10);
+  return m+'<span class="E">E</span>'+(e<0?'-':'+')+Math.abs(e);
+}
+function cpFormat(x,fmt){
+  if(!isFinite(x)) return 'Error';
+  const a=Math.abs(x);
+  if(fmt==='n1'||fmt==='n2'){
+    if(x===0) return '0';
+    const grenze=(fmt==='n1')?1e-2:1e-9;
+    if(a<grenze||a>=1e10) return cpExp(x,10,false);
+    const dez=Math.min(Math.max(10-(Math.floor(Math.log10(a))+1),0),20);
+    return cpStrip(x.toFixed(dez));
+  }
+  if(fmt[0]==='f'){ const n=+fmt.slice(1); return a>=1e10 ? cpExp(x,n+1,true) : x.toFixed(n); }
+  if(fmt[0]==='s'){ return cpExp(x,+fmt.slice(1),true); }
+  return String(x);
+}
+function cpShow(){
+  const roh=document.getElementById('cp-in').value, fmt=document.getElementById('cp-fmt').value;
+  const teile=String(roh).split(/[\/÷]/); const x=(teile.length===2)?leseZahl(teile[0])/leseZahl(teile[1]):leseZahl(roh);
+  document.getElementById('cp-line').textContent=String(roh).replace(/,/g,'.').replace(/e/gi,'E');
+  document.getElementById('cp-out').innerHTML=isFinite(x)?cpFormat(x,fmt):'Eingabe nicht lesbar';
+}
+function cpUnlock(){ document.getElementById('cp-sim').hidden=false; document.getElementById('cp-unlock').hidden=true; cpShow(); }
+
+/* ---------- Quiz-Rückmeldungen ---------- */
+quizFeedback['go1']={
+  ok:'✅ <strong>Richtig!</strong> Von −15 bis −10 sind es 5 Schritte zu je einem Faktor 10: Ein Atom ist etwa 10<sup>5</sup> = 100&nbsp;000-mal so groß wie sein Kern – also 5 Größenordnungen.',
+  ng:'❌ <strong>Nicht ganz.</strong> Gezählt wird der Abstand der Hochzahlen: −10 − (−15) = 5. Der Faktor ist 10<sup>5</sup>, die Zahl der Größenordnungen 5.',
+  hint:'Eine Größenordnung entspricht einem Faktor 10. Wie viele Zehnerschritte liegen zwischen den beiden Hochzahlen?'
+};
+quizFeedback['vk1']={
+  ok:'✅ <strong>Richtig!</strong> µ und m sind verschiedene Zahlen: <span class="frac"><span class="fn">6·10<sup>−6</sup>&nbsp;C</span><span class="fd">2·10<sup>−3</sup>&nbsp;C</span></span> = 3·10<sup>−3</sup> = 0,003.',
+  ng:'❌ <strong>Nicht ganz.</strong> Kürzen darfst du nur gleiche Vorsätze. Ersetze µ = 10<sup>−6</sup> und m = 10<sup>−3</sup>: Das Ergebnis ist 3·10<sup>−3</sup> = 0,003 (Coulomb kürzt sich).',
+  hint:'Darf man µ gegen m kürzen? Ersetze beide Vorsätze zuerst durch ihre Zehnerpotenzen.'
+};
+quizFeedback['neg1']={
+  ok:'✅ <strong>Richtig!</strong> 10<sup>−7</sup> = <span class="frac"><span class="fn">1</span><span class="fd">10<sup>7</sup></span></span>: Die Länge ist positiv, aber sehr klein (0,000&nbsp;000&nbsp;65&nbsp;m).',
+  ng:'❌ <strong>Nicht ganz.</strong> Das Minus gehört zur Hochzahl, nicht zur Zahl: 10<sup>−7</sup> bedeutet „siebenmal durch 10 teilen“. Ein negatives Vorzeichen der ganzen Zahl stünde vor der 6,5.',
+  hint:'Wo genau steht das Minuszeichen – vor der 6,5 oder in der Hochzahl?'
+};
+quizFeedback['wn1']={
+  ok:'✅ <strong>Richtig!</strong> 25·10<sup>−6</sup>&nbsp;C ist wertgleich, aber vor dem Komma stehen zwei Ziffern. Normiert: 2,5·10<sup>−5</sup>&nbsp;C.',
+  ng:'❌ <strong>Nicht ganz.</strong> Der Wert stimmt (µ = 10<sup>−6</sup>), nur ist 25 kein zulässiger Vorfaktor. Komma eine Stelle nach links, Hochzahl um 1 größer: 2,5·10<sup>−5</sup>&nbsp;C.',
+  hint:'Prüfe zwei Dinge getrennt: Stimmt der Wert? Und erfüllt der Vorfaktor die Regel der wissenschaftlichen Notation?'
+};
+quizFeedback['e1']={
+  ok:'✅ <strong>Richtig!</strong> 3E-4 = 3·10<sup>−4</sup> = 0,0003.',
+  ng:'❌ <strong>Nicht ganz.</strong> Das E bedeutet „mal zehn hoch“: 3E-4 = 3·10<sup>−4</sup> = 0,0003 – weder eine Subtraktion noch ein Produkt mit −4.',
+  hint:'Lies das E als „mal zehn hoch“ und schreibe den Ausdruck vollständig auf.'
+};
+quizFeedback['x4']={
+  ok:'✅ <strong>Richtig!</strong> 4,2&nbsp;µC = 4,2·10<sup>−6</sup>&nbsp;C, und EXP enthält das „·10“ bereits.',
+  ng:'❌ <strong>Nicht ganz.</strong> µ steht für 10<sup>−6</sup>, und nach EXP folgt direkt die Hochzahl – ohne zusätzliches „× 10“ und ohne die Eulersche Zahl. Richtig ist 4.2 EXP (−)6.',
+  hint:'Welche Hochzahl gehört zu µ? Und was steckt in der Taste EXP schon drin?'
+};
+
+function initGroessen(){ ksRender(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initGroessen); } else { initGroessen(); }
+</script>
+</body>
+</html>
