@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>quiz.py – Speichersysteme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CYBERWEBSEITE – Design (nicht verändern, nur Inhalte im CONFIG-Block)
+   ===================================================================== */
+:root{
+  --void:#04070a; --ink:#d9ffe9; --phos:#7cffb2; --amber:#ffb547; --mag:#ff4fd8;
+  --cyan:#5ce1ff; --lav:#b9a3ff; --dim:#4f7f6c; --line:#0f2a20;
+  --fs-body:clamp(17px,1.75vw,36px); --fs-small:clamp(14px,1.15vw,24px);
+  --fs-title:clamp(42px,5.4vw,118px); --fs-hero:clamp(54px,7.4vw,160px);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --void:#04070a; --ink:#d9ffe9; } }
+:root[data-theme="dark"]{ --void:#04070a; --ink:#d9ffe9; }
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--void);color:var(--ink);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:var(--fs-body);line-height:1.35;overflow:hidden;cursor:default}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+#rain{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.9;transition:opacity .8s}
+body[data-typ="frage"] #rain,body[data-typ="liste"] #rain,body[data-typ="info"] #rain{opacity:.35}
+.crt{position:fixed;inset:0;z-index:2;animation:flicker 5s infinite}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:6;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,.32) 3px,rgba(0,0,0,0) 4px)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:7;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.72) 100%)}
+.sweep{position:fixed;left:0;right:0;height:22vh;top:-22vh;pointer-events:none;z-index:6;background:linear-gradient(to bottom,rgba(124,255,178,0),rgba(124,255,178,.05),rgba(124,255,178,0));animation:sweep 7s linear infinite}
+@keyframes sweep{to{transform:translateY(130vh)}}
+@keyframes flicker{0%,100%{opacity:1}47%{opacity:1}48%{opacity:.93}49%{opacity:1}82%{opacity:.97}}
+
+#term{position:relative;height:100%;padding:clamp(18px,3vw,60px) clamp(20px,4.2vw,86px) calc(clamp(18px,2.4vw,44px) + 52px);display:flex;flex-direction:column;gap:clamp(6px,1vw,20px);overflow:hidden;text-shadow:0 0 6px rgba(124,255,178,.35)}
+.row{white-space:pre-wrap;word-break:break-word}
+.prompt{color:var(--dim);font-size:var(--fs-small)}
+.prompt .ps{color:var(--phos)} .prompt .cmd{color:var(--ink)}
+.caret{display:inline-block;width:.6em;height:1.05em;vertical-align:-.15em;background:var(--phos);margin-left:.08em;animation:blink 1s steps(1) infinite;box-shadow:0 0 12px var(--phos)}
+@keyframes blink{50%{opacity:0}}
+.ok{color:var(--phos)} .wait{color:var(--amber)}
+.log{font-size:var(--fs-small);color:var(--ink);opacity:.85}
+.hero{white-space:pre-line;font-family:"VT323",monospace;font-size:var(--fs-hero);line-height:.92;color:var(--phos);margin:clamp(12px,2.4vw,44px) 0 clamp(6px,1vw,18px);text-shadow:0 0 14px rgba(124,255,178,.7),0 0 60px rgba(124,255,178,.3);letter-spacing:.01em}
+.title{font-family:"VT323",monospace;font-size:var(--fs-title);line-height:.95;color:var(--phos);text-shadow:0 0 12px rgba(124,255,178,.65),0 0 44px rgba(124,255,178,.25);margin-top:clamp(2px,.4vw,8px)}
+.comment{color:var(--dim)}
+.comment.bright{color:#9fdcc4}
+.tipp{color:var(--amber);text-shadow:0 0 8px rgba(255,181,71,.45)}
+.spacer{flex:1 1 auto;min-height:0}
+
+.help{display:grid;grid-template-columns:auto auto 1fr;column-gap:clamp(16px,2.4vw,52px);row-gap:clamp(8px,1.3vw,26px);margin-top:clamp(10px,2vw,40px);font-size:var(--fs-body)}
+.help .n{font-family:"VT323",monospace;font-size:1.9em;line-height:.8;color:var(--amber)}
+.help .h{color:var(--phos);font-weight:600} .help .d{color:var(--ink);opacity:.8}
+
+.lines{display:grid;gap:clamp(6px,1vw,18px);margin-top:clamp(6px,1.2vw,24px)}
+.lines .li{display:grid;grid-template-columns:auto 1fr;gap:clamp(10px,1.2vw,24px);align-items:baseline}
+.lines .b{font-family:"VT323",monospace;font-size:1.5em;line-height:.8;color:var(--amber);text-shadow:0 0 10px rgba(255,181,71,.5)}
+
+.split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(16px,3vw,64px);align-items:start}
+.code{border-left:2px solid var(--line);padding:clamp(8px,1vw,18px) 0 clamp(8px,1vw,18px) clamp(10px,1.2vw,22px);font-size:var(--fs-body);background:linear-gradient(90deg,rgba(124,255,178,.05),rgba(124,255,178,0))}
+.code .ln{display:grid;grid-template-columns:2.2em 1fr;white-space:pre}
+.code .no{color:var(--dim);opacity:.7;user-select:none}
+.kw{color:var(--mag)} .cl{color:var(--cyan)} .num{color:var(--amber)} .fn{color:var(--phos)} .str{color:var(--amber)} .cm{color:var(--dim)}
+
+.opts{display:grid;gap:clamp(6px,.9vw,16px)}
+.opt{--c:var(--phos);position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:clamp(12px,1.4vw,28px);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,20px);border-left:3px solid color-mix(in srgb,var(--c) 70%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--c) 12%,transparent),transparent 70%);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.9,.2,1),background .25s,color .25s;opacity:0;transform:translateX(-18px)}
+.opt.in{opacity:1;transform:none}
+.opt .k{font-family:"VT323",monospace;font-size:1.75em;line-height:.8;color:var(--c);text-shadow:0 0 12px var(--c)}
+.opt .t{min-width:0}
+.opt .flag{font-family:"VT323",monospace;font-size:1.3em;line-height:.8;opacity:0}
+.opt[data-k="A"]{--c:var(--mag)} .opt[data-k="B"]{--c:var(--cyan)} .opt[data-k="C"]{--c:var(--amber)} .opt[data-k="D"]{--c:var(--lav)}
+.opt.wrong{opacity:.2;filter:saturate(.3)}
+.opt.right{background:var(--phos);color:var(--void);border-left-color:var(--phos);box-shadow:0 0 50px rgba(124,255,178,.55),0 0 0 2px var(--phos);text-shadow:none;transform:scale(1.02)}
+.opt.right .k{color:var(--void);text-shadow:none}
+.opt.right .flag{opacity:1;color:var(--void)}
+.opt.pick{cursor:pointer}
+.opt.pick:hover{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 30%,transparent),transparent 85%);transform:translateX(6px)}
+.opt.pick:active{transform:translateX(6px) scale(.99)}
+.opt.miss{opacity:1;filter:none;background:var(--mag);color:var(--void);border-left-color:var(--mag);box-shadow:0 0 40px rgba(255,79,216,.5),0 0 0 2px var(--mag);animation:shake .45s ease}
+.opt.miss .k{color:var(--void);text-shadow:none}
+.opt.miss .flag{opacity:1;color:var(--void)}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.verdict{font-family:"VT323",monospace;font-size:1.4em;line-height:.8;margin-left:.6em}
+.verdict.ok{color:var(--phos);text-shadow:0 0 12px rgba(124,255,178,.7)}
+.verdict.no{color:var(--mag);text-shadow:0 0 12px rgba(255,79,216,.7)}
+.glitch.fehl .flash{background:var(--mag)}
+
+.timer{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:clamp(10px,1.2vw,24px);font-size:var(--fs-small);color:var(--cyan);margin-top:clamp(4px,.6vw,12px)}
+.timer .bar{display:grid;grid-template-columns:repeat(30,1fr);gap:clamp(2px,.25vw,5px);height:clamp(12px,1.2vw,24px)}
+.timer .seg{background:currentColor;box-shadow:0 0 10px currentColor;transition:opacity .2s}
+.timer .seg.off{opacity:.12;box-shadow:none}
+.timer .sec{font-family:"VT323",monospace;font-size:2em;line-height:.8;min-width:3.4ch;text-align:right}
+.timer.warn{color:var(--amber)} .timer.hot{color:var(--mag)}
+.timer.done .sec{animation:blink .35s steps(1) infinite}
+
+.explain{border:1px solid var(--line);border-left:3px solid var(--phos);padding:clamp(8px,1vw,18px) clamp(12px,1.4vw,26px);background:rgba(4,20,14,.75)}
+.explain .row{color:#b9f5d8}
+
+.glitch #term{animation:glitch .55s steps(1)}
+@keyframes glitch{
+  0%{transform:none;text-shadow:3px 0 var(--mag),-3px 0 var(--cyan)}
+  15%{transform:translate(-8px,2px) skewX(-6deg);clip-path:inset(12% 0 60% 0)}
+  30%{transform:translate(7px,-3px);clip-path:inset(55% 0 8% 0);text-shadow:-5px 0 var(--mag),5px 0 var(--cyan)}
+  45%{transform:translate(-3px,0) skewX(4deg);clip-path:inset(30% 0 35% 0)}
+  60%{transform:translate(4px,1px);clip-path:none;text-shadow:2px 0 var(--mag),-2px 0 var(--cyan)}
+  100%{transform:none;clip-path:none}
+}
+.flash{position:fixed;inset:0;z-index:5;pointer-events:none;background:var(--phos);opacity:0}
+.glitch .flash{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:.35}100%{opacity:0}}
+
+.status{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);z-index:8;display:flex;align-items:stretch;gap:0;height:clamp(34px,3vw,52px);font-size:clamp(13px,1vw,20px);background:var(--phos);color:var(--void);text-shadow:none;overflow-x:auto;white-space:nowrap}
+.status .sess{padding:0 1.1em;display:flex;align-items:center;background:var(--void);color:var(--phos);font-weight:600}
+.status .tab{padding:0 .9em;display:flex;align-items:center;font-weight:500}
+.status .tab[aria-current="true"]{background:var(--void);color:var(--amber)}
+.status .gap{flex:1}
+.status .keys{display:flex;align-items:center;gap:1.4em;padding:0 1.2em}
+.status .keys b{font-weight:600}
+.status .clock{padding:0 1.1em;display:flex;align-items:center;background:var(--void);color:var(--phos)}
+
+@media (max-width:760px){.split{grid-template-columns:1fr}.status .keys{display:none}}
+@media (prefers-reduced-motion: reduce){
+  .crt,.sweep,.caret{animation:none}
+  .glitch #term,.glitch .flash{animation:none}
+  .opt{transition:none}
+  .opt.miss{animation:none}
+  #rain{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="crt"><main id="term" aria-live="polite"></main></div>
+<div class="flash" aria-hidden="true"></div>
+<div class="sweep" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<nav class="status" aria-label="Navigation">
+  <span class="sess" id="sess">[sitzung]</span>
+  <span id="tabs" style="display:flex"></span>
+  <span class="gap"></span>
+  <span class="keys" id="keys"></span>
+  <span class="clock" id="clock">00:00</span>
+</nav>
+
+<script>
+/* =====================================================================
+   INHALT – nur dieser Block wird für eine neue Seite angepasst.
+   Folientypen: boot · liste · frage · info · merksatz  (siehe SKILL.md)
+   Code-Zeilen sind reiner Text, die Syntax-Farben entstehen automatisch.
+   ===================================================================== */
+var CONFIG = {
+  titel: "quiz.py – Speichersysteme",
+  sitzung: "speicher",
+  timerSekunden: 30,
+  regenWoerter: ["Pit","Land","405nm","λ/NA","HDD","SSD","7200U/min","4,17ms","LTO","Floating Gate","SLC","QLC","2**n","TBW","DRAM","SRAM","L1","Cache","Refresh","0b1010","Tunneloxid","Wear-Leveling","read()","write()"],
+  folien: [
+    { typ:"boot", tab:"go",
+      pfad:"~/informatik/klasse-11 $", befehl:"python3 quiz.py --thema speicher",
+      log:[
+        ["ok","lese Spur aus Pits und Lands"],
+        ["ok","drehe Platter auf 7200 U/min"],
+        ["ok","fange Elektronen auf dem Floating Gate"],
+        ["ok","15 Fragen geladen"],
+        ["..","warte auf Klasse 11"]
+      ],
+      hero:"Wo bleiben\neure Bits?",
+      kommentar:"Quiz Speichersysteme. Leertaste startet." },
+
+    { typ:"liste", tab:"help", befehl:"help(ablauf)",
+      zeilen:[
+        ["1","lesen","Frage und Antworten lesen"],
+        ["2","denken","30 Sekunden, ohne zu reden"],
+        ["3","karte hoch","bei KARTEN HOCH! zeigen alle gleichzeitig"],
+        ["4","auflösung","richtige Antwort und Erklärung"]
+      ],
+      kommentar:"gemischte Verteilung? Eine Minute mit dem Nachbarn reden, dann neu abstimmen." },
+
+    { typ:"frage", tab:"f1", tag:"optisch",
+      titel:"Wann ist ein Bit eine 1?",
+      sub:"CD, DVD und Blu-ray: Spur aus Pits und Lands",
+      antworten:[
+        ["A","Immer, wenn der Laser auf einen Pit trifft"],
+        ["B","Immer, wenn der Laser auf ein Land trifft"],
+        ["C","Bei einem Wechsel zwischen Pit und Land"],
+        ["D","Wenn die Stelle stark magnetisiert ist"]
+      ],
+      richtig:"C",
+      warum:["Gelesen wird der Übergang: Wechsel = 1, kein Wechsel = 0.","„Pit = 0, Land = 1“ ist die typische Falle."] },
+
+    { typ:"frage", tab:"f2", tag:"optisch",
+      titel:"Warum fasst eine Blu-ray mehr?",
+      sub:"Alle Scheiben haben 12 cm Durchmesser.",
+      antworten:[
+        ["A","Sie dreht sich schneller als eine CD"],
+        ["B","Kürzere Wellenlänge → kleinerer Lichtfleck"],
+        ["C","Die Bits werden zusätzlich magnetisch gespeichert"],
+        ["D","Die Pits sind tiefer als bei der CD"]
+      ],
+      richtig:"B",
+      warum:["Fleckgröße ≈ λ / NA: 405 nm statt 780 nm, größere NA.","Kleinere Pits und engere Spuren → mehr Daten pro Fläche."],
+      tipp:"Woran liegt es, wie klein ein Lichtfleck werden kann?" },
+
+    { typ:"frage", tab:"f3", tag:"scheibentyp",
+      titel:"Welche Scheibe ist wiederbeschreibbar?",
+      sub:"Schicht wechselt zwischen kristallin und amorph.",
+      antworten:[
+        ["A","Gepresste Audio-CD (ROM)"],
+        ["B","DVD-R mit Farbstoffschicht"],
+        ["C","Gekaufte Film-Blu-ray"],
+        ["D","BD-RE mit Phasenwechsel-Schicht"]
+      ],
+      richtig:"D",
+      warum:["Phasenwechsel ist umkehrbar → viele Male beschreibbar.","Der Farbstoff einer R-Scheibe verfärbt sich nur einmal."] },
+
+    { typ:"frage", tab:"f4", tag:"scheibentyp",
+      titel:"Wie entstehen Pits auf einer Film-BD?",
+      antworten:[
+        ["A","Sie werden im Werk mechanisch gepresst"],
+        ["B","Ein Laser verfärbt eine Farbstoffschicht"],
+        ["C","Ein Laser schaltet kristallin auf amorph"],
+        ["D","Ein Magnetkopf richtet Bereiche aus"]
+      ],
+      richtig:"A",
+      warum:["Gekaufte Scheiben sind gepresst (ROM) – nur lesbar.","B ist die R-Scheibe, C die RW/RE-Scheibe."] },
+
+    { typ:"frage", tab:"f5", tag:"festplatte",
+      titel:"Was bewegt den Kopf zur Spur?",
+      antworten:[
+        ["A","Die Spindel"],
+        ["B","Der Platter"],
+        ["C","Der Schwenkarm"],
+        ["D","Der Sektor"]
+      ],
+      richtig:"C",
+      warum:["Der Schwenkarm fährt die Köpfe von Spur zu Spur.","Die Spindel dreht die Platter, der Sektor ist ein Spurabschnitt."] },
+
+    { typ:"frage", tab:"f6", tag:"festplatte",
+      titel:"Was speichert bei der HDD das Bit?",
+      antworten:[
+        ["A","Ladung in einem winzigen Kondensator"],
+        ["B","Die Magnetisierungsrichtung eines Bereichs"],
+        ["C","Eine Vertiefung in der Plattenoberfläche"],
+        ["D","Ein Flipflop aus sechs Transistoren"]
+      ],
+      richtig:"B",
+      warum:["Spule schreibt per Magnetfeld; Sensor liest Richtungswechsel.","A ist DRAM, C optisch, D ist SRAM."] },
+
+    { typ:"frage", tab:"f7", tag:"zugriffszeit",
+      titel:"Mittlere Rotationsverzögerung?",
+      sub:"Festplatte mit 7200 U/min, im Mittel eine halbe Umdrehung warten",
+      code:[
+        "n = 7200 / 60     # U pro s",
+        "T = 1 / n         # s pro Umdrehung",
+        "t_rot = T / 2",
+        "print(t_rot * 1000, 'ms')"
+      ],
+      antworten:[["A","ca. 8,3 ms"],["B","ca. 1,2 ms"],["C","ca. 12 ms"],["D","ca. 4,2 ms"]],
+      richtig:"D",
+      warum:["120 U/s → T ≈ 8,33 ms → halbe Umdrehung ≈ 4,17 ms.","8,3 ms wäre eine ganze Umdrehung, 12 ms inkl. Suchzeit."],
+      tipp:"Erst T ausrechnen – dann nicht vergessen: nur eine halbe Umdrehung.",
+      timer:60 },
+
+    { typ:"frage", tab:"f8", tag:"magnetband",
+      titel:"Warum noch Magnetbänder (LTO)?",
+      sub:"Archiv im Rechenzentrum",
+      antworten:[
+        ["A","Sie haben den schnellsten Zufallszugriff"],
+        ["B","Billig pro TB, langlebig, offline lagerbar"],
+        ["C","Sie sind stoßfest wie eine SSD"],
+        ["D","Sie brauchen keinen Lesekopf"]
+      ],
+      richtig:"B",
+      warum:["Archiv: selten lesen, aber viel, billig und lange speichern.","Zugriff ist sequenziell – Spulen dauert Sekunden bis Minuten."] },
+
+    { typ:"frage", tab:"f9", tag:"flash",
+      titel:"Wo sitzen die Elektronen fest?",
+      sub:"Flash-Zelle, auch ohne Strom",
+      antworten:[
+        ["A","Im Kondensator der Zelle"],
+        ["B","Auf dem Steuer-Gate"],
+        ["C","Auf dem rundum isolierten Floating Gate"],
+        ["D","In der Magnetschicht der Zelle"]
+      ],
+      richtig:"C",
+      warum:["Das Floating Gate ist komplett von Oxid umgeben.","Darum ist Flash nichtflüchtig – im Gegensatz zum RAM."] },
+
+    { typ:"frage", tab:"f10", tag:"slc bis qlc",
+      titel:"Wie viele Niveaus braucht TLC?",
+      sub:"TLC speichert 3 Bit pro Zelle.",
+      antworten:[["A","3"],["B","6"],["C","8"],["D","16"]],
+      richtig:"C",
+      warum:["n Bits → 2ⁿ Niveaus: 2³ = 8.","16 Niveaus braucht QLC (4 Bit)."],
+      tipp:"Wie viele verschiedene Muster kann man mit 3 Bits bilden?" },
+
+    { typ:"frage", tab:"f11", tag:"abnutzung",
+      titel:"Warum verschleißt eine SSD?",
+      sub:"Sie hat keine beweglichen Teile.",
+      antworten:[
+        ["A","Der Controller nutzt sich durch Reibung ab"],
+        ["B","Schreiben/Löschen schädigt das Tunneloxid"],
+        ["C","Beim Lesen werden die Zellen zu heiß"],
+        ["D","Gar nicht – SSDs verschleißen nie"]
+      ],
+      richtig:"B",
+      warum:["Elektronen bleiben im Oxid stecken, Fehlstellen entstehen.","Ladung sickert weg, die Niveaus verschwimmen."],
+      timer:45 },
+
+    { typ:"frage", tab:"f12", tag:"abnutzung",
+      titel:"Was nutzt die Zelle NICHT ab?",
+      antworten:[["A","Lesen"],["B","Schreiben"],["C","Löschen"],["D","Alle drei gleich stark"]],
+      richtig:"A",
+      warum:["Beim Lesen tunneln keine Elektronen durch das Oxid.","Wie Papier: Schreiben und Radieren schaden, Anschauen nicht."] },
+
+    { typ:"frage", tab:"f13", tag:"dram und sram",
+      titel:"Welche Aussage stimmt?",
+      antworten:[
+        ["A","SRAM braucht einen Refresh, DRAM nicht"],
+        ["B","Beide behalten ihre Daten ohne Strom"],
+        ["C","DRAM ist schneller und teurer als SRAM"],
+        ["D","SRAM ist schneller, DRAM dichter und billiger"]
+      ],
+      richtig:"D",
+      warum:["SRAM: 6 Transistoren, ca. 1 ns. DRAM: 1T + 1C, Refresh nötig.","Beide sind flüchtig."] },
+
+    { typ:"frage", tab:"f14", tag:"speicherhierarchie",
+      titel:"Von schnell nach langsam?",
+      antworten:[
+        ["A","RAM – Register – Cache – SSD – HDD"],
+        ["B","Register – Cache – RAM – SSD – HDD"],
+        ["C","Cache – Register – SSD – RAM – HDD"],
+        ["D","Register – RAM – Cache – HDD – SSD"]
+      ],
+      richtig:"B",
+      warum:["Je näher am Rechenwerk, desto schneller, kleiner, teurer.","SSD: µs, HDD: ms – die Mechanik bremst."],
+      timer:45 },
+
+    { typ:"frage", tab:"f15", tag:"lokalität",
+      titel:"Mittlere Zugriffszeit?",
+      sub:"Trefferrate 95 %, Cache 1 ns, RAM 100 ns",
+      code:[
+        "treffer = 0.95",
+        "t = treffer * 1 + (1 - treffer) * 100",
+        "print(t, 'ns')"
+      ],
+      antworten:[["A","ca. 95 ns"],["B","ca. 50 ns"],["C","ca. 6 ns"],["D","ca. 1 ns"]],
+      richtig:"C",
+      warum:["0,95 · 1 ns + 0,05 · 100 ns ≈ 6 ns statt 100 ns.","Dank Lokalität bedient der Cache fast alle Zugriffe."],
+      tipp:"Gewichteter Mittelwert: Treffer schnell, Fehlschläge langsam.",
+      timer:60 },
+
+    { typ:"merksatz", tab:"end", befehl:"print(merksatz)",
+      hero:"Kein Speicher kann alles –\ndarum die Hierarchie.",
+      kommentar:"Nächste Stunde: Puzzlephase Prozessor und Speicher",
+      exit:true }
+  ]
+};
+
+/* ============================ ENDE INHALT ============================ */
+
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var term = document.getElementById("term");
+  var tabsEl = document.getElementById("tabs");
+  var F = CONFIG.folien;
+  var T_DEFAULT = CONFIG.timerSekunden || 30;
+
+  document.title = CONFIG.titel || document.title;
+  document.getElementById("sess").textContent = "[" + (CONFIG.sitzung || "sitzung") + "]";
+
+  /* Fragen automatisch durchzählen */
+  var qn = 0;
+  F.forEach(function(f){ if(f.typ === "frage") f._nr = ++qn; });
+
+  /* Tastenlegende */
+  var hatTimer = F.some(function(f){ return f.typ === "frage" || f.timer; });
+  var hatTipp = F.some(function(f){ return !!f.tipp; });
+  var keys = '<span><b>Leertaste</b> weiter</span><span><b>←</b> zurück</span>';
+  if(hatTimer) keys += '<span><b>T</b> Timer neu</span>';
+  if(hatTipp) keys += '<span><b>H</b> Tipp</span>';
+  keys += '<span><b>Antwort antippen</b> prüfen</span><span><b>F</b> Vollbild</span>';
+  document.getElementById("keys").innerHTML = keys;
+
+  /* ---------- Zustand ---------- */
+  var cur = 0, phase = 0, busy = false, fast = false, token = 0, tippShown = false;
+  var ergebnis = {};   /* Folienindex -> true/false, nur angetippte Fragen */
+  var timerId = null, timerLeft = 30, timerTotal = 30, timerDone = "ZEIT UM!", timerEl = null;
+
+  /* ---------- Helfer ---------- */
+  function mk(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
+  function sleep(ms, tk){ return new Promise(function(res){ if(fast || reduce || tk !== token) return res(); setTimeout(res, ms); }); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  /* Syntax-Hervorhebung für Code-Zeilen (Python, JS, Java …) */
+  var KW = {};
+  ("class def return if elif else for while in not and or is import from as pass break continue try except finally raise with lambda yield global print "+
+   "True False None function var let const new this extends implements public private protected static void int double float boolean char do switch case")
+    .split(" ").forEach(function(w){ if(w) KW[w] = 1; });
+  function hl(src){
+    var re = /(#.*$|\/\/.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(\d+(?:\.\d+)?)\b|([A-Za-z_À-ɏ][\wÀ-ɏ]*)/g;
+    var out = "", last = 0, m;
+    while((m = re.exec(src))){
+      out += esc(src.slice(last, m.index)); last = re.lastIndex;
+      if(m[1]) out += '<span class="cm">' + esc(m[1]) + '</span>';
+      else if(m[2]) out += '<span class="str">' + esc(m[2]) + '</span>';
+      else if(m[3]) out += '<span class="num">' + m[3] + '</span>';
+      else {
+        var w = m[4], rest = src.slice(re.lastIndex).replace(/^\s+/, "");
+        if(KW[w]) out += '<span class="kw">' + w + '</span>';
+        else if(/^[A-Z]/.test(w)) out += '<span class="cl">' + w + '</span>';
+        else if(rest.charAt(0) === "(") out += '<span class="fn">' + w + '</span>';
+        else out += esc(w);
+      }
+    }
+    return out + esc(src.slice(last));
+  }
+
+  async function type(node, text, cps, tk){
+    cps = cps || 40;
+    if(fast || reduce){ node.textContent = text; return; }
+    for(var i = 1; i <= text.length; i++){
+      if(tk !== token) return;
+      if(fast){ node.textContent = text; return; }
+      node.textContent = text.slice(0, i);
+      await sleep(1000 / cps + (Math.random() * 18), tk);
+    }
+  }
+  var GLYPHS = "01<>/\\[]{}#$%&*+=?_|~^:;§ABCDEFabcdef";
+  function scramble(node, text, dur, tk){
+    return new Promise(function(res){
+      if(fast || reduce){ node.textContent = text; return res(); }
+      var start = null;
+      function frame(ts){
+        if(tk !== token) return res();
+        if(start === null) start = ts;
+        var p = Math.min(1, (ts - start) / dur);
+        if(fast) p = 1;
+        var out = "";
+        for(var i = 0; i < text.length; i++){
+          var ch = text[i];
+          if(ch === " " || ch === "\n"){ out += ch; continue; }
+          var reveal = (i / text.length) * 0.75 + 0.25;
+          out += (p >= reveal) ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        node.textContent = out;
+        if(p < 1) requestAnimationFrame(frame); else { node.textContent = text; res(); }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function glitch(){
+    if(reduce) return;
+    document.body.classList.remove("glitch"); void document.body.offsetWidth;
+    document.body.classList.add("glitch");
+    setTimeout(function(){ document.body.classList.remove("glitch"); }, 600);
+  }
+  async function promptLine(cmd, tk, ps){
+    var r = mk("div","row prompt");
+    r.innerHTML = '<span class="ps">' + (ps ? esc(ps) : "&gt;&gt;&gt;") + '</span> <span class="cmd"></span>';
+    term.appendChild(r);
+    await type(r.querySelector(".cmd"), cmd, 34, tk);
+    return r;
+  }
+  function caret(){ return mk("span","caret"); }
+  async function codeBlock(parent, lines, tk){
+    var code = mk("div","code"); parent.appendChild(code);
+    for(var l = 0; l < lines.length; l++){
+      if(tk !== token) return code;
+      code.appendChild(mk("div","ln", '<span class="no">' + (l + 1) + '</span><span>' + (hl(lines[l]) || " ") + '</span>'));
+      await sleep(60, tk);
+    }
+    return code;
+  }
+
+  /* ---------- Timer ---------- */
+  function fmt(s){ s = Math.ceil(s); return s >= 60 ? (Math.floor(s / 60) + ":" + String(s % 60).padStart(2,"0")) : (s + " s"); }
+  function buildTimer(total){
+    var t = mk("div","timer");
+    t.innerHTML = '<span>zeit</span><div class="bar"></div><span class="sec"></span>';
+    var bar = t.querySelector(".bar");
+    for(var i = 0; i < 30; i++) bar.appendChild(mk("span","seg"));
+    timerTotal = total; timerLeft = total;
+    return t;
+  }
+  function drawTimer(){
+    if(!timerEl) return;
+    var segs = timerEl.querySelectorAll(".seg");
+    var on = Math.ceil(timerLeft / timerTotal * 30 - 1e-9);
+    for(var i = 0; i < segs.length; i++) segs[i].classList.toggle("off", i >= on);
+    var frac = timerLeft / timerTotal;
+    timerEl.classList.toggle("warn", frac <= 1/3 && frac > 1/6);
+    timerEl.classList.toggle("hot", frac <= 1/6);
+    timerEl.classList.toggle("done", timerLeft <= 0);
+    timerEl.querySelector(".sec").textContent = timerLeft <= 0 ? timerDone : fmt(timerLeft);
+  }
+  function stopTimer(){ if(timerId){ clearInterval(timerId); timerId = null; } }
+  function startTimer(){
+    stopTimer(); timerLeft = timerTotal; drawTimer();
+    var t0 = performance.now();
+    timerId = setInterval(function(){
+      timerLeft = Math.max(0, timerTotal - (performance.now() - t0) / 1000);
+      drawTimer();
+      if(timerLeft <= 0){ stopTimer(); glitch(); }
+    }, 100);
+  }
+  function addTimer(total, doneText, auto){
+    timerDone = doneText;
+    timerEl = buildTimer(total); term.appendChild(timerEl); drawTimer();
+    if(auto) startTimer();
+  }
+
+  /* ---------- Folientypen ---------- */
+  async function renderBoot(f, tk){
+    await promptLine(f.befehl, tk, f.pfad || "~ $");
+    var lines = f.log || [];
+    for(var i = 0; i < lines.length; i++){
+      if(tk !== token) return;
+      var r = mk("div","row log");
+      r.innerHTML = (lines[i][0] === "ok" ? '<span class="ok">[ ok ]</span> ' : '<span class="wait">[ .. ]</span> ') + esc(lines[i][1]);
+      term.appendChild(r);
+      await sleep(170, tk);
+    }
+    var h = mk("div","hero"); term.appendChild(h);
+    await scramble(h, f.hero, 1400, tk);
+    glitch();
+    var c = mk("div","row comment"); term.appendChild(c);
+    await type(c, "# " + (f.kommentar || "Leertaste startet."), 60, tk);
+    c.appendChild(caret());
+  }
+
+  async function renderListe(f, tk){
+    await promptLine(f.befehl, tk);
+    if(f.titel){ var t = mk("div","title"); term.appendChild(t); await scramble(t, f.titel, 700, tk); }
+    var g = mk("div","help"); term.appendChild(g);
+    var rows = f.zeilen || [];
+    for(var i = 0; i < rows.length; i++){
+      if(tk !== token) return;
+      var n = mk("span","n"), hh = mk("span","h"), d = mk("span","d");
+      g.appendChild(n); g.appendChild(hh); g.appendChild(d);
+      await scramble(n, rows[i][0], 260, tk);
+      await type(hh, rows[i][1], 70, tk);
+      await type(d, rows[i][2], 90, tk);
+      await sleep(120, tk);
+    }
+    if(f.kommentar){
+      var c = mk("div","row comment"); c.style.marginTop = "clamp(12px,2vw,40px)"; term.appendChild(c);
+      await type(c, "# " + f.kommentar, 70, tk);
+    }
+  }
+
+  async function renderInfo(f, tk, auto){
+    await promptLine(f.befehl, tk);
+    var t = mk("div","title"); term.appendChild(t);
+    await scramble(t, f.titel, 700, tk);
+    if(f.sub){ var s = mk("div","row comment bright"); term.appendChild(s); await type(s, "# " + f.sub, 80, tk); }
+    var host = term;
+    if(f.code){
+      var split = mk("div","split"); term.appendChild(split);
+      await codeBlock(split, f.code, tk);
+      host = split;
+    }
+    var box = mk("div","lines"); if(f.code) box.style.marginTop = "0"; host.appendChild(box);
+    var zs = f.zeilen || [];
+    for(var i = 0; i < zs.length; i++){
+      if(tk !== token) return;
+      var li = mk("div","li"), b = mk("span","b"), tx = mk("span","t");
+      li.appendChild(b); li.appendChild(tx); box.appendChild(li);
+      await scramble(b, "»", 200, tk);
+      await type(tx, zs[i], 80, tk);
+      await sleep(90, tk);
+    }
+    if(f.timer) addTimer(f.timer, f.timerText || "ZEIT UM!", auto);
+  }
+
+  async function renderFrage(f, tk, auto){
+    await promptLine("frage(" + f._nr + ")   # " + (f.tag || ""), tk);
+    var t = mk("div","title"); term.appendChild(t);
+    await scramble(t, f.titel, 700, tk);
+    if(f.sub){ var s = mk("div","row comment bright"); term.appendChild(s); await type(s, "# " + f.sub, 80, tk); }
+    var opts = mk("div","opts");
+    if(f.code){
+      var split = mk("div","split"); term.appendChild(split);
+      await codeBlock(split, f.code, tk);
+      if(tk !== token) return;
+      split.appendChild(opts);
+    } else {
+      opts.style.marginTop = "clamp(6px,1.2vw,24px)";
+      term.appendChild(opts);
+    }
+    for(var k = 0; k < f.antworten.length; k++){
+      if(tk !== token) return;
+      var o = mk("div","opt pick"); o.dataset.k = f.antworten[k][0];
+      o.setAttribute("role","button"); o.tabIndex = 0;
+      o.innerHTML = '<span class="k">[' + esc(f.antworten[k][0]) + ']</span><span class="t"></span><span class="flag">✓ richtig</span>';
+      o.addEventListener("click", function(ev){ ev.stopPropagation(); waehle(f, this.dataset.k); });
+      o.addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); ev.stopPropagation(); waehle(f, this.dataset.k); } });
+      opts.appendChild(o);
+      void o.offsetWidth; o.classList.add("in");
+      await scramble(o.querySelector(".t"), f.antworten[k][1], 380, tk);
+      await sleep(70, tk);
+    }
+    addTimer(f.timer || T_DEFAULT, f.timerText || "KARTEN HOCH!", auto);
+  }
+
+  function waehle(f, k){
+    if(F[cur] !== f || phase !== 0) return;
+    if(busy){ fast = true; return; }
+    phase = 1;
+    ergebnis[cur] = (k === f.richtig);
+    run(function(tk){ return revealFrage(f, tk, k); });
+  }
+
+  async function revealFrage(f, tk, wahl){
+    stopTimer();
+    if(timerEl) timerEl.remove(); timerEl = null;
+    var tp = term.querySelector(".tipp"); if(tp) tp.remove();
+    var treffer = wahl ? (wahl === f.richtig) : null;
+    var pl = await promptLine(wahl ? "pruefe('" + wahl + "')" : "aufloesen()", tk);
+    if(tk !== token) return;
+    if(wahl){
+      var v = mk("span", "verdict " + (treffer ? "ok" : "no"));
+      v.textContent = treffer ? "✓ RICHTIG!" : "✗ FALSCH";
+      pl.appendChild(v);
+    }
+    document.body.classList.toggle("fehl", treffer === false);
+    glitch();
+    var all = term.querySelectorAll(".opt");
+    for(var j = 0; j < all.length; j++){
+      all[j].classList.remove("pick"); all[j].removeAttribute("role"); all[j].removeAttribute("tabindex");
+      if(all[j].dataset.k === f.richtig) all[j].classList.add("right");
+      else if(all[j].dataset.k === wahl){ all[j].classList.add("miss"); all[j].querySelector(".flag").textContent = "✗ falsch"; }
+      else all[j].classList.add("wrong");
+    }
+    await sleep(350, tk);
+    var box = mk("div","explain"); term.appendChild(box);
+    var w = f.warum || [];
+    for(var i = 0; i < w.length; i++){
+      var r = mk("div","row"); box.appendChild(r);
+      await type(r, "# " + w[i], 75, tk);
+    }
+  }
+
+  async function renderMerksatz(f, tk){
+    await promptLine(f.befehl || "print(merksatz)", tk);
+    var h = mk("div","hero"); term.appendChild(h);
+    await scramble(h, f.hero, 1500, tk);
+    glitch();
+    if(f.kommentar){
+      var c = mk("div","row comment bright"); term.appendChild(c);
+      await type(c, "# " + f.kommentar, 60, tk);
+    }
+    var ids = Object.keys(ergebnis);
+    if(ids.length){
+      var n = ids.filter(function(i){ return ergebnis[i]; }).length;
+      var e2 = mk("div","row comment bright"); term.appendChild(e2);
+      await type(e2, "# ergebnis: " + n + " von " + ids.length + (ids.length === qn ? " Fragen" : " angetippten Fragen") + " richtig", 60, tk);
+    }
+    await sleep(300, tk);
+    if(f.exit !== false){
+      var e = await promptLine("exit()", tk);
+      e.appendChild(caret());
+    }
+  }
+
+  async function showTipp(f, tk){
+    if(!f.tipp || tippShown) return;
+    tippShown = true;
+    var r = mk("div","row tipp");
+    if(timerEl) term.insertBefore(r, timerEl); else term.appendChild(r);
+    await type(r, "# tipp: " + f.tipp, 70, tk);
+  }
+
+  /* ---------- Steuerung ---------- */
+  function drawTabs(){
+    tabsEl.innerHTML = "";
+    F.forEach(function(f, i){
+      var b = mk("button","tab"); b.textContent = i + ":" + (f.tab || f.typ);
+      if(i === cur) b.setAttribute("aria-current","true");
+      b.addEventListener("click", function(ev){ ev.stopPropagation(); go(i, true); });
+      tabsEl.appendChild(b);
+    });
+    var a = tabsEl.children[cur]; if(a && a.scrollIntoView) a.scrollIntoView({block:"nearest", inline:"nearest"});
+    fitStatus();
+  }
+  /* Tastenlegende ausblenden, wenn Tabs + Uhr sonst nicht in die Statusleiste passen */
+  var statusEl = document.querySelector(".status"), keysEl = document.getElementById("keys");
+  function fitStatus(){
+    keysEl.style.display = "";
+    if(statusEl.scrollWidth > statusEl.clientWidth + 1) keysEl.style.display = "none";
+  }
+  window.addEventListener("resize", fitStatus);
+  async function run(fn){
+    busy = true; fast = false;
+    var tk = token;
+    try{ await fn(tk); } finally { if(tk === token){ busy = false; fast = false; } }
+  }
+  function go(i, instant){
+    if(i < 0 || i >= F.length) return;
+    token++; stopTimer(); timerEl = null; tippShown = false;
+    cur = i; phase = 0; term.innerHTML = ""; drawTabs();
+    var f = F[i];
+    document.body.dataset.typ = f.typ;
+    busy = false;
+    run(async function(tk){
+      if(instant) fast = true;
+      if(f.typ === "boot") await renderBoot(f, tk);
+      else if(f.typ === "liste") await renderListe(f, tk);
+      else if(f.typ === "info") await renderInfo(f, tk, !instant);
+      else if(f.typ === "merksatz") await renderMerksatz(f, tk);
+      else if(f.typ === "frage") await renderFrage(f, tk, !instant);
+    });
+  }
+  function next(){
+    if(busy){ fast = true; return; }
+    var f = F[cur];
+    if(f.typ === "frage" && phase === 0){
+      phase = 1;
+      run(function(tk){ return revealFrage(f, tk); });
+      return;
+    }
+    go(cur + 1, false);
+  }
+  function prev(){ go(cur - 1, true); }
+
+  document.addEventListener("keydown", function(e){
+    if(e.target && e.target.closest && e.target.closest(".status") && (e.key === "Enter" || e.key === " ")) return;
+    var f = F[cur];
+    if([" ","ArrowRight","PageDown","Enter"].indexOf(e.key) >= 0){ e.preventDefault(); next(); }
+    else if(["ArrowLeft","PageUp","Backspace"].indexOf(e.key) >= 0){ e.preventDefault(); prev(); }
+    else if(e.key === "t" || e.key === "T"){ if(timerEl && !busy && phase === 0) startTimer(); }
+    else if(e.key === "h" || e.key === "H"){ if(f.tipp && !busy && phase === 0) run(function(tk){ return showTipp(f, tk); }); }
+    else if(e.key === "f" || e.key === "F"){
+      if(!document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
+      else if(document.exitFullscreen) document.exitFullscreen().catch(function(){});
+    }
+  });
+  term.addEventListener("click", next);
+
+  /* ---------- Uhr ---------- */
+  var clock = document.getElementById("clock");
+  function tick(){ var d = new Date(); clock.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0"); }
+  tick(); setInterval(tick, 10000);
+
+  /* ---------- Code-Regen im Hintergrund ---------- */
+  (function(){
+    if(reduce) return;
+    var cv = document.getElementById("rain"), ctx = cv.getContext("2d");
+    var WORDS = (CONFIG.regenWoerter && CONFIG.regenWoerter.length) ? CONFIG.regenWoerter : ["0","1"];
+    var cols = [], W, H, fs;
+    function size(){
+      W = cv.width = window.innerWidth; H = cv.height = window.innerHeight;
+      fs = Math.max(14, Math.round(W / 90));
+      var n = Math.floor(W / (fs * 5.5)); cols = [];
+      for(var i = 0; i < n; i++) cols.push({ x: i * fs * 5.5 + Math.random() * fs, y: Math.random() * H, v: 0.25 + Math.random() * 0.6, acc: 0, w: WORDS[(Math.random() * WORDS.length) | 0] });
+    }
+    size(); window.addEventListener("resize", size);
+    var last = 0;
+    function frame(ts){
+      if(ts - last > 70){
+        last = ts;
+        ctx.fillStyle = "rgba(4,7,10,0.16)"; ctx.fillRect(0, 0, W, H);
+        ctx.font = fs + "px 'IBM Plex Mono', monospace";
+        for(var i = 0; i < cols.length; i++){
+          var c = cols[i];
+          c.acc += c.v;
+          if(c.acc >= 1){
+            c.acc = 0;
+            c.y += fs * 1.35; c.w = WORDS[(Math.random() * WORDS.length) | 0];
+            ctx.fillStyle = "rgba(160,255,205,0.16)"; ctx.fillText(c.w, c.x, c.y);
+            if(c.y > H + fs * 2){ c.y = -Math.random() * H * 0.6; c.v = 0.25 + Math.random() * 0.6; }
+          }
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  go(0, false);
+})();
+</script>
+</body>
+</html>

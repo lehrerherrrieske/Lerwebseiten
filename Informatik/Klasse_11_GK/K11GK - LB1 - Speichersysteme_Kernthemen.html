@@ -96,6 +96,8 @@ img{max-width:100%;height:auto;}
   color:var(--text-2);font-size:var(--fs-base);}
 .card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
   padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
 @media (max-width:640px){.two-col{grid-template-columns:1fr;}}
 .badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
@@ -198,6 +200,58 @@ img{max-width:100%;height:auto;}
   line-height:1.7;transition:padding .28s ease;}
 .acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
 
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
 /* ── Heftereintrag ── */
 .hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
   padding:14px 16px;background:var(--accent-light);margin:12px 0;}
@@ -212,6 +266,9 @@ img{max-width:100%;height:auto;}
   .phase{display:block !important;} .subphase{display:block !important;}
   .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
   .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
   .card,.pagehead{box-shadow:none;break-inside:avoid;}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
@@ -225,21 +282,25 @@ img{max-width:100%;height:auto;}
 
 /* Lückentext / Wörter ziehen */
 .dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
-.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:pointer;user-select:none;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
 .dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
 .dtw-word.used{opacity:.3;pointer-events:none;}
 .dtw-text{font-size:var(--fs-base);line-height:2.1;}
-.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
 .dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
 .dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
 .dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
 
 /* Zuordnung Begriff ↔ Definition */
 .m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
-.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:pointer;user-select:none;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
 .m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
 .m-chip.used{opacity:.3;pointer-events:none;}
-.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
 .m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
 .m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
 .m-def{font-size:var(--fs-sm);color:var(--text-2);}
@@ -247,8 +308,12 @@ img{max-width:100%;height:auto;}
 
 /* Reihenfolge sortieren */
 .sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
-.sort-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
 .sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
 .sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
 
 /* Wörter markieren */
@@ -261,12 +326,13 @@ img{max-width:100%;height:auto;}
 .mw.m-miss{border-color:var(--warn);border-style:dashed;}
 
 /* Memory */
-.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;max-width:420px;}
-.memcard{position:relative;height:58px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
-  font-family:var(--font-mono);font-size:var(--fs-h2);display:flex;align-items:center;justify-content:center;}
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
 .memcard .val{visibility:hidden;color:var(--accent-hover);}
 .memcard.open .val,.memcard.done .val{visibility:visible;}
-.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
 .memcard.open .cover,.memcard.done .cover{display:none;}
 .memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
 
@@ -287,44 +353,35 @@ img{max-width:100%;height:auto;}
 .cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
 
 /* Wortsuche */
-.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
 .ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
   font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
 .ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
 .ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
 .ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
 .ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
 .ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
 
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
 
 /* ============ Seitenspezifisch: Speichersysteme ============ */
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
-
-/* Lehrermodus-Leiste */
-.teacher-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding:8px 12px;
-  border:1.5px dashed var(--border);border-radius:var(--radius);background:var(--surface-2);}
-.tb-label{font-size:var(--fs-sm);font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;}
-.tb-login,.tb-active{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;}
-.tb-login[hidden],.tb-active[hidden]{display:none;}
-.tb-input{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);border-radius:6px;padding:4px 9px;width:14ch;background:var(--surface);}
-.tb-state{font-size:var(--fs-sm);font-weight:600;color:#166534;}
-.tb-fb{font-size:var(--fs-sm);color:var(--err);font-weight:600;}
-body.teacher .teacher-bar{border-style:solid;border-color:var(--ok-b);background:var(--ok-bg);}
-
-/* Gesperrte Hilfen */
-.t-lock:disabled{opacity:.55;cursor:not-allowed;}
-.t-lock:disabled::before{content:"🔒 ";}
-.t-only{display:none !important;}
-body.teacher .t-only{display:flex !important;}
-.hilfe{margin:12px 0;padding:10px 14px;border:1.5px solid var(--info-b);border-radius:var(--radius);background:var(--info-bg);}
-.hilfe-head{font-size:var(--fs-sm);font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.hilfe .btn{margin:4px 6px 4px 0;}
-.hilfe-text{display:none;margin:6px 0 8px;padding:8px 12px;background:var(--surface);border-radius:8px;color:var(--text-2);}
-.hilfe-text.on{display:block;}
-body:not(.teacher) .hilfe::after{content:"Die Hilfen schaltet deine Lehrkraft frei.";display:block;font-size:var(--fs-sm);color:var(--text-3);margin-top:4px;}
-body.showsol .sol,body.showsol .hilfe-text{display:block;}
-
-/* Tabellen, Abbildungen, Karten */
+.wichtig{display:inline-block;vertical-align:middle;margin-left:8px;padding:1px 10px;border-radius:var(--radius-full);
+  background:var(--err-bg);border:1.5px solid var(--err);color:#991b1b;font-family:var(--font);
+  font-size:var(--fs-sm);font-weight:800;letter-spacing:.04em;white-space:nowrap;}
+.legend-wichtig{margin-top:10px;}
+.legend-wichtig .wichtig{margin-left:2px;}
+.ex{margin:14px 0;}
+.task-card{border:1.5px solid var(--accent-muted);border-left:5px solid var(--accent);border-radius:var(--radius);
+  padding:4px 18px 10px;margin:16px 0;background:var(--surface-warm);}
+.task-card > h3{margin-top:12px;}
+.task-card .ex{border-top:1px dashed var(--border);padding-top:10px;}
+.task-card .ex:first-of-type{border-top:none;}
 .tbl-wrap{overflow-x:auto;}
 .tbl{border-collapse:collapse;width:100%;margin:10px 0;font-size:var(--fs-base);}
 .tbl th,.tbl td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;color:var(--text-2);}
@@ -332,18 +389,21 @@ body.showsol .sol,body.showsol .hilfe-text{display:block;}
 .hefter-box table{border-collapse:collapse;margin:6px 0;}
 .hefter-box td{border:1px solid var(--accent-muted);padding:4px 8px;vertical-align:top;}
 .fig{margin:12px 0;}
-.svgfig{width:100%;max-width:640px;height:auto;display:block;background:#fff;border:1px solid var(--border-light);border-radius:var(--radius);}
+.svgfig{width:100%;max-width:680px;height:auto;display:block;background:#fff;border:1px solid var(--border-light);border-radius:var(--radius);}
 .mini-card{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;}
 .mini-card h3{margin-top:0;}
 .star{margin:16px 0;padding:12px 16px;border:1.5px solid var(--accent-muted);border-radius:var(--radius);background:var(--surface-warm);}
 .star-head{font-weight:700;color:var(--accent-hover);margin-bottom:6px;}
 .free{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;margin:6px 0;background:var(--surface);}
-.star .btn{margin-top:4px;}
 .echo{font-style:italic;color:var(--text-2);}
 .inp-wide{width:16ch;}
 .inline-fb{display:inline-block;margin-left:8px;margin-top:0;}
 .gated{display:none;} .gated.open{display:block;}
-body.teacher .gated{display:block;}
+.gated.open > .caption:first-child{display:none;}
+.wear-box{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:12px 0;}
+.wear-list{margin:8px 0 8px 22px;color:var(--text-2);}
+.wear-list li{margin-bottom:6px;}
+.mark-sent .mw{display:block;font-family:var(--font);font-size:var(--fs-base);margin:4px 0;line-height:1.5;}
 
 /* Werkzeuge (nach eigener Leistung) */
 .tool{margin:12px 0;padding:12px 16px;border:2px solid var(--accent-muted);border-radius:var(--radius);background:var(--accent-light);}
@@ -387,34 +447,30 @@ body.teacher .gated{display:block;}
 .memcard{font-size:var(--fs-sm);padding:2px 4px;text-align:center;line-height:1.2;}
 .mem-grid{max-width:520px;}
 
-@media print{
-  body:not(.teacher) .sol,body:not(.teacher) .hilfe-text,body:not(.teacher) .t-only{display:none !important;}
-  .gated,.tool{display:block !important;}
-  .teacher-bar{display:none !important;}
-}
+@media print{ .gated,.tool{display:block !important;} .gated > .caption:first-child{display:none !important;} }
 
 </style>
 </head>
 <body>
 <div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Haste Gespeichert">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
   <header class="pagehead">
     <div class="eyebrow">Klasse 11 GK · LB1 · Technische Informatik · Themengruppe B</div>
     <h1>Speichersysteme: optisch, elektromagnetisch, elektronisch</h1>
     <div class="goal">🎯 Die Lernenden vergleichen optische, elektromagnetische und elektronische Speicher, indem sie deren Funktionsprinzip beschreiben, Zugriffszeiten berechnen und die Speicherhierarchie begründet ordnen.</div>
-    <div class="teacher-bar" id="teacher-bar">
-      <span class="tb-label">🔑 Lehrermodus</span>
-      <span class="tb-login" id="tb-login">
-        <label for="tb-pw" class="sr-only">Passwort für den Lehrermodus</label>
-        <input type="password" id="tb-pw" class="tb-input" placeholder="Passwort" autocomplete="off">
-        <button class="btn btn-ghost btn-sm" onclick="teacherLogin()">Freischalten</button>
-      </span>
-      <span class="tb-active" id="tb-active" hidden>
-        <span class="tb-state">✅ aktiv – alle Hilfen und Lösungen sind freigeschaltet</span>
-        <button class="btn btn-ghost btn-sm" id="tb-showall" onclick="toggleAllSolutions()">Alle Lösungen einblenden</button>
-        <button class="btn btn-ghost btn-sm" onclick="teacherLogout()">Beenden</button>
-      </span>
-      <span class="tb-fb" id="tb-fb" aria-live="polite"></span>
-    </div>
+    <p class="caption legend-wichtig">Abschnitte mit <span class="wichtig">! Wichtig</span> gehören zum Kern – die musst du am Ende sicher erklären können.</p>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -423,7 +479,7 @@ body.teacher .gated{display:block;}
     <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Kernthema 2</span>Festplatte &amp; Band</button>
     <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Kernthema 3</span>Flash &amp; SSD</button>
     <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Kernthema 4</span>RAM &amp; Hierarchie</button>
-    <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Sicherung</span>Übersicht &amp; Exit</button>
+    <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Sicherung</span>Üben &amp; Exit</button>
   </nav>
 
 <!-- ===================================================== EINSTIEG -->
@@ -462,25 +518,33 @@ body.teacher .gated{display:block;}
         <tr><td>⚡ elektronisch</td><td>eine elektrische Ladung oder ein Schaltzustand</td><td>Flash (SSD, USB-Stick), RAM, Cache</td></tr>
       </table>
 
-      <p><strong>Ordne zu:</strong> Klicke zuerst auf eine Familie, dann auf das passende Beispiel.</p>
-      <div class="baustein" data-type="match" id="match-familien">
-        <div class="m-pool">
-          <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
-          <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
-          <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagnetisch</span>
-          <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagnetisch</span>
-          <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
-          <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+      <div class="ex">
+        <p><strong>Aufgabe E1:</strong> Ordne jedes Beispiel seiner Speicherfamilie zu – anklicken oder ziehen.</p>
+        <div class="baustein" data-type="match" id="match-familien">
+          <div class="m-pool">
+            <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
+            <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
+            <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagnetisch</span>
+            <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagnetisch</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+          </div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">microSD-Karte in der Kamera</span></div>
+          <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">4K-Film auf Blu-ray</span></div>
+          <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">LTO-Bandkassette im Archiv eines Rechenzentrums</span></div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Arbeitsspeicher (RAM) im Notebook</span></div>
+          <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Festplatte in einem Heim-NAS</span></div>
+          <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Audio-CD aus dem Plattenladen</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">microSD-Karte in der Kamera</span></div>
-        <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">4K-Film auf Blu-ray</span></div>
-        <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">LTO-Bandkassette im Archiv eines Rechenzentrums</span></div>
-        <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Arbeitsspeicher (RAM) im Notebook</span></div>
-        <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Festplatte in einem Heim-NAS</span></div>
-        <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Audio-CD aus dem Plattenladen</span></div>
-        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-e1">
+          <div data-tipp>Frag dich bei jedem Gerät: Dreht sich da ein Laser, ein Magnet – oder gar nichts?</div>
+          <div data-tipp>Scheiben, die man ins Laufwerk legt und die ein Laser liest, sind optisch. Alles mit Magnetschicht (Platten, Bänder) ist elektromagnetisch. Chips ohne bewegliche Teile sind elektronisch.</div>
+          <div data-tipp>Blu-ray und Audio-CD sind optisch. Bandkassette und NAS-Festplatte sind elektromagnetisch. Bleiben microSD-Karte und RAM.</div>
+          <div data-muster><p>optisch: 4K-Film auf Blu-ray, Audio-CD · elektromagnetisch: LTO-Bandkassette, Festplatte im NAS · elektronisch: microSD-Karte (Flash), Arbeitsspeicher (DRAM).</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -493,7 +557,9 @@ body.teacher .gated{display:block;}
         <div class="quiz-fb" id="qfb-q0a"></div>
       </div>
 
-      <div class="t-only callout callout-info">👩‍🏫 <span><strong>Für die Lehrkraft:</strong> Die Seite deckt nur die vier Kernthemen (Aufgaben 1–4) ab. Pflicht sind jeweils x.1 und x.2; die ★-Aufgaben entsprechen den Zusatzaufgaben x.3. Vertiefungen 5–9 und die Puzzlephase sind nicht enthalten.</span></div>
+      <div class="lehrer-only" hidden>
+        <div class="callout callout-info">👩‍🏫 <span><strong>Für die Lehrkraft:</strong> Die Seite deckt die vier Kernthemen (Aufgaben 1–4 des Arbeitsauftrags B) ab. Pflicht sind jeweils x.1 und x.2; die ★-Aufgaben entsprechen den Zusatzaufgaben x.3. Vertiefungen 5–9 und die Puzzlephase sind nicht enthalten. Die Sicherung enthält zu jedem Kernthema eine Übungsaufgabe.</span></div>
+      </div>
 
       <p class="connector-text">Fangen wir mit dem Speicher an, den du vielleicht nur noch aus dem Auto deiner Eltern kennst: Wie passt ein ganzer Film auf eine Plastikscheibe?</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Zu Kernthema 1: Optische Speicher →</button></div>
@@ -517,7 +583,7 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 1 -->
     <div class="subphase on" id="ph1-sub-1">
-      <h3>Aufbau: eine einzige, sehr lange Spur</h3>
+      <h3>Pits und Lands: eine einzige, sehr lange Spur <span class="wichtig">! Wichtig</span></h3>
       <p>Auf einer Scheibe aus <span class="tt" data-tip="Durchsichtiger, harter Kunststoff; aus ihm bestehen CD, DVD und Blu-ray.">Polycarbonat</span> verläuft eine <strong>einzige Spiralspur</strong> von innen nach außen. Sie besteht aus Vertiefungen, den <span class="tt" data-tip="Englisch „Grube“: eine winzige Vertiefung in der Spur.">Pits</span>, und ebenen Stellen, den <span class="tt" data-tip="Englisch „Land“: die ebene Fläche zwischen zwei Pits.">Lands</span>, in einer spiegelnden Schicht (z.&nbsp;B. Aluminium). Ein Laser tastet die Spur ab, eine <span class="tt" data-tip="Lichtempfindliches Bauteil, das Lichtstärke in ein elektrisches Signal umwandelt.">Fotodiode</span> misst, wie viel Licht zurückkommt.</p>
 
       <figure class="fig">
@@ -529,11 +595,9 @@ body.teacher .gated{display:block;}
           <text x="80" y="188" font-size="14" fill="#374151" text-anchor="middle">Land</text>
           <text x="255" y="188" font-size="14" fill="#374151" text-anchor="middle">Pit (≈ ¼ Wellenlänge tief)</text>
           <text x="480" y="188" font-size="14" fill="#374151" text-anchor="middle">Land</text>
-          <!-- Laser auf Land -->
           <line x1="80" y1="20" x2="80" y2="128" stroke="#C93B3B" stroke-width="4"/>
-          <line x1="92" y1="128" x2="92" y2="20" stroke="#C93B3B" stroke-width="4" stroke-dasharray="0"/>
+          <line x1="92" y1="128" x2="92" y2="20" stroke="#C93B3B" stroke-width="4"/>
           <text x="86" y="14" font-size="13" fill="#991b1b" text-anchor="middle">viel Licht zurück</text>
-          <!-- Laser auf Pit-Kante -->
           <line x1="250" y1="40" x2="250" y2="148" stroke="#C93B3B" stroke-width="4"/>
           <line x1="262" y1="148" x2="262" y2="40" stroke="#C93B3B" stroke-width="2" stroke-dasharray="4 4"/>
           <text x="256" y="32" font-size="13" fill="#991b1b" text-anchor="middle">weniger Licht zurück</text>
@@ -548,21 +612,18 @@ body.teacher .gated{display:block;}
       <p>Die Pits sind etwa eine <strong>Viertel Wellenlänge</strong> tief. Licht, das aus dem Pit zurückkommt, hat einen etwas längeren Weg und löscht sich mit dem Licht vom Rand teilweise aus – es kommt <strong>weniger Licht</strong> zurück. Jetzt kommt der Trick, der oft überrascht:</p>
       <div class="callout">💡 <span>Nicht „Pit = 0" und „Land = 1"! Ein <strong>Wechsel</strong> zwischen Pit und Land wird als <strong>1</strong> gelesen, gleichbleibende Bereiche als <strong>0</strong>. Die Länge von Pits und Lands legt fest, wie viele Nullen zwischen zwei Einsen liegen.</span></div>
 
-      <h3>🔎 Lies die Spur selbst</h3>
-      <p>Unten siehst du ein Stück Spur, aufgeteilt in gleich lange Takte. Lies an jeder Grenze zwischen zwei Takten ein Bit: Wechsel → 1, kein Wechsel → 0. Bei 13 Takten gibt es 12 Grenzen, also 12 Bits.</p>
-      <div class="track" id="track1" aria-label="Spur: Land, Land, Pit, Pit, Pit, Land, Land, Land, Land, Pit, Pit, Pit, Land"></div>
-      <p>Gelesene Bitfolge: <input class="inp inp-wide" id="bits1" placeholder="z. B. 0100…" aria-label="Bitfolge eingeben">
-        <button class="btn btn-primary btn-sm" onclick="checkBits()">✓ Prüfen</button>
-        <span class="fb grp-fb inline-fb" id="bits1-fb"></span></p>
-
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Gehe von links nach rechts. Vergleiche immer nur zwei Nachbarn: Takt 1 mit Takt 2, dann Takt 2 mit Takt 3 usw.</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 2</button>
-        <div class="hilfe-text">Takt 1 und 2 sind beide Land → 0. Takt 2 ist Land, Takt 3 ist Pit → 1. Also beginnt die Folge mit <span class="math">01…</span></div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-bits1')">Lösung zeigen</button>
-        <div class="sol" id="sol-bits1">Grenzen: L|L 0 · L|P 1 · P|P 0 · P|P 0 · P|L 1 · L|L 0 · L|L 0 · L|L 0 · L|P 1 · P|P 0 · P|P 0 · P|L 1 → <span class="math">010010001001</span></div>
+      <div class="ex">
+        <p><strong>Aufgabe 1.1 🔎 Lies die Spur selbst:</strong> Die Spur ist in gleich lange Takte aufgeteilt. Lies an jeder Grenze zwischen zwei Takten ein Bit: Wechsel → 1, kein Wechsel → 0. Bei 13 Takten gibt es 12 Grenzen, also 12 Bits.</p>
+        <div class="track" data-track="LLPPPLLLLPPPL" aria-label="Spur: Land, Land, Pit, Pit, Pit, Land, Land, Land, Land, Pit, Pit, Pit, Land"></div>
+        <p>Gelesene Bitfolge: <input class="inp inp-wide" id="bits1" placeholder="z. B. 0100…" aria-label="Bitfolge eingeben">
+          <button class="btn btn-primary btn-sm" onclick="checkBits('bits1','LLPPPLLLLPPPL')">✓ Prüfen</button>
+          <span class="fb grp-fb inline-fb" id="bits1-fb"></span></p>
+        <div class="hs" id="hs-bits1">
+          <div data-tipp>Gehe von links nach rechts und vergleiche immer nur zwei Nachbarn: Takt 1 mit Takt 2, dann Takt 2 mit Takt 3 usw.</div>
+          <div data-tipp>Takt 1 und 2 sind beide Land → 0. Takt 2 ist Land, Takt 3 ist Pit → 1. Die Folge beginnt also mit <span class="math">01</span>.</div>
+          <div data-tipp>Die ersten fünf Bits lauten <span class="math">01001</span>. Mach an der Grenze zwischen Takt 6 und 7 weiter.</div>
+          <div data-muster><p>Grenzen: L|L 0 · L|P 1 · P|P 0 · P|P 0 · P|L 1 · L|L 0 · L|L 0 · L|L 0 · L|P 1 · P|P 0 · P|P 0 · P|L 1</p><p>Bitfolge: <span class="math">010010001001</span></p></div>
+        </div>
       </div>
 
       <h3>Drei Generationen im Vergleich</h3>
@@ -591,23 +652,24 @@ body.teacher .gated{display:block;}
     <div class="subphase" id="ph1-sub-2">
       <h3>Warum passt mehr auf eine Blu-ray?</h3>
       <p>Man kann einen Laserstrahl nicht beliebig fein bündeln. Wegen der <span class="tt" data-tip="Licht breitet sich hinter einer Öffnung oder Linse etwas „um die Ecke“ aus – ein Lichtfleck kann deshalb nicht beliebig klein werden.">Beugung</span> bleibt immer ein Lichtfleck übrig. Für seine Größe gilt ungefähr:</p>
-      <div class="formula">Fleckgröße ≈ <i>λ</i> / NA</div>
+      <div class="formula">Fleckgröße ≈ <span class="frac"><span class="fn"><i>λ</i></span><span class="fd">NA</span></span></div>
       <p><i>λ</i> ist die Wellenlänge, NA die <span class="tt" data-tip="Maß dafür, wie stark eine Linse Licht bündeln kann. Größere NA → kleinerer Fleck.">numerische Apertur</span> der Linse. Je kleiner der Fleck, desto kleiner dürfen Pits und Spuren sein – und desto enger liegen sie.</p>
 
-      <p><strong>Rechne selbst</strong> (auf ganze Nanometer runden):</p>
-      <p>CD: <i>λ</i> = 780&nbsp;nm, NA = 0,45 → Fleck ≈ <input class="inp" id="fl-cd"> <span class="unit">nm</span></p>
-      <p>DVD: <i>λ</i> = 650&nbsp;nm, NA = 0,60 → Fleck ≈ <input class="inp" id="fl-dvd"> <span class="unit">nm</span></p>
-      <p>Blu-ray: <i>λ</i> = 405&nbsp;nm, NA = 0,85 → Fleck ≈ <input class="inp" id="fl-bd"> <span class="unit">nm</span></p>
-      <div>
-        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['fl-cd',1733],['fl-dvd',1083],['fl-bd',476]])">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
-      </div>
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Einfach teilen: Wellenlänge in Nanometern durch die NA. Die Einheit bleibt nm.</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-fleck')">Lösung zeigen</button>
-        <div class="sol" id="sol-fleck">CD: 780&nbsp;nm / 0,45 ≈ 1733&nbsp;nm · DVD: 650&nbsp;nm / 0,60 ≈ 1083&nbsp;nm · Blu-ray: 405&nbsp;nm / 0,85 ≈ 476&nbsp;nm.<br>Der Blu-ray-Fleck ist etwa 3,6-mal so schmal wie der CD-Fleck, seine Fläche also etwa 3,6² ≈ 13-mal kleiner.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 1.2:</strong> Berechne die Fleckgröße für alle drei Generationen (auf ganze Nanometer runden).</p>
+        <p>CD: <i>λ</i> = 780&nbsp;nm, NA = 0,45 → Fleck ≈ <input class="inp" id="fl-cd" inputmode="decimal"> <span class="unit">nm</span></p>
+        <p>DVD: <i>λ</i> = 650&nbsp;nm, NA = 0,60 → Fleck ≈ <input class="inp" id="fl-dvd" inputmode="decimal"> <span class="unit">nm</span></p>
+        <p>Blu-ray: <i>λ</i> = 405&nbsp;nm, NA = 0,85 → Fleck ≈ <input class="inp" id="fl-bd" inputmode="decimal"> <span class="unit">nm</span></p>
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['fl-cd',1733],['fl-dvd',1083],['fl-bd',476]])">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-fleck">
+          <div data-tipp>Die Formel steht direkt über der Aufgabe. Was setzt du für <i>λ</i> und NA ein?</div>
+          <div data-tipp>Wellenlänge in Nanometern durch die NA teilen. Die Einheit bleibt nm, die NA hat keine Einheit.</div>
+          <div data-tipp>CD: <span class="frac"><span class="fn">780&nbsp;nm</span><span class="fd">0,45</span></span> – das Ergebnis liegt zwischen 1700 und 1800&nbsp;nm. Rechne DVD und Blu-ray genauso.</div>
+          <div data-muster><p>CD: <span class="frac"><span class="fn">780&nbsp;nm</span><span class="fd">0,45</span></span> ≈ 1733&nbsp;nm<br>DVD: <span class="frac"><span class="fn">650&nbsp;nm</span><span class="fd">0,60</span></span> ≈ 1083&nbsp;nm<br>Blu-ray: <span class="frac"><span class="fn">405&nbsp;nm</span><span class="fd">0,85</span></span> ≈ 476&nbsp;nm</p><p>Der Blu-ray-Fleck ist etwa 3,6-mal so schmal wie der CD-Fleck, seine Fläche also etwa 3,6² ≈ 13-mal kleiner.</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -626,20 +688,29 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 3 -->
     <div class="subphase" id="ph1-sub-3">
-      <h3>Gepresst, einmal beschreibbar, wiederbeschreibbar</h3>
-      <p>Ordne das Funktionsprinzip dem Scheibentyp zu.</p>
-      <div class="baustein" data-type="match" id="match-rom">
-        <div class="m-pool">
-          <span class="m-chip" data-id="rom" onclick="matchSelect(this)">gepresst (ROM)</span>
-          <span class="m-chip" data-id="r" onclick="matchSelect(this)">einmal beschreibbar (R)</span>
-          <span class="m-chip" data-id="rw" onclick="matchSelect(this)">wiederbeschreibbar (RW/RE)</span>
+      <h3>Funktionsprinzip und Scheibentyp <span class="wichtig">! Wichtig</span></h3>
+      <p>Es gibt drei Arten von Scheiben: <strong>gepresst</strong> (ROM), <strong>einmal beschreibbar</strong> (R) und <strong>wiederbeschreibbar</strong> (RW bzw. RE bei Blu-ray). Sie unterscheiden sich darin, wie die „dunklen" Stellen entstehen.</p>
+      <div class="ex">
+        <p><strong>Aufgabe 1.3:</strong> Ordne das Funktionsprinzip dem Scheibentyp zu.</p>
+        <div class="baustein" data-type="match" id="match-rom">
+          <div class="m-pool">
+            <span class="m-chip" data-id="rom" onclick="matchSelect(this)">gepresst (ROM)</span>
+            <span class="m-chip" data-id="r" onclick="matchSelect(this)">einmal beschreibbar (R)</span>
+            <span class="m-chip" data-id="rw" onclick="matchSelect(this)">wiederbeschreibbar (RW/RE)</span>
+          </div>
+          <div class="m-zone" data-correct="r" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Rohling mit Farbstoffschicht. Ein Laser hoher Leistung verfärbt den Farbstoff dauerhaft – die Marken reflektieren weniger.</span></div>
+          <div class="m-zone" data-correct="rw" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Phasenwechsel-Schicht: kristallin (hell) oder amorph (dunkel). Hohe Laserleistung mit schnellem Abkühlen → amorph, mittlere Leistung → wieder kristallin. Mehrere Hundert bis einige Tausend Mal.</span></div>
+          <div class="m-zone" data-correct="rom" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Pits werden im Werk mechanisch in die Scheibe gepresst. Massenware wie Audio-CD, Film-Blu-ray, Software. Nur lesbar.</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <div class="m-zone" data-correct="r" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Rohling mit Farbstoffschicht. Ein Laser hoher Leistung verfärbt den Farbstoff dauerhaft – die Marken reflektieren weniger.</span></div>
-        <div class="m-zone" data-correct="rw" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Phasenwechsel-Schicht: kristallin (hell) oder amorph (dunkel). Hohe Laserleistung mit schnellem Abkühlen → amorph, mittlere Leistung → wieder kristallin. Mehrere Hundert bis einige Tausend Mal.</span></div>
-        <div class="m-zone" data-correct="rom" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Pits werden im Werk mechanisch in die Scheibe gepresst. Massenware wie Audio-CD, Film-Blu-ray, Software. Nur lesbar.</span></div>
-        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-rom">
+          <div data-tipp>Achte auf das Schlüsselwort in jeder Beschreibung: „im Werk", „dauerhaft", „wieder".</div>
+          <div data-tipp>Nur bei einem Typ entstehen echte Vertiefungen. Bei den anderen beiden verändert der Laser eine Schicht – einmal unumkehrbar, einmal umkehrbar.</div>
+          <div data-tipp>„Mechanisch gepresst" gehört zu ROM. Ein Farbstoff, der verfärbt wird, lässt sich nicht zurückverwandeln.</div>
+          <div data-muster><p>ROM: Pits im Werk mechanisch gepresst, nur lesbar.<br>R: Farbstoff wird vom Laser dauerhaft verfärbt, einmal beschreibbar.<br>RW/RE: Phasenwechsel-Schicht kristallin ↔ amorph, mehrfach beschreibbar.</p></div>
+        </div>
       </div>
       <div class="callout callout-info">🔬 <span>Bei R und RW gibt es keine echten Vertiefungen. Der Brenner erzeugt nur Stellen, die <strong>weniger reflektieren</strong> – für die Fotodiode wirkt das wie ein Pit.</span></div>
 
@@ -647,16 +718,20 @@ body.teacher .gated{display:block;}
         <div class="hefter-label">📓 Heftereintrag — Optische Speicher</div>
         <p><strong>Prinzip:</strong> Eine Spiralspur aus Pits (Vertiefungen) und Lands (Ebenen) in einer spiegelnden Schicht. Ein Laser tastet ab, eine Fotodiode misst das reflektierte Licht. Pits reflektieren weniger (Interferenz).</p>
         <p><strong>Bit:</strong> Wechsel Pit ↔ Land = 1, kein Wechsel = 0.</p>
-        <p><strong>Kapazität:</strong> Fleckgröße ≈ <i>λ</i> / NA. Kürzere Wellenlänge und größere NA → kleinere Pits, engere Spuren. CD 780&nbsp;nm, ca. 700&nbsp;MB · DVD 650&nbsp;nm, 4,7&nbsp;GB · Blu-ray 405&nbsp;nm, 25&nbsp;GB je Schicht.</p>
+        <p><strong>Kapazität:</strong> Fleckgröße ≈ <span class="frac"><span class="fn"><i>λ</i></span><span class="fd">NA</span></span>. Kürzere Wellenlänge und größere NA → kleinere Pits, engere Spuren. CD 780&nbsp;nm, ca. 700&nbsp;MB · DVD 650&nbsp;nm, 4,7&nbsp;GB · Blu-ray 405&nbsp;nm, 25&nbsp;GB je Schicht.</p>
         <p><strong>Typen:</strong> ROM gepresst (nur lesen) · R Farbstoff verfärbt (einmal) · RW/RE Phasenwechsel kristallin/amorph (mehrfach).</p>
       </div>
 
-      <div class="star">
+      <div class="star ex">
         <div class="star-head">★ Für Profis (freiwillig)</div>
         <p>Beurteile, warum optische Datenträger an Bedeutung verlieren und wofür sie noch sinnvoll sind. Nenne mindestens ein konkretes Beispiel.</p>
         <textarea rows="3" class="free" placeholder="Dein Urteil …"></textarea>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-z13')">Erwartung zeigen</button>
-        <div class="sol" id="sol-z13"><strong>Bedeutungsverlust:</strong> Streaming und Cloud; USB-Sticks, SD-Karten und SSDs sind schneller, größer und robuster; viele Geräte haben kein Laufwerk mehr; geringe Kapazität, langsam, kratzempfindlich.<br><strong>Noch sinnvoll:</strong> Filme in hoher Qualität (4K-Blu-ray) und Spiele auf Datenträgern; Musik-CDs als Besitz; Archiv und Offline-Backup (nicht überschreibbar, unabhängig von Magnetfeldern, günstig); Umgebungen ohne Netz.<br><em>Erwartung: begründetes Urteil mit Beispiel.</em></div>
+        <div class="hs" id="hs-z13">
+          <div data-tipp>Überleg, wie du selbst heute Filme und Musik nutzt – und wann du zuletzt eine Scheibe eingelegt hast.</div>
+          <div data-tipp>Sammle Nachteile (Kapazität, Tempo, Robustheit, Geräte ohne Laufwerk) und dann Stärken (billig vervielfältigen, nicht überschreibbar, unempfindlich gegen Magnetfelder).</div>
+          <div data-tipp>Mögliche Beispiele für „noch sinnvoll": 4K-Blu-ray, Spiele auf Scheibe, Offline-Archiv, Orte ohne Internet.</div>
+          <div data-muster><p><strong>Bedeutungsverlust:</strong> Streaming und Cloud; USB-Sticks, SD-Karten und SSDs sind schneller, größer und robuster; viele Geräte haben kein Laufwerk mehr; geringe Kapazität, langsam, kratzempfindlich.</p><p><strong>Noch sinnvoll:</strong> Filme in hoher Qualität (4K-Blu-ray) und Spiele auf Datenträgern; Musik-CDs als Besitz; Archiv und Offline-Backup (nicht überschreibbar, unabhängig von Magnetfeldern, günstig); Umgebungen ohne Netz.</p></div>
+        </div>
       </div>
 
       <p class="connector-text">Optische Scheiben sind billig zu vervielfältigen, aber langsam und klein. Rechenzentren setzen deshalb auf etwas ganz anderes – auf Magnete, die sich mit über 100 Umdrehungen pro Sekunde unter einem Lesekopf drehen.</p>
@@ -680,21 +755,19 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 1 -->
     <div class="subphase on" id="ph2-sub-1">
-      <h3>Aufbau einer Festplatte (HDD)</h3>
+      <h3>Aufbau einer Festplatte (HDD) <span class="wichtig">! Wichtig</span></h3>
       <figure class="fig">
         <svg viewBox="0 0 640 300" role="img" aria-labelledby="svg-hdd-t" class="svgfig">
-          <title id="svg-hdd-t">Draufsicht auf eine Festplatte mit nummerierten Bauteilen: 1 Platter, 2 Spindel, 3 Spur, 4 Sektor, 5 Schwenkarm, 6 Schreib-Lese-Kopf.</title>
+          <title id="svg-hdd-t">Draufsicht auf eine Festplatte mit nummerierten Bauteilen 1 bis 6.</title>
           <rect x="10" y="10" width="620" height="280" rx="14" fill="#E5E7EB" stroke="#6B7280" stroke-width="2"/>
           <circle cx="220" cy="150" r="125" fill="#CBD5E1" stroke="#475569" stroke-width="2"/>
           <circle cx="220" cy="150" r="95" fill="none" stroke="#64748B" stroke-width="1.5" stroke-dasharray="5 4"/>
           <circle cx="220" cy="150" r="65" fill="none" stroke="#64748B" stroke-width="1.5" stroke-dasharray="5 4"/>
           <path d="M220 150 L220 25 A125 125 0 0 1 308 62 Z" fill="#3F5E8C" fill-opacity=".25" stroke="#3F5E8C" stroke-width="2"/>
           <circle cx="220" cy="150" r="18" fill="#475569"/>
-          <!-- Arm -->
           <circle cx="540" cy="240" r="16" fill="#374151"/>
           <line x1="540" y1="240" x2="300" y2="140" stroke="#374151" stroke-width="10" stroke-linecap="round"/>
           <rect x="290" y="132" width="16" height="16" fill="#C93B3B"/>
-          <!-- Labels -->
           <g font-size="15" font-weight="700" fill="#111">
             <circle cx="120" cy="245" r="13" fill="#fff" stroke="#111"/><text x="120" y="250" text-anchor="middle">1</text>
             <circle cx="220" cy="150" r="11" fill="#fff" stroke="#111"/><text x="220" y="155" text-anchor="middle">2</text>
@@ -707,46 +780,62 @@ body.teacher .gated{display:block;}
         <figcaption>Schematische Draufsicht (nicht maßstäblich). Echte Platten haben viele Tausend Spuren.</figcaption>
       </figure>
 
-      <p><strong>Ordne die Nummern zu:</strong> Klicke auf die Nummer, dann auf die passende Beschreibung.</p>
-      <div class="baustein" data-type="match" id="match-hdd">
-        <div class="m-pool">
-          <span class="m-chip" data-id="1" onclick="matchSelect(this)">1</span>
-          <span class="m-chip" data-id="2" onclick="matchSelect(this)">2</span>
-          <span class="m-chip" data-id="3" onclick="matchSelect(this)">3</span>
-          <span class="m-chip" data-id="4" onclick="matchSelect(this)">4</span>
-          <span class="m-chip" data-id="5" onclick="matchSelect(this)">5</span>
-          <span class="m-chip" data-id="6" onclick="matchSelect(this)">6</span>
+      <div class="ex">
+        <p><strong>Aufgabe 2.1:</strong> Ordne die Nummern aus der Skizze den Beschreibungen zu.</p>
+        <div class="baustein" data-type="match" id="match-hdd">
+          <div class="m-pool">
+            <span class="m-chip" data-id="1" onclick="matchSelect(this)">1</span>
+            <span class="m-chip" data-id="2" onclick="matchSelect(this)">2</span>
+            <span class="m-chip" data-id="3" onclick="matchSelect(this)">3</span>
+            <span class="m-chip" data-id="4" onclick="matchSelect(this)">4</span>
+            <span class="m-chip" data-id="5" onclick="matchSelect(this)">5</span>
+            <span class="m-chip" data-id="6" onclick="matchSelect(this)">6</span>
+          </div>
+          <div class="m-zone" data-correct="5" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Schwenkarm:</strong> bewegt die Köpfe von Spur zu Spur.</span></div>
+          <div class="m-zone" data-correct="1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Platter:</strong> Aluminium- oder Glasscheibe mit ferromagnetischer Schicht. Meist mehrere übereinander.</span></div>
+          <div class="m-zone" data-correct="6" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Schreib-Lese-Kopf:</strong> schwebt wenige Nanometer über der Oberfläche auf einem Luftpolster.</span></div>
+          <div class="m-zone" data-correct="4" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Sektor:</strong> Abschnitt einer Spur, heute meist 4096&nbsp;Byte.</span></div>
+          <div class="m-zone" data-correct="2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Spindel:</strong> dreht alle Platter gemeinsam mit 5400 oder 7200 U/min.</span></div>
+          <div class="m-zone" data-correct="3" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Spur:</strong> konzentrischer Kreis. Gleiche Spuren aller Platter bilden einen <span class="tt" data-tip="Alle Spuren mit gleichem Radius auf allen Plattern zusammen – sie sind ohne Armbewegung erreichbar.">Zylinder</span>.</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <div class="m-zone" data-correct="5" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Schwenkarm:</strong> bewegt die Köpfe von Spur zu Spur.</span></div>
-        <div class="m-zone" data-correct="1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Platter:</strong> Aluminium- oder Glasscheibe mit ferromagnetischer Schicht. Meist mehrere übereinander.</span></div>
-        <div class="m-zone" data-correct="6" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Schreib-Lese-Kopf:</strong> schwebt wenige Nanometer über der Oberfläche auf einem Luftpolster.</span></div>
-        <div class="m-zone" data-correct="4" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Sektor:</strong> Abschnitt einer Spur, heute meist 4096&nbsp;Byte.</span></div>
-        <div class="m-zone" data-correct="2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Spindel:</strong> dreht alle Platter gemeinsam mit 5400 oder 7200 U/min.</span></div>
-        <div class="m-zone" data-correct="3" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def"><strong>Spur:</strong> konzentrischer Kreis. Gleiche Spuren aller Platter bilden einen <span class="tt" data-tip="Alle Spuren mit gleichem Radius auf allen Plattern zusammen – sie sind ohne Armbewegung erreichbar.">Zylinder</span>.</span></div>
-        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-hdd">
+          <div data-tipp>Beginne mit den auffälligsten Teilen: Was ist die große Scheibe, was der lange Balken?</div>
+          <div data-tipp>Die große Scheibe ist der Platter, der Balken der Schwenkarm. Das rote Quadrat an der Spitze des Arms ist der Kopf, die Mitte der Scheibe die Spindel.</div>
+          <div data-tipp>Bleiben die gestrichelte Kreislinie und das blaue „Tortenstück". Ein Kreis um die Mitte ist eine Spur, ein Abschnitt davon ein Sektor.</div>
+          <div data-muster><p>1 Platter · 2 Spindel · 3 Spur · 4 Sektor · 5 Schwenkarm · 6 Schreib-Lese-Kopf</p></div>
+        </div>
       </div>
 
-      <h3>Wie ein Bit magnetisch gespeichert wird</h3>
-      <p>Setze die Wörter ein: erst das Wort anklicken, dann die Lücke.</p>
-      <div class="baustein" data-type="dtw" id="dtw-magnet">
-        <div class="dtw-pool">
-          <span class="dtw-word" data-w="Magnetfeld" onclick="dtwSelect(this)">Magnetfeld</span>
-          <span class="dtw-word" data-w="senkrecht" onclick="dtwSelect(this)">senkrecht</span>
-          <span class="dtw-word" data-w="Widerstand" onclick="dtwSelect(this)">Widerstand</span>
-          <span class="dtw-word" data-w="Richtungswechseln" onclick="dtwSelect(this)">Richtungswechseln</span>
-          <span class="dtw-word" data-w="Spule" onclick="dtwSelect(this)">Spule</span>
+      <h3>Wie ein Bit magnetisch gespeichert wird <span class="wichtig">! Wichtig</span></h3>
+      <div class="ex">
+        <p><strong>Aufgabe 2.2:</strong> Setze die Wörter ein – erst das Wort anklicken, dann die Lücke, oder das Wort hineinziehen.</p>
+        <div class="baustein" data-type="dtw" id="dtw-magnet">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Magnetfeld" onclick="dtwSelect(this)">Magnetfeld</span>
+            <span class="dtw-word" data-w="senkrecht" onclick="dtwSelect(this)">senkrecht</span>
+            <span class="dtw-word" data-w="Widerstand" onclick="dtwSelect(this)">Widerstand</span>
+            <span class="dtw-word" data-w="Richtungswechseln" onclick="dtwSelect(this)">Richtungswechseln</span>
+            <span class="dtw-word" data-w="Spule" onclick="dtwSelect(this)">Spule</span>
+          </div>
+          <p class="dtw-text">In der Magnetschicht sind winzige Bereiche unterschiedlich magnetisiert, heute meist
+            <span class="dtw-gap" data-answer="senkrecht" onclick="dtwPlace(this)">______</span> zur Oberfläche.
+            <strong>Schreiben:</strong> Die <span class="dtw-gap" data-answer="Spule" onclick="dtwPlace(this)">______</span> im Kopf erzeugt ein
+            <span class="dtw-gap" data-answer="Magnetfeld" onclick="dtwPlace(this)">______</span> und richtet die Magnetisierung aus.
+            <strong>Lesen:</strong> An <span class="dtw-gap" data-answer="Richtungswechseln" onclick="dtwPlace(this)">______</span> ändert sich der
+            <span class="dtw-gap" data-answer="Widerstand" onclick="dtwPlace(this)">______</span> des Sensors (GMR/TMR-Effekt) – daraus entsteht das Signal.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <p class="dtw-text">In der Magnetschicht sind winzige Bereiche unterschiedlich magnetisiert, heute meist
-          <span class="dtw-gap" data-answer="senkrecht" onclick="dtwPlace(this)">______</span> zur Oberfläche.
-          <strong>Schreiben:</strong> Die <span class="dtw-gap" data-answer="Spule" onclick="dtwPlace(this)">______</span> im Kopf erzeugt ein
-          <span class="dtw-gap" data-answer="Magnetfeld" onclick="dtwPlace(this)">______</span> und richtet die Magnetisierung aus.
-          <strong>Lesen:</strong> An <span class="dtw-gap" data-answer="Richtungswechseln" onclick="dtwPlace(this)">______</span> ändert sich der
-          <span class="dtw-gap" data-answer="Widerstand" onclick="dtwPlace(this)">______</span> des Sensors (GMR/TMR-Effekt) – daraus entsteht das Signal.</p>
-        <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-magnet">
+          <div data-tipp>Denk an den Physikunterricht: Wodurch entsteht ein Magnetfeld, wenn Strom fließt?</div>
+          <div data-tipp>Beim Schreiben arbeitet eine stromdurchflossene Spule wie ein kleiner Elektromagnet. Beim Lesen misst ein Sensor eine elektrische Größe, die vom Magnetfeld abhängt.</div>
+          <div data-tipp>„Spule" und „Magnetfeld" gehören zum Schreiben, „Widerstand" zum Sensor beim Lesen. Die Richtung der Magnetisierung zur Oberfläche ist heute „senkrecht".</div>
+          <div data-muster><p>… heute meist <strong>senkrecht</strong> zur Oberfläche. Schreiben: Die <strong>Spule</strong> im Kopf erzeugt ein <strong>Magnetfeld</strong> und richtet die Magnetisierung aus. Lesen: An <strong>Richtungswechseln</strong> ändert sich der <strong>Widerstand</strong> des Sensors.</p></div>
+        </div>
       </div>
       <div class="callout">💡 <span>Kommt dir das bekannt vor? Wie bei der CD steckt die Information in den <strong>Wechseln</strong> (bei der Festplatte: <span class="tt" data-tip="Stelle, an der die Magnetisierungsrichtung umschlägt.">Flusswechsel</span>), nicht im Zustand selbst.</span></div>
 
@@ -757,7 +846,6 @@ body.teacher .gated{display:block;}
     <!-- Teil 2 -->
     <div class="subphase" id="ph2-sub-2">
       <h3>Woraus besteht die Zugriffszeit?</h3>
-      <p>Jeder Zugriff auf einen beliebigen Sektor braucht drei Schritte:</p>
       <table class="tbl">
         <tr><th>Anteil</th><th>Was passiert?</th><th>typisch</th></tr>
         <tr><td><span class="tt" data-tip="Englisch „seek time“: Zeit, bis der Arm den Kopf über die richtige Spur bewegt hat.">Suchzeit</span></td><td>Arm bewegt den Kopf zur richtigen Spur</td><td>ca. 8&nbsp;ms</td></tr>
@@ -765,23 +853,25 @@ body.teacher .gated{display:block;}
         <tr><td>Übertragungszeit</td><td>Daten tatsächlich lesen</td><td>klein bei kleinen Blöcken</td></tr>
       </table>
 
-      <h3>Berechne die mittlere Rotationsverzögerung bei 7200&nbsp;U/min</h3>
-      <p>Im Mittel muss man eine <strong>halbe Umdrehung</strong> warten – mal liegt der Sektor direkt unter dem Kopf, mal ist er gerade vorbei.</p>
-      <p>a) Umdrehungen pro Sekunde: <input class="inp" id="rot-us"> <span class="unit">U/s</span></p>
-      <p>b) Dauer einer Umdrehung <i>T</i>: <input class="inp" id="rot-t"> <span class="unit">ms</span></p>
-      <p>c) mittlere Rotationsverzögerung <i>t</i><sub>rot</sub>: <input class="inp" id="rot-trot"> <span class="unit">ms</span></p>
-      <div>
-        <button class="btn btn-primary btn-sm" onclick="checkRot(this)">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
-      </div>
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Eine Minute hat 60&nbsp;Sekunden. Teile die Umdrehungen pro Minute durch 60.</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 2</button>
-        <div class="hilfe-text">Bei 120 Umdrehungen pro Sekunde dauert eine Umdrehung 1/120&nbsp;s. Rechne in Millisekunden um: mal 1000.</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-rot')">Lösung zeigen</button>
-        <div class="sol" id="sol-rot">7200&nbsp;U/min = 7200&nbsp;U / 60&nbsp;s = 120&nbsp;U/s<br><i>T</i> = 1 / (120&nbsp;U/s) ≈ 0,00833&nbsp;s = 8,33&nbsp;ms<br><i>t</i><sub>rot</sub> = <i>T</i> / 2 ≈ 4,17&nbsp;ms</div>
+      <div class="ex">
+        <p><strong>Aufgabe 2.3:</strong> Berechne die mittlere Rotationsverzögerung bei 7200&nbsp;U/min. Im Mittel muss man eine <strong>halbe Umdrehung</strong> warten.</p>
+        <p>a) Umdrehungen pro Sekunde: <input class="inp" id="rot-us" inputmode="decimal"> <span class="unit">U/s</span></p>
+        <p>b) Dauer einer Umdrehung <i>T</i>: <input class="inp" id="rot-t" inputmode="decimal"> <span class="unit">ms</span></p>
+        <p>c) mittlere Rotationsverzögerung <i>t</i><sub>rot</sub>: <input class="inp" id="rot-trot" inputmode="decimal"> <span class="unit">ms</span></p>
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="checkRot(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-rot">
+          <div data-tipp>Rechne Schritt für Schritt: erst pro Sekunde, dann die Dauer einer Umdrehung, dann die Hälfte davon.</div>
+          <div data-tipp>Eine Minute hat 60&nbsp;s. Die Dauer einer Umdrehung ist der Kehrwert der Drehzahl: <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd"><i>n</i></span></span>.</div>
+          <div data-tipp><span class="frac"><span class="fn">7200&nbsp;U</span><span class="fd">60&nbsp;s</span></span> = 120&nbsp;U/s. Also <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd">120</span></span>&nbsp;s – rechne in Millisekunden um (mal 1000) und halbiere.</div>
+          <div data-muster><p class="heft">geg.: <i>n</i> = 7200&nbsp;U/min · ges.: <i>t</i><sub>rot</sub><br>
+            <i>n</i> = <span class="frac"><span class="fn">7200&nbsp;U</span><span class="fd">60&nbsp;s</span></span> = 120&nbsp;U/s<br>
+            <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd">120&nbsp;U/s</span></span> ≈ 0,00833&nbsp;s = 8,33&nbsp;ms<br>
+            <i>t</i><sub>rot</sub> = <span class="frac"><span class="fn"><i>T</i></span><span class="fd">2</span></span> = <span class="frac"><span class="fn">8,33&nbsp;ms</span><span class="fd">2</span></span><br><u><i>t</i><sub>rot</sub> ≈ 4,17&nbsp;ms</u></p>
+            <p>Im Mittel wartet die Platte rund 4,2&nbsp;ms, bis der Sektor unter dem Kopf ist.</p></div>
+        </div>
       </div>
 
       <div class="tool" id="rot-tool" hidden>
@@ -793,34 +883,44 @@ body.teacher .gated{display:block;}
         <p class="caption">Server-Festplatten mit 15&nbsp;000&nbsp;U/min halbieren die Wartezeit gegenüber 7200&nbsp;U/min – der Millisekundenbereich bleibt.</p>
       </div>
 
-      <h3>Wie viele Zufallszugriffe schafft die Platte pro Sekunde?</h3>
-      <p>Suchzeit 8&nbsp;ms plus deine mittlere Rotationsverzögerung ergeben die Zugriffszeit. Übertragungszeit vernachlässigen.</p>
-      <p>Zugriffszeit: <input class="inp" id="acc-t"> <span class="unit">ms</span> &nbsp;→&nbsp; Zugriffe pro Sekunde (ganze Zahl): <input class="inp" id="acc-n"></p>
-      <div>
-        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['acc-t',12.17,0.25],['acc-n',82,4]])">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
-      </div>
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Eine Sekunde sind 1000&nbsp;ms. Wie oft passt deine Zugriffszeit hinein?</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-acc')">Lösung zeigen</button>
-        <div class="sol" id="sol-acc">8&nbsp;ms + 4,17&nbsp;ms ≈ 12,2&nbsp;ms · 1000&nbsp;ms / 12,2&nbsp;ms ≈ 82 → rund 80 Zufallszugriffe pro Sekunde. Eine SSD braucht dafür Mikrosekunden statt Millisekunden.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 2.4:</strong> Wie viele Zufallszugriffe schafft die Platte pro Sekunde? Suchzeit 8&nbsp;ms plus deine mittlere Rotationsverzögerung ergeben die Zugriffszeit; die Übertragungszeit vernachlässigst du.</p>
+        <p>Zugriffszeit: <input class="inp" id="acc-t" inputmode="decimal"> <span class="unit">ms</span> &nbsp;→&nbsp; Zugriffe pro Sekunde (ganze Zahl): <input class="inp" id="acc-n" inputmode="decimal"></p>
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['acc-t',12.17,0.25],['acc-n',82,4]])">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-acc">
+          <div data-tipp>Zwei Schritte: erst die Zeit für einen Zugriff, dann: Wie oft passt diese Zeit in eine Sekunde?</div>
+          <div data-tipp>Zugriffszeit = Suchzeit + Rotationsverzögerung. Eine Sekunde sind 1000&nbsp;ms.</div>
+          <div data-tipp>8&nbsp;ms + 4,17&nbsp;ms ≈ 12,2&nbsp;ms. Rechne <span class="frac"><span class="fn">1000&nbsp;ms</span><span class="fd">12,2&nbsp;ms</span></span>.</div>
+          <div data-muster><p class="heft"><i>t</i><sub>Zugriff</sub> = 8&nbsp;ms + 4,17&nbsp;ms ≈ 12,2&nbsp;ms<br>
+            Zugriffe pro Sekunde = <span class="frac"><span class="fn">1000&nbsp;ms</span><span class="fd">12,2&nbsp;ms</span></span> ≈ <u>82</u></p>
+            <p>Die Festplatte schafft rund 80 Zufallszugriffe pro Sekunde. Eine SSD braucht dafür Mikrosekunden statt Millisekunden.</p></div>
+        </div>
       </div>
 
-      <p><strong>Markiere alles, was die Zugriffszeit einer Festplatte bestimmt.</strong></p>
-      <div class="baustein" data-type="mark" id="mark-hdd">
-        <p class="mark-text">
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Suchzeit des Arms</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Taktfrequenz der CPU</span>
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Drehzahl der Platter</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Ladungsverlust der Zellen</span>
-          <span class="mw" data-correct="1" onclick="markToggle(this)">Übertragungszeit</span>
-          <span class="mw" data-correct="0" onclick="markToggle(this)">Wellenlänge des Lasers</span>
-        </p>
-        <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+      <div class="ex">
+        <p><strong>Aufgabe 2.5:</strong> Markiere alles, was die Zugriffszeit einer Festplatte bestimmt.</p>
+        <div class="baustein" data-type="mark" id="mark-hdd">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Suchzeit des Arms</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Taktfrequenz der CPU</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Drehzahl der Platter</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Ladungsverlust der Zellen</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Übertragungszeit</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Wellenlänge des Lasers</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-markhdd">
+          <div data-tipp>Schau dir die Tabelle „Woraus besteht die Zugriffszeit?" noch einmal an.</div>
+          <div data-tipp>Drei Begriffe gehören zur Festplatte, drei zu ganz anderen Bauteilen (Prozessor, Flash-Zelle, optisches Laufwerk).</div>
+          <div data-tipp>Die Drehzahl steckt in der Rotationsverzögerung. „Ladungsverlust" gehört zu Flash, „Wellenlänge" zur CD.</div>
+          <div data-muster><p>Richtig: Suchzeit des Arms, Drehzahl der Platter (bestimmt die Rotationsverzögerung), Übertragungszeit.<br>Falsch: Taktfrequenz der CPU (Prozessor), Ladungsverlust (Flash), Wellenlänge (optisch).</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -837,16 +937,20 @@ body.teacher .gated{display:block;}
         <div class="hefter-label">📓 Heftereintrag — Festplatte (HDD)</div>
         <p><strong>Aufbau:</strong> Platter mit Magnetschicht auf einer Spindel (5400 oder 7200&nbsp;U/min), Schreib-Lese-Köpfe am Schwenkarm. Spuren = konzentrische Kreise, Sektoren = Abschnitte (meist 4096&nbsp;Byte), gleiche Spuren aller Platter = Zylinder.</p>
         <p><strong>Bit:</strong> Magnetisierungsrichtung winziger Bereiche. Schreiben: Spule erzeugt Magnetfeld. Lesen: Widerstand des Sensors ändert sich an Richtungswechseln (GMR/TMR).</p>
-        <p><strong>Zugriffszeit</strong> = Suchzeit (ca. 8&nbsp;ms) + Rotationsverzögerung + Übertragungszeit.<br>7200&nbsp;U/min = 120&nbsp;U/s → <i>T</i> ≈ 8,33&nbsp;ms → <i>t</i><sub>rot</sub> = <i>T</i>/2 ≈ 4,17&nbsp;ms → gesamt ca. 12&nbsp;ms, rund 80 Zufallszugriffe pro Sekunde.</p>
+        <p><strong>Zugriffszeit</strong> = Suchzeit (ca. 8&nbsp;ms) + Rotationsverzögerung + Übertragungszeit.<br>7200&nbsp;U/min = 120&nbsp;U/s → <i>T</i> ≈ 8,33&nbsp;ms → <i>t</i><sub>rot</sub> = <span class="frac"><span class="fn"><i>T</i></span><span class="fd">2</span></span> ≈ 4,17&nbsp;ms → gesamt ca. 12&nbsp;ms, rund 80 Zufallszugriffe pro Sekunde.</p>
         <p><strong>Folge:</strong> sequenzielles Lesen schnell, Zufallszugriffe langsam (Mechanik: Millisekunden statt Mikrosekunden).</p>
       </div>
 
-      <div class="star">
+      <div class="star ex">
         <div class="star-head">★ Für Profis (freiwillig)</div>
         <p>Beurteile, warum Magnetbänder (LTO) in Rechenzentren noch für Archive genutzt werden. Nenne mindestens drei Argumente und eine Grenze.</p>
         <textarea rows="3" class="free" placeholder="Deine Argumente …"></textarea>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-z23')">Erwartung zeigen</button>
-        <div class="sol" id="sol-z23"><strong>Für Band:</strong> sehr niedrige Kosten pro Terabyte; hohe Kapazität je Kassette (LTO-9: 18&nbsp;TB unkomprimiert); hohe Datenrate beim sequenziellen Schreiben (LTO-9: ca. 400&nbsp;MB/s); lange Haltbarkeit (Herstellerangabe ca. 30 Jahre); Kassetten im Regal brauchen keinen Strom; offline gelagert geschützt vor Ransomware und Fehlbedienung (Air Gap).<br><strong>Grenze:</strong> rein sequenzieller Zugriff, Spulen dauert Sekunden bis Minuten → Archiv und Backup, nicht Arbeitsspeicher.<br><em>Erwartung: begründete Einordnung mit mindestens drei Argumenten.</em></div>
+        <div class="hs" id="hs-z23">
+          <div data-tipp>Ein Archiv wird selten gelesen, muss aber lange halten und viel fassen. Welche Eigenschaften zählen dann?</div>
+          <div data-tipp>Denk an Kosten pro Terabyte, Kapazität je Kassette, Haltbarkeit, Stromverbrauch im Regal und Schutz vor Angriffen.</div>
+          <div data-tipp>Ein Band, das offline im Regal liegt, kann keine Schadsoftware verschlüsseln. Die Grenze liegt beim Zugriff: Ein Band muss gespult werden.</div>
+          <div data-muster><p><strong>Für Band:</strong> sehr niedrige Kosten pro Terabyte; hohe Kapazität je Kassette (LTO-9: 18&nbsp;TB unkomprimiert); hohe Datenrate beim sequenziellen Schreiben (LTO-9: ca. 400&nbsp;MB/s); lange Haltbarkeit (Herstellerangabe ca. 30 Jahre); Kassetten im Regal brauchen keinen Strom; offline gelagert geschützt vor Ransomware und Fehlbedienung (Air Gap).</p><p><strong>Grenze:</strong> rein sequenzieller Zugriff, Spulen dauert Sekunden bis Minuten → Archiv und Backup, nicht Arbeitsspeicher.</p></div>
+        </div>
       </div>
 
       <p class="connector-text">Die Mechanik ist der Bremsklotz der Festplatte. Was wäre, wenn man sie einfach weglässt? Dann landet man bei der SSD – die keine beweglichen Teile hat und trotzdem nicht ewig hält.</p>
@@ -865,7 +969,7 @@ body.teacher .gated{display:block;}
       <span class="substep-label">Teile:</span>
       <button class="substep-chip active" onclick="revealSub(3,1)">1 · Floating Gate</button>
       <button class="substep-chip locked" onclick="revealSub(3,2)">2 · SLC bis QLC</button>
-      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Verschleiß</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Abnutzung</button>
       <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
     </div>
 
@@ -897,20 +1001,28 @@ body.teacher .gated{display:block;}
         <figcaption>Vereinfachter Querschnitt einer Floating-Gate-Zelle (nicht maßstäblich).</figcaption>
       </figure>
 
-      <p><strong>Bringe die Vorgänge in die richtige Reihenfolge</strong> – vom leeren Block bis zum gelesenen Bit.</p>
-      <div class="baustein" data-type="sort" id="sort-flash">
-        <div class="sort-list">
-          <div class="sort-item" data-v="3"><span>Lesen: Eine Lesespannung wird angelegt. Fließt Strom? Geladen → sperrt, ungeladen → leitet.</span>
-            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="1"><span>Schreiben: Mit hoher Spannung tunneln Elektronen durch das dünne Oxid auf das Floating Gate.</span>
-            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="4"><span>Löschen: Die Elektronen werden per Tunneleffekt wieder entfernt – nur blockweise.</span>
-            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="2"><span>Die Elektronen bleiben gefangen und verschieben die Schwellenspannung des Transistors – auch ohne Strom.</span>
-            <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+      <div class="ex">
+        <p><strong>Aufgabe 3.1:</strong> Bringe die Vorgänge in die richtige Reihenfolge – vom Schreiben bis zum Löschen. Karten ziehen oder mit ▲▼ verschieben.</p>
+        <div class="baustein" data-type="sort" id="sort-flash">
+          <div class="sort-list">
+            <div class="sort-item" data-v="3"><span>Lesen: Eine Lesespannung wird angelegt. Fließt Strom? Geladen → sperrt, ungeladen → leitet.</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="1"><span>Schreiben: Mit hoher Spannung tunneln Elektronen durch das dünne Oxid auf das Floating Gate.</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="4"><span>Löschen: Die Elektronen werden per Tunneleffekt wieder entfernt – nur blockweise.</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="2"><span>Die Elektronen bleiben gefangen und verschieben die Schwellenspannung des Transistors – auch ohne Strom.</span>
+              <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-sortflash">
+          <div data-tipp>Bevor man etwas lesen kann, muss es gespeichert sein. Was passiert also zuerst?</div>
+          <div data-tipp>Reihenfolge der Lebensgeschichte eines Bits: hineinbringen → festhalten → auslesen → wieder entfernen.</div>
+          <div data-tipp>Oben steht „Schreiben", unten „Löschen". Dazwischen: Erst bleiben die Elektronen gefangen, dann wird gelesen.</div>
+          <div data-muster><p>1. Schreiben (Elektronen tunneln auf das Floating Gate) → 2. Elektronen bleiben gefangen, Schwellenspannung verschoben → 3. Lesen (fließt Strom?) → 4. Löschen (blockweise per Tunneleffekt).</p></div>
+        </div>
       </div>
       <p class="caption">Bei modernem 3D-NAND wird oft eine „Charge-Trap"-Schicht statt eines Floating Gates genutzt – das Prinzip ist ähnlich.</p>
 
@@ -932,10 +1044,18 @@ body.teacher .gated{display:block;}
     <div class="subphase" id="ph3-sub-2">
       <h3>SLC, MLC, TLC, QLC</h3>
       <p>Die Buchstaben verraten, wie viele Bits in einer Zelle stecken: <strong>S</strong>ingle, <strong>M</strong>ulti (2), <strong>T</strong>riple (3), <strong>Q</strong>uad (4) <strong>L</strong>evel <strong>C</strong>ell. Um <i>n</i> Bits zu unterscheiden, braucht man 2<sup><i>n</i></sup> verschiedene Ladungsniveaus.</p>
-      <p><strong>Ergänze:</strong> Ladungsniveaus bei MLC <input class="inp" id="lv-mlc">, TLC <input class="inp" id="lv-tlc">, QLC <input class="inp" id="lv-qlc"></p>
-      <div>
-        <button class="btn btn-primary btn-sm" onclick="checkLevels(this)">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
+      <div class="ex">
+        <p><strong>Aufgabe 3.2:</strong> Ergänze die Zahl der Ladungsniveaus: MLC <input class="inp" id="lv-mlc" inputmode="numeric">, TLC <input class="inp" id="lv-tlc" inputmode="numeric">, QLC <input class="inp" id="lv-qlc" inputmode="numeric"></p>
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="checkLevels(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-levels">
+          <div data-tipp>Mit 1 Bit kann man 2 Zustände unterscheiden (0 und 1). Wie viele Kombinationen gibt es mit 2 Bits?</div>
+          <div data-tipp>Die Zahl der Niveaus ist 2<sup><i>n</i></sup>, wobei <i>n</i> die Zahl der Bits pro Zelle ist.</div>
+          <div data-tipp>MLC: 2² = 4. Rechne 2³ für TLC und 2⁴ für QLC.</div>
+          <div data-muster><p>MLC: 2² = <u>4</u> · TLC: 2³ = <u>8</u> · QLC: 2⁴ = <u>16</u> Ladungsniveaus.</p><p>Jedes zusätzliche Bit verdoppelt die Zahl der Niveaus, die die Zelle sicher unterscheiden muss.</p></div>
+        </div>
       </div>
 
       <div class="tool" id="lv-tool" hidden>
@@ -976,6 +1096,7 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 3 -->
     <div class="subphase" id="ph3-sub-3">
+      <h3>„Abnutzung" ohne Mechanik – warum Flash verschleißt <span class="wichtig">! Wichtig</span></h3>
       <div class="poe-box" id="poe-wear">
         <div class="poe-label">🤔 Was meinst du?</div>
         <p>Eine SSD hat keine beweglichen Teile. Kann sie sich trotzdem abnutzen – und wenn ja, wodurch?</p>
@@ -985,9 +1106,100 @@ body.teacher .gated{display:block;}
       </div>
 
       <div id="wear-explain" class="gated" data-gate="poe-wear">
-        <h3>Warum Flash verschleißt</h3>
-        <p>Beim Programmieren und Löschen müssen Elektronen durch die dünne Oxidschicht <span class="tt" data-tip="Quanteneffekt: Elektronen gelangen durch eine eigentlich undurchdringliche, sehr dünne Isolierschicht.">tunneln</span>. <strong>Jeder Vorgang schädigt die Schicht</strong>: Elektronen bleiben hängen, Defekte entstehen. Die Schwellenspannungen verschieben sich, Ladung entweicht schneller – irgendwann lassen sich die Niveaus nicht mehr sicher unterscheiden.</p>
-        <p>Dazu kommt: Löschen geht nur <strong>blockweise</strong>, Schreiben nur <strong>seitenweise</strong>. Wer eine kleine Datei ändert, verursacht oft viel mehr Schreibarbeit, als die Datei groß ist (<span class="tt" data-tip="Schreibverstärkung: Die SSD schreibt intern mehr Daten, als der Rechner ihr geschickt hat.">Write Amplification</span>).</p>
+        <p class="caption">Die Erklärung erscheint, sobald du deine Vermutung festgehalten hast.</p>
+        <div class="wear-box">
+          <p><strong>Kurz erklärt:</strong> Das „Verschleißteil" einer Flash-Zelle ist die hauchdünne <strong>Tunneloxid-Schicht</strong> (nur wenige Nanometer, also einige Dutzend Atomlagen). Bei jedem <strong>Schreiben</strong> und <strong>Löschen</strong> werden Elektronen mit hoher Spannung (rund 15 bis 20&nbsp;V) quer durch diese Schicht gedrückt. Das geht nicht spurlos vorbei:</p>
+          <ol class="wear-list">
+            <li><strong>Elektronen bleiben stecken.</strong> Einige Elektronen schaffen es nicht ganz durch und bleiben <em>im Oxid</em> hängen. Diese Ladung verschiebt die Schwellenspannung – die Zelle „sieht" geladener aus, als sie ist.</li>
+            <li><strong>Das Oxid bekommt Löcher.</strong> Die energiereichen Elektronen brechen Bindungen im Oxid auf. Es entstehen winzige Fehlstellen, über die gespeicherte Elektronen später <strong>vom Floating Gate wegsickern</strong>.</li>
+            <li><strong>Die Niveaus verschwimmen.</strong> Durch 1. und 2. lässt sich irgendwann nicht mehr sicher sagen, auf welchem Ladungsniveau die Zelle steht. Der Controller erkennt das, sperrt den Block und ersetzt ihn durch einen Reserveblock.</li>
+          </ol>
+          <div class="callout">✏️ <span><strong>Vergleich:</strong> Wie ein Blatt Papier, auf dem du immer an derselben Stelle schreibst und radierst. Jedes Radieren macht das Papier etwas dünner und rauer – nach vielen Runden bleibt die Schrift nicht mehr sauber stehen. <strong>Lesen</strong> dagegen ist wie Anschauen: Das schadet dem Papier praktisch nicht.</span></div>
+        </div>
+
+        <figure class="fig">
+          <svg viewBox="0 0 680 300" role="img" aria-labelledby="svg-wear-t" class="svgfig">
+            <title id="svg-wear-t">Vergleich zweier Flash-Zellen. Links eine neue Zelle: sauberes Tunneloxid, Elektronen tunneln hindurch und bleiben auf dem Floating Gate. Rechts eine abgenutzte Zelle nach vielen tausend Zyklen: im Oxid stecken gefangene Elektronen und Fehlstellen, über die Elektronen vom Floating Gate wegsickern.</title>
+            <!-- Linke Zelle -->
+            <text x="165" y="24" font-size="16" font-weight="700" text-anchor="middle" fill="#166534">Neue Zelle</text>
+            <text x="165" y="42" font-size="13" text-anchor="middle" fill="#374151">wenige Schreib-/Löschzyklen</text>
+            <rect x="40" y="60" width="250" height="34" fill="#9CA3AF" stroke="#374151" stroke-width="2"/>
+            <text x="165" y="82" font-size="13" text-anchor="middle" fill="#111">Steuer-Gate</text>
+            <rect x="40" y="94" width="250" height="14" fill="#FEF3C7" stroke="#B45309"/>
+            <rect x="40" y="108" width="250" height="52" fill="#DBEAFE" stroke="#3F5E8C" stroke-width="2"/>
+            <text x="165" y="126" font-size="13" text-anchor="middle" fill="#1E3A8A">Floating Gate</text>
+            <g fill="#3F5E8C"><circle cx="105" cy="145" r="6"/><circle cx="135" cy="145" r="6"/><circle cx="165" cy="145" r="6"/><circle cx="195" cy="145" r="6"/><circle cx="225" cy="145" r="6"/></g>
+            <rect x="40" y="160" width="250" height="26" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+            <text x="80" y="178" font-size="12" text-anchor="middle" fill="#92400E">Tunneloxid</text>
+            <rect x="40" y="186" width="250" height="40" fill="#E5E7EB" stroke="#6B7280"/>
+            <text x="165" y="211" font-size="13" text-anchor="middle" fill="#374151">Kanal</text>
+            <line x1="262" y1="220" x2="262" y2="150" stroke="#2D8B55" stroke-width="3" marker-end="url(#ar-g)"/>
+            <text x="165" y="252" font-size="13" text-anchor="middle" fill="#166534">Elektronen tunneln sauber durch</text>
+            <text x="165" y="270" font-size="13" text-anchor="middle" fill="#166534">und bleiben oben gefangen ✔</text>
+            <!-- Pfeil Mitte -->
+            <text x="340" y="132" font-size="13" text-anchor="middle" fill="#374151">tausende</text>
+            <text x="340" y="148" font-size="13" text-anchor="middle" fill="#374151">Zyklen</text>
+            <line x1="312" y1="165" x2="362" y2="165" stroke="#374151" stroke-width="3" marker-end="url(#ar-k)"/>
+            <!-- Rechte Zelle -->
+            <text x="515" y="24" font-size="16" font-weight="700" text-anchor="middle" fill="#991b1b">Abgenutzte Zelle</text>
+            <text x="515" y="42" font-size="13" text-anchor="middle" fill="#374151">viele Schreib-/Löschzyklen</text>
+            <rect x="390" y="60" width="250" height="34" fill="#9CA3AF" stroke="#374151" stroke-width="2"/>
+            <text x="515" y="82" font-size="13" text-anchor="middle" fill="#111">Steuer-Gate</text>
+            <rect x="390" y="94" width="250" height="14" fill="#FEF3C7" stroke="#B45309"/>
+            <rect x="390" y="108" width="250" height="52" fill="#DBEAFE" stroke="#3F5E8C" stroke-width="2"/>
+            <text x="515" y="126" font-size="13" text-anchor="middle" fill="#1E3A8A">Floating Gate</text>
+            <g fill="#3F5E8C"><circle cx="470" cy="145" r="6"/><circle cx="500" cy="145" r="6"/><circle cx="530" cy="145" r="6"/></g>
+            <rect x="390" y="160" width="250" height="26" fill="#FDE2C4" stroke="#C2410C" stroke-width="2"/>
+            <!-- gefangene Elektronen im Oxid -->
+            <text x="430" y="178" font-size="12" text-anchor="middle" fill="#92400E">Tunneloxid</text><g fill="#C93B3B"><circle cx="480" cy="173" r="5"/><circle cx="505" cy="170" r="5"/><circle cx="600" cy="174" r="5"/></g>
+            <!-- Fehlstellen -->
+            <g stroke="#111" stroke-width="2"><line x1="535" y1="165" x2="545" y2="181"/><line x1="545" y1="165" x2="535" y2="181"/><line x1="565" y1="165" x2="575" y2="181"/><line x1="575" y1="165" x2="565" y2="181"/></g>
+            <!-- Leck -->
+            <path d="M555 150 C555 170 560 190 560 220" fill="none" stroke="#C93B3B" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#ar-r)"/>
+            <rect x="390" y="186" width="250" height="40" fill="#E5E7EB" stroke="#6B7280"/>
+            <text x="470" y="211" font-size="13" text-anchor="middle" fill="#374151">Kanal</text>
+            <text x="515" y="252" font-size="13" text-anchor="middle" fill="#991b1b">● im Oxid steckende Elektronen</text>
+            <text x="515" y="270" font-size="13" text-anchor="middle" fill="#991b1b">✕ Fehlstellen → Ladung sickert weg</text>
+            <defs>
+              <marker id="ar-g" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2D8B55"/></marker>
+              <marker id="ar-k" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#374151"/></marker>
+              <marker id="ar-r" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C93B3B"/></marker>
+            </defs>
+          </svg>
+          <figcaption>Neue und abgenutzte Flash-Zelle im Vergleich (vereinfacht, nicht maßstäblich). Rot: Elektronen, die im Oxid stecken geblieben sind; ✕: Fehlstellen, über die Ladung wegsickert.</figcaption>
+        </figure>
+
+        <div class="callout callout-info">🔁 <span>Dazu kommt: Löschen geht nur <strong>blockweise</strong>, Schreiben nur <strong>seitenweise</strong>. Wer eine kleine Datei ändert, verursacht oft viel mehr Schreibarbeit, als die Datei groß ist (<span class="tt" data-tip="Schreibverstärkung: Die SSD schreibt intern mehr Daten, als der Rechner ihr geschickt hat.">Write Amplification</span>) – und damit mehr Verschleiß.</span></div>
+
+        <div class="ex">
+          <p><strong>Aufgabe 3.3:</strong> Fasse die Erklärung zusammen – setze die Wörter ein.</p>
+          <div class="baustein" data-type="dtw" id="dtw-wear">
+            <div class="dtw-pool">
+              <span class="dtw-word" data-w="Tunneloxid" onclick="dtwSelect(this)">Tunneloxid</span>
+              <span class="dtw-word" data-w="Schreiben" onclick="dtwSelect(this)">Schreiben</span>
+              <span class="dtw-word" data-w="Fehlstellen" onclick="dtwSelect(this)">Fehlstellen</span>
+              <span class="dtw-word" data-w="Lesen" onclick="dtwSelect(this)">Lesen</span>
+              <span class="dtw-word" data-w="Niveaus" onclick="dtwSelect(this)">Niveaus</span>
+              <span class="dtw-word" data-w="Reserveblock" onclick="dtwSelect(this)">Reserveblock</span>
+            </div>
+            <p class="dtw-text">Verschleißteil der Flash-Zelle ist das dünne
+              <span class="dtw-gap" data-answer="Tunneloxid" onclick="dtwPlace(this)">______</span>. Beim
+              <span class="dtw-gap" data-answer="Schreiben" onclick="dtwPlace(this)">______</span> und Löschen werden Elektronen hindurchgedrückt; dabei bleiben Elektronen stecken und es entstehen
+              <span class="dtw-gap" data-answer="Fehlstellen" onclick="dtwPlace(this)">______</span>, über die Ladung wegsickert. Irgendwann lassen sich die
+              <span class="dtw-gap" data-answer="Niveaus" onclick="dtwPlace(this)">______</span> nicht mehr unterscheiden, und der Controller ersetzt den Block durch einen
+              <span class="dtw-gap" data-answer="Reserveblock" onclick="dtwPlace(this)">______</span>. Reines
+              <span class="dtw-gap" data-answer="Lesen" onclick="dtwPlace(this)">______</span> schadet der Zelle dagegen kaum.</p>
+            <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+            <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-dtwwear">
+            <div data-tipp>Schau dir die drei nummerierten Punkte der Erklärung und das Bild noch einmal an.</div>
+            <div data-tipp>Unterscheide: Was schadet der Zelle (zwei Vorgänge), was nicht? Was entsteht im Oxid? Was macht der Controller zum Schluss?</div>
+            <div data-tipp>Die Schicht heißt Tunneloxid. Im Bild sind die ✕ die Fehlstellen. Das Papier-Vergleichsbild sagt dir, was harmlos ist.</div>
+            <div data-muster><p>Verschleißteil ist das dünne <strong>Tunneloxid</strong>. Beim <strong>Schreiben</strong> und Löschen … entstehen <strong>Fehlstellen</strong>, über die Ladung wegsickert. Irgendwann lassen sich die <strong>Niveaus</strong> nicht mehr unterscheiden, der Controller ersetzt den Block durch einen <strong>Reserveblock</strong>. Reines <strong>Lesen</strong> schadet kaum.</p></div>
+          </div>
+        </div>
 
         <h3>🔧 Ausprobieren: Wear-Leveling</h3>
         <p>Du speicherst immer wieder dieselbe Datei. Ohne <span class="tt" data-tip="Verschleißausgleich: Der Controller verteilt Schreibvorgänge gleichmäßig auf alle Blöcke.">Wear-Leveling</span> landet sie immer im selben Block. Mit Wear-Leveling sucht der Controller jedes Mal den am wenigsten abgenutzten Block.</p>
@@ -1012,19 +1224,22 @@ body.teacher .gated{display:block;}
           <tr><td>SLC-Cache</td><td>schreibt zuerst schnell im 1-Bit-Modus, sortiert später um</td></tr>
         </table>
 
-        <h3>Reicht das für den Alltag?</h3>
-        <p>Hersteller geben die Haltbarkeit in <span class="tt" data-tip="Terabytes Written: So viele Terabyte darf man laut Garantie insgesamt auf die SSD schreiben.">TBW</span> an. Eine SSD hat 600&nbsp;TBW bei 5&nbsp;Jahren Garantie. Wie viele Gigabyte darfst du dann <strong>pro Tag</strong> schreiben? (1&nbsp;TB = 1000&nbsp;GB)</p>
-        <p>pro Tag: <input class="inp" id="tbw-gb"> <span class="unit">GB</span></p>
-        <div>
-          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['tbw-gb',329,6]])">✓ Prüfen</button>
-          <div class="fb grp-fb"></div>
-        </div>
-        <div class="hilfe">
-          <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-          <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-          <div class="hilfe-text">Wie viele Tage haben 5 Jahre? Teile dann die 600&nbsp;TB durch diese Anzahl Tage.</div>
-          <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-tbw')">Lösung zeigen</button>
-          <div class="sol" id="sol-tbw">600&nbsp;TB / (5 · 365&nbsp;Tage) = 600&nbsp;TB / 1825&nbsp;Tage ≈ 0,33&nbsp;TB/Tag ≈ 330&nbsp;GB pro Tag – für normale Nutzung (meist deutlich unter 50&nbsp;GB pro Tag) weit mehr als nötig.</div>
+        <div class="ex">
+          <p><strong>Aufgabe 3.4:</strong> Hersteller geben die Haltbarkeit in <span class="tt" data-tip="Terabytes Written: So viele Terabyte darf man laut Garantie insgesamt auf die SSD schreiben.">TBW</span> an. Eine SSD hat 600&nbsp;TBW bei 5&nbsp;Jahren Garantie. Wie viele Gigabyte darfst du dann <strong>pro Tag</strong> schreiben? (1&nbsp;TB = 1000&nbsp;GB)</p>
+          <p>pro Tag: <input class="inp" id="tbw-gb" inputmode="decimal"> <span class="unit">GB</span></p>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['tbw-gb',329,6]])">✓ Prüfen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-tbw">
+            <div data-tipp>Die gesamte erlaubte Schreibmenge wird gleichmäßig auf alle Tage der Garantiezeit verteilt.</div>
+            <div data-tipp>Rechne zuerst die Zahl der Tage aus: 5 Jahre · 365 Tage. Teile dann die 600&nbsp;TB durch diese Zahl.</div>
+            <div data-tipp>5 · 365 = 1825 Tage. <span class="frac"><span class="fn">600&nbsp;TB</span><span class="fd">1825</span></span> ergibt einen Wert in TB – mal 1000 ergibt GB.</div>
+            <div data-muster><p class="heft">geg.: 600&nbsp;TBW, 5 Jahre · ges.: GB pro Tag<br>
+              Tage = 5 · 365 = 1825<br>
+              Schreibmenge pro Tag = <span class="frac"><span class="fn">600&nbsp;TB</span><span class="fd">1825&nbsp;Tage</span></span> ≈ 0,33&nbsp;TB = <u>ca. 330&nbsp;GB</u></p>
+              <p>Man dürfte rund 330&nbsp;GB pro Tag schreiben – normale Nutzung liegt meist deutlich unter 50&nbsp;GB pro Tag.</p></div>
+          </div>
         </div>
 
         <div class="quiz-item">
@@ -1042,16 +1257,21 @@ body.teacher .gated{display:block;}
         <div class="hefter-label">📓 Heftereintrag — Flash und SSD</div>
         <p><strong>Floating-Gate-Zelle:</strong> MOS-Transistor mit isoliertem Floating Gate. Schreiben: Elektronen tunneln mit hoher Spannung auf das Gate und bleiben gefangen → Schwellenspannung verschoben. Lesen: fließt bei Lesespannung Strom? Löschen: blockweise per Tunneleffekt.</p>
         <p><strong>Bits pro Zelle:</strong> SLC 1 · MLC 2 · TLC 3 · QLC 4 → 2<sup><i>n</i></sup> Ladungsniveaus (2, 4, 8, 16). Mehr Bits: billiger je GB, aber langsamer und weniger Zyklen.</p>
-        <p><strong>Verschleiß:</strong> Tunneln schädigt das Oxid; Niveaus verschwimmen. Gegenmaßnahmen im Controller: Wear-Leveling, Bad-Block-Management mit Reserve, ECC, Garbage Collection, TRIM, SLC-Cache.</p>
+        <p><strong>Verschleiß:</strong> Bei jedem Schreiben/Löschen werden Elektronen durch das dünne Tunneloxid gedrückt. Dabei bleiben Elektronen im Oxid stecken und es entstehen Fehlstellen → Ladung sickert weg, die Niveaus verschwimmen. Lesen schadet kaum.</p>
+        <p><strong>Gegenmaßnahmen im Controller:</strong> Wear-Leveling, Bad-Block-Management mit Reserve, ECC, Garbage Collection, TRIM, SLC-Cache.</p>
         <p><strong>Beispiel:</strong> 600&nbsp;TBW in 5 Jahren ≈ 330&nbsp;GB pro Tag.</p>
       </div>
 
-      <div class="star">
+      <div class="star ex">
         <div class="star-head">★ Für Profis (freiwillig)</div>
         <p>Beurteile beim SSD-Kauf den Zielkonflikt zwischen Bits pro Zelle, Preis, Tempo und Lebensdauer. Gib eine Empfehlung für zwei Nutzungsprofile (z.&nbsp;B. Schülerin mit Notebook, Videoschnitt-Profi).</p>
         <textarea rows="3" class="free" placeholder="Deine Empfehlung …"></textarea>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-z33')">Erwartung zeigen</button>
-        <div class="sol" id="sol-z33"><strong>Büro, Surfen, Streaming, Spiele:</strong> TLC oder QLC genügt (Schreibmengen meist deutlich unter 50&nbsp;GB pro Tag, das TBW reicht sehr lange).<br><strong>Dauerschreiber (Videoschnitt, Datenbanken, Server):</strong> TLC mit hohem TBW oder DWPD, größerer Reserve und großem Cache. <strong>Extreme Haltbarkeit:</strong> SLC (Industrie).<br><strong>Weitere Kaufkriterien:</strong> TBW und Garantie, Dauerschreibrate nach Leeren des SLC-Caches, DRAM-Cache, Schnittstelle, Preis.<br><em>Erwartung: Zielkonflikt erkannt und Empfehlung mit Nutzungsprofil begründet.</em></div>
+        <div class="hs" id="hs-z33">
+          <div data-tipp>Was gewinnt man, was verliert man, wenn man mehr Bits pro Zelle speichert?</div>
+          <div data-tipp>Mehr Bits: billiger je GB, aber langsamer und weniger Zyklen. Entscheidend ist also, wie viel jemand pro Tag schreibt.</div>
+          <div data-tipp>Vergleiche die normale Schreibmenge (meist unter 50&nbsp;GB pro Tag) mit dem TBW-Wert aus Aufgabe 3.4 – und überlege, wer deutlich mehr schreibt.</div>
+          <div data-muster><p><strong>Büro, Surfen, Streaming, Spiele:</strong> TLC oder QLC genügt (Schreibmengen meist deutlich unter 50&nbsp;GB pro Tag, das TBW reicht sehr lange).</p><p><strong>Dauerschreiber (Videoschnitt, Datenbanken, Server):</strong> TLC mit hohem TBW oder DWPD, größerer Reserve und großem Cache. <strong>Extreme Haltbarkeit:</strong> SLC (Industrie).</p><p><strong>Weitere Kaufkriterien:</strong> TBW und Garantie, Dauerschreibrate nach Leeren des SLC-Caches, DRAM-Cache, Schnittstelle, Preis.</p></div>
+        </div>
       </div>
 
       <p class="connector-text">Flash ist schnell – für uns. Für einen Prozessor, der Milliarden Befehle pro Sekunde abarbeitet, ist selbst eine SSD eine Schnecke. Deshalb gibt es noch schnellere Speicher, die ihre Daten aber sofort vergessen, wenn der Strom weg ist.</p>
@@ -1076,7 +1296,7 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 1 -->
     <div class="subphase on" id="ph4-sub-1">
-      <h3>Zwei Arten von RAM</h3>
+      <h3>Unterschiede zwischen DRAM und SRAM <span class="wichtig">! Wichtig</span></h3>
       <div class="two-col">
         <div class="mini-card">
           <h3>DRAM</h3>
@@ -1087,25 +1307,33 @@ body.teacher .gated{display:block;}
           <p>Pro Bit <strong>ca. 6 Transistoren</strong>, zusammengeschaltet als <span class="tt" data-tip="Schaltung mit zwei stabilen Zuständen, die ihren Zustand hält, solange Spannung anliegt.">Flipflop</span>. Der Zustand bleibt, solange Spannung anliegt – kein Refresh nötig.</p>
         </div>
       </div>
-      <p><strong>Ordne zu:</strong> Welche Eigenschaft gehört zu welchem RAM?</p>
-      <div class="baustein" data-type="match" id="match-ram">
-        <div class="m-pool">
-          <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
-          <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
-          <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
-          <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
-          <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
-          <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
+      <div class="ex">
+        <p><strong>Aufgabe 4.1:</strong> Welche Eigenschaft gehört zu welchem RAM?</p>
+        <div class="baustein" data-type="match" id="match-ram">
+          <div class="m-pool">
+            <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
+            <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
+            <span class="m-chip" data-id="d" onclick="matchSelect(this)">DRAM</span>
+            <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
+            <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
+            <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
+          </div>
+          <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">sehr schnell, ca. 1&nbsp;ns</span></div>
+          <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">hohe Dichte, günstig</span></div>
+          <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">wird für Register und Cache verwendet</span></div>
+          <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Arbeitsspeicher (DDR5, LPDDR)</span></div>
+          <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">geringe Dichte, teuer</span></div>
+          <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">ca. 50 bis 100&nbsp;ns bis zum Prozessorkern</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">sehr schnell, ca. 1&nbsp;ns</span></div>
-        <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">hohe Dichte, günstig</span></div>
-        <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">wird für Register und Cache verwendet</span></div>
-        <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Arbeitsspeicher (DDR5, LPDDR)</span></div>
-        <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">geringe Dichte, teuer</span></div>
-        <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">ca. 50 bis 100&nbsp;ns bis zum Prozessorkern</span></div>
-        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-ram">
+          <div data-tipp>Überlege: Was folgt daraus, dass SRAM 6 Transistoren pro Bit braucht, DRAM nur 1 Transistor und 1 Kondensator?</div>
+          <div data-tipp>Viele Bauteile pro Bit → viel Fläche → geringe Dichte, teuer, aber schnell. Wenige Bauteile → dicht und günstig, aber langsamer.</div>
+          <div data-tipp>Je drei Aussagen gehören zu jedem RAM. Der teure, schnelle Speicher sitzt im Prozessor (Register, Cache), der günstige auf dem Speicherriegel.</div>
+          <div data-muster><p><strong>SRAM:</strong> sehr schnell (ca. 1&nbsp;ns) · Register und Cache · geringe Dichte, teuer.<br><strong>DRAM:</strong> hohe Dichte, günstig · Arbeitsspeicher (DDR5, LPDDR) · ca. 50 bis 100&nbsp;ns.</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -1124,22 +1352,30 @@ body.teacher .gated{display:block;}
 
     <!-- Teil 2 -->
     <div class="subphase" id="ph4-sub-2">
-      <h3>Die Speicherhierarchie</h3>
+      <h3>Die Speicherhierarchie <span class="wichtig">! Wichtig</span></h3>
       <p>Man stapelt die Speicher zu einer Pyramide: <strong>oben</strong> schnell, klein, teuer je Bit und nah am Prozessor – <strong>unten</strong> groß, langsam, günstig und meist nichtflüchtig.</p>
-      <p><strong>Sortiere</strong> von der schnellsten Stufe (oben) zur langsamsten (unten).</p>
-      <div class="baustein" data-type="sort" id="sort-hier">
-        <div class="sort-list">
-          <div class="sort-item" data-v="5"><span>Arbeitsspeicher (DRAM)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="2"><span>L1-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="7"><span>Festplatte (HDD)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="1"><span>Register</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="6"><span>SSD (Flash)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="4"><span>L3-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="8"><span>Magnetband / optisch</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-          <div class="sort-item" data-v="3"><span>L2-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+      <div class="ex">
+        <p><strong>Aufgabe 4.2:</strong> Sortiere von der schnellsten Stufe (oben) zur langsamsten (unten).</p>
+        <div class="baustein" data-type="sort" id="sort-hier">
+          <div class="sort-list">
+            <div class="sort-item" data-v="5"><span>Arbeitsspeicher (DRAM)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="2"><span>L1-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="7"><span>Festplatte (HDD)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="1"><span>Register</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="6"><span>SSD (Flash)</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="4"><span>L3-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="8"><span>Magnetband / optisch</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+            <div class="sort-item" data-v="3"><span>L2-Cache</span><span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
+        <div class="hs" id="hs-hier">
+          <div data-tipp>Je näher ein Speicher am Rechenwerk des Prozessors sitzt, desto schneller ist er.</div>
+          <div data-tipp>Ganz oben stehen die Speicher <em>im</em> Prozessor, dann der Arbeitsspeicher, dann die Massenspeicher, ganz unten das Archiv.</div>
+          <div data-tipp>Register → L1 → L2 → L3 sind die ersten vier. Bei den Massenspeichern: Welcher hat keine Mechanik?</div>
+          <div data-muster><p>Register → L1-Cache → L2-Cache → L3-Cache → Arbeitsspeicher (DRAM) → SSD → HDD → Magnetband / optisch</p></div>
+        </div>
       </div>
 
       <h3>Größenordnungen</h3>
@@ -1210,21 +1446,21 @@ body.teacher .gated{display:block;}
         <div class="quiz-fb" id="qfb-q4b"></div>
       </div>
 
-      <h3>Wie viel bringt der Cache?</h3>
-      <p>Angenommen, 95&nbsp;% aller Zugriffe finden ihre Daten im Cache (<span class="tt" data-tip="Anteil der Zugriffe, bei denen die Daten schon im Cache liegen.">Trefferrate</span>). Ein Cache-Zugriff dauert 1&nbsp;ns, ein RAM-Zugriff 100&nbsp;ns. Berechne die <strong>mittlere Zugriffszeit</strong>.</p>
-      <p><i>t</i><sub>mittel</sub> = <input class="inp" id="hit-t"> <span class="unit">ns</span></p>
-      <div>
-        <button class="btn btn-primary btn-sm" onclick="checkHit(this)">✓ Prüfen</button>
-        <div class="fb grp-fb"></div>
-      </div>
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Es ist ein gewichteter Mittelwert: Anteil der Treffer mal Cache-Zeit plus Anteil der Fehlschläge mal RAM-Zeit.</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 2</button>
-        <div class="hilfe-text">95&nbsp;% = 0,95 und 5&nbsp;% = 0,05. Setze ein: 0,95 · 1&nbsp;ns + 0,05 · …</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-hit')">Lösung zeigen</button>
-        <div class="sol" id="sol-hit"><i>t</i><sub>mittel</sub> = 0,95 · 1&nbsp;ns + 0,05 · 100&nbsp;ns = 0,95&nbsp;ns + 5&nbsp;ns ≈ 6&nbsp;ns – statt 100&nbsp;ns ohne Cache.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 4.3:</strong> 95&nbsp;% aller Zugriffe finden ihre Daten im Cache (<span class="tt" data-tip="Anteil der Zugriffe, bei denen die Daten schon im Cache liegen.">Trefferrate</span>). Ein Cache-Zugriff dauert 1&nbsp;ns, ein RAM-Zugriff 100&nbsp;ns. Berechne die <strong>mittlere Zugriffszeit</strong>.</p>
+        <p><i>t</i><sub>mittel</sub> = <input class="inp" id="hit-t" inputmode="decimal"> <span class="unit">ns</span></p>
+        <div>
+          <button class="btn btn-primary btn-sm" onclick="checkHit(this)">✓ Prüfen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-hit">
+          <div data-tipp>In 95 von 100 Fällen geht es schnell, in 5 von 100 Fällen langsam. Wie bildet man daraus einen Durchschnitt?</div>
+          <div data-tipp>Gewichteter Mittelwert: Anteil Treffer · Cache-Zeit + Anteil Fehlschläge · RAM-Zeit.</div>
+          <div data-tipp>95&nbsp;% = 0,95 und 5&nbsp;% = 0,05. Setze ein: 0,95 · 1&nbsp;ns + 0,05 · 100&nbsp;ns.</div>
+          <div data-muster><p class="heft">geg.: Trefferrate 0,95; <i>t</i><sub>Cache</sub> = 1&nbsp;ns; <i>t</i><sub>RAM</sub> = 100&nbsp;ns · ges.: <i>t</i><sub>mittel</sub><br>
+            <i>t</i><sub>mittel</sub> = 0,95 · 1&nbsp;ns + 0,05 · 100&nbsp;ns = 0,95&nbsp;ns + 5&nbsp;ns<br><u><i>t</i><sub>mittel</sub> ≈ 6&nbsp;ns</u></p>
+            <p>Mit Cache dauert ein Zugriff im Mittel rund 6&nbsp;ns statt 100&nbsp;ns.</p></div>
+        </div>
       </div>
 
       <div class="tool" id="hit-tool" hidden>
@@ -1252,15 +1488,19 @@ body.teacher .gated{display:block;}
         <p><strong>Beispiel:</strong> Trefferrate 95&nbsp;%: 0,95 · 1&nbsp;ns + 0,05 · 100&nbsp;ns ≈ 6&nbsp;ns statt 100&nbsp;ns.</p>
       </div>
 
-      <div class="star">
+      <div class="star ex">
         <div class="star-head">★ Für Profis (freiwillig)</div>
         <p>Beurteile, warum es nicht den einen idealen Speicher gibt – und wie die Hierarchie dieses Problem löst.</p>
         <textarea rows="3" class="free" placeholder="Dein Urteil …"></textarea>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-z43')">Erwartung zeigen</button>
-        <div class="sol" id="sol-z43"><strong>Zielkonflikt:</strong> Geschwindigkeit, Kapazität, Preis, Energiebedarf, Nichtflüchtigkeit und Robustheit lassen sich nicht in einem Speicher vereinen. SRAM braucht viel Fläche und Energie und kostet je Bit ein Vielfaches; große billige Speicher (HDD, Band) sind langsam. Ein Arbeitsspeicher aus reinem SRAM wäre unbezahlbar, ein System nur mit HDD unerträglich langsam.<br><strong>Lösung:</strong> die Hierarchie – wenig schneller Speicher, viel langsamer Speicher; dank Lokalitätsprinzip liegen die benötigten Daten meist im schnellen. Neue Speichertechnologien versuchen, die Lücken zu schließen, haben sich bisher aber nicht durchgesetzt.</div>
+        <div class="hs" id="hs-z43">
+          <div data-tipp>Welche fünf Eigenschaften wünscht man sich von einem Speicher? Gibt es einen, der alle erfüllt?</div>
+          <div data-tipp>Stelle zwei Extreme gegenüber: einen Rechner nur mit SRAM und einen nur mit HDD. Was wäre jeweils das Problem?</div>
+          <div data-tipp>Die Hierarchie kombiniert wenig schnellen mit viel langsamem Speicher. Welches Prinzip sorgt dafür, dass das trotzdem schnell wirkt?</div>
+          <div data-muster><p><strong>Zielkonflikt:</strong> Geschwindigkeit, Kapazität, Preis, Energiebedarf, Nichtflüchtigkeit und Robustheit lassen sich nicht in einem Speicher vereinen. SRAM braucht viel Fläche und Energie und kostet je Bit ein Vielfaches; große billige Speicher (HDD, Band) sind langsam. Ein Arbeitsspeicher aus reinem SRAM wäre unbezahlbar, ein System nur mit HDD unerträglich langsam.</p><p><strong>Lösung:</strong> die Hierarchie – wenig schneller Speicher, viel langsamer Speicher; dank Lokalitätsprinzip liegen die benötigten Daten meist im schnellen.</p></div>
+        </div>
       </div>
 
-      <p class="connector-text">Du kennst jetzt alle vier Bausteine. Zeit, sie zu einem Gesamtbild zusammenzusetzen – und die große Frage vom Anfang zu beantworten.</p>
+      <p class="connector-text">Du kennst jetzt alle vier Bausteine. Zeit, sie zu üben, zu einem Gesamtbild zusammenzusetzen – und die große Frage vom Anfang zu beantworten.</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Zur Sicherung →</button></div>
     </div>
   </div>
@@ -1269,45 +1509,278 @@ body.teacher .gated{display:block;}
 <!-- ===================================================== SICHERUNG -->
 <section class="phase" id="ph5">
   <div class="card">
-    <h2>✅ Übersicht, Titelfrage und Exit-Ticket</h2>
-    <p>Optisch, elektromagnetisch, elektronisch – jede Familie hat ihre Stärke und ihren Preis. Kannst du sie auseinanderhalten, ohne zurückzublättern?</p>
+    <h2>✅ Sicherung: Üben, Übersicht, Exit-Ticket</h2>
+    <p>Optisch, elektromagnetisch, elektronisch – jede Familie hat ihre Stärke und ihren Preis. Kannst du das Gelernte anwenden, ohne zurückzublättern? Zu jedem Kernthema gibt es hier eine Übungsaufgabe mit Verständnisfragen.</p>
 
-    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="3">
+    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="4">
       <span class="substep-label">Teile:</span>
-      <button class="substep-chip active" onclick="revealSub(5,1)">1 · Übersichtstafel</button>
-      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · Titelfrage</button>
-      <button class="substep-chip locked" onclick="revealSub(5,3)">3 · Exit-Ticket</button>
-      <button class="substep-all" onclick="revealSub(5,3)">Alle Teile anzeigen</button>
+      <button class="substep-chip active" onclick="revealSub(5,1)">1 · Üben zu allen Themen</button>
+      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · Übersichtstafel</button>
+      <button class="substep-chip locked" onclick="revealSub(5,3)">3 · Titelfrage</button>
+      <button class="substep-chip locked" onclick="revealSub(5,4)">4 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(5,4)">Alle Teile anzeigen</button>
     </div>
 
-    <!-- Teil 1 -->
+    <!-- Teil 1: Übungen -->
     <div class="subphase on" id="ph5-sub-1">
-      <h3>Die Übersichtstafel für euer Plakat</h3>
-      <p>Ordne jede Aussage der passenden Speicherfamilie zu.</p>
-      <div class="baustein" data-type="match" id="match-tafel">
-        <div class="m-pool">
-          <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
-          <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
-          <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
-          <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
-          <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
-          <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
-          <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
-          <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
-          <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+
+      <!-- S1 optisch -->
+      <div class="task-card">
+        <h3>💿 Übung S1 · Optische Speicher</h3>
+        <div class="ex">
+          <p><strong>a)</strong> Lies diese neue Spur aus (Wechsel → 1, kein Wechsel → 0).</p>
+          <div class="track" data-track="PLLLPPLPPPPLL" aria-label="Spur: Pit, Land, Land, Land, Pit, Pit, Land, Pit, Pit, Pit, Pit, Land, Land"></div>
+          <p>Bitfolge: <input class="inp inp-wide" id="bits2" placeholder="12 Bits" aria-label="Bitfolge eingeben">
+            <button class="btn btn-primary btn-sm" onclick="checkBits('bits2','PLLLPPLPPPPLL')">✓ Prüfen</button>
+            <span class="fb grp-fb inline-fb" id="bits2-fb"></span></p>
+          <div class="hs" id="hs-s1a">
+            <div data-tipp>Gleiche Regel wie in Aufgabe 1.1: Es kommt nicht darauf an, ob Pit oder Land – nur ob sich etwas ändert.</div>
+            <div data-tipp>Takt 1 ist Pit, Takt 2 ist Land → Wechsel → 1. Takt 2 und 3 sind beide Land → 0.</div>
+            <div data-tipp>Die ersten sechs Bits lauten <span class="math">100101</span>. Mach an der Grenze zwischen Takt 7 und 8 weiter.</div>
+            <div data-muster><p>P|L 1 · L|L 0 · L|L 0 · L|P 1 · P|P 0 · P|L 1 · L|P 1 · P|P 0 · P|P 0 · P|P 0 · P|L 1 · L|L 0</p><p>Bitfolge: <span class="math">100101100010</span></p></div>
+          </div>
         </div>
-        <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Magnetisierungsrichtung</span></div>
-        <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Ladung in der Speicherzelle</span></div>
-        <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Pit/Land, gelesen über die Reflexion des Laserlichts</span></div>
-        <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">stoßfest, Zugriff in Mikrosekunden, aber Schreibverschleiß</span></div>
-        <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">kratzempfindlich, aber unempfindlich gegen Magnetfelder</span></div>
-        <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">pro Terabyte am günstigsten; Zugriff Millisekunden bis Minuten</span></div>
-        <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">0,7 bis 25&nbsp;GB je Schicht; heute v.&nbsp;a. Verteilung von Filmen und Archiv</span></div>
-        <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">steckt in Smartphone, Notebook und im Cache</span></div>
-        <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Rechenzentrum, Backup, Archiv; mechanisch bzw. nur sequenziell</span></div>
-        <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
-        <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
-        <div class="fb grp-fb"></div>
+
+        <div class="ex">
+          <p><strong>b)</strong> Verständnisfrage:</p>
+          <div class="quiz-item">
+            <div class="quiz-q">Ein altes DVD-Laufwerk soll eine Blu-ray lesen. Warum klappt das nicht?</div>
+            <div class="quiz-opts">
+              <button class="quiz-btn" onclick="quizCheck('qs1b', this, 'w')">Weil die Blu-ray magnetisch beschrieben ist.</button>
+              <button class="quiz-btn" onclick="quizCheck('qs1b', this, 'c')">Weil der rote 650-nm-Laser einen viel zu großen Lichtfleck erzeugt: Er überdeckt mehrere der winzigen Blu-ray-Pits und Spuren gleichzeitig.</button>
+              <button class="quiz-btn" onclick="quizCheck('qs1b', this, 'w')">Weil die Blu-ray-Scheibe einen größeren Durchmesser hat.</button>
+            </div>
+            <div class="quiz-fb" id="qfb-qs1b"></div>
+          </div>
+          <div class="hs" id="hs-s1b">
+            <div data-tipp>Welcher Teil des Laufwerks unterscheidet sich zwischen DVD und Blu-ray?</div>
+            <div data-tipp>Denk an die Formel Fleckgröße ≈ <span class="frac"><span class="fn"><i>λ</i></span><span class="fd">NA</span></span> und an deine Rechnung aus Aufgabe 1.2.</div>
+            <div data-tipp>Der DVD-Fleck ist mehr als doppelt so groß wie der Blu-ray-Fleck, der Spurabstand der Blu-ray aber nur 0,32&nbsp;µm.</div>
+            <div data-muster><p>Der rote DVD-Laser (650&nbsp;nm, NA 0,60) erzeugt einen Fleck von rund 1100&nbsp;nm. Die Blu-ray-Spuren liegen nur 0,32&nbsp;µm auseinander, die Pits sind entsprechend klein. Der Fleck überdeckt mehrere Spuren und Pits zugleich – die Fotodiode kann die Wechsel nicht mehr auflösen.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>c)</strong> Erkläre in zwei bis drei Sätzen, warum man auf eine gekaufte Film-Blu-ray nichts speichern kann, auf eine BD-RE aber schon.</p>
+          <textarea rows="3" class="free" placeholder="Deine Erklärung …"></textarea>
+          <div class="hs" id="hs-s1c">
+            <div data-tipp>Wie entstehen die „dunklen" Stellen auf einer gekauften Scheibe – und wie auf einer RE?</div>
+            <div data-tipp>Eine gekaufte Scheibe ist gepresst (ROM). Eine RE hat eine Phasenwechsel-Schicht.</div>
+            <div data-tipp>Gepresste Pits sind mechanische Vertiefungen, die ein Laser nicht verändern kann. Die Phasenwechsel-Schicht lässt sich mit unterschiedlicher Laserleistung zwischen zwei Zuständen umschalten.</div>
+            <div data-muster><p>Eine gekaufte Film-Blu-ray ist <strong>gepresst</strong>: Die Pits wurden im Werk mechanisch in die Scheibe gedrückt. Der Laser im Laufwerk kann diese Vertiefungen nicht verändern, die Scheibe ist nur lesbar.</p><p>Eine <strong>BD-RE</strong> hat eine Phasenwechsel-Schicht: Hohe Laserleistung mit schnellem Abkühlen macht sie amorph (dunkel), mittlere Leistung wieder kristallin (hell). So lassen sich die Stellen viele Male neu schreiben.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 EM -->
+      <div class="task-card">
+        <h3>🧲 Übung S2 · Festplatte</h3>
+        <div class="ex">
+          <p><strong>a)</strong> Ein günstiges Notebook hat eine Festplatte mit 5400&nbsp;U/min. Berechne die Dauer einer Umdrehung und die mittlere Rotationsverzögerung (auf zwei Nachkommastellen).</p>
+          <p><i>T</i> = <input class="inp" id="s2-t" inputmode="decimal"> <span class="unit">ms</span> &nbsp; <i>t</i><sub>rot</sub> = <input class="inp" id="s2-trot" inputmode="decimal"> <span class="unit">ms</span></p>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['s2-t',11.11,0.05],['s2-trot',5.56,0.05]])">✓ Prüfen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-s2a">
+            <div data-tipp>Gleicher Rechenweg wie in Aufgabe 2.3 – nur mit einer anderen Drehzahl.</div>
+            <div data-tipp>Erst Umdrehungen pro Sekunde (durch 60), dann <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd"><i>n</i></span></span>, dann halbieren.</div>
+            <div data-tipp><span class="frac"><span class="fn">5400&nbsp;U</span><span class="fd">60&nbsp;s</span></span> = 90&nbsp;U/s. <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd">90</span></span>&nbsp;s – in ms umrechnen.</div>
+            <div data-muster><p class="heft">geg.: <i>n</i> = 5400&nbsp;U/min · ges.: <i>T</i>, <i>t</i><sub>rot</sub><br>
+              <i>n</i> = <span class="frac"><span class="fn">5400&nbsp;U</span><span class="fd">60&nbsp;s</span></span> = 90&nbsp;U/s<br>
+              <i>T</i> = <span class="frac"><span class="fn">1</span><span class="fd">90&nbsp;U/s</span></span> ≈ 0,01111&nbsp;s = <u>11,11&nbsp;ms</u><br>
+              <i>t</i><sub>rot</sub> = <span class="frac"><span class="fn"><i>T</i></span><span class="fd">2</span></span> = <u>5,56&nbsp;ms</u></p>
+              <p>Die langsamere Platte wartet im Mittel rund 1,4&nbsp;ms länger als eine mit 7200&nbsp;U/min.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>b)</strong> Verständnisfrage:</p>
+          <div class="quiz-item">
+            <div class="quiz-q">Was erkennt der Lesekopf einer Festplatte, um ein Bit zu lesen?</div>
+            <div class="quiz-opts">
+              <button class="quiz-btn" onclick="quizCheck('qs2b', this, 'w')">Ob an der Stelle ein Loch in der Magnetschicht ist.</button>
+              <button class="quiz-btn" onclick="quizCheck('qs2b', this, 'w')">Wie viel Ladung in der Magnetschicht gespeichert ist.</button>
+              <button class="quiz-btn" onclick="quizCheck('qs2b', this, 'c')">Wo sich die Magnetisierungsrichtung ändert – dort ändert sich der Widerstand seines Sensors.</button>
+            </div>
+            <div class="quiz-fb" id="qfb-qs2b"></div>
+          </div>
+          <div class="hs" id="hs-s2b">
+            <div data-tipp>Welche physikalische Größe trägt bei der Festplatte das Bit?</div>
+            <div data-tipp>Das Bit ist eine Magnetisierungsrichtung. Der Sensor im Kopf reagiert auf Magnetfelder mit einer Änderung einer elektrischen Größe.</div>
+            <div data-tipp>Wie bei der CD steckt die Information in den Wechseln. Der GMR/TMR-Sensor ändert dabei seinen Widerstand.</div>
+            <div data-muster><p>Der Kopf erkennt <strong>Flusswechsel</strong>: Wo die Magnetisierungsrichtung umschlägt, ändert sich der Widerstand des GMR/TMR-Sensors. Daraus entsteht das Lesesignal. Löcher gibt es keine, und „Ladung" gehört zu Flash und DRAM.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>c)</strong> Begründe, warum ein laufendes Notebook mit Festplatte nicht herunterfallen sollte, eines mit SSD dagegen deutlich robuster ist.</p>
+          <textarea rows="3" class="free" placeholder="Deine Begründung …"></textarea>
+          <div class="hs" id="hs-s2c">
+            <div data-tipp>Was bewegt sich in einer laufenden Festplatte – und wie nah ist es an der Plattenoberfläche?</div>
+            <div data-tipp>Der Kopf schwebt nur wenige Nanometer über der schnell drehenden Scheibe auf einem Luftpolster.</div>
+            <div data-tipp>Ein Stoß kann den Kopf auf die Oberfläche schlagen lassen („Headcrash"). Eine SSD hat keine beweglichen Teile.</div>
+            <div data-muster><p>In einer laufenden Festplatte drehen sich die Platter mit 5400 bis 7200&nbsp;U/min, und der Schreib-Lese-Kopf schwebt nur wenige Nanometer darüber. Bei einem Stoß kann der Kopf die Oberfläche berühren und die Magnetschicht zerkratzen (Headcrash) – Daten gehen verloren.</p><p>Eine SSD speichert elektronisch und hat keine beweglichen Teile. Sie ist deshalb stoßfest.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 Flash -->
+      <div class="task-card">
+        <h3>⚡ Übung S3 · Flash und SSD</h3>
+        <div class="ex">
+          <p><strong>a)</strong> Forscher arbeiten an Zellen mit 5&nbsp;Bit (PLC). Wie viele Ladungsniveaus müsste eine solche Zelle unterscheiden?</p>
+          <p>Niveaus: <input class="inp" id="s3-lv" inputmode="numeric"></p>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['s3-lv',32,0]])">✓ Prüfen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-s3a">
+            <div data-tipp>Wie hängen Bits pro Zelle und Zahl der Niveaus zusammen? Schau in die SLC-bis-QLC-Tabelle.</div>
+            <div data-tipp>Niveaus = 2<sup><i>n</i></sup> mit <i>n</i> = Bits pro Zelle.</div>
+            <div data-tipp>QLC hat 2⁴ = 16 Niveaus. Ein Bit mehr verdoppelt die Zahl.</div>
+            <div data-muster><p>2⁵ = <u>32</u> Ladungsniveaus – doppelt so viele wie bei QLC, im selben Spannungsfenster. Die Niveaus liegen noch enger, die Zelle verträgt noch weniger Zyklen.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>b)</strong> Verständnisfrage:</p>
+          <div class="quiz-item">
+            <div class="quiz-q">Welcher Vorgang nutzt eine Flash-Zelle praktisch <em>nicht</em> ab?</div>
+            <div class="quiz-opts">
+              <button class="quiz-btn" onclick="quizCheck('qs3b', this, 'w')">Schreiben</button>
+              <button class="quiz-btn" onclick="quizCheck('qs3b', this, 'c')">Lesen</button>
+              <button class="quiz-btn" onclick="quizCheck('qs3b', this, 'w')">Löschen</button>
+            </div>
+            <div class="quiz-fb" id="qfb-qs3b"></div>
+          </div>
+          <div class="hs" id="hs-s3b">
+            <div data-tipp>Bei welchem Vorgang müssen Elektronen durch das Tunneloxid?</div>
+            <div data-tipp>Elektronen werden beim Hineinbringen und beim Entfernen durch das Oxid gedrückt. Beim dritten Vorgang wird nur eine kleine Spannung angelegt und geprüft, ob Strom fließt.</div>
+            <div data-tipp>Denk an den Papiervergleich: Schreiben und Radieren schaden dem Papier – was nicht?</div>
+            <div data-muster><p><strong>Lesen.</strong> Dabei wird nur eine kleine Lesespannung angelegt und geprüft, ob Strom fließt; es tunneln keine Elektronen durch das Oxid. Schreiben und Löschen drücken dagegen jedes Mal Elektronen mit hoher Spannung durch das Tunneloxid und schädigen es.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>c)</strong> Eine günstige SSD hat 300&nbsp;TBW bei 3&nbsp;Jahren Garantie. Wie viele Gigabyte pro Tag darf man schreiben (ganze Zahl)?</p>
+          <p>pro Tag: <input class="inp" id="s3-tbw" inputmode="decimal"> <span class="unit">GB</span></p>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['s3-tbw',274,3]])">✓ Prüfen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-s3c">
+            <div data-tipp>Gleicher Rechenweg wie in Aufgabe 3.4.</div>
+            <div data-tipp>Erst die Tage berechnen (3 · 365), dann 300&nbsp;TB durch die Tage teilen und in GB umrechnen.</div>
+            <div data-tipp>3 · 365 = 1095 Tage. <span class="frac"><span class="fn">300&nbsp;TB</span><span class="fd">1095</span></span> ≈ 0,274&nbsp;TB.</div>
+            <div data-muster><p class="heft">Tage = 3 · 365 = 1095<br>Schreibmenge pro Tag = <span class="frac"><span class="fn">300&nbsp;TB</span><span class="fd">1095&nbsp;Tage</span></span> ≈ 0,274&nbsp;TB = <u>ca. 274&nbsp;GB</u></p><p>Auch die günstige SSD erlaubt rund 274&nbsp;GB pro Tag – für normale Nutzung mehr als genug.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>d)</strong> Erkläre mithilfe des Bildes zur abgenutzten Zelle, warum eine QLC-Zelle schneller unbrauchbar wird als eine SLC-Zelle, obwohl beide gleich gebaut sind.</p>
+          <textarea rows="3" class="free" placeholder="Deine Erklärung …"></textarea>
+          <div class="hs" id="hs-s3d">
+            <div data-tipp>Was passiert im Oxid bei jedem Zyklus – und welche Folge hat das für die gespeicherte Ladung?</div>
+            <div data-tipp>Steckengebliebene Elektronen verschieben die Schwellenspannung, Fehlstellen lassen Ladung wegsickern. Wie stark darf sich die Ladung verändern, bevor die Zelle falsch gelesen wird?</div>
+            <div data-tipp>SLC muss nur 2 Niveaus unterscheiden, QLC 16 – im selben Spannungsfenster. Wie groß ist der Abstand zwischen zwei Niveaus jeweils?</div>
+            <div data-muster><p>Bei jedem Schreib- und Löschzyklus bleiben Elektronen im Tunneloxid stecken und es entstehen Fehlstellen. Dadurch verschiebt sich die Schwellenspannung, und Ladung sickert vom Floating Gate weg.</p><p>Eine SLC-Zelle unterscheidet nur 2 Niveaus mit großem Abstand – kleine Verschiebungen fallen nicht ins Gewicht. Eine QLC-Zelle teilt dasselbe Fenster in 16 Niveaus mit sehr kleinem Abstand. Schon eine geringe Verschiebung lässt ein Niveau ins Nachbarniveau rutschen, die Zelle wird falsch gelesen. Deshalb verträgt QLC nur etwa 10² bis 10³ Zyklen, SLC rund 10⁵.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 RAM / Hierarchie -->
+      <div class="task-card">
+        <h3>🧠 Übung S4 · RAM und Speicherhierarchie</h3>
+        <div class="ex">
+          <p><strong>a)</strong> Markiere alle Aussagen, die stimmen.</p>
+          <div class="baustein" data-type="mark" id="mark-ram">
+            <p class="mark-text mark-sent">
+              <span class="mw" data-correct="1" onclick="markToggle(this)">DRAM muss regelmäßig aufgefrischt werden.</span>
+              <span class="mw" data-correct="0" onclick="markToggle(this)">SRAM behält seinen Inhalt auch ohne Strom.</span>
+              <span class="mw" data-correct="1" onclick="markToggle(this)">Der L1-Cache ist aus SRAM gebaut.</span>
+              <span class="mw" data-correct="0" onclick="markToggle(this)">Je weiter unten in der Pyramide, desto teurer pro Bit.</span>
+              <span class="mw" data-correct="1" onclick="markToggle(this)">Eine SSD ist schneller als eine HDD, aber langsamer als DRAM.</span>
+              <span class="mw" data-correct="0" onclick="markToggle(this)">Ein SRAM-Bit braucht weniger Chipfläche als ein DRAM-Bit.</span>
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+            <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-s4a">
+            <div data-tipp>Prüfe jede Aussage einzeln gegen den Heftereintrag zu DRAM, SRAM und Hierarchie.</div>
+            <div data-tipp>Achte auf drei Fallen: Was heißt „flüchtig"? In welche Richtung wird die Pyramide teurer? Wie viele Bauteile braucht ein SRAM-Bit?</div>
+            <div data-tipp>Drei Aussagen stimmen, drei nicht. SRAM ist flüchtig, unten ist es günstig, und 6 Transistoren brauchen mehr Fläche als 1 Transistor + 1 Kondensator.</div>
+            <div data-muster><p><strong>Richtig:</strong> DRAM braucht Refresh · L1-Cache ist SRAM · SSD liegt zwischen HDD und DRAM.</p><p><strong>Falsch:</strong> SRAM ist flüchtig · unten ist es <em>günstiger</em> pro Bit · ein SRAM-Bit (6 Transistoren) braucht <em>mehr</em> Fläche als ein DRAM-Bit.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>b)</strong> Ein schlecht programmiertes Programm springt kreuz und quer durch den Speicher. Die Trefferrate sinkt auf 90&nbsp;% (Cache 1&nbsp;ns, RAM 100&nbsp;ns). Berechne die mittlere Zugriffszeit.</p>
+          <p><i>t</i><sub>mittel</sub> = <input class="inp" id="s4-hit" inputmode="decimal"> <span class="unit">ns</span></p>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['s4-hit',10.9,0.1]])">✓ Prüfen</button>
+            <div class="fb grp-fb"></div>
+          </div>
+          <div class="hs" id="hs-s4b">
+            <div data-tipp>Gleicher Rechenweg wie in Aufgabe 4.3 – nur mit einer anderen Trefferrate.</div>
+            <div data-tipp>Gewichteter Mittelwert: Anteil Treffer · 1&nbsp;ns + Anteil Fehlschläge · 100&nbsp;ns.</div>
+            <div data-tipp>90&nbsp;% = 0,90, Fehlschläge 10&nbsp;% = 0,10. Setze ein: 0,90 · 1&nbsp;ns + 0,10 · 100&nbsp;ns.</div>
+            <div data-muster><p class="heft"><i>t</i><sub>mittel</sub> = 0,90 · 1&nbsp;ns + 0,10 · 100&nbsp;ns = 0,9&nbsp;ns + 10&nbsp;ns<br><u><i>t</i><sub>mittel</sub> = 10,9&nbsp;ns</u></p><p>Nur 5 Prozentpunkte weniger Treffer machen den Speicherzugriff fast doppelt so langsam (10,9&nbsp;ns statt ca. 6&nbsp;ns). Programme, die die Lokalität nutzen, sind deshalb deutlich schneller.</p></div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <p><strong>c)</strong> Ein Notebook mit 4&nbsp;GB RAM und Festplatte wird langsam, sobald viele Browser-Tabs offen sind. Erkläre mithilfe der Speicherhierarchie, warum mehr RAM hier hilft.</p>
+          <textarea rows="3" class="free" placeholder="Deine Erklärung …"></textarea>
+          <div class="hs" id="hs-s4c">
+            <div data-tipp>Wo landen Daten laufender Programme, wenn der Arbeitsspeicher voll ist?</div>
+            <div data-tipp>Das Betriebssystem lagert Daten auf den Massenspeicher aus (Auslagerungsdatei). Wie viel langsamer ist die HDD als der RAM? Schau in die Zeitlupe.</div>
+            <div data-tipp>RAM ca. 100&nbsp;ns, HDD ca. 10&nbsp;ms – das ist rund 100&nbsp;000-mal langsamer. Mehr RAM bedeutet: weniger auslagern.</div>
+            <div data-muster><p>Reicht der Arbeitsspeicher nicht, lagert das Betriebssystem Teile der Programmdaten auf die Festplatte aus. Werden sie wieder gebraucht, müssen sie von der HDD geholt werden – mit rund 10&nbsp;ms statt rund 100&nbsp;ns, also etwa 100&nbsp;000-mal langsamer. Das Notebook „hängt".</p><p>Mit mehr RAM passen alle Tabs in die schnellere Stufe der Hierarchie; es muss kaum noch ausgelagert werden. (Eine SSD statt der HDD würde das Auslagern zusätzlich stark beschleunigen.)</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Alles zusammensetzen: die Übersichtstafel ↓</button></div>
+    </div>
+
+    <!-- Teil 2 -->
+    <div class="subphase" id="ph5-sub-2">
+      <h3>Die Übersichtstafel für euer Plakat</h3>
+      <div class="ex">
+        <p><strong>Aufgabe S5:</strong> Ordne jede Aussage der passenden Speicherfamilie zu.</p>
+        <div class="baustein" data-type="match" id="match-tafel">
+          <div class="m-pool">
+            <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
+            <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
+            <span class="m-chip" data-id="o" onclick="matchSelect(this)">💿 optisch</span>
+            <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
+            <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
+            <span class="m-chip" data-id="m" onclick="matchSelect(this)">🧲 elektromagn.</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+            <span class="m-chip" data-id="e" onclick="matchSelect(this)">⚡ elektronisch</span>
+          </div>
+          <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Magnetisierungsrichtung</span></div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Ladung in der Speicherzelle</span></div>
+          <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Bit = Pit/Land, gelesen über die Reflexion des Laserlichts</span></div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">stoßfest, Zugriff in Mikrosekunden, aber Schreibverschleiß</span></div>
+          <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">kratzempfindlich, aber unempfindlich gegen Magnetfelder</span></div>
+          <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">pro Terabyte am günstigsten; Zugriff Millisekunden bis Minuten</span></div>
+          <div class="m-zone" data-correct="o" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">0,7 bis 25&nbsp;GB je Schicht; heute v.&nbsp;a. Verteilung von Filmen und Archiv</span></div>
+          <div class="m-zone" data-correct="e" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">steckt in Smartphone, Notebook und im Cache</span></div>
+          <div class="m-zone" data-correct="m" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Rechenzentrum, Backup, Archiv; mechanisch bzw. nur sequenziell</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-tafel">
+          <div data-tipp>Jede Familie bekommt genau drei Aussagen: eine zum Bit, eine zu Stärken und Schwächen, eine zum Einsatz.</div>
+          <div data-tipp>Beginne mit den drei „Bit = …"-Aussagen. Dann: Wer ist kratzempfindlich, wer verschleißt beim Schreiben, wer ist pro TB am günstigsten?</div>
+          <div data-tipp>„Rechenzentrum, Backup, Archiv; mechanisch" passt zu Festplatte und Band. „0,7 bis 25&nbsp;GB je Schicht" sind die Scheiben.</div>
+          <div data-muster><p><strong>optisch:</strong> Pit/Land mit Laser · kratzempfindlich, magnetfeldunempfindlich · 0,7–25&nbsp;GB, Verteilung und Archiv.<br><strong>elektromagnetisch:</strong> Magnetisierungsrichtung · pro TB am günstigsten, ms bis min · Rechenzentrum, Backup, Archiv.<br><strong>elektronisch:</strong> Ladung in der Zelle · stoßfest, µs, Schreibverschleiß · Smartphone, Notebook, Cache.</p></div>
+        </div>
       </div>
 
       <div class="hefter-box">
@@ -1325,56 +1798,79 @@ body.teacher .gated{display:block;}
       </div>
 
       <p class="connector-text">Die Tafel zeigt: Jede Spalte hat mindestens eine Schwäche. Jetzt bist du bereit für die große Frage.</p>
-      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Die Titelfrage beantworten ↓</button></div>
-    </div>
-
-    <!-- Teil 2 -->
-    <div class="subphase" id="ph5-sub-2">
-      <h3>Die Titelfrage</h3>
-      <div class="callout">📌 <span><strong>Warum gibt es optische, elektromagnetische und elektronische Speicher nebeneinander – und warum hat keiner die anderen verdrängt?</strong> Antworte in höchstens drei Sätzen.</span></div>
-      <textarea rows="4" class="free" id="titel-antwort" placeholder="Deine Antwort in höchstens drei Sätzen …"></textarea>
-      <p>Schau dir danach nochmal deine Vermutung vom Anfang an: <span id="poe-ideal-echo" class="echo">(noch keine Vermutung festgehalten)</span></p>
-      <div class="hilfe">
-        <div class="hilfe-head">🛟 Wenn du nicht weiterkommst</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 1</button>
-        <div class="hilfe-text">Satz 1: Welche fünf Eigenschaften wünscht man sich von einem Speicher – und kann einer alle erfüllen?</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showHelp(this)">Hilfe 2</button>
-        <div class="hilfe-text">Satz 2: Nenne je Familie eine Stärke und eine Schwäche. Satz 3: Was machen Computer deshalb mit den verschiedenen Speichern?</div>
-        <button class="btn btn-ghost btn-sm t-lock" onclick="showSol('sol-titel')">Musterantwort zeigen</button>
-        <div class="sol" id="sol-titel">Kein Speicher ist gleichzeitig schnell, groß, billig, nichtflüchtig und robust – es gibt einen Zielkonflikt. Elektronische Speicher (SRAM, DRAM, Flash) sind schnell, stoßfest und sparsam, aber pro Bit teurer und teils verschleißend; elektromagnetische (HDD, Band) sind pro Terabyte am günstigsten, aber mechanisch bzw. nur sequenziell; optische lassen sich billig vervielfältigen und sind unempfindlich gegen Magnetfelder, haben aber kleine Kapazität und sind langsam. Deshalb kombinieren Systeme die Medien in einer Hierarchie und wählen je Aufgabe (Arbeit, Backup, Archiv, Verteilung).</div>
-      </div>
-      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,3)">Zum Exit-Ticket ↓</button></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,3)">Die Titelfrage beantworten ↓</button></div>
     </div>
 
     <!-- Teil 3 -->
     <div class="subphase" id="ph5-sub-3">
+      <h3>Die Titelfrage</h3>
+      <div class="ex">
+        <div class="callout">📌 <span><strong>Warum gibt es optische, elektromagnetische und elektronische Speicher nebeneinander – und warum hat keiner die anderen verdrängt?</strong> Antworte in höchstens drei Sätzen.</span></div>
+        <textarea rows="4" class="free" id="titel-antwort" placeholder="Deine Antwort in höchstens drei Sätzen …"></textarea>
+        <p>Schau dir danach nochmal deine Vermutung vom Anfang an: <span id="poe-ideal-echo" class="echo">(noch keine Vermutung festgehalten)</span></p>
+        <div class="hs" id="hs-titel">
+          <div data-tipp>Satz 1: Welche fünf Eigenschaften wünscht man sich von einem Speicher – und kann einer alle erfüllen?</div>
+          <div data-tipp>Satz 2: Nenne je Familie eine Stärke und eine Schwäche. Nutze die Übersichtstafel.</div>
+          <div data-tipp>Satzanfänge: „Kein Speicher ist gleichzeitig …" – „Elektronische Speicher sind …, elektromagnetische …, optische …" – „Deshalb kombinieren Computer …"</div>
+          <div data-muster><p>Kein Speicher ist gleichzeitig schnell, groß, billig, nichtflüchtig und robust – es gibt einen Zielkonflikt. Elektronische Speicher (SRAM, DRAM, Flash) sind schnell, stoßfest und sparsam, aber pro Bit teurer und teils verschleißend; elektromagnetische (HDD, Band) sind pro Terabyte am günstigsten, aber mechanisch bzw. nur sequenziell; optische lassen sich billig vervielfältigen und sind unempfindlich gegen Magnetfelder, haben aber kleine Kapazität und sind langsam. Deshalb kombinieren Systeme die Medien in einer Hierarchie und wählen je Aufgabe (Arbeit, Backup, Archiv, Verteilung).</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,4)">Zum Exit-Ticket ↓</button></div>
+    </div>
+
+    <!-- Teil 4 -->
+    <div class="subphase" id="ph5-sub-4">
       <h3>🎟️ Exit-Ticket</h3>
-      <div class="quiz-item">
-        <div class="quiz-q">1. Ein Fotograf will 40&nbsp;TB Fotos für 20 Jahre sicher und günstig archivieren, braucht aber nur selten Zugriff. Was passt am besten?</div>
-        <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q5a', this, 'w')">Ein großer Arbeitsspeicher.</button>
-          <button class="quiz-btn" onclick="quizCheck('q5a', this, 'c')">Magnetband (LTO): sehr günstig pro TB, lange haltbar, offline lagerbar – der langsame Zugriff stört hier kaum.</button>
-          <button class="quiz-btn" onclick="quizCheck('q5a', this, 'w')">QLC-SSDs, weil sie am schnellsten sind.</button>
+      <div class="ex">
+        <div class="quiz-item">
+          <div class="quiz-q">1. Ein Fotograf will 40&nbsp;TB Fotos für 20 Jahre sicher und günstig archivieren, braucht aber nur selten Zugriff. Was passt am besten?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('q5a', this, 'w')">Ein großer Arbeitsspeicher.</button>
+            <button class="quiz-btn" onclick="quizCheck('q5a', this, 'c')">Magnetband (LTO): sehr günstig pro TB, lange haltbar, offline lagerbar – der langsame Zugriff stört hier kaum.</button>
+            <button class="quiz-btn" onclick="quizCheck('q5a', this, 'w')">QLC-SSDs, weil sie am schnellsten sind.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-q5a"></div>
         </div>
-        <div class="quiz-fb" id="qfb-q5a"></div>
+        <div class="hs" id="hs-x1">
+          <div data-tipp>Welche Eigenschaften sind hier wichtig – und welche eher nicht?</div>
+          <div data-tipp>Wichtig: viel Kapazität, günstig, lange haltbar, nichtflüchtig. Unwichtig: schneller Zugriff.</div>
+          <div data-tipp>RAM ist flüchtig. Flash verliert stromlos über Jahre Ladung und ist pro TB teurer. Welcher Speicher ist für Archive gemacht?</div>
+          <div data-muster><p><strong>Magnetband (LTO):</strong> sehr günstig pro TB, große Kassetten (LTO-9: 18&nbsp;TB), lange haltbar (ca. 30 Jahre), offline lagerbar. Der langsame, sequenzielle Zugriff stört bei seltenen Zugriffen nicht.</p></div>
+        </div>
       </div>
-      <div class="quiz-item">
-        <div class="quiz-q">2. Welche Aussage über das Lesen eines Bits ist richtig?</div>
-        <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q5b', this, 'c')">Bei CD und Festplatte steckt die Information in den Wechseln (Pit↔Land bzw. Magnetisierungsrichtung).</button>
-          <button class="quiz-btn" onclick="quizCheck('q5b', this, 'w')">Auf der CD ist jeder Pit eine 0 und jedes Land eine 1.</button>
-          <button class="quiz-btn" onclick="quizCheck('q5b', this, 'w')">Eine Flash-Zelle wird gelesen, indem man ihre Magnetisierung misst.</button>
+      <div class="ex">
+        <div class="quiz-item">
+          <div class="quiz-q">2. Welche Aussage über das Lesen eines Bits ist richtig?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('q5b', this, 'c')">Bei CD und Festplatte steckt die Information in den Wechseln (Pit↔Land bzw. Magnetisierungsrichtung).</button>
+            <button class="quiz-btn" onclick="quizCheck('q5b', this, 'w')">Auf der CD ist jeder Pit eine 0 und jedes Land eine 1.</button>
+            <button class="quiz-btn" onclick="quizCheck('q5b', this, 'w')">Eine Flash-Zelle wird gelesen, indem man ihre Magnetisierung misst.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-q5b"></div>
         </div>
-        <div class="quiz-fb" id="qfb-q5b"></div>
+        <div class="hs" id="hs-x2">
+          <div data-tipp>Erinnere dich an deine Übungen mit der Spur.</div>
+          <div data-tipp>Gab es bei der Spur eine feste Regel „Pit = 0"? Und ist Flash magnetisch?</div>
+          <div data-tipp>Sowohl auf der CD als auch auf der Festplatte wird der Übergang erkannt, nicht der Zustand selbst.</div>
+          <div data-muster><p>Richtig ist: Bei CD und Festplatte steckt die Information in den <strong>Wechseln</strong>. Pit = 0 / Land = 1 ist eine typische Fehlvorstellung, und Flash speichert Ladung, nicht Magnetisierung.</p></div>
+        </div>
       </div>
-      <div class="quiz-item">
-        <div class="quiz-q">3. Warum fühlt sich ein Computer trotz langsamem RAM meist schnell an?</div>
-        <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q5c', this, 'w')">Weil der Prozessor langsamer rechnet, als der RAM liefert.</button>
-          <button class="quiz-btn" onclick="quizCheck('q5c', this, 'w')">Weil alle Programme komplett in den Registern liegen.</button>
-          <button class="quiz-btn" onclick="quizCheck('q5c', this, 'c')">Weil dank Lokalitätsprinzip die meisten Zugriffe vom schnellen Cache bedient werden.</button>
+      <div class="ex">
+        <div class="quiz-item">
+          <div class="quiz-q">3. Warum fühlt sich ein Computer trotz langsamem RAM meist schnell an?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('q5c', this, 'w')">Weil der Prozessor langsamer rechnet, als der RAM liefert.</button>
+            <button class="quiz-btn" onclick="quizCheck('q5c', this, 'w')">Weil alle Programme komplett in den Registern liegen.</button>
+            <button class="quiz-btn" onclick="quizCheck('q5c', this, 'c')">Weil dank Lokalitätsprinzip die meisten Zugriffe vom schnellen Cache bedient werden.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-q5c"></div>
         </div>
-        <div class="quiz-fb" id="qfb-q5c"></div>
+        <div class="hs" id="hs-x3">
+          <div data-tipp>Welche Stufe der Pyramide fängt die meisten Zugriffe ab?</div>
+          <div data-tipp>Programme greifen vorhersehbar zu: Kürzliches wird wieder gebraucht, Benachbartes bald.</div>
+          <div data-tipp>Wie hieß das Prinzip, mit dem der Cache „vorhersagt", welche Daten gebraucht werden? Erinnere dich an die 6&nbsp;ns statt 100&nbsp;ns.</div>
+          <div data-muster><p>Dank des <strong>Lokalitätsprinzips</strong> (zeitlich und örtlich) liegen die benötigten Daten meist schon im Cache. Bei 95&nbsp;% Trefferrate sinkt die mittlere Zugriffszeit von 100&nbsp;ns auf rund 6&nbsp;ns. Der Prozessor ist viel schneller als der RAM, und Register fassen nur wenige Byte.</p></div>
+        </div>
       </div>
 
       <div class="star">
@@ -1402,7 +1898,7 @@ body.teacher .gated{display:block;}
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Flash und SSD</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Elektronen auf dem Floating Gate. <i>n</i> Bits pro Zelle → 2<sup><i>n</i></sup> Niveaus. Tunneln schädigt das Oxid; der Controller gleicht mit Wear-Leveling, Reserve und ECC aus.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Elektronen auf dem Floating Gate. <i>n</i> Bits pro Zelle → 2<sup><i>n</i></sup> Niveaus. Schreiben und Löschen schädigen das Tunneloxid (steckengebliebene Elektronen, Fehlstellen); der Controller gleicht mit Wear-Leveling, Reserve und ECC aus.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Speicherhierarchie</span><span class="acc-icon">▼</span></button>
@@ -1413,6 +1909,7 @@ body.teacher .gated{display:block;}
     <p class="connector-text">In der Puzzlephase triffst du die Prozessor-Expertinnen und -Experten. Sie werden dir erzählen, dass ihr Prozessor bei 3&nbsp;GHz pro Takt nur 0,33&nbsp;ns Zeit hat – und dann rund 300 Takte auf den RAM warten muss. Wie man diesen Flaschenhals entschärft, findet ihr gemeinsam heraus.</p>
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
   </div>
+
 
 </div>
 <script>
@@ -1488,9 +1985,12 @@ function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
   let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
   const fb=btn.parentElement.querySelector('.grp-fb');
   if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
   return ok===spec.length;
 }
 function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
 
 /* ---------- Vorhersage: erst raten, dann auflösen ---------- */
 function lockPredict(id){
@@ -1539,8 +2039,154 @@ function initHefter(){
   }
 }
 
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); }
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -1552,19 +2198,35 @@ function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; 
 /* 1 Lückentext */
 function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
 function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
-  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
-  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
 function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
 function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
 
 /* 2 Begriff ↔ Definition */
 function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
-function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel||zone.classList.contains('filled'))return; zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.add('filled'); sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
 function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
 function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
 
 /* 3 Sortieren */
-function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement; if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); }
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
 function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
 
 /* 4 Wörter markieren */
@@ -1582,7 +2244,7 @@ function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('
 
 /* 6 Flashcards */
 function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
-function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').textContent = s._back?cards[i][1]:cards[i][0]; s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
 function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
 function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
 
@@ -1604,21 +2266,121 @@ function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim(
   s._grid=grid; s._words=words; s._found=[]; s._start=null;
   const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
   let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
-  host.querySelectorAll('.ws-cell').forEach(cell=>cell.addEventListener('click',function(){ wsClick(cell); }));
+  wsWire(s,host);
   const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
 function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
 function wsShuffle(btn){ wsBuild(bs(btn)); }
-function wsClick(cell){ const s=bs(cell); if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
-  const sr=+s._start.dataset.r,sc=+s._start.dataset.c,er=+cell.dataset.r,ec=+cell.dataset.c; s._start.classList.remove('ws-start'); s._start=null;
-  const straight=(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc)); if(!straight)return;
-  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),steps=Math.max(Math.abs(er-sr),Math.abs(ec-sc)); let letters='',cells=[];
-  for(let i=0;i<=steps;i++){ const rr=sr+dr*i,cc=sc+dc*i; letters+=s._grid[rr][cc]; cells.push([rr,cc]); }
-  const rev=letters.split('').reverse().join(''); const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
-  if(word&&!s._found.includes(word)){ s._found.push(word); cells.forEach(rc=>{ const el=s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); if(el)el.classList.add('ws-found'); }); wsWordList(s); if(s._found.length===s._words.length){ setFb(s,'🎉 Alle Wörter gefunden!',true); } } }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
 
 /* ---------- Init: alle Bausteine initialisieren ---------- */
 function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
-  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s); }); }
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
 
 
@@ -1645,7 +2407,7 @@ Object.assign(quizFeedback, {
   q3b: { ok:'✅ <strong>Richtig!</strong> Je mehr Niveaus, desto kleiner der Abstand zwischen ihnen – Abnutzung und Ladungsverlust führen schneller zu Lesefehlern.',
          ng:'❌ <strong>Nicht ganz.</strong> Jede Zelle ist ein Transistor, egal ob SLC oder QLC. Entscheidend ist, dass sich 16 Niveaus ein gleich großes Spannungsfenster teilen müssen.',
          hint:'Nutze das Werkzeug mit den Ladungsniveaus: Wie breit ist ein Niveau bei SLC, wie breit bei QLC?' },
-  q3c: { ok:'✅ <strong>Richtig!</strong> Verschleiß entsteht elektrisch im Oxid, nicht mechanisch. Wear-Leveling und Reserve machen ihn im Alltag harmlos.',
+  q3c: { ok:'✅ <strong>Richtig!</strong> Verschleiß entsteht elektrisch im Tunneloxid, nicht mechanisch. Wear-Leveling und Reserve machen ihn im Alltag harmlos.',
          ng:'❌ <strong>Nicht ganz.</strong> Lesen schadet kaum. Es sind Schreiben und Löschen, bei denen Elektronen durch das Oxid tunneln und es dabei schädigen.',
          hint:'Was muss bei jedem Schreib- und Löschvorgang durch die dünne Oxidschicht hindurch?' },
   q4a: { ok:'✅ <strong>Richtig!</strong> Ohne Spannung vergessen beide ihren Inhalt – deshalb braucht jeder Rechner zusätzlich nichtflüchtigen Speicher.',
@@ -1654,6 +2416,15 @@ Object.assign(quizFeedback, {
   q4b: { ok:'✅ <strong>Richtig!</strong> Beide Arten von Lokalität greifen hier – typische Trefferraten liegen dann weit über 90&nbsp;%.',
          ng:'❌ <strong>Nicht ganz.</strong> Register fassen nur wenige Byte, und der Cache rechnet nicht. Er profitiert davon, dass Nachbarn gleich mitgeladen werden und dieselbe Variable ständig gebraucht wird.',
          hint:'Welche Elemente liegen im Speicher direkt neben dem gerade gelesenen – und wann werden sie gebraucht?' },
+  qs1b:{ ok:'✅ <strong>Richtig!</strong> Der rote Laserfleck (ca. 1100&nbsp;nm) ist viel breiter als der Spurabstand der Blu-ray (0,32&nbsp;µm).',
+         ng:'❌ <strong>Nicht ganz.</strong> Blu-ray und DVD sind beide optisch und gleich groß (12&nbsp;cm). Entscheidend ist der zu große Lichtfleck des roten Lasers.',
+         hint:'Rechne im Kopf nach: Wie groß ist der Fleck des DVD-Lasers im Vergleich zum Spurabstand der Blu-ray?' },
+  qs2b:{ ok:'✅ <strong>Richtig!</strong> Flusswechsel ändern den Widerstand des GMR/TMR-Sensors – daraus entsteht das Lesesignal.',
+         ng:'❌ <strong>Nicht ganz.</strong> Die Magnetschicht hat keine Löcher, und Ladung speichern Flash und DRAM. Der Kopf erkennt Richtungswechsel der Magnetisierung.',
+         hint:'Welche Größe trägt das Bit bei der Festplatte – und woran erkennt man es, wie bei der CD?' },
+  qs3b:{ ok:'✅ <strong>Richtig!</strong> Beim Lesen tunneln keine Elektronen durch das Oxid – deshalb verschleißt die Zelle dabei praktisch nicht.',
+         ng:'❌ <strong>Nicht ganz.</strong> Schreiben und Löschen drücken Elektronen durch das Tunneloxid und schädigen es. Nur beim Lesen passiert das nicht.',
+         hint:'Bei welchem Vorgang muss <em>keine</em> Ladung durch das Tunneloxid?' },
   q5a: { ok:'✅ <strong>Richtig!</strong> Archiv ist genau die Stärke von Band: günstig, langlebig, offline.',
          ng:'❌ <strong>Nicht ganz.</strong> RAM ist flüchtig, und QLC-SSDs sind pro TB deutlich teurer und stromlos nicht für Jahrzehnte gedacht. Für seltene Zugriffe auf riesige Mengen ist Band erste Wahl.',
          hint:'Welche Eigenschaft ist hier unwichtig – und welcher Speicher opfert genau diese?' },
@@ -1665,70 +2436,41 @@ Object.assign(quizFeedback, {
          hint:'Wie hieß das Prinzip, mit dem der Cache „vorhersagt", welche Daten gebraucht werden?' }
 });
 
-/* ---------- Lehrermodus ---------- */
-const T_HASH = 1128861236;
-function tHash(s){ let x = 5381; for (const c of s) x = (((x << 5) + x) + c.charCodeAt(0)) >>> 0; return x; }
-function teacherLogin(){
-  const inp = document.getElementById('tb-pw'), fb = document.getElementById('tb-fb');
-  if (tHash(inp.value) === T_HASH){
-    try{ sessionStorage.setItem('lehrermodus','1'); }catch(e){}
-    inp.value = ''; fb.textContent = ''; applyTeacher(true);
-  } else { fb.textContent = 'Passwort falsch.'; inp.select(); }
-}
-function teacherLogout(){
-  try{ sessionStorage.removeItem('lehrermodus'); }catch(e){}
-  document.body.classList.remove('showsol'); applyTeacher(false);
-}
-function applyTeacher(on){
-  document.body.classList.toggle('teacher', on);
-  document.getElementById('tb-login').hidden = on;
-  document.getElementById('tb-active').hidden = !on;
-  document.querySelectorAll('.t-lock').forEach(b => { b.disabled = !on; b.title = on ? '' : 'Wird von der Lehrkraft freigeschaltet'; });
-  if (on){
-    document.querySelectorAll('.tool').forEach(t => t.hidden = false);
-    document.querySelectorAll('.substep-nav').forEach(nav => { const p = +nav.dataset.phase; revealSubQuiet(p, +nav.dataset.total); });
+/* ---------- Lehrermodus-Erweiterung: Werkzeuge, alle Teile, Vermutungs-Schranken ---------- */
+const _teachSetUI = teachSetUI;
+teachSetUI = function(active){
+  _teachSetUI(active);
+  document.body.classList.toggle('teacher', active);
+  document.querySelectorAll('.tool').forEach(t => { t.hidden = !(active || t.dataset.earned === '1'); });
+  if (active){
+    document.querySelectorAll('.subphase').forEach(s => s.classList.add('on'));   /* zeigt alles, ohne den Fortschritt zu speichern */
     if (!document.querySelector('.lv-btns .sel')) drawLevels(1, document.querySelector('.lv-btns .btn'));
-  } else {
-    initSubReveal();
-    document.querySelectorAll('.hilfe-text.on').forEach(h => h.classList.remove('on'));
-    document.querySelectorAll('.sol').forEach(s => s.style.display = '');
-    document.getElementById('tb-showall').textContent = 'Alle Lösungen einblenden';
-  }
-}
-/* Lehrermodus zeigt alle Teile, ohne den Fortschritt der Lernenden zu speichern */
-function revealSubQuiet(p, total){
-  for (let i = 1; i <= total; i++){ const el = document.getElementById('ph'+p+'-sub-'+i); if (el) el.classList.add('on'); }
-}
-function toggleAllSolutions(){
-  const on = document.body.classList.toggle('showsol');
-  document.getElementById('tb-showall').textContent = on ? 'Lösungen ausblenden' : 'Alle Lösungen einblenden';
-}
-function showHelp(btn){
-  if (btn.disabled) return;
-  const t = btn.nextElementSibling; if (t && t.classList.contains('hilfe-text')) t.classList.add('on');
-}
-document.addEventListener('keydown', e => { if (e.target && e.target.id === 'tb-pw' && e.key === 'Enter') teacherLogin(); });
+  } else { initSubReveal(); }
+  updateGates();
+};
+function earnTool(id){ const t = document.getElementById(id); if (t){ t.dataset.earned = '1'; t.hidden = false; } }
 
 /* ---------- Vermutung als Schranke ---------- */
 function predicted(id){ try{ if (localStorage.getItem('predict_'+id)) return true; }catch(e){}
   const o = document.getElementById(id+'-out'); return !!(o && !o.hidden); }
 function updateGates(){
-  document.querySelectorAll('.gated').forEach(g => g.classList.toggle('open', predicted(g.dataset.gate)));
+  const teach = hsTeach();
+  document.querySelectorAll('.gated').forEach(g => g.classList.toggle('open', teach || predicted(g.dataset.gate)));
   const echo = document.getElementById('poe-ideal-echo'); let t = null;
   try{ t = localStorage.getItem('predict_poe-ideal'); }catch(e){}
   if (echo && t) echo.textContent = '„' + t + '"';
 }
 
-/* ---------- Kernthema 1: Spur lesen ---------- */
-const TRACK = 'LLPPPLLLLPPPL';
-function buildTrack(){
-  const host = document.getElementById('track1'); if (!host) return;
-  host.innerHTML = TRACK.split('').map((c,i) =>
-    '<div class="tcell '+c+'"><span class="tnum">'+(i+1)+'</span><span class="tl">'+(c==='L'?'Land':'Pit')+'</span><div class="surf"></div></div>').join('');
+/* ---------- Spur lesen (Kernthema 1 und Übung S1) ---------- */
+function buildTracks(){
+  document.querySelectorAll('.track[data-track]').forEach(host => {
+    host.innerHTML = host.dataset.track.split('').map((c,i) =>
+      '<div class="tcell '+c+'"><span class="tnum">'+(i+1)+'</span><span class="tl">'+(c==='L'?'Land':'Pit')+'</span><div class="surf"></div></div>').join('');
+  });
 }
-function checkBits(){
-  const inp = document.getElementById('bits1'), fb = document.getElementById('bits1-fb');
-  let soll = ''; for (let i = 1; i < TRACK.length; i++) soll += (TRACK[i] !== TRACK[i-1]) ? '1' : '0';
+function checkBits(id, track){
+  const inp = document.getElementById(id), fb = document.getElementById(id+'-fb');
+  let soll = ''; for (let i = 1; i < track.length; i++) soll += (track[i] !== track[i-1]) ? '1' : '0';
   const ist = (inp.value || '').replace(/[^01]/g, '');
   const ok = ist === soll;
   inp.classList.toggle('ok', ok); inp.classList.toggle('err', !ok);
@@ -1741,21 +2483,17 @@ function checkBits(){
 
 /* ---------- Kernthema 2: Rotation ---------- */
 function checkRot(btn){
-  if (checkNumGroup(btn, [['rot-us',120,0.5],['rot-t',8.33,0.05],['rot-trot',4.17,0.05]])){
-    document.getElementById('rot-tool').hidden = false; rotExplore();
-  }
+  if (checkNumGroup(btn, [['rot-us',120,0.5],['rot-t',8.33,0.05],['rot-trot',4.17,0.05]])){ earnTool('rot-tool'); rotExplore(); }
 }
 function rotExplore(){
   const rpm = +document.getElementById('rot-slider').value;
   document.getElementById('rot-rpm').textContent = de(rpm, 0);
-  document.getElementById('rot-out').textContent = de(30000 / rpm) + '\u00a0ms';
+  document.getElementById('rot-out').textContent = de(30000 / rpm) + ' ms';
 }
 
 /* ---------- Kernthema 3: Ladungsniveaus ---------- */
 function checkLevels(btn){
-  if (checkNumGroup(btn, [['lv-mlc',4,0],['lv-tlc',8,0],['lv-qlc',16,0]])){
-    document.getElementById('lv-tool').hidden = false; drawLevels(1, document.querySelector('.lv-btns .btn'));
-  }
+  if (checkNumGroup(btn, [['lv-mlc',4,0],['lv-tlc',8,0],['lv-qlc',16,0]])){ earnTool('lv-tool'); drawLevels(1, document.querySelector('.lv-btns .btn')); }
 }
 function drawLevels(n, btn){
   document.querySelectorAll('.lv-btns .btn').forEach(b => b.classList.toggle('sel', b === btn));
@@ -1768,7 +2506,7 @@ function drawLevels(n, btn){
   bar.innerHTML = h;
   const names = {1:'SLC',2:'MLC',3:'TLC',4:'QLC'};
   document.getElementById('lv-text').innerHTML = '<strong>' + names[n] + ':</strong> ' + n + ' Bit pro Zelle → ' + k +
-    ' Ladungsniveaus. Jedes Niveau hat nur noch <strong>1/' + k + '</strong> des Spannungsfensters.' +
+    ' Ladungsniveaus. Jedes Niveau hat nur noch ' + frac('1', String(k)) + ' des Spannungsfensters.' +
     (n === 4 ? ' Die Bitmuster passen nicht mehr in die Felder – so eng wird es auch für den Controller.' : '');
 }
 
@@ -1804,21 +2542,17 @@ function wlDraw(){
 
 /* ---------- Kernthema 4: Trefferrate ---------- */
 function checkHit(btn){
-  if (checkNumGroup(btn, [['hit-t',5.95,0.1]])){ document.getElementById('hit-tool').hidden = false; hitExplore(); }
+  if (checkNumGroup(btn, [['hit-t',5.95,0.1]])){ earnTool('hit-tool'); hitExplore(); }
 }
 function hitExplore(){
   const h = +document.getElementById('hit-slider').value / 100, t = h * 1 + (1 - h) * 100;
   document.getElementById('hit-rate').textContent = de(h * 100, 0);
-  document.getElementById('hit-out').textContent = de(t) + '\u00a0ns';
+  document.getElementById('hit-out').textContent = de(t) + ' ns';
   document.getElementById('hit-fill').style.width = t + '%';
 }
 
 /* ---------- Init ---------- */
-function initSpeicher(){
-  buildTrack(); wlReset(); rotExplore(); hitExplore(); updateGates();
-  let t = false; try{ t = sessionStorage.getItem('lehrermodus') === '1'; }catch(e){}
-  applyTeacher(t);
-}
+function initSpeicher(){ buildTracks(); wlReset(); rotExplore(); hitExplore(); updateGates(); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSpeicher); else initSpeicher();
 
 </script>
