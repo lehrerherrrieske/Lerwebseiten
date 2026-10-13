@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korrekturzeichen &amp; Korrekturregeln · Ph · Inf · Ma · Bio</title>
+<style>
+
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#8C3A4A;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+
+
+/* ── Nachschlage-Seite ── */
+[hidden]{display:none !important;}
+.kz-searchbar{position:sticky;top:8px;z-index:30;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:var(--surface);padding:10px;border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);margin:10px 0 6px;}
+.kz-q{flex:1 1 280px;font-family:var(--font);font-size:var(--fs-lg);padding:9px 12px;border:2px solid var(--accent-muted);border-radius:8px;background:var(--surface);color:var(--text);}
+.kz-q:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
+.kz-sel{font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);max-width:100%;}
+.kz-count{margin:2px 2px 10px;}
+.kz-qlabel{margin-top:6px;}
+.kz-quick{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px;}
+.kz-qbtn{font-family:var(--font-mono);font-weight:700;font-size:var(--fs-base);min-width:2.6em;padding:4px 8px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--accent-hover);cursor:pointer;}
+.kz-qbtn:hover,.kz-qbtn:focus-visible{border-color:var(--accent);background:var(--accent-light);outline:none;}
+.kz-teil{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:6px 18px 14px;margin:14px 0;box-shadow:var(--shadow);}
+.kz-teil h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.kz-tnr{font-family:var(--font-mono);font-size:var(--fs-sm);background:var(--accent);color:#fff;border-radius:var(--radius-full);padding:2px 10px;}
+.kz-sub{color:var(--text-2);margin-top:16px;}
+.kz-entry{border:1.5px solid var(--border-light);border-radius:var(--radius);padding:10px 14px;margin:10px 0;background:var(--surface-warm,#FDF9F3);scroll-margin-top:110px;}
+.kz-entry.flash{animation:kzflash 1.6s ease;}
+@keyframes kzflash{0%,40%{box-shadow:0 0 0 4px var(--accent-muted);}100%{box-shadow:none;}}
+.kz-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.kz-head h4{font-family:var(--font-display);font-size:var(--fs-base);font-weight:700;color:var(--text);margin:0 0 4px;}
+.ref{font-family:var(--font-mono);font-size:var(--fs-sm);font-weight:700;white-space:nowrap;border:1.5px solid var(--text);border-radius:6px;padding:0 7px;color:var(--text);background:var(--surface);}
+.kz-body p{margin-bottom:6px;}
+.kz-zeichen{display:grid;grid-template-columns:4.2em 1fr;gap:14px;align-items:start;}
+.kz-sym{font-family:var(--font-mono);font-weight:800;font-size:var(--fs-h2);color:#B42323;text-align:center;
+  border:2px solid #E7B5B5;background:#FFF5F5;border-radius:8px;padding:6px 2px;line-height:1.2;}
+.kz-bsp{color:var(--text-2);}
+.kz-wo{color:var(--text-2);}
+.kz-tag{display:inline-block;margin-top:4px;font-size:var(--fs-sm);color:var(--text-3);border:1px dashed var(--border);border-radius:var(--radius-full);padding:0 8px;}
+.kz-list{margin:4px 0 6px 1.4em;color:var(--text-2);} .kz-list li{margin:2px 0;}
+.kz-tab{border-collapse:collapse;margin:8px 0;width:100%;}
+.kz-tab th,.kz-tab td{border:1px solid var(--border);padding:5px 9px;text-align:left;vertical-align:top;font-size:var(--fs-base);}
+.kz-tab th{background:var(--surface-2);}
+.kz-tab td.c,.kz-skala td,.kz-skala th{text-align:center;}
+.kz-skala td{font-family:var(--font-mono);}
+.kz-skala tr.hit td{background:var(--accent-light);font-weight:700;}
+.kz-scroll{overflow-x:auto;}
+.farbe{display:inline-block;width:.9em;height:.9em;border-radius:3px;vertical-align:-1px;border:1px solid rgba(0,0,0,.25);}
+mark.hl{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px;}
+kbd{font-family:var(--font-mono);font-size:var(--fs-sm);border:1.5px solid var(--border);border-bottom-width:3px;border-radius:5px;padding:0 6px;background:var(--surface);}
+code{font-family:var(--font-mono);background:var(--surface-2);border:1px solid var(--border-light);border-radius:4px;padding:0 4px;}
+.kz-checks{display:flex;flex-direction:column;gap:6px;margin:6px 0;}
+.kz-check{display:flex;gap:10px;align-items:flex-start;cursor:pointer;color:var(--text-2);}
+.kz-check input{width:1.2em;height:1.2em;margin-top:.25em;accent-color:var(--accent);}
+.kz-check input:checked + span{text-decoration:line-through;color:var(--text-3);}
+.kz-rechner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:10px 0;}
+.kz-rechner label{display:flex;gap:8px;align-items:center;font-weight:600;}
+.kz-rechner .inp{width:6em;}
+.kz-mode{display:inline-flex;border:2px solid var(--accent);border-radius:var(--radius-full);overflow:hidden;margin:6px 0 4px;}
+.kz-modebtn{font-family:var(--font);font-size:var(--fs-base);font-weight:700;background:var(--surface);color:var(--accent-hover);border:none;padding:7px 18px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;}
+.kz-modebtn span{font-size:var(--fs-sm);font-weight:500;opacity:.85;}
+.kz-modebtn.on{background:var(--accent);color:#fff;}
+.kz-modebtn:focus-visible{outline:3px solid var(--accent-muted);outline-offset:-3px;}
+.kz-tend{font-weight:600;}
+.kz-tendopts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;color:var(--text-2);}
+.kz-tendopts .inp{width:3.6em;padding:3px 6px;}
+.kz-pctbox{border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;margin:12px 0;background:var(--surface-2);}
+.kz-pctbox>summary{display:flex;align-items:baseline;gap:8px;}
+.kz-pctgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px;margin:8px 0;}
+.kz-pct{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:4px 10px;}
+.kz-pct .inp{width:4.2em;padding:3px 6px;}
+.kz-pctin{white-space:nowrap;color:var(--text-2);}
+.fb.err{color:#991b1b;}
+.kz-keyhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.kz-keyhead h3{margin-right:auto;}
+.kz-ergebnis{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:800;color:var(--accent-hover);}
+.kz-ffq{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;
+  border:1.5px solid var(--border);border-radius:8px;margin:8px 0;background:var(--surface);}
+.kz-yn{display:flex;gap:6px;}
+.kz-yn .btn.sel{background:var(--accent);color:#fff;border-color:var(--accent);}
+.kz-ffres{padding:12px 15px;border-radius:var(--radius);margin:10px 0;font-size:var(--fs-base);border-left:5px solid;}
+.kz-ffres.ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.kz-ffres.ng{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+.kz-ffres.na{background:var(--info-bg);border-color:var(--info);}
+
+/* ── Klappboxen ── */
+details>summary{list-style:none;cursor:pointer;}
+details>summary::-webkit-details-marker{display:none;}
+.kz-chev{display:inline-block;flex:0 0 auto;width:1.1em;color:var(--accent);transition:transform .2s ease;font-size:var(--fs-sm);}
+details[open]>summary .kz-chev{transform:rotate(90deg);}
+summary:focus-visible{outline:3px solid var(--accent-muted);outline-offset:3px;border-radius:6px;}
+.kz-teil>summary{display:flex;align-items:center;gap:10px;padding:8px 0;}
+.kz-teil>summary h2{margin:6px 0;flex:1;}
+.kz-teil:not([open]){padding-bottom:6px;}
+.kz-teil:not([open])>summary:hover h2{text-decoration:underline;text-decoration-color:var(--accent-muted);}
+.kz-group{margin:6px 0;}
+.kz-group>summary{display:flex;align-items:baseline;gap:8px;padding:4px 0;}
+.kz-group>summary .kz-sub{margin:8px 0 2px;}
+.kz-regel>summary.kz-head{display:flex;align-items:baseline;gap:8px;}
+.kz-regel>summary.kz-head h4{flex:1;margin:0;}
+.kz-regel[open]>summary{margin-bottom:6px;}
+.kz-regel:not([open]){padding-top:8px;padding-bottom:8px;}
+a.ref{text-decoration:none;}
+a.ref:hover,a.ref:focus-visible{background:var(--accent);color:#fff;border-color:var(--accent);}
+.kz-docs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0 4px;}
+.kz-docs-l{font-weight:700;}
+.kz-doc{display:inline-block;padding:5px 12px;border:1.5px solid var(--accent-muted);border-radius:var(--radius-full);background:var(--accent-light);text-decoration:none;}
+.kz-doc:hover,.kz-doc:focus-visible{background:var(--accent);color:#fff;}
+.kz-fold{display:flex;gap:6px;margin-left:auto;}
+@media (max-width:600px){.kz-zeichen{grid-template-columns:3.4em 1fr;}.kz-head{flex-direction:column;gap:2px;}}
+@media print{.kz-searchbar,.kz-quick,.kz-qlabel,.kz-count,#kz-empty,.kz-chev,.kz-docs{display:none !important;} a.ref::after{content:"";}
+  .kz-entry,.kz-teil{display:block !important;break-inside:avoid;} .kz-zeichen{display:grid !important;} mark.hl{background:none;}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Korrektur">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv.</strong></span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Physik · Informatik · Mathematik · Biologie · Stand 10/2026</div>
+    <h1>Korrekturzeichen &amp; Korrekturregeln</h1>
+    <div class="goal">🎯 Du findest jedes Korrekturzeichen und jede Korrekturregel in Sekunden, indem du nach Zeichen, Stichwort oder Fundstelle suchst – und entscheidest Folgefehler-Fälle sicher, indem du die drei Bedingungen der VwV prüfst.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+    <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Nachschlagen</span>Alle Zeichen &amp; Regeln</button>
+    <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Werkzeuge</span>Punkte-Rechner &amp; Folgefehler-Check</button>
+  </nav>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Was suchst du?</h2>
+    <p>Tippe ein Zeichen, ein Stichwort oder eine Fundstelle – die Liste filtert sofort und klappt die Treffer auf. Taste <kbd>/</kbd> springt ins Suchfeld. Jeder Teil und jeder Unterpunkt lässt sich über ▶ ein- und ausklappen.</p>
+    <div class="kz-docs"><span class="kz-docs-l">📜 Amtliche Texte:</span>
+      <a class="kz-doc" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener">VwV Durchführung Oberstufe und Abiturprüfung ↗</a>
+      <a class="kz-doc" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung" target="_blank" rel="noopener">Schulordnung Gymnasien Abiturprüfung (SOGYA) ↗</a>
+      <span class="caption">Die Fundstellen-Kästchen an jedem Eintrag führen direkt dorthin (Internet nötig).</span></div>
+    <div class="kz-searchbar" role="search">
+      <input type="search" id="q" class="kz-q" placeholder="z. B. Folgefehler, Me, Täuschung, § 28, Rückgabe …" aria-label="Suchbegriff" autocomplete="off">
+      <select id="fach" class="kz-sel" aria-label="Fach filtern">
+        <option value="alle">Alle Fächer</option>
+        <option value="mint">Ma · Bio · Ch · Ph</option>
+        <option value="inf">Informatik</option>
+      </select>
+      <select id="teil" class="kz-sel" aria-label="Teil filtern"><option value="0">Alle Teile</option><option value="1">Teil 1 · Korrekturverfahren – Grundsätze</option><option value="2">Teil 2 · Allgemeine Korrekturzeichen (alle Fächer)</option><option value="3">Teil 3 · Fachspezifische Korrekturzeichen</option><option value="4">Teil 4 · Folgefehler – wann darf ich (r) geben?</option><option value="5">Teil 5 · Sprachrichtigkeit und äußere Form</option><option value="6">Teil 6 · Leistungsnachweise organisieren</option><option value="7">Teil 7 · Sonderfälle der Bewertung</option><option value="8">Teil 8 · Noten und Bewertungsskalen</option><option value="9">Teil 9 · Abitur: Durchführung und Prüfungsverfahren</option><option value="10">Teil 10 · Schnellcheck vor der Rückgabe</option></select>
+      <button class="btn btn-ghost btn-sm" onclick="kzReset()">↺ Zurücksetzen</button>
+      <span class="kz-fold"><button class="btn btn-ghost btn-sm" onclick="kzFold(true)">▼ Alle aufklappen</button><button class="btn btn-ghost btn-sm" onclick="kzFold(false)">▶ Alle zuklappen</button></span>
+    </div>
+    <div class="kz-count caption" id="kz-count" aria-live="polite"></div>
+    <div class="kz-qlabel caption">Alle Zeichen auf einen Blick – antippen springt zur Erklärung:</div>
+    <div class="kz-quick" aria-label="Alle Zeichen"><button class="kz-qbtn" onclick="jumpSign('A')" title="Zum Zeichen A">A</button><button class="kz-qbtn" onclick="jumpSign('Gr')" title="Zum Zeichen Gr">Gr</button><button class="kz-qbtn" onclick="jumpSign('S')" title="Zum Zeichen S">S</button><button class="kz-qbtn" onclick="jumpSign('R')" title="Zum Zeichen R">R</button><button class="kz-qbtn" onclick="jumpSign('Z')" title="Zum Zeichen Z">Z</button><button class="kz-qbtn" onclick="jumpSign('ul')" title="Zum Zeichen ul">ul</button><button class="kz-qbtn" onclick="jumpSign('I')" title="Zum Zeichen I">I</button><button class="kz-qbtn" onclick="jumpSign('Th')" title="Zum Zeichen Th">Th</button><button class="kz-qbtn" onclick="jumpSign('Bg')" title="Zum Zeichen Bg">Bg</button><button class="kz-qbtn" onclick="jumpSign('Bl')" title="Zum Zeichen Bl">Bl</button><button class="kz-qbtn" onclick="jumpSign('Bp')" title="Zum Zeichen Bp">Bp</button><button class="kz-qbtn" onclick="jumpSign('Df')" title="Zum Zeichen Df">Df</button><button class="kz-qbtn" onclick="jumpSign('Fs')" title="Zum Zeichen Fs">Fs</button><button class="kz-qbtn" onclick="jumpSign('Lg')" title="Zum Zeichen Lg">Lg</button><button class="kz-qbtn" onclick="jumpSign('W')" title="Zum Zeichen W">W</button><button class="kz-qbtn" onclick="jumpSign('Zs')" title="Zum Zeichen Zs">Zs</button><button class="kz-qbtn" onclick="jumpSign('ug')" title="Zum Zeichen ug">ug</button><button class="kz-qbtn" onclick="jumpSign('uv')" title="Zum Zeichen uv">uv</button><button class="kz-qbtn" onclick="jumpSign('Me')" title="Zum Zeichen Me">Me</button><button class="kz-qbtn" onclick="jumpSign('r')" title="Zum Zeichen r">r</button><button class="kz-qbtn" onclick="jumpSign('f')" title="Zum Zeichen f">f</button><button class="kz-qbtn" onclick="jumpSign('(r)')" title="Zum Zeichen (r)">(r)</button><button class="kz-qbtn" onclick="jumpSign('Sy')" title="Zum Zeichen Sy">Sy</button><button class="kz-qbtn" onclick="jumpSign('Se')" title="Zum Zeichen Se">Se</button></div>
+    <div class="callout callout-info" id="kz-empty" hidden>🔍 <span>Nichts gefunden. Versuche ein kürzeres Stichwort (z. B. „Einheit“ statt „Maßeinheit fehlt“) oder setze die Filter zurück.</span></div>
+  </div>
+  <div id="kz-list"><details class="kz-teil" id="teil1" data-teil="1"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 1</span> Korrekturverfahren – Grundsätze</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e1" data-fach="alle" data-kw="erstkorrektor zweitkorrektor drittkorrektor rot grün braun rand rechts links farbe stift"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Farben und Ränder</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1 ↗</a></summary><div class="kz-body"><p>Jede Korrektur hat ihre eigene Farbe und ihren eigenen Rand; Korrekturzeichen stehen auf dem Rand.</p><table class="kz-tab"><tr><th>Rolle</th><th>Farbe</th><th>Rand</th><th>Besonderheit</th></tr><tr><td>Erstkorrektur</td><td><span class="farbe" style="background:#C93B3B"></span> rot</td><td>rechts</td><td>korrigiert vollständig</td></tr><tr><td>Zweitkorrektur</td><td><span class="farbe" style="background:#2D8B55"></span> grün</td><td>links</td><td>eigenständige Bewertung</td></tr><tr><td>Drittkorrektur</td><td><span class="farbe" style="background:#7A4A2A"></span> braun</td><td>links</td><td>setzt das endgültige Korrekturzeichen</td></tr></table><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Prüflinge schreiben im Abitur nur mit Blau oder Schwarz (VwV VI Nr. 8) – so bleiben die Korrekturfarben eindeutig.</span></div></div></details><details class="kz-entry kz-regel" open id="e2" data-fach="alle" data-kw="bewertungseinheiten liste kennziffer unterschrift eintragen"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Keine Punkte in die Arbeit</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1 ↗</a></summary><div class="kz-body"><p><span class="tt" tabindex="0" data-tip="Rohpunkte einer Prüfungsarbeit, die über eine Skala in Notenpunkte umgerechnet werden">Bewertungseinheiten (BE)</span> und Punkte trägt keine Korrektur in die Prüfungsarbeit ein. Sie kommen in eine eigene, unterschriebene Liste, die nur die <span class="tt" tabindex="0" data-tip="schulinterne, persönliche Nummer je Prüfling statt des Namens">Kennziffern</span> der Prüflinge trägt.</p></div></details><details class="kz-entry kz-regel" open id="e3" data-fach="alle" data-kw="sachinformation beilegen erstkorrektor"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Sachinformation an Zweit- und Drittkorrektur</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1 ↗</a></summary><div class="kz-body"><p>Die Erstkorrektur darf eine Sachinformation beilegen, wenn das aus pädagogischen und inhaltlichen Gründen nötig ist – aber <strong>ohne</strong> Angaben zu BE oder Punktzahl.</p></div></details><details class="kz-entry kz-regel" open id="e4" data-fach="alle" data-kw="konzept reinschrift siehe konzept schmierblatt entwurf"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Reinschrift vor Konzept</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1 ↗</a></summary><div class="kz-body"><p>Bewertet wird die Reinschrift. Teile des Konzepts zählen nur, wenn</p><ol class="kz-list"><li>in der Reinschrift „siehe Konzept“ vermerkt ist,</li><li>die Passage im Konzept eindeutig gekennzeichnet ist und</li><li>die Prüflinge in der Prüfungsbelehrung darauf hingewiesen wurden.</li></ol></div></details><details class="kz-entry kz-regel" open id="e5" data-fach="alle" data-kw="sprache rechtschreibung abzug form"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Sprachlich-formale Mängel kennzeichnen</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1 ↗</a></summary><div class="kz-body"><p>Sie werden in allen Prüfungsarbeiten gekennzeichnet. Ein Punktabzug wegen sprachlicher oder formaler Mängel wird auf der Kennziffern-Liste vermerkt.</p></div></details><details class="kz-entry kz-regel" open id="e6" data-fach="alle" data-kw="bell besondere lernleistung gutachten kolloquium"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Besondere Lernleistung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer IV.4 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">IV.4 ↗</a></summary><div class="kz-body"><p>Die betreuende Fachlehrkraft (Erstkorrektur) und die Zweitkorrektur erstellen jeweils ein Gutachten, das die Punktzahl begründet. Höchstens drei Schülerinnen und Schüler pro Arbeit.</p></div></details><details class="kz-entry kz-regel" open id="e7" data-fach="alle" data-kw="klassenarbeit klausur sek gültigkeit"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Gilt das auch für Klassenarbeiten?</h4></summary><div class="kz-body"><p>Die Zeichen sind in der VwV für Abiturarbeiten verbindlich festgelegt.</p><div class="callout callout-warn">⚠️ <span><strong>Achtung:</strong> Für Klassenarbeiten und Klausuren ist dieselbe Systematik üblich und sinnvoll – Festlegungen der Fachkonferenz beachten.</span></div></div></details></div></details><details class="kz-teil" id="teil2" data-teil="2"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 2</span> Allgemeine Korrekturzeichen (alle Fächer)</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-group" open><summary><span class="kz-chev" aria-hidden="true">▶</span><h3 class="kz-sub">Sprachlich-formale Mängel <span class="caption">– am Rand</span></h3></summary><div class="kz-gbody"><article class="kz-entry kz-zeichen" id="z8" data-fach="alle" data-sign="A" data-kw="sprachlich formal ausdruck umgangssprache stil"><div class="kz-sym" aria-label="Korrekturzeichen A">A</div><div class="kz-txt"><div class="kz-head"><h4>Ausdruck</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: umgangssprachlich: „die Kraft wird halt immer krasser“</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z9" data-fach="alle" data-sign="Gr" data-kw="sprachlich formal grammatik kasus"><div class="kz-sym" aria-label="Korrekturzeichen Gr">Gr</div><div class="kz-txt"><div class="kz-head"><h4>Grammatik</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: „Die Elektronen bewegt sich zum Pluspol.“</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z10" data-fach="alle" data-sign="S" data-kw="sprachlich formal satzbau satz"><div class="kz-sym" aria-label="Korrekturzeichen S">S</div><div class="kz-txt"><div class="kz-head"><h4>Satzbau</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: unvollständiger oder verschachtelter Satz ohne klares Prädikat</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z11" data-fach="alle" data-sign="R" data-kw="sprachlich formal rechtschreibung orthographie"><div class="kz-sym" aria-label="Korrekturzeichen R">R</div><div class="kz-txt"><div class="kz-head"><h4>Rechtschreibung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: „Wiederstand“ statt „Widerstand“</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z12" data-fach="alle" data-sign="Z" data-kw="sprachlich formal zeichensetzung komma"><div class="kz-sym" aria-label="Korrekturzeichen Z">Z</div><div class="kz-txt"><div class="kz-head"><h4>Zeichensetzung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: fehlendes Komma vor dem Nebensatz</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z13" data-fach="alle" data-sign="ul" data-kw="sprachlich formal unleserlich schrift lesbar"><div class="kz-sym" aria-label="Korrekturzeichen ul">ul</div><div class="kz-txt"><div class="kz-head"><h4>unleserlich</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Passage nicht sicher zu entziffern</div><div class="kz-tag">alle Fächer</div></div></article></div></details><details class="kz-group" open><summary><span class="kz-chev" aria-hidden="true">▶</span><h3 class="kz-sub">Inhaltliche Mängel <span class="caption">– allgemein mit I, präziser mit:</span></h3></summary><div class="kz-gbody"><article class="kz-entry kz-zeichen" id="z14" data-fach="alle" data-sign="I" data-kw="inhaltlich inhalt"><div class="kz-sym" aria-label="Korrekturzeichen I">I</div><div class="kz-txt"><div class="kz-head"><h4>Inhalt (allgemein)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: inhaltlicher Fehler ohne genauere Einordnung</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z15" data-fach="alle" data-sign="Th" data-kw="inhaltlich thema aufgabe verfehlt"><div class="kz-sym" aria-label="Korrekturzeichen Th">Th</div><div class="kz-txt"><div class="kz-head"><h4>Thema bzw. Aufgabenstellung nicht beachtet</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Stromstärke berechnet, gefragt war der Widerstand</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z16" data-fach="alle" data-sign="Bg" data-kw="inhaltlich begründung begruende"><div class="kz-sym" aria-label="Korrekturzeichen Bg">Bg</div><div class="kz-txt"><div class="kz-head"><h4>fehlende oder falsche Begründung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: bei „Begründe …“ nur die Behauptung ohne Ursache</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z17" data-fach="alle" data-sign="Bl" data-kw="inhaltlich beleg material quelle"><div class="kz-sym" aria-label="Korrekturzeichen Bl">Bl</div><div class="kz-txt"><div class="kz-head"><h4>fehlender Beleg (aus den Materialien)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Aussage ohne Bezug auf Messwerttabelle oder Material M1</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z18" data-fach="alle" data-sign="Bp" data-kw="inhaltlich beispiel"><div class="kz-sym" aria-label="Korrekturzeichen Bp">Bp</div><div class="kz-txt"><div class="kz-head"><h4>fehlendes oder unpassendes Beispiel</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Glühlampe als Beispiel für einen ohmschen Widerstand</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z19" data-fach="alle" data-sign="Df" data-kw="inhaltlich definition"><div class="kz-sym" aria-label="Korrekturzeichen Df">Df</div><div class="kz-txt"><div class="kz-head"><h4>falsche Definition</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: „Spannung ist die Menge an Strom.“</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z20" data-fach="alle" data-sign="Fs" data-kw="inhaltlich fachsprache fachsymbolik formelzeichen"><div class="kz-sym" aria-label="Korrekturzeichen Fs">Fs</div><div class="kz-txt"><div class="kz-head"><h4>Verstoß gegen Fachsprache bzw. Fachsymbolik</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: „Die Spannung fließt durch das Kabel.“ / falsches Formelzeichen</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z21" data-fach="alle" data-sign="Lg" data-kw="inhaltlich logik schluss"><div class="kz-sym" aria-label="Korrekturzeichen Lg">Lg</div><div class="kz-txt"><div class="kz-head"><h4>Logik</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Schlussfolgerung ergibt sich nicht aus den Voraussetzungen</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z22" data-fach="alle" data-sign="W" data-kw="inhaltlich wiederholung weitschweifig"><div class="kz-sym" aria-label="Korrekturzeichen W">W</div><div class="kz-txt"><div class="kz-head"><h4>unbegründete Wiederholung, Weitschweifigkeit</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: gleicher Gedanke zum dritten Mal</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z23" data-fach="alle" data-sign="Zs" data-kw="inhaltlich zusammenhang bruch"><div class="kz-sym" aria-label="Korrekturzeichen Zs">Zs</div><div class="kz-txt"><div class="kz-head"><h4>inhaltlicher Zusammenhangfehler („gedanklicher Bruch“)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: Sprung von Ursache zu Folgerung ohne Bindeglied</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z24" data-fach="alle" data-sign="f" data-kw="inhaltlich falsch fehler"><div class="kz-sym" aria-label="Korrekturzeichen f">f</div><div class="kz-txt"><div class="kz-head"><h4>falsch</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: falsche Aussage oder falsches Ergebnis</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z25" data-fach="alle" data-sign="ug" data-kw="inhaltlich ungenau runden"><div class="kz-sym" aria-label="Korrekturzeichen ug">ug</div><div class="kz-txt"><div class="kz-head"><h4>ungenau</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: unscharfe Formulierung, zu stark gerundet</div><div class="kz-tag">alle Fächer</div></div></article><article class="kz-entry kz-zeichen" id="z26" data-fach="alle" data-sign="uv" data-kw="inhaltlich unvollständig fehlt"><div class="kz-sym" aria-label="Korrekturzeichen uv">uv</div><div class="kz-txt"><div class="kz-head"><h4>unvollständig</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1b der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1b ↗</a></div><div class="kz-bsp">Typischer Fall: nur zwei von drei geforderten Aspekten</div><div class="kz-tag">alle Fächer</div></div></article></div></details><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Die Beispiele sind Orientierungshilfen, keine amtliche Zuordnung.</span></div></div></details><details class="kz-teil" id="teil3" data-teil="3"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 3</span> Fachspezifische Korrekturzeichen</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-group" open><summary><span class="kz-chev" aria-hidden="true">▶</span><h3 class="kz-sub">Mathematik, Biologie, Chemie, Physik <span class="caption">– gelten auch in Informatik</span></h3></summary><div class="kz-gbody"><article class="kz-entry kz-zeichen" id="z27" data-fach="mintinf" data-sign="Me" data-kw="einheit maßeinheit größe"><div class="kz-sym" aria-label="Korrekturzeichen Me">Me</div><div class="kz-txt"><div class="kz-head"><h4>fehlende oder falsche Maßeinheit (bei der Arbeit mit Größen)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></div><div class="kz-bsp">Typischer Fall: Ergebnis „24“ statt „24&nbsp;Ω“</div><div class="kz-wo">📍 am Rand</div><div class="kz-tag">Ma · Bio · Ch · Ph · Inf</div></div></article><article class="kz-entry kz-zeichen" id="z28" data-fach="mintinf" data-sign="r" data-kw="richtig haken"><div class="kz-sym" aria-label="Korrekturzeichen r">r</div><div class="kz-txt"><div class="kz-head"><h4>Teil- oder Endergebnis ist richtig</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></div><div class="kz-bsp">Typischer Fall: korrekt berechnetes Zwischenergebnis</div><div class="kz-wo">📍 im Lösungstext</div><div class="kz-tag">Ma · Bio · Ch · Ph · Inf</div></div></article><article class="kz-entry kz-zeichen" id="z29" data-fach="mintinf" data-sign="f" data-kw="falsch ergebnis"><div class="kz-sym" aria-label="Korrekturzeichen f">f</div><div class="kz-txt"><div class="kz-head"><h4>Teil- oder Endergebnis ist falsch</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></div><div class="kz-bsp">Typischer Fall: Rechenfehler beim Umstellen</div><div class="kz-wo">📍 am Rand, im Lösungstext unterstrichen</div><div class="kz-tag">Ma · Bio · Ch · Ph · Inf</div></div></article><article class="kz-entry kz-zeichen" id="z30" data-fach="mintinf" data-sign="(r)" data-kw="folgefehler folgeergebnis weiterrechnen"><div class="kz-sym" aria-label="Korrekturzeichen (r)">(r)</div><div class="kz-txt"><div class="kz-head"><h4>Folgeergebnis: richtig, sinnvoll und unverkürzt mit einem falschen Zwischenergebnis weitergerechnet</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></div><div class="kz-bsp">Typischer Fall: mit falschem <i>R</i> korrekt <i>P</i> berechnet</div><div class="kz-wo">📍 im Lösungstext</div><div class="kz-tag">Ma · Bio · Ch · Ph · Inf</div></div></article></div></details><details class="kz-group" open><summary><span class="kz-chev" aria-hidden="true">▶</span><h3 class="kz-sub">Nur Informatik</h3></summary><div class="kz-gbody"><article class="kz-entry kz-zeichen" id="z31" data-fach="inf" data-sign="Sy" data-kw="syntax code programm python sql"><div class="kz-sym" aria-label="Korrekturzeichen Sy">Sy</div><div class="kz-txt"><div class="kz-head"><h4>falsche Syntax</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2f der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2f ↗</a></div><div class="kz-bsp">Typischer Fall: fehlende Klammer, fehlender Doppelpunkt in Python, SELECT ohne FROM – so nicht ausführbar</div><div class="kz-tag">nur Informatik</div></div></article><article class="kz-entry kz-zeichen" id="z32" data-fach="inf" data-sign="Se" data-kw="semantik bedeutung logik schleife programm"><div class="kz-sym" aria-label="Korrekturzeichen Se">Se</div><div class="kz-txt"><div class="kz-head"><h4>falsche Semantik</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2f der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2f ↗</a></div><div class="kz-bsp">Typischer Fall: „<“ statt „<=“, falsche Abbruchbedingung, falscher JOIN – läuft, tut aber nicht das Geforderte</div><div class="kz-tag">nur Informatik</div></div></article></div></details><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Die Abgrenzung Sy/Se ist eine Auslegung; die VwV nennt nur die Begriffe.</span></div></div></details><details class="kz-teil" id="teil4" data-teil="4"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 4</span> Folgefehler – wann darf ich (r) geben?</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e33" data-fach="alle" data-kw="folgefehler (r) regel richtig sinnvoll unverkürzt"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Die Regel</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></summary><div class="kz-body"><p>(r) erhält ein Teil- oder Endergebnis, das durch <strong>richtiges, sinnvolles und unverkürztes</strong> Weiterrechnen mit einem falschen Zwischenergebnis entstanden ist. Alle drei Bedingungen müssen erfüllt sein.</p></div></details><details class="kz-entry kz-regel" open id="e34" data-fach="alle" data-kw="folgefehler prüffragen"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Drei Prüffragen vor jedem (r)</h4></summary><div class="kz-body"><ol class="kz-list"><li><u>richtig</u> – Ist der Weg ab dem Fehler fachlich korrekt (richtige Formel, Umformung, Einheit)?</li><li><u>sinnvoll</u> – Ergibt das Weiterrechnen mit dem falschen Wert im Sachzusammenhang noch Sinn?</li><li><u>unverkürzt</u> – Wurden trotz des Fehlers alle geforderten Schritte gezeigt, ohne dass die Aufgabe leichter wurde?</li></ol><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Die Prüffragen übersetzen die drei Begriffe der VwV in die Korrekturpraxis. Zum Durchklicken: Reiter „Werkzeuge“.</span></div></div></details><details class="kz-entry kz-regel" open id="e35" data-fach="alle" data-kw="folgefehler markieren unterstreichen"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>So wird markiert</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.2e der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.2e ↗</a></summary><div class="kz-body"><p>Die Fehlerursache wird im Text unterstrichen und am Rand mit <strong>f</strong> gekennzeichnet. Alle konsequent daraus folgenden Ergebnisse erhalten <strong>(r)</strong>. So wird der Fehler nur an seiner Ursache bewertet.</p></div></details><details class="kz-entry kz-regel" open id="e36" data-fach="alle" data-kw="folgefehler kein ausnahme vereinfacht unsinnig"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Kein (r), wenn …</h4></summary><div class="kz-body"><ol class="kz-list"><li>der Fehler die Aufgabe vereinfacht (z. B. aus einer quadratischen wird eine lineare Gleichung, ein Rechenschritt entfällt),</li><li>das Folgeergebnis offensichtlich unsinnig ist und nicht hinterfragt wird (negative Masse, <i>v</i> &gt; <i>c</i>, Wirkungsgrad über 100&nbsp;%),</li><li>nach dem Fehler mit einer falschen Formel weitergerechnet wird – das ist ein neuer Fehler (f), kein Folgefehler,</li><li>das Ergebnis ohne nachvollziehbaren Rechenweg dasteht.</li></ol><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Diese Fälle leiten sich aus „sinnvoll“ und „unverkürzt“ ab; bei zentralen Abituraufgaben gehen die mitgelieferten Bewertungshinweise vor.</span></div></div></details><details class="kz-entry kz-regel" open id="e37" data-fach="mint" data-kw="folgefehler beispiel physik widerstand leistung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Beispiel Physik</h4></summary><div class="kz-body"><p><i>U</i> = 12&nbsp;V, <i>I</i> = 0,5&nbsp;A. Gesucht: <i>R</i> und <i>P</i>.</p><table class="kz-tab"><tr><th>Schritt</th><th>Schülerlösung</th><th>Zeichen</th></tr><tr><td>1</td><td><i>R</i> = <span class="frac"><span class="fn"><i>U</i></span><span class="fd"><i>I</i></span></span> = <span class="frac"><span class="fn">12&nbsp;V</span><span class="fd">0,5&nbsp;A</span></span> = <strong>2,4&nbsp;Ω</strong> <span class="caption">(richtig wäre 24&nbsp;Ω)</span></td><td class="c"><strong>f</strong></td></tr><tr><td>2</td><td><i>P</i> = <i>I</i>² · <i>R</i> = (0,5&nbsp;A)² · 2,4&nbsp;Ω = <strong>0,6&nbsp;W</strong> <span class="caption">(richtig wäre 6&nbsp;W)</span></td><td class="c"><strong>(r)</strong></td></tr></table></div></details><details class="kz-entry kz-regel" open id="e38" data-fach="inf" data-kw="folgefehler beispiel informatik schleife trace"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Beispiel Informatik</h4></summary><div class="kz-body"><p>Der Schleifenzähler wird mit <code>i = 1</code> statt <code>i = 0</code> initialisiert (<strong>Se</strong>). Die anschließende Trace-Tabelle ist mit diesem Startwert konsequent und vollständig richtig geführt → <strong>(r)</strong> für die Trace-Tabelle.</p></div></details><details class="kz-entry kz-regel" open id="e39" data-fach="alle" data-kw="folgefehler klassenarbeit erwartungshorizont kriterien"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Klassenarbeiten und Klausuren</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p24" target="_blank" rel="noopener" title="§ 24 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;24 ↗</a></summary><div class="kz-body"><p>Die (r)-Regel stammt aus der Abitur-VwV. Bei eigenen Arbeiten entscheidet die Lehrkraft in pädagogischer Verantwortung – die Folgefehler-Regel gehört in den Erwartungshorizont und in die vorab bekannt gegebenen Bewertungskriterien.</p><div class="hefter-box"><div class="hefter-label">📓 Zum Kopieren — Folgefehler-Regel für den Erwartungshorizont</div><p><strong>Folgefehler:</strong> Ein Teil- oder Endergebnis, das durch richtiges, sinnvolles und unverkürztes Weiterrechnen mit einem falschen Zwischenergebnis entsteht, wird als richtig gewertet (Zeichen (r)). Der Fehler wird nur an seiner Ursache abgezogen (Zeichen f).</p><p><strong>Kein Folgefehler</strong> liegt vor, wenn der Fehler die Aufgabe vereinfacht, das Ergebnis offensichtlich unsinnig ist und nicht hinterfragt wird oder mit einer falschen Formel weitergerechnet wird.</p></div></div></details></div></details><details class="kz-teil" id="teil5" data-teil="5"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 5</span> Sprachrichtigkeit und äußere Form</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e40" data-fach="alle" data-kw="form äußere schrift sauberkeit abzug"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Äußere Form</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p28" target="_blank" rel="noopener" title="§ 28 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;28 ↗</a></summary><div class="kz-body"><p>Schwerwiegende Mängel in der äußeren Form werden bei Klassenarbeiten, Klausuren und Komplexen Leistungen bei der Notengebung berücksichtigt. Das ist bei der Benotung zu vermerken.</p></div></details><details class="kz-entry kz-regel" open id="e41" data-fach="alle" data-kw="sprache rechtschreibung ausdruck abzug alle fächer"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Sprachrichtigkeit in allen Fächern</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p28" target="_blank" rel="noopener" title="§ 28 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;28 ↗</a></summary><div class="kz-body"><p>Schwerwiegende Verstöße gegen die Sprachrichtigkeit und schwerwiegende Ausdrucksmängel werden in <strong>allen</strong> Unterrichtsfächern bei der Notengebung berücksichtigt – also auch in Physik, Informatik, Mathematik und Biologie.</p></div></details><details class="kz-entry kz-regel" open id="e42" data-fach="alle" data-kw="kennzeichnen sprache pflicht"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Kennzeichnungspflicht</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p28" target="_blank" rel="noopener" title="§ 28 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;28 ↗</a></summary><div class="kz-body"><p>Verstöße gegen die Sprachrichtigkeit und Ausdrucksmängel werden in <strong>allen</strong> schriftlichen Arbeiten gekennzeichnet – auch dann, wenn kein Abzug erfolgt.</p></div></details><details class="kz-entry kz-regel" open id="e43" data-fach="alle" data-kw="abitur abzug sprache form punkte einfache wertung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Abzug im Abitur</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p62" target="_blank" rel="noopener" title="§ 62 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;62 ↗</a></summary><div class="kz-body"><p>Bei schwerwiegenden und gehäuften Verstößen gegen die sprachliche Richtigkeit oder die äußere Form werden Punkte der einfachen Wertung abgezogen. Kein Abzug, wenn die Verstöße bereits Gegenstand der fachspezifischen Bewertungsvorgaben sind. Der Abzug wird auf der Liste vermerkt; die Prüflinge werden vorher über die Folgen belehrt.</p><div class="callout callout-warn">⚠️ <span><strong>Achtung:</strong> Die genaue Höhe des Abzugs steht in § 62 Abs. 2 SOGYA – vor der Abiturkorrektur dort nachlesen.</span></div><div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Fs und Me sind inhaltliche Mängel und fließen in die BE ein – sie gehören nicht zusätzlich in den sprachlichen Abzug.</span></div></div></details></div></details><details class="kz-teil" id="teil6" data-teil="6"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 6</span> Leistungsnachweise organisieren</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e44" data-fach="alle" data-kw="ankündigen termin woche vorher"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Ankündigen</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>Klassenarbeiten und Klausuren in der Regel mindestens <strong>eine Woche</strong> vorher.</p></div></details><details class="kz-entry kz-regel" open id="e45" data-fach="alle" data-kw="anzahl pro woche pro tag maximal häufung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Häufung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>In der Regel höchstens <strong>drei</strong> Arbeiten pro Woche und <strong>eine</strong> pro Tag. Pro Schuljahr (Kl. 5–10) höchstens 20, pro Kurshalbjahr (Jgst. 11/12) höchstens 18 Klassenarbeiten/Klausuren und Komplexe Leistungen.</p></div></details><details class="kz-entry kz-regel" open id="e46" data-fach="alle" data-kw="rückgabe frist korrigiert zurück besprechen wochen"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Rückgabe</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>Korrigiert zurückgeben <strong>und</strong> besprechen – Klassenarbeiten innerhalb von <strong>2 Wochen</strong>, Klausuren innerhalb von <strong>3 Wochen</strong>.</p></div></details><details class="kz-entry kz-regel" open id="e47" data-fach="alle" data-kw="eltern unterschrift kenntnisnahme aufbewahrung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Kenntnisnahme</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>Bei Minderjährigen gehen alle Arbeiten mit nach Hause; die Lehrkraft prüft die Kenntnisnahme der Eltern. Die Aufbewahrung liegt bei Eltern bzw. volljährigen Schülerinnen und Schülern.</p></div></details><details class="kz-entry kz-regel" open id="e48" data-fach="alle" data-kw="dauer minuten länge klausur"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Klausurdauer</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>Höchstens <strong>90 Minuten</strong>; in Biologie, Chemie, Physik (sowie Deutsch, Kunst, Fremdsprachen) bis zu <strong>180 Minuten</strong>. In Fächern der schriftlichen Abiturprüfung darf je eine Klausur in Abiturlänge geschrieben werden.</p></div></details><details class="kz-entry kz-regel" open id="e49" data-fach="alle" data-kw="oberstufe anzahl kurshalbjahr"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Klausuren in der Oberstufe</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p27" target="_blank" rel="noopener" title="§ 27 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;27 ↗</a></summary><div class="kz-body"><p>11/I bis 12/I je Fach eine oder zwei; in 12/II kann eine geschrieben werden (außer Sport).</p></div></details><details class="kz-entry kz-regel" open id="e50" data-fach="alle" data-kw="zeitpunkt unterrichtseinheit stoff"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Zeitpunkt</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p26" target="_blank" rel="noopener" title="§ 26 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;26 ↗</a></summary><div class="kz-body"><p>Klassenarbeiten nach Abschluss einer Unterrichtseinheit; sie dürfen Grundlagenwissen früherer Abschnitte einbeziehen.</p></div></details><details class="kz-entry kz-regel" open id="e51" data-fach="alle" data-kw="gewichtung kriterien bekanntgeben schuljahresbeginn fachkonferenz"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Transparenz</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p24" target="_blank" rel="noopener" title="§ 24 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;24 ↗</a></summary><div class="kz-body"><p>Zu Beginn jedes Schuljahres nachweislich bekannt geben: Gewichtung Klassenarbeiten zu sonstigen Leistungen (beschließt die Fachkonferenz), Anzahl der Arbeiten und die Bewertungskriterien – bei Minderjährigen auch den Eltern.</p></div></details></div></details><details class="kz-teil" id="teil7" data-teil="7"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 7</span> Sonderfälle der Bewertung</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e52" data-fach="alle" data-kw="täuschung schummeln spicker handy unerlaubt betrug versuch"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Täuschung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p31" target="_blank" rel="noopener" title="§ 31 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;31 ↗</a></summary><div class="kz-body"><p>Unerlaubte Hilfsmittel oder andere Täuschung → Kl. 5–10 Note „ungenügend“, Jgst. 11/12 <strong>0 Punkte</strong>. Auf der Arbeit vermerken. Beim Versuch kann genauso verfahren werden.</p></div></details><details class="kz-entry kz-regel" open id="e53" data-fach="alle" data-kw="nicht erbracht verweigert leer abgegeben fehlen unentschuldigt"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Nicht erbracht (selbst zu vertreten)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p25" target="_blank" rel="noopener" title="§ 25 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;25 ↗</a></summary><div class="kz-body"><p>Note „ungenügend“ bzw. 0 Punkte. Bei Klassenarbeiten/Klausuren den Eltern bzw. volljährigen Schülern mit kurzer Begründung mitteilen. Die Note zählt wie jede andere.</p></div></details><details class="kz-entry kz-regel" open id="e54" data-fach="alle" data-kw="krank nachschreiben versäumt entschuldigt"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Versäumt (nicht selbst zu vertreten)</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p25" target="_blank" rel="noopener" title="§ 25 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;25 ↗</a></summary><div class="kz-body"><p>Die Fachlehrkraft entscheidet, ob nachgeschrieben wird. Bei erheblichen Unterrichtsversäumnissen ist eine gesonderte Leistungsermittlung möglich.</p></div></details><details class="kz-entry kz-regel" open id="e55" data-fach="alle" data-kw="nachteilsausgleich lrs legasthenie förderbedarf zeitverlängerung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Nachteilsausgleich</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p24" target="_blank" rel="noopener" title="§ 24 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;24 ↗</a></summary><div class="kz-body"><p>Bei sonderpädagogischem Förderbedarf (lernzielgleich), Behinderung oder festgestellter Teilleistungsschwäche legt die Fachlehrkraft im Einvernehmen mit der Schulleitung Maßnahmen zur Organisation und Gestaltung fest – die Anforderungen werden qualitativ <strong>nicht</strong> verändert.</p></div></details><details class="kz-entry kz-regel" open id="e56" data-fach="alle" data-kw="bekanntgabe leistungsstand nachfrage"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Bekanntgabe</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p25" target="_blank" rel="noopener" title="§ 25 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;25 ↗</a></summary><div class="kz-body"><p>Noten und Punkte werden bekannt gegeben; auf Nachfrage nennt die Lehrkraft den aktuellen Leistungsstand.</p></div></details><details class="kz-entry kz-regel" open id="e57" data-fach="alle" data-kw="handy smartwatch mobiltelefon täuschung abitur"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Handy im Abitur</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VI.7 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VI.7 ↗</a></summary><div class="kz-body"><p>Mobiltelefone und andere Kommunikationsmittel, die nicht ausdrücklich zugelassen sind, müssen ausgeschaltet und vom Arbeitsplatz entfernt sein – sonst unerlaubtes Hilfsmittel (Täuschung).</p></div></details></div></details><details class="kz-teil" id="teil8" data-teil="8"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 8</span> Noten und Bewertungsskalen</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e58" data-fach="alle" data-kw="noten notenstufen sehr gut ungenügend definition tendenz"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Notenstufen Klassen 5–10</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p25" target="_blank" rel="noopener" title="§ 25 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;25 ↗</a></summary><div class="kz-body"><p>Tendenzen werden mit „+“ oder „–“ ausgedrückt.</p><table class="kz-tab"><tr><th>Note</th><th>Die Leistung …</th></tr><tr><td><strong>1</strong> sehr gut</td><td>entspricht den Anforderungen in besonderem Maße.</td></tr><tr><td><strong>2</strong> gut</td><td>entspricht den Anforderungen voll.</td></tr><tr><td><strong>3</strong> befriedigend</td><td>entspricht im Allgemeinen den Anforderungen.</td></tr><tr><td><strong>4</strong> ausreichend</td><td>weist zwar Mängel auf, entspricht aber im Ganzen noch den Anforderungen.</td></tr><tr><td><strong>5</strong> mangelhaft</td><td>entspricht nicht den Anforderungen; Grundkenntnisse sind vorhanden, Mängel in absehbarer Zeit behebbar.</td></tr><tr><td><strong>6</strong> ungenügend</td><td>entspricht nicht den Anforderungen; selbst Grundkenntnisse so lückenhaft, dass Mängel nicht absehbar behebbar sind.</td></tr></table></div></details><details class="kz-entry kz-regel" open id="e59" data-fach="alle" data-kw="skala be bewertungseinheiten punkte umrechnung 60 80 90 100 120 notenpunkte"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>BE-Skalen der Abiturprüfung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VII.1c der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VII.1c ↗</a></summary><div class="kz-body"><p>Umrechnung Bewertungseinheiten → Notenpunkte → Note. Zum Ausrechnen: Reiter „Werkzeuge“.</p><div class="kz-scroll"><table class="kz-tab kz-skala"><tr><th>Punkte</th><th>Note</th><th>60 BE</th><th>80 BE</th><th>90 BE</th><th>100 BE</th><th>120 BE</th></tr><tr><td class="c">15</td><td class="c">1+</td><td class="c">60–57</td><td class="c">80–76</td><td class="c">90–86</td><td class="c">100–95</td><td class="c">120–114</td></tr><tr><td class="c">14</td><td class="c">1</td><td class="c">56–54</td><td class="c">75–72</td><td class="c">85–81</td><td class="c">94–90</td><td class="c">113–108</td></tr><tr><td class="c">13</td><td class="c">1−</td><td class="c">53–51</td><td class="c">71–68</td><td class="c">80–77</td><td class="c">89–85</td><td class="c">107–102</td></tr><tr><td class="c">12</td><td class="c">2+</td><td class="c">50–48</td><td class="c">67–64</td><td class="c">76–72</td><td class="c">84–80</td><td class="c">101–96</td></tr><tr><td class="c">11</td><td class="c">2</td><td class="c">47–45</td><td class="c">63–60</td><td class="c">71–68</td><td class="c">79–75</td><td class="c">95–90</td></tr><tr><td class="c">10</td><td class="c">2−</td><td class="c">44–42</td><td class="c">59–56</td><td class="c">67–63</td><td class="c">74–70</td><td class="c">89–84</td></tr><tr><td class="c">09</td><td class="c">3+</td><td class="c">41–39</td><td class="c">55–52</td><td class="c">62–59</td><td class="c">69–65</td><td class="c">83–78</td></tr><tr><td class="c">08</td><td class="c">3</td><td class="c">38–36</td><td class="c">51–48</td><td class="c">58–54</td><td class="c">64–60</td><td class="c">77–72</td></tr><tr><td class="c">07</td><td class="c">3−</td><td class="c">35–33</td><td class="c">47–44</td><td class="c">53–50</td><td class="c">59–55</td><td class="c">71–66</td></tr><tr><td class="c">06</td><td class="c">4+</td><td class="c">32–30</td><td class="c">43–40</td><td class="c">49–45</td><td class="c">54–50</td><td class="c">65–60</td></tr><tr><td class="c">05</td><td class="c">4</td><td class="c">29–27</td><td class="c">39–36</td><td class="c">44–41</td><td class="c">49–45</td><td class="c">59–54</td></tr><tr><td class="c">04</td><td class="c">4−</td><td class="c">26–24</td><td class="c">35–32</td><td class="c">40–36</td><td class="c">44–40</td><td class="c">53–48</td></tr><tr><td class="c">03</td><td class="c">5+</td><td class="c">23–20</td><td class="c">31–27</td><td class="c">35–30</td><td class="c">39–33</td><td class="c">47–40</td></tr><tr><td class="c">02</td><td class="c">5</td><td class="c">19–17</td><td class="c">26–22</td><td class="c">29–25</td><td class="c">32–27</td><td class="c">39–33</td></tr><tr><td class="c">01</td><td class="c">5−</td><td class="c">16–12</td><td class="c">21–16</td><td class="c">24–18</td><td class="c">26–20</td><td class="c">32–24</td></tr><tr><td class="c">00</td><td class="c">6</td><td class="c">11–00</td><td class="c">15–00</td><td class="c">17–00</td><td class="c">19–00</td><td class="c">23–00</td></tr></table></div><div class="callout callout-warn">⚠️ <span><strong>Achtung:</strong> Die Skala in der Bekanntmachung von 2009 (revosax, Vorschrift 10656) ist veraltet (gültig bis 31.07.2015) – dort beginnt z. B. die 60-BE-Skala mit 60–58. Es gilt die Tabelle oben aus der VwV 2024.</span></div></div></details></div></details><details class="kz-teil" id="teil9" data-teil="9"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 9</span> Abitur: Durchführung und Prüfungsverfahren</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e60" data-fach="alle" data-kw="aufsicht protokoll raum"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Aufsicht</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VI.3 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VI.3 ↗</a></summary><div class="kz-body"><p>Mindestens zwei Aufsicht führende Lehrkräfte je Raum, in der Regel nicht die am selben Tag prüfende Fachlehrkraft. Der Verlauf wird protokolliert (Anlage 12).</p></div></details><details class="kz-entry kz-regel" open id="e61" data-fach="alle" data-kw="zentral aufgabe fehler schulaufsicht anrufen"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Zentrale Aufgaben</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VI.5 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VI.5 ↗</a></summary><div class="kz-body"><p>Dürfen nicht abgeändert werden. Bei Zweifeln an der fachlichen Richtigkeit oder bei unvorhergesehenen Ereignissen sofort die Schulaufsichtsbehörde telefonisch benachrichtigen.</p></div></details><details class="kz-entry kz-regel" open id="e62" data-fach="alle" data-kw="experiment umschlag öffnen physik biologie chemie"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Naturwissenschaften</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VI.5 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VI.5 ↗</a></summary><div class="kz-body"><p>Nach dem Öffnen der Umschläge prüft die Fachlehrkraft die Vollständigkeit, danach werden die Experimentieranordnungen vorbereitet.</p></div></details><details class="kz-entry kz-regel" open id="e63" data-fach="alle" data-kw="arbeitszeit abgabe einlesezeit blätter"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Arbeitszeit und Abgabe</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VI.8 der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VI.8 ↗</a></summary><div class="kz-body"><p>Die Arbeitszeit schließt Lesen und Auswählen ein. Abgegeben werden alle nummerierten Reinschrift- und Konzeptblätter (auch unbeschriebene) und das Material.</p></div></details><details class="kz-entry kz-regel" open id="e64" data-fach="alle" data-kw="mündlich prüfung aufgaben umschlag protokoll"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Mündliche Prüfung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener" title="Ziffer VIII der VwV im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">VIII ↗</a></summary><div class="kz-body"><p>Anzahl der Aufgaben = Prüflinge + 2 (16 genügen insgesamt).</p><ol class="kz-list"><li>Die Aufgaben enthalten fachbezogene Anforderungen an die Lösung zum Vortrag.</li><li>Genehmigung durch die Fachprüfungskommission spätestens am letzten Werktag vorher.</li><li>Keine Informationen über mögliche Inhalte an die Prüflinge.</li><li>Gezogene Umschläge werden nicht erneut verwendet; Protokoll nach Anlage 13.</li></ol></div></details><details class="kz-entry kz-regel" open id="e65" data-fach="alle" data-kw="null punkte nachprüfung zusätzlich mündlich"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>0 Punkte in der Prüfung</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p50" target="_blank" rel="noopener" title="§ 50 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;50 ↗</a></summary><div class="kz-body"><p>Wird eine Prüfungsleistung mit 0 Punkten bewertet, folgt eine zusätzliche mündliche Prüfung – der Prüfling wird bei der Bekanntgabe darauf hingewiesen.</p></div></details><details class="kz-entry kz-regel" open id="e66" data-fach="alle" data-kw="drittkorrektur abweichung"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Drittkorrektur</h4><a class="ref" href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung#p62" target="_blank" rel="noopener" title="§ 62 SOGYA im amtlichen Text öffnen (revosax)" onclick="event.stopPropagation()">§&nbsp;62 ↗</a></summary><div class="kz-body"><p>Entscheidet, wenn Erst- und Zweitkorrektur stärker voneinander abweichen als in § 62 Abs. 4 SOGYA festgelegt.</p></div></details></div></details><details class="kz-teil" id="teil10" data-teil="10"><summary><span class="kz-chev" aria-hidden="true">▶</span><h2><span class="kz-tnr">Teil 10</span> Schnellcheck vor der Rückgabe</h2><span class="kz-tcount caption"></span></summary><div class="kz-tbody"><details class="kz-entry kz-regel" open id="e67" data-fach="alle" data-kw="checkliste schnellcheck rückgabe kontrolle"><summary class="kz-head"><span class="kz-chev" aria-hidden="true">▶</span><h4>Checkliste</h4></summary><div class="kz-body"><p>Häkchen werden in diesem Browser gespeichert – praktisch beim Korrigieren eines ganzen Stapels.</p><div class="kz-checks" id="checks"><label class="kz-check"><input type="checkbox" data-k="0"> <span>Alle Fehler am Rand gekennzeichnet (als Lehrkraft: rot, rechter Rand).</span></label><label class="kz-check"><input type="checkbox" data-k="1"> <span>Sprachfehler gekennzeichnet – auch ohne Abzug (§ 28).</span></label><label class="kz-check"><input type="checkbox" data-k="2"> <span>Fehlerursache mit f, Folgeergebnisse mit (r) markiert.</span></label><label class="kz-check"><input type="checkbox" data-k="3"> <span>Abzug für äußere Form/Sprache bei der Benotung vermerkt.</span></label><label class="kz-check"><input type="checkbox" data-k="4"> <span>Täuschung oder Nichterbringen auf der Arbeit vermerkt, Eltern informiert.</span></label><label class="kz-check"><input type="checkbox" data-k="5"> <span>Rückgabe innerhalb von 2 (Klassenarbeit) bzw. 3 Wochen (Klausur), Besprechung eingeplant.</span></label><label class="kz-check"><input type="checkbox" data-k="6"> <span>Kenntnisnahme der Eltern bei Minderjährigen geprüft.</span></label><button class="btn btn-ghost btn-sm" onclick="checksReset()">↺ Alle Häkchen entfernen</button></div></div></details></div></details></div>
+  <p class="connector-text">Du willst nicht nur nachschlagen, sondern eine Bewertung ausrechnen oder einen Folgefehler-Fall entscheiden? Dafür gibt es die Werkzeuge.</p>
+  <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Zu den Werkzeugen →</button></div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>🧮 Punkte-Rechner</h2>
+    <p>Stufe wählen, maximale und erreichte Punktzahl eintragen – Note bzw. Notenpunkte und der komplette Notenschlüssel erscheinen sofort.</p>
+    <div class="kz-mode" role="group" aria-label="Schulstufe">
+      <button class="kz-modebtn" id="mode-s1" aria-pressed="false" onclick="beMode('s1')">SEK I <span>Noten 1–6</span></button>
+      <button class="kz-modebtn" id="mode-s2" aria-pressed="false" onclick="beMode('s2')">SEK II <span>Notenpunkte 15–0</span></button>
+    </div>
+    <div class="kz-rechner">
+      <label>maximale Punktzahl <input id="be-max" class="inp" inputmode="decimal" value="50" oninput="beCalc()"></label>
+      <label>erreicht <input id="be-wert" class="inp" inputmode="decimal" oninput="beCalc()" placeholder="z. B. 38" title="Zusatzpunkte über der Höchstpunktzahl sind erlaubt"></label>
+      <label>Punkteinheit <select id="be-step" class="kz-sel" onchange="beCalc()"><option value="1">ganze Punkte</option><option value="0.5">halbe Punkte</option></select></label>
+      <label class="kz-tend" id="be-tend-l"><input type="checkbox" id="be-tend" checked onchange="beCalc()"> Tendenzen (+/–)</label>
+      <span class="kz-tendopts" id="be-tendopts">„−“ für die untersten <input id="be-tm" class="inp" inputmode="decimal" value="1" oninput="beCalc()" aria-label="Minus-Bereich in Punkten"> P. · „+“ für die obersten <input id="be-tp" class="inp" inputmode="decimal" value="1" oninput="beCalc()" aria-label="Plus-Bereich in Punkten"> P. je Note</span>
+    </div>
+    <div class="kz-ergebnis" id="be-out" aria-live="polite">–</div>
+    <details class="kz-pctbox" id="be-pctbox">
+      <summary><span class="kz-chev" aria-hidden="true">▶</span><strong>Prozentverteilung anpassen</strong> <span class="caption" id="be-pctinfo"></span></summary>
+      <p class="caption">Mindestprozent je Stufe („ab … %“). Werte müssen von oben nach unten kleiner werden. Deine Werte bleiben in diesem Browser gespeichert – getrennt für SEK I und SEK II.</p>
+      <div class="kz-pctgrid" id="be-pct"></div>
+      <div class="fb" id="be-pctfb"></div>
+      <button class="btn btn-ghost btn-sm" onclick="bePctReset()">↺ Voreinstellung wiederherstellen</button>
+    </details>
+    <div class="kz-keyhead"><h3>Notenschlüssel</h3><button class="btn btn-ghost btn-sm" onclick="beCopy(this)">📋 Notenschlüssel kopieren</button><span class="caption" id="be-copyfb"></span></div>
+    <div class="kz-scroll"><table class="kz-tab kz-skala" id="be-tab"></table></div>
+    <div class="callout callout-info" id="be-note">ℹ️ <span></span></div>
+  </div>
+
+  <div class="card">
+    <h2>🔁 Folgefehler-Check</h2>
+    <p>Für ein einzelnes Teil- oder Endergebnis: Beantworte die Fragen der Reihe nach.</p>
+    <div class="kz-ff" id="ff">
+      <div class="kz-ffq" data-i="0"><span>1. Ist das Ergebnis aus einem <strong>falschen Zwischenergebnis</strong> entstanden?</span>
+        <span class="kz-yn"><button class="btn btn-ghost btn-sm" onclick="ffSet(0,1,this)">Ja</button><button class="btn btn-ghost btn-sm" onclick="ffSet(0,0,this)">Nein</button></span></div>
+      <div class="kz-ffq" data-i="1" hidden><span>2. Ist der Weg ab dem Fehler <strong>fachlich richtig</strong> (Formel, Umformung, Einheit)?</span>
+        <span class="kz-yn"><button class="btn btn-ghost btn-sm" onclick="ffSet(1,1,this)">Ja</button><button class="btn btn-ghost btn-sm" onclick="ffSet(1,0,this)">Nein</button></span></div>
+      <div class="kz-ffq" data-i="2" hidden><span>3. Ist das Weiterrechnen <strong>sinnvoll</strong> – kein offensichtlich unsinniges Ergebnis, das unkommentiert bleibt?</span>
+        <span class="kz-yn"><button class="btn btn-ghost btn-sm" onclick="ffSet(2,1,this)">Ja</button><button class="btn btn-ghost btn-sm" onclick="ffSet(2,0,this)">Nein</button></span></div>
+      <div class="kz-ffq" data-i="3" hidden><span>4. Ist die Lösung <strong>unverkürzt</strong> – hat der Fehler die Aufgabe nicht vereinfacht und sind alle Schritte gezeigt?</span>
+        <span class="kz-yn"><button class="btn btn-ghost btn-sm" onclick="ffSet(3,1,this)">Ja</button><button class="btn btn-ghost btn-sm" onclick="ffSet(3,0,this)">Nein</button></span></div>
+      <div class="kz-ffres" id="ff-res" hidden></div>
+      <button class="btn btn-ghost btn-sm" onclick="ffReset()">↺ Neuer Fall</button>
+    </div>
+    <div class="callout callout-info">🧭 <span><em>Praxis-Auslegung:</em> Fragen 3 und 4 sind die Auslegung von „sinnvoll“ und „unverkürzt“ aus VwV VII.2e.</span></div>
+  </div>
+  <p class="connector-text">Eine Regel nachschlagen? Zurück zur Übersicht – die Suche merkt sich deinen letzten Begriff.</p>
+  <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(0)">← Zum Nachschlagen</button></div>
+</section>
+
+  <div class="card">
+    <h3>Das Wichtigste in drei Sätzen</h3>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Wer korrigiert womit?</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Erstkorrektur rot am rechten Rand, Zweitkorrektur grün links, Drittkorrektur braun links – Punkte stehen nie in der Arbeit, nur auf der Kennziffern-Liste.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Wann gibt es (r)?</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Nur wenn mit dem falschen Zwischenergebnis richtig, sinnvoll und unverkürzt weitergerechnet wurde; die Ursache bekommt f.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Was gilt für Sprache in Physik &amp; Informatik?</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Sprachfehler werden in allen schriftlichen Arbeiten gekennzeichnet; schwerwiegende Verstöße fließen in allen Fächern in die Note ein (§ 28 SOGYA).</div></div></div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Mit Suche, Punkte-Rechner und Folgefehler-Check hast du alles für den nächsten Korrekturstapel beisammen.</span></div>
+    <p class="connector-text">Neue VwV im nächsten Schuljahr? Dann zuerst die BE-Skalen und § 62 SOGYA gegenprüfen – dort ändert sich erfahrungsgemäß am ehesten etwas.</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Alle Kopier-Kästen übernehmen</button>
+    <p class="caption" style="margin-top:14px">Quellen: <a href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener">VwV Durchführung Oberstufe und Abiturprüfung vom 13.08.2024</a> (Ziff. IV, VI–VIII, XI; aktuelle Fassung ab 03.05.2025); <a href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung" target="_blank" rel="noopener"> Schulordnung Gymnasien Abiturprüfung (SOGYA)</a> vom 30.05.2023, Fassung ab 01.08.2026. „Praxis-Auslegung“ = Hilfe zur Anwendung, keine Rechtsvorschrift.</p>
+  </div>
+
+</div>
+<script>
+
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+
+const SKALEN={"60": [[60, 57, 15], [56, 54, 14], [53, 51, 13], [50, 48, 12], [47, 45, 11], [44, 42, 10], [41, 39, 9], [38, 36, 8], [35, 33, 7], [32, 30, 6], [29, 27, 5], [26, 24, 4], [23, 20, 3], [19, 17, 2], [16, 12, 1], [11, 0, 0]], "80": [[80, 76, 15], [75, 72, 14], [71, 68, 13], [67, 64, 12], [63, 60, 11], [59, 56, 10], [55, 52, 9], [51, 48, 8], [47, 44, 7], [43, 40, 6], [39, 36, 5], [35, 32, 4], [31, 27, 3], [26, 22, 2], [21, 16, 1], [15, 0, 0]], "90": [[90, 86, 15], [85, 81, 14], [80, 77, 13], [76, 72, 12], [71, 68, 11], [67, 63, 10], [62, 59, 9], [58, 54, 8], [53, 50, 7], [49, 45, 6], [44, 41, 5], [40, 36, 4], [35, 30, 3], [29, 25, 2], [24, 18, 1], [17, 0, 0]], "100": [[100, 95, 15], [94, 90, 14], [89, 85, 13], [84, 80, 12], [79, 75, 11], [74, 70, 10], [69, 65, 9], [64, 60, 8], [59, 55, 7], [54, 50, 6], [49, 45, 5], [44, 40, 4], [39, 33, 3], [32, 27, 2], [26, 20, 1], [19, 0, 0]], "120": [[120, 114, 15], [113, 108, 14], [107, 102, 13], [101, 96, 12], [95, 90, 11], [89, 84, 10], [83, 78, 9], [77, 72, 8], [71, 66, 7], [65, 60, 6], [59, 54, 5], [53, 48, 4], [47, 40, 3], [39, 33, 2], [32, 24, 1], [23, 0, 0]]};
+
+/* ── Suche ── */
+function kzNorm(s){ return String(s).toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+  .replace(/§\s*/g,'§').replace(/ /g,' ').replace(/[–—]/g,'-'); }
+function kzEsc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function kzTokRe(t){ /* kurze, rein alphanumerische Begriffe (z. B. „Me“, „f“, „r“) nur als ganzes Wort */
+  return (/^[a-z0-9]{1,2}$/.test(t)) ? new RegExp('(^|[^a-z0-9])'+kzEsc(t)+'(?![a-z0-9])') : new RegExp(kzEsc(t)); }
+function kzUnmark(root){ root.querySelectorAll('mark.hl').forEach(m=>{ m.replaceWith(document.createTextNode(m.textContent)); }); root.normalize(); }
+function kzMark(el, toks){
+  const w=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), nodes=[];
+  while(w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n=>{
+    const raw=n.nodeValue, norm=kzNorm(raw); if(norm.length!==raw.length) return;  /* nur bei 1:1-Länge sicher */
+    let ranges=[];
+    toks.forEach(t=>{ const short=/^[a-z0-9]{1,2}$/.test(t); let i=0;
+      while((i=norm.indexOf(t,i))>-1){ const a=norm[i-1]||' ', b=norm[i+t.length]||' ';
+        if(!short || (!/[a-z0-9]/.test(a) && !/[a-z0-9]/.test(b))) ranges.push([i,i+t.length]); i+=t.length; } });
+    if(!ranges.length) return;
+    ranges.sort((x,y)=>x[0]-y[0]); const merged=[]; ranges.forEach(r=>{ const l=merged[merged.length-1]; if(l&&r[0]<=l[1]) l[1]=Math.max(l[1],r[1]); else merged.push(r.slice()); });
+    const frag=document.createDocumentFragment(); let p=0;
+    merged.forEach(([a,b])=>{ frag.appendChild(document.createTextNode(raw.slice(p,a))); const m=document.createElement('mark'); m.className='hl'; m.textContent=raw.slice(a,b); frag.appendChild(m); p=b; });
+    frag.appendChild(document.createTextNode(raw.slice(p))); n.replaceWith(frag);
+  });
+}
+function kzFilter(){
+  const q=document.getElementById('q').value, fach=document.getElementById('fach').value, teil=document.getElementById('teil').value;
+  const toks=kzNorm(q).split(/\s+/).filter(Boolean);
+  const list=document.getElementById('kz-list'); kzUnmark(list);
+  let n=0, total=0; const active=(toks.length>0||fach!=='alle'||teil!=='0');
+  list.querySelectorAll('.kz-teil').forEach(sec=>{
+    let shown=0; const teilOk=(teil==='0'||sec.dataset.teil===teil);
+    sec.querySelectorAll('.kz-entry').forEach(e=>{
+      total++;
+      const f=e.dataset.fach, fachOk=(fach==='alle'||f==='alle'||f==='mintinf'||f===fach);
+      const sign=kzNorm(e.dataset.sign||'');
+      const hay=' '+kzNorm(e.textContent+' '+(e.dataset.kw||''))+' ';
+      const txtOk=toks.every(t=> (sign && sign===t) || kzTokRe(t).test(hay));
+      const ok=teilOk&&fachOk&&txtOk; e.hidden=!ok; if(ok){shown++; n++;}
+    });
+    sec.querySelectorAll('.kz-group').forEach(g=>{ g.hidden=!g.querySelector('.kz-entry:not([hidden])'); });
+    sec.querySelectorAll(':scope > .kz-tbody > .callout').forEach(c=>{ c.hidden=(toks.length>0); });
+    sec.hidden=(shown===0);
+    const tc=sec.querySelector('.kz-tcount'); if(tc) tc.textContent=shown+(shown===1?' Eintrag':' Einträge');
+    if(active && shown>0){ sec.open=true; sec.querySelectorAll('.kz-group, .kz-entry').forEach(d=>{ if(!d.hidden) d.open=true; }); }
+  });
+  if(toks.length) list.querySelectorAll('.kz-entry:not([hidden])').forEach(e=>kzMark(e,toks));
+  document.getElementById('kz-count').textContent = (toks.length||fach!=='alle'||teil!=='0') ? (n+' von '+total+' Einträgen') : (total+' Einträge');
+  document.getElementById('kz-empty').hidden = n>0;
+}
+function kzReset(){ document.getElementById('q').value=''; document.getElementById('fach').value='alle'; document.getElementById('teil').value='0'; kzFilter(); }
+function kzFold(open){ document.querySelectorAll('#kz-list details').forEach(d=>{ if(d.classList.contains('kz-teil')||open) d.open=open; }); }
+window.addEventListener('beforeprint',()=>{ document.querySelectorAll('details').forEach(d=>{ d.dataset.wasOpen=d.open?'1':'0'; d.open=true; }); });
+window.addEventListener('afterprint',()=>{ document.querySelectorAll('details').forEach(d=>{ if(d.dataset.wasOpen==='0') d.open=false; }); });
+function jumpSign(s){
+  kzReset(); showPhase(0);
+  const e=[...document.querySelectorAll('.kz-zeichen')].find(x=>x.dataset.sign===s); if(!e) return;
+  let d=e.parentElement; while(d){ if(d.tagName==='DETAILS') d.open=true; d=d.parentElement; }
+  setTimeout(()=>{ e.scrollIntoView({behavior:'smooth',block:'center'}); e.classList.remove('flash'); void e.offsetWidth; e.classList.add('flash'); },60);
+}
+/* ── Checkliste ── */
+function checksInit(){ document.querySelectorAll('#checks input').forEach(c=>{
+  try{ c.checked=localStorage.getItem('kz_check_'+c.dataset.k)==='1'; }catch(e){}
+  c.addEventListener('change',()=>{ try{ localStorage.setItem('kz_check_'+c.dataset.k, c.checked?'1':'0'); }catch(e){} }); }); }
+function checksReset(){ document.querySelectorAll('#checks input').forEach(c=>{ c.checked=false; try{ localStorage.removeItem('kz_check_'+c.dataset.k); }catch(e){} }); }
+/* ── Punkte-Rechner (SEK I / SEK II) ── */
+const BE_DEF={ s1:[95,80,65,45,25],                                      /* Note 1 … 5; darunter 6 (Schulstandard) */
+               s2:[95,90,85,80,75,70,65,60,55,50,45,40,35,27,20] };       /* 15 … 1 Punkte; darunter 0 (Schulstandard) */
+const BE_LAB={ s1:['1','2','3','4','5'], s2:['15','14','13','12','11','10','09','08','07','06','05','04','03','02','01'] };
+const BE_NOTE2=['1+','1','1−','2+','2','2−','3+','3','3−','4+','4','4−','5+','5','5−'];
+let BE_MODE='s2';
+function bePctLoad(m){ try{ const v=JSON.parse(localStorage.getItem('kz_pct2_'+m)||'null'); if(Array.isArray(v)&&v.length===BE_DEF[m].length) return v; }catch(e){} return BE_DEF[m].slice(); }
+function bePctSave(m,v){ try{ localStorage.setItem('kz_pct2_'+m, JSON.stringify(v)); }catch(e){} }
+function beNum(id){ const r=(document.getElementById(id).value||'').replace(',','.').trim(); return r===''?NaN:parseFloat(r); }
+function beFmt(x){ return (Math.round(x*100)/100).toString().replace('.',','); }
+function beCeil(x,step){ return Math.ceil(Math.round(x/step*1e6)/1e6)*step; }       /* Mindestpunktzahl, auf Punkteinheit aufgerundet */
+function beMode(m){
+  BE_MODE=m; try{ localStorage.setItem('kz_bemode',m); }catch(e){}
+  ['s1','s2'].forEach(k=>{ const b=document.getElementById('mode-'+k); b.classList.toggle('on',k===m); b.setAttribute('aria-pressed',String(k===m)); });
+  document.getElementById('be-tend-l').hidden=(m!=='s1');
+  try{ const t=JSON.parse(localStorage.getItem('kz_tend')||'null'); if(t&&!beMode._init){ document.getElementById('be-tend').checked=!!t.on; document.getElementById('be-tm').value=t.tm||'1'; document.getElementById('be-tp').value=t.tp||'1'; } }catch(e){} beMode._init=true;
+  bePctRender(); beCalc();
+}
+function bePctRender(){
+  const pct=bePctLoad(BE_MODE), lab=BE_LAB[BE_MODE], box=document.getElementById('be-pct');
+  box.innerHTML=lab.map((l,i)=>'<label class="kz-pct"><span>'+(BE_MODE==='s1'?'Note '+l:l+' P. ('+BE_NOTE2[i]+')')+'</span>'+
+    '<span class="kz-pctin">ab <input class="inp" inputmode="decimal" data-i="'+i+'" value="'+beFmt(pct[i])+'" aria-label="Mindestprozent für '+(BE_MODE==='s1'?'Note ':'')+l+'"> %</span></label>').join('')+
+    '<label class="kz-pct kz-pct-last"><span>'+(BE_MODE==='s1'?'Note 6':'00 P. (6)')+'</span><span class="kz-pctin">darunter</span></label>';
+  box.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
+    const v=[...box.querySelectorAll('input')].map(x=>parseFloat((x.value||'').replace(',','.')));
+    const fb=document.getElementById('be-pctfb');
+    const ok=v.every((x,i)=>isFinite(x)&&x>0&&x<=100&&(i===0||x<v[i-1]));
+    box.querySelectorAll('input').forEach((x,i)=>x.classList.toggle('err', !(isFinite(v[i])&&v[i]>0&&v[i]<=100&&(i===0||v[i]<v[i-1]))));
+    if(ok){ bePctSave(BE_MODE,v); fb.textContent=''; fb.className='fb'; beCalc(); }
+    else { fb.textContent='⚠️ Bitte Werte zwischen 0 und 100 eintragen, von oben nach unten kleiner werdend.'; fb.className='fb err'; }
+  }));
+  const isDef=JSON.stringify(pct)===JSON.stringify(BE_DEF[BE_MODE]);
+  document.getElementById('be-pctinfo').textContent=isDef?'– Voreinstellung':'– eigene Werte aktiv';
+}
+function bePctReset(){ try{ localStorage.removeItem('kz_pct2_'+BE_MODE); }catch(e){} bePctRender(); beCalc(); document.getElementById('be-pctfb').textContent=''; }
+function beRows(max,step,pct){
+  /* Bänder: Stufe i gilt ab ceil(max·p_i) bis zur nächsthöheren Grenze minus eine Punkteinheit */
+  const lab=BE_LAB[BE_MODE].concat([BE_MODE==='s1'?'6':'00']);
+  const from=pct.map(p=>beCeil(max*p/100,step)).concat([0]);
+  return lab.map((l,i)=>({lab:l, note:(BE_MODE==='s2'?(BE_NOTE2[i]||'6'):l), pct:(i<pct.length?pct[i]:0), from:from[i], to:(i===0?max:from[i-1]-step)}));
+}
+function beTendOn(){ return BE_MODE==='s1' && document.getElementById('be-tend').checked; }
+function beTendWidth(id){ const x=beNum(id); return (isFinite(x)&&x>0)?x:NaN; }
+/* Tendenz-Bereiche eines Notenbands: „−“ für die untersten tm Punkte, „+“ für die obersten tp Punkte.
+   Note 1 erhält „+“ nur oberhalb der Höchstpunktzahl (Zusatzpunkte); Note 6 bekommt keine Tendenz. */
+function beTendRanges(r,step,tm,tp,max){
+  if(r.lab==='6'||r.to<r.from) return {minus:null, plus:null};
+  const minus=[r.from, Math.min(r.to, r.from+tm-step)];
+  const plus = r.lab==='1' ? 'über '+beFmt(max) : [Math.max(r.from, r.to-tp+step), r.to];
+  return {minus, plus};
+}
+function beRangeTxt(x){ if(x===null) return ''; if(typeof x==='string') return x; return x[0]===x[1]?beFmt(x[0]):beFmt(x[1])+' – '+beFmt(x[0]); }
+function beCalc(){
+  const max=beNum('be-max'), v=beNum('be-wert'), step=parseFloat(document.getElementById('be-step').value);
+  const out=document.getElementById('be-out'), tab=document.getElementById('be-tab'), note=document.querySelector('#be-note span');
+  const tend=beTendOn(), tm=beTendWidth('be-tm'), tp=beTendWidth('be-tp');
+  document.getElementById('be-tendopts').hidden=!tend;
+  try{ localStorage.setItem('kz_tend', JSON.stringify({on:document.getElementById('be-tend').checked, tm:document.getElementById('be-tm').value, tp:document.getElementById('be-tp').value})); }catch(e){}
+  if(!isFinite(max)||max<=0){ out.textContent='Bitte eine maximale Punktzahl eintragen.'; tab.innerHTML=''; return; }
+  if(Math.abs(Math.round(max/step)*step-max)>1e-9){ out.textContent='Die maximale Punktzahl passt nicht zur Punkteinheit.'; tab.innerHTML=''; return; }
+  const rows=beRows(max,step,bePctLoad(BE_MODE));
+  const tOk = !tend || (isFinite(tm)&&isFinite(tp)&&Math.abs(Math.round(tm/step)*step-tm)<1e-9&&Math.abs(Math.round(tp/step)*step-tp)<1e-9);
+  let hit=-1;
+  if(!isFinite(v)) out.textContent='–';
+  else if(v<0) out.textContent='Erreicht darf nicht negativ sein.';
+  else if(Math.abs(Math.round(v/step)*step-v)>1e-9) out.textContent=(step===1?'Bitte ganze Punkte eingeben oder „halbe Punkte“ wählen.':'Bitte in halben Punkten eingeben.');
+  else if(!tOk) out.textContent='Bitte die Tendenz-Grenzen als Vielfaches der Punkteinheit eintragen (z. B. 1).';
+  else {
+    const over=v>max+1e-9;
+    hit= over ? 0 : rows.findIndex(r=>v>=r.from-1e-9&&v<=r.to+1e-9);
+    const r=rows[hit], pr=beFmt(v/max*100);
+    let lab=r.note;
+    if(tend && r.lab!=='6'){
+      if(over && r.lab==='1') lab='1+';
+      else { const t=beTendRanges(r,step,tm,tp,max);
+        if(t.minus && v<=t.minus[1]+1e-9) lab=r.lab+'−';
+        else if(Array.isArray(t.plus) && v>=t.plus[0]-1e-9) lab=r.lab+'+'; }
+    }
+    const zus = over ? ' <span class="caption">(mit Zusatzpunkten)</span>' : '';
+    out.innerHTML=beFmt(v)+' von '+beFmt(max)+' Punkten = '+pr+'&nbsp;% → '+(BE_MODE==='s2'?'<strong>'+r.lab+' Notenpunkte</strong> (Note '+r.note+')':'<strong>Note '+lab+'</strong>')+zus;
+  }
+  const tcols = tend && tOk;
+  tab.innerHTML='<tr><th>'+(BE_MODE==='s2'?'Notenpunkte':'Note')+'</th>'+(BE_MODE==='s2'?'<th>Note</th>':'')+'<th>ab</th><th>Punkte</th>'+(tcols?'<th>„−“ bei</th><th>„+“ bei</th>':'')+'</tr>'+
+    rows.map((r,i)=>{ const t=tcols?beTendRanges(r,step,tm,tp,max):null;
+      return '<tr'+(i===hit?' class="hit"':'')+'><td>'+r.lab+'</td>'+(BE_MODE==='s2'?'<td>'+r.note+'</td>':'')+
+      '<td>'+(r.pct===0?'darunter':beFmt(r.pct)+'&nbsp;%')+'</td><td>'+(r.to<r.from?'–':(r.from===r.to?beFmt(r.from):beFmt(r.to)+' – '+beFmt(r.from)))+'</td>'+
+      (tcols?'<td>'+beRangeTxt(t.minus)+'</td><td>'+beRangeTxt(t.plus)+'</td>':'')+'</tr>'; }).join('');
+  const isDef=JSON.stringify(bePctLoad(BE_MODE))===JSON.stringify(BE_DEF[BE_MODE]);
+  document.getElementById('be-pctinfo').textContent=isDef?'– Voreinstellung':'– eigene Werte aktiv';
+  note.innerHTML = BE_MODE==='s2'
+    ? (isDef?'Voreinstellung = Standard-Verteilung (15 Punkte ab 95&nbsp;%, 05 ab 45&nbsp;%, 01 ab 20&nbsp;%). Sie weicht bei 03 Punkten von den Abitur-Skalen der VwV ab (dort 33&nbsp;% statt 35&nbsp;%) – für die Abiturprüfung selbst gelten die amtlichen Tabellen (Teil 8).':'Eigene Prozentverteilung aktiv – für die Abiturprüfung gelten die amtlichen Skalen (VwV VII.1c).')
+    : 'Für Klassenarbeiten in SEK I gibt es keine landesweite Punkte-Skala – maßgeblich ist der Beschluss deiner Fachkonferenz (§ 24 SOGYA).'+(isDef?' Voreinstellung = Standard-Verteilung (Note 1 ab 95&nbsp;%, 2 ab 80&nbsp;%, 3 ab 65&nbsp;%, 4 ab 45&nbsp;%, 5 ab 25&nbsp;%).':' Eigene Prozentverteilung aktiv.')+(tend?' Tendenzen: „−“ an der Untergrenze, „+“ direkt unter der nächstbesseren Note; „1+“ nur mit Zusatzpunkten über der Höchstpunktzahl, Note 6 ohne Tendenz.':'');
+}
+function beCopy(btn){
+  const rows=[...document.querySelectorAll('#be-tab tr')].map(tr=>[...tr.children].map(td=>td.textContent.replace(/ /g,' ')).join('\t')).join('\n');
+  const fb=document.getElementById('be-copyfb'); const done=()=>{ fb.textContent='✓ kopiert – in Word oder Excel einfügen'; setTimeout(()=>fb.textContent='',2500); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(rows).then(done,()=>beCopyFallback(rows,done)); } else beCopyFallback(rows,done);
+}
+function beCopyFallback(t,done){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
+/* ── Folgefehler-Check ── */
+const FF=[null,null,null,null];
+function ffSet(i,v,btn){
+  FF[i]=v; for(let k=i+1;k<4;k++) FF[k]=null;
+  btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.toggle('sel', b===btn));
+  ffRender();
+}
+function ffRender(){
+  const qs=document.querySelectorAll('.kz-ffq'), res=document.getElementById('ff-res');
+  let stop=-1;
+  for(let i=0;i<4;i++){ if(FF[i]===null){ stop=i; break; } if((i===0&&FF[0]===0)||(i>0&&FF[i]===0)){ stop=i; break; } }
+  qs.forEach((q,i)=>{ const vis = i===0 || (FF[i-1]===1 && (stop===-1||i<=stop)); q.hidden=!vis;
+    if(!vis){ FF[i]=null; q.querySelectorAll('.btn').forEach(b=>b.classList.remove('sel')); } });
+  res.className='kz-ffres'; res.hidden=true;
+  if(FF[0]===0){ res.hidden=false; res.classList.add('na'); res.innerHTML='Kein Folgefehler-Fall: Das Ergebnis wird für sich bewertet – richtig <strong>r</strong>, falsch <strong>f</strong>.'; return; }
+  const bad=[1,2,3].find(i=>FF[i]===0);
+  if(bad){ const why={1:'Ab dem Fehler wurde nicht fachlich richtig weitergerechnet – das ist ein neuer Fehler.',2:'Das Ergebnis ist offensichtlich unsinnig und bleibt unkommentiert – nicht „sinnvoll“.',3:'Der Fehler hat die Aufgabe vereinfacht oder Schritte fehlen – nicht „unverkürzt“.'}[bad];
+    res.hidden=false; res.classList.add('ng'); res.innerHTML='<strong>Kein (r):</strong> '+why+' Zeichen: <strong>f</strong>.'; return; }
+  if(FF[1]===1&&FF[2]===1&&FF[3]===1){ res.hidden=false; res.classList.add('ok'); res.innerHTML='<strong>(r)</strong> – Folgeergebnis wird als richtig gewertet. Die Fehlerursache selbst bleibt mit <strong>f</strong> markiert.'; }
+}
+function ffReset(){ for(let i=0;i<4;i++) FF[i]=null; document.querySelectorAll('.kz-yn .btn').forEach(b=>b.classList.remove('sel')); ffRender(); }
+/* ── Start ── */
+(function(){
+  const go=()=>{ const q=document.getElementById('q');
+    q.addEventListener('input',kzFilter); document.getElementById('fach').addEventListener('change',kzFilter); document.getElementById('teil').addEventListener('change',kzFilter);
+    document.addEventListener('keydown',e=>{ if(e.key==='/' && !/input|textarea|select/i.test(document.activeElement.tagName)){ e.preventDefault(); showPhase(0); q.focus(); }
+      if(e.key==='Escape' && document.activeElement===q){ kzReset(); } });
+    kzFilter(); checksInit(); let bm='s2'; try{ bm=localStorage.getItem('kz_bemode')||'s2'; }catch(e){} beMode(bm); ffRender(); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+})();
+
+</script>
+</body>
+</html>

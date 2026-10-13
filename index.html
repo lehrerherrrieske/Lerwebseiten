@@ -60,11 +60,26 @@
            Im Lehrermodus sind diese Seiten trotzdem anklickbar.
   pw     : optional, Passwort des Lehrermodus DIESER Lernseite – wird nur im
            Lehrermodus des Portals auf der Karte angezeigt
+  hidden : optional, true blendet die Seite für SuS komplett aus (auch aus
+           den Seitenzahlen). Nur im Lehrermodus sichtbar, Badge "Versteckt".
+
+  ulb    : optional, Unterbereich innerhalb des Lernbereichs, z. B. "Quiz".
+           Alle Seiten mit gleichem lb UND gleichem ulb landen in einem eigenen
+           Unter-Dropdown innerhalb des Lernbereichs, z. B.:
+             { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik",
+               ulb:"Quiz", titel:"Quiz Prozessoren", datei:"..." }
+
+  LERNBEREICHE:
+  Jeder Lernbereich (lb) einer Klasse ist ein aufklappbares Dropdown-Feld,
+  Unterbereiche (ulb) sind Dropdowns darin. Alle sind anfangs eingeklappt.
+  Leerzeichen am Anfang/Ende von lb und ulb werden ignoriert.
 
   LEHRERMODUS DES PORTALS:
   Versteckt: Klick auf das 📚 neben "Lernportal" lässt die Leiste ausfahren.
-  Passwort steht oben im HTML bei <div class="teachbar" ... data-pw="Lehrer2026">.
-  Aktiv: WIP-Seiten öffnen, Seiten-Passwörter sehen, Seitenzahlen inkl. WIP.
+  Passwort steht oben im HTML bei <div class="teachbar" ... data-pw="...">.
+  Aktiv: WIP-Seiten öffnen, versteckte Seiten sehen, Seiten-Passwörter sehen,
+  Seitenzahlen inkl. WIP/versteckt und Reiter "Tools & Links" über der
+  Fachauswahl (Inhalt aus dem Array TOOLS im Skript).
 
   Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
   automatisch einen freundlichen Platzhaltertext – kein Fehler.
@@ -171,11 +186,39 @@
     padding:2px 10px;
   }
 
-  /* ── Seitenliste ── */
-  .lb-group{margin-bottom:26px;}
-  .lb-title{
-    display:inline-block;font-size:var(--fs-sm);font-weight:700;letter-spacing:.02em;color:var(--color-text-muted);margin-bottom:10px;
+  /* ── Seitenliste: Lernbereiche als Dropdown ── */
+  .lb-group{
+    border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    background:var(--color-surface);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);
   }
+  .lb-head{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:transparent;border:none;cursor:pointer;padding:15px 20px;text-align:left;
+    font-family:var(--font-body);
+  }
+  .lb-head:hover{background:var(--color-surface-warm);}
+  .lb-head:focus-visible{outline:3px solid var(--sc-accent);outline-offset:-3px;}
+  .lb-title{font-size:var(--fs-base);font-weight:700;color:var(--color-text);}
+  .lb-count{font-size:var(--fs-sm);color:var(--color-text-muted);font-weight:500;margin-left:10px;white-space:nowrap;}
+  /* Dreieck: zu = ▼ (gedreht), offen = ▲ */
+  .lb-icon{color:var(--color-text-muted);font-size:var(--fs-lg);line-height:1;flex-shrink:0;
+    transform:rotate(180deg);transition:transform .22s ease;}
+  .lb-head.open .lb-icon{transform:none;}
+  .lb-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease;}
+  .lb-head.open + .lb-body{grid-template-rows:1fr;}
+  .lb-body-inner{overflow:hidden;min-height:0;}
+  .lb-head:not(.open) + .lb-body .lb-body-inner{visibility:hidden;}  /* zugeklappt: nicht per Tab erreichbar */
+  .lb-body-inner .seite-card{margin:0 14px 12px;}
+  .lb-body-inner > :first-child{margin-top:4px;}
+
+  /* Unterbereich (ulb): Dropdown im Dropdown */
+  .lb-group.ulb{margin:0 14px 12px;border-radius:var(--radius);box-shadow:none;background:var(--color-bg-warm);}
+  .lb-group.ulb > .lb-head{padding:11px 16px;}
+  .lb-group.ulb > .lb-head:hover{background:var(--color-border-light);}
+  .lb-group.ulb .lb-title{font-weight:600;}
+  .lb-group.ulb .lb-title::before{content:"↳ ";color:var(--color-text-muted);}
+  .lb-group.ulb .lb-icon{font-size:var(--fs-base);}
+  .lb-group.ulb .seite-card{margin:0 12px 10px;}
   .seite-card{
     display:flex;align-items:center;justify-content:space-between;gap:14px;
     border:1px solid var(--color-border);border-radius:var(--radius);
@@ -184,7 +227,7 @@
   }
   .seite-card:hover{border-color:var(--sc-accent);box-shadow:var(--shadow-md);transform:translateX(2px);}
   .seite-card:focus-visible{outline:3px solid var(--sc-accent);outline-offset:2px;}
-  .seite-titel{font-weight:700;font-size:var(--fs-base);}
+  .seite-titel{font-weight:700;font-size:var(--fs-base);white-space:pre-line;}  /* \n im Titel = Zeilenumbruch */
   .seite-meta{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
   .badge-neu{
     background:var(--color-success-light,#E8F5EE);color:#2D8B55;font-size:var(--fs-sm);
@@ -212,6 +255,34 @@
   .seite-pw{display:inline-block;margin-top:4px;font-size:var(--fs-sm);color:var(--color-text-secondary);
     background:#E8EEF5;border:1px solid #C9D5E3;border-radius:6px;padding:1px 8px;}
   .seite-pw code{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:#33475B;}
+  .seite-card.versteckt{border-style:dashed;border-color:#C9B3DB;}
+  .badge-hidden{
+    background:#F3E8FD;color:#6B3A8C;font-size:var(--fs-sm);
+    font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;
+  }
+
+  /* ── Reiter Fächer / Tools & Links (nur im Lehrermodus) ── */
+  .tabbar{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab-btn{
+    cursor:pointer;border:1px solid var(--color-border);background:var(--color-surface);
+    border-radius:var(--radius-full);padding:7px 18px;font-family:var(--font-body);
+    font-size:var(--fs-sm);font-weight:600;color:var(--color-text-secondary);transition:.15s;
+  }
+  .tab-btn.on{background:#33475B;border-color:#33475B;color:#fff;}
+  .tab-btn:not(.on):hover{border-color:#33475B;color:#33475B;}
+  .tool-card{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    border:1px solid var(--color-border);border-radius:var(--radius);
+    background:var(--color-surface);padding:16px 18px;margin-bottom:10px;
+    text-decoration:none;color:var(--color-text);transition:.15s;box-shadow:var(--shadow);
+  }
+  .tool-card:hover{border-color:#33475B;box-shadow:var(--shadow-md);transform:translateX(2px);}
+  .tool-titel{font-weight:700;font-size:var(--fs-base);}
+  .tool-meta{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
+  .tool-goto{font-size:1.3rem;color:#33475B;flex-shrink:0;}
+  .tool-gruppe{font-size:var(--fs-sm);font-weight:700;color:var(--color-text-muted);margin:18px 0 8px;}
+  .tool-gruppe:first-child{margin-top:0;}
+
   .lehrer-hinweis{background:#E8F5EE;border:1.5px solid #A7D7BC;border-radius:var(--radius);
     padding:10px 16px;margin-bottom:20px;font-size:var(--fs-sm);color:#14532D;}
 
@@ -294,9 +365,15 @@
 <main class="wrap">
 
   <div class="lehrer-hinweis lehrer-only" hidden>
-    🧑‍🏫 <strong>Lehrermodus aktiv:</strong> Seiten „In Arbeit“ sind anklickbar, die Passwörter
-    der Lernseiten werden angezeigt. Der Modus gilt auch auf den Lernseiten, die du von hier
-    aus öffnest (bis zum Schließen des Tabs).
+    🧑‍🏫 <strong>Lehrermodus aktiv:</strong> Seiten „In Arbeit“ sind anklickbar, versteckte Seiten
+    werden angezeigt, ebenso die Passwörter der Lernseiten. Der Modus gilt auch auf den Lernseiten,
+    die du von hier aus öffnest (bis zum Schließen des Tabs).
+  </div>
+
+  <!-- Reiter nur im Lehrermodus sichtbar -->
+  <div class="tabbar lehrer-only" id="tabbar" hidden>
+    <button class="tab-btn on" id="tabFaecher">📚 Fächer</button>
+    <button class="tab-btn" id="tabTools">🔧 Tools &amp; nützliche Links</button>
   </div>
 
   <!-- Schritt 1: Fach -->
@@ -316,6 +393,12 @@
   <section class="view" id="view-seiten">
     <h2 class="section-title" id="seitenTitle">Lernseiten</h2>
     <div id="seitenListe"></div>
+  </section>
+
+  <!-- Tools & Links (nur im Lehrermodus erreichbar) -->
+  <section class="view" id="view-tools">
+    <h2 class="section-title">Tools &amp; nützliche Links</h2>
+    <div id="toolsListe"></div>
   </section>
 
 </main>
@@ -405,6 +488,10 @@ const SEITEN = [
   // { fach:"physik", klasse:"8", lb:"LB2",
   //   titel:"Stromstärke, Spannung, Widerstand",
   //   datei:"K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
+  // ==========================================================
+  // =====================Tools=============================== 
+  // ==========================================================
+
 
   // ==========================================================
   // =====================PHYSIK=============================== 
@@ -451,18 +538,18 @@ const SEITEN = [
   // =================Klasse 10=================
   { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen ", titel:"Befehlssammlung Programmierung in Python ", datei:"K10 - Hefter.html", pw:"InfoIstCool" },
   
-  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen - Quiz ", titel:"Quiz - Algorithmen01", datei:"cyberAbfrage_k10_python_pap.html", pw:"Nicht Gesetzt" },
-  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen - Quiz ", titel:"Quiz - Algorithmen02", datei:"cyberAbfrage2_k10_python_pap.html", pw:"Nicht Gesetzt" },
+  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen", ulb:"Quiz", titel:"Quiz - Algorithmen01", datei:"cyberAbfrage_k10_python_pap.html", pw:"Nicht Gesetzt" },
+  { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen", ulb:"Quiz", titel:"Quiz - Algorithmen02", datei:"cyberAbfrage2_k10_python_pap.html", pw:"Nicht Gesetzt" },
   // =================Klasse GK11=================
   { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Schaltalgebra & Schaltnetze – Übungen", datei:"K11GK - LB1 - Schaltalgebra_Schaltnetze_Uebungen.html",pw:"Nicht Gesetzt" },
   { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Prozessoren – Kernaufgaben", datei:"K11GK - LB1 - Prozessoren_Kernaufgaben.html", pw:"gut getacktet" ,wip:true},
   { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Speichersysteme – Kernthemen", datei:"K11GK - LB1 - Speichersysteme_Kernthemen.html", pw:"Haste Gespeichert" ,wip:true},
   { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik ", titel:"Schutzziele Datenschutz", datei:"K11GK - LB1 - Schutzziele_Datenschutz.html", pw:"Informatik11GK" },
 
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik - Quiz", titel:"Quiz Prozessoren", datei:"K11GK - LB1 - CyberQuiz Prozessoren.html", pw:"Nicht Gesetzt" ,wip:true},
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik - Quiz", titel:"Quiz Speichersysteme", datei:"K11GK - LB1 - CyberQuiz Speichersysteme.html", pw:"Nicht Gesetzt" ,wip:true},
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik - Quiz", titel:"Quiz Schutzziele 01", datei:"K11GK - LB1 - CyberQuiz Schutzziele.html", pw:"Nicht Gesetzt" },
-  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik - Quiz", titel:"Quiz Schutzziele 02", datei:"K11GK - LB1 - CyberQuiz Schutzziele_2.html", pw:"Nicht Gesetzt" },
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik", ulb:"Quiz", titel:"Quiz Prozessoren", datei:"K11GK - LB1 - CyberQuiz Prozessoren.html", pw:"Nicht Gesetzt" ,wip:true},
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik", ulb:"Quiz", titel:"Quiz Speichersysteme", datei:"K11GK - LB1 - CyberQuiz Speichersysteme.html", pw:"Nicht Gesetzt" ,wip:true},
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik", ulb:"Quiz", titel:"Quiz Schutzziele 01", datei:"K11GK - LB1 - CyberQuiz Schutzziele.html", pw:"Nicht Gesetzt" },
+  { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik", ulb:"Quiz", titel:"Quiz Schutzziele 02", datei:"K11GK - LB1 - CyberQuiz Schutzziele_2.html", pw:"Nicht Gesetzt" },
   // =================Klasse GK12=================
   
   // =================Klasse LK11=================
@@ -479,8 +566,31 @@ const SEITEN = [
   // ==========================================================
   // =================Englisch=================================
   // ==========================================================
-  
 
+
+];
+
+// >>> TOOLS & LINKS: nur im Lehrermodus über den Reiter "Tools & nützliche Links"
+// sichtbar. Jede Zeile entweder
+//   { titel, datei, beschreibung (optional), gruppe (optional) }  -> Datei im Ordner TOOLS_ORDNER
+//   { titel, url,   beschreibung (optional), gruppe (optional) }  -> externer Link (neuer Tab)
+// "datei" ist NUR der Dateiname – der Ordner kommt automatisch aus TOOLS_ORDNER.
+// Einträge mit gleicher "gruppe" werden unter einer Zwischenüberschrift gesammelt.
+// Eigene Tools öffnen sich im selben Tab (Lehrermodus bleibt so aktiv),
+// externe Links in einem neuen Tab.
+const TOOLS_ORDNER = "Tools";   // Ordner neben der index.html
+const TOOLS = [
+  // { gruppe:"Unterricht", titel:"Zufallsgenerator", datei:"Zufallsgenerator.html",
+  //   beschreibung:"Schüler zufällig auswählen" },
+  // { gruppe:"Extern", titel:"Kahoot", url:"https://create.kahoot.it/library",
+  //   beschreibung:"Eigene Kahoots verwalten" },
+  
+  { gruppe:"Bewertung", titel:"Bewertungen", datei:"Korrekturzeichen_Cheat_Sheet.html"},
+  { gruppe:"Unterricht", titel:"Zufallsgenerator", url:"https://zufallsgenerator.de"},
+  //   beschreibung:"Schüler zufällig auswählen" }
+
+  { gruppe:"Extern", titel:"Kahoot", url:"https://create.kahoot.it/library", beschreibung:"Eigene Kahoots verwalten" },
+  { gruppe:"Extern", titel:"Physik Apps", url:"https://www.teacher.dev/apps", beschreibung:"Erstellung von Physikalischen Zecihnungen und Anwendungen" },
 ];
 
 /* ============================================================
@@ -504,8 +614,14 @@ let currentFach = null, currentKlasse = null;
 
 // Lehrermodus-Zustand (wird unten durch initTeachbar gesetzt)
 let teach = false;
-// Sichtbar/zählbar: im Schülermodus nur fertige Seiten, im Lehrermodus alle
-const sichtbar = s => teach || !s.wip;
+// angezeigt: versteckte Seiten nur im Lehrermodus
+const angezeigt = s => teach || !s.hidden;
+// anklickbar: WIP-Seiten nur im Lehrermodus
+const anklickbar = s => teach || !s.wip;
+// gezählt: im Schülermodus nur fertige, nicht versteckte Seiten, im Lehrermodus alle
+const sichtbar = s => angezeigt(s) && anklickbar(s);
+// Aufgeklappte Lernbereiche merken (überlebt Neuzeichnen beim Lehrermodus-Wechsel)
+const lbOffen = new Set();
 const seitenText = n => n + " Seite" + (n === 1 ? "" : "n");
 
 // Fach-Karten aus FAECHER erzeugen
@@ -531,14 +647,20 @@ function renderFaecher(){
 const viewFach = document.getElementById("view-fach");
 const viewKlasse = document.getElementById("view-klasse");
 const viewSeiten = document.getElementById("view-seiten");
+const viewTools = document.getElementById("view-tools");
 const crumbbar = document.getElementById("crumbbar");
 const crumbPath = document.getElementById("crumbPath");
 const btnBack = document.getElementById("btnBack");
 let currentKlasseLabel = null;
 
 function showView(view){
-  [viewFach, viewKlasse, viewSeiten].forEach(v => v.classList.remove("active"));
+  [viewFach, viewKlasse, viewSeiten, viewTools].forEach(v => v.classList.remove("active"));
   view.classList.add("active");
+  // Reiter nur auf der Startebene (Fächer / Tools) zeigen
+  const startebene = (view === viewFach || view === viewTools);
+  document.getElementById("tabbar").hidden = !(teach && startebene);
+  document.getElementById("tabFaecher").classList.toggle("on", view === viewFach);
+  document.getElementById("tabTools").classList.toggle("on", view === viewTools);
 }
 
 function goFach(){
@@ -548,6 +670,50 @@ function goFach(){
   crumbbar.classList.remove("active");
   showView(viewFach);
 }
+
+/* ---------- Tools & nützliche Links (nur Lehrermodus) ---------- */
+function goTools(){
+  if (!teach){ goFach(); return; }
+  currentFach = null; currentKlasse = null;
+  document.body.style.removeProperty("--fach");
+  const liste = document.getElementById("toolsListe");
+  liste.innerHTML = "";
+  if (TOOLS.length === 0){
+    liste.innerHTML = `<div class="empty-state">
+        <div class="em-icon">🔧</div>
+        Noch keine Tools oder Links eingetragen.<br>
+        Einfach im Array TOOLS in der index.html ergänzen.
+      </div>`;
+  } else {
+    let letzteGruppe = null;
+    TOOLS.forEach(t => {
+      if ((t.gruppe || "") !== (letzteGruppe || "") && t.gruppe){
+        const h = document.createElement("div");
+        h.className = "tool-gruppe";
+        h.textContent = t.gruppe;
+        liste.appendChild(h);
+      }
+      letzteGruppe = t.gruppe || null;
+      const a = document.createElement("a");
+      a.className = "tool-card";
+      if (t.datei){
+        a.href = TOOLS_ORDNER ? `${TOOLS_ORDNER}/${t.datei}` : t.datei;   // eigenes Tool, selber Tab
+      } else {
+        a.href = t.url; a.target = "_blank"; a.rel = "noopener";           // externer Link, neuer Tab
+      }
+      a.innerHTML = `<div>
+          <div class="tool-titel">${t.titel}</div>
+          ${t.beschreibung ? `<div class="tool-meta">${t.beschreibung}</div>` : ""}
+        </div>
+        <div class="tool-goto">${t.datei ? "→" : "↗"}</div>`;
+      liste.appendChild(a);
+    });
+  }
+  crumbbar.classList.remove("active");
+  showView(viewTools);
+}
+document.getElementById("tabFaecher").addEventListener("click", goFach);
+document.getElementById("tabTools").addEventListener("click", goTools);
 
 function goKlasse(fach){
   currentFach = fach; currentKlasse = null;
@@ -587,7 +753,7 @@ function goSeiten(fach, klasseId, klasseLabel){
   const klasseInfo = (KLASSEN[fach] || []).find(k => k.id === klasseId);
   const ordner = klasseInfo ? klasseInfo.ordner : "";
 
-  const treffer = SEITEN.filter(s => s.fach === fach && s.klasse === klasseId);
+  const treffer = SEITEN.filter(s => s.fach === fach && s.klasse === klasseId && angezeigt(s));
   const liste = document.getElementById("seitenListe");
   liste.innerHTML = "";
 
@@ -598,40 +764,75 @@ function goSeiten(fach, klasseId, klasseLabel){
         Schau in Kürze wieder vorbei!
       </div>`;
   } else {
-    // Nach Lernbereich gruppieren, Reihenfolge des ersten Auftretens
-    const gruppen = [];
-    treffer.forEach(s => {
-      let g = gruppen.find(g => g.lb === s.lb);
-      if (!g){ g = {lb: s.lb, items: []}; gruppen.push(g); }
-      g.items.push(s);
-    });
-    gruppen.forEach(g => {
+    // Eine Seiten-Karte bauen
+    const karte = s => {
+      const offen = anklickbar(s);             // WIP nur im Lehrermodus anklickbar
+      const el = document.createElement(offen ? "a" : "div");
+      el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "")
+                   + (s.hidden ? " versteckt" : "");
+      if (offen){
+        el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
+      } else {
+        el.setAttribute("aria-disabled", "true");
+      }
+      const badges = (s.hidden ? '<span class="badge-hidden">Versteckt</span>' : "")
+                   + (s.wip ? '<span class="badge-wip">In Arbeit</span>'
+                            : (s.neu ? '<span class="badge-neu">Neu</span>' : ""));
+      const pwInfo = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code></div>` : "";
+      el.innerHTML = `<div>
+          <div class="seite-titel">${s.titel}${badges}</div>
+          ${pwInfo}
+        </div>
+        <div class="goto">→</div>`;
+      return el;
+    };
+    // Dropdown bauen (für Lernbereich und Unterbereich gleich) – standardmäßig zu
+    const dropdown = (key, titel, n, kinder, unter) => {
       const block = document.createElement("div");
-      block.className = "lb-group";
-      const heading = document.createElement("div");
-      heading.className = "lb-title";
-      heading.textContent = g.lb;
-      block.appendChild(heading);
-      g.items.forEach(s => {
-        const offen = sichtbar(s);               // WIP nur im Lehrermodus anklickbar
-        const el = document.createElement(offen ? "a" : "div");
-        el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "");
-        if (offen){
-          el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
-        } else {
-          el.setAttribute("aria-disabled", "true");
-        }
-        const badge = s.wip ? '<span class="badge-wip">In Arbeit</span>'
-                            : (s.neu ? '<span class="badge-neu">Neu</span>' : "");
-        const pwInfo = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code></div>` : "";
-        el.innerHTML = `<div>
-            <div class="seite-titel">${s.titel}${badge}</div>
-            ${pwInfo}
-          </div>
-          <div class="goto">→</div>`;
-        block.appendChild(el);
+      block.className = "lb-group" + (unter ? " ulb" : "");
+      const head = document.createElement("button");
+      const auf = lbOffen.has(key);
+      head.className = "lb-head" + (auf ? " open" : "");
+      head.setAttribute("aria-expanded", auf ? "true" : "false");
+      head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count">${seitenText(n)}</span></span>
+        <span class="lb-icon" aria-hidden="true">▲</span>`;
+      head.querySelector(".lb-title").textContent = titel;
+      head.addEventListener("click", () => {
+        const jetztAuf = head.classList.toggle("open");
+        head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
+        jetztAuf ? lbOffen.add(key) : lbOffen.delete(key);
       });
-      liste.appendChild(block);
+      const body = document.createElement("div");
+      body.className = "lb-body";
+      const inner = document.createElement("div");
+      inner.className = "lb-body-inner";
+      kinder.forEach(k => inner.appendChild(k));
+      body.appendChild(inner);
+      block.appendChild(head);
+      block.appendChild(body);
+      return block;
+    };
+    const zaehle = items => items.filter(s => s.wip ? teach : true).length;   // WIP zählt nur im Lehrermodus
+    const gruppiere = (items, feld) => {        // Reihenfolge des ersten Auftretens
+      const out = [];
+      items.forEach(s => {
+        const name = String(s[feld] || "").trim();
+        let g = out.find(g => g.name === name);
+        if (!g){ g = {name, items: []}; out.push(g); }
+        g.items.push(s);
+      });
+      return out;
+    };
+
+    gruppiere(treffer, "lb").forEach(g => {
+      const key = fach + "|" + klasseId + "|" + g.name;
+      // Erst Seiten ohne Unterbereich, dann je Unterbereich ein Unter-Dropdown
+      const direkt = g.items.filter(s => !String(s.ulb || "").trim());
+      const unter = gruppiere(g.items.filter(s => String(s.ulb || "").trim()), "ulb");
+      const kinder = direkt.map(karte).concat(
+        unter.map(u => dropdown(key + "|" + u.name, u.name, zaehle(u.items), u.items.map(karte), true))
+      );
+      liste.appendChild(dropdown(key, g.name, zaehle(g.items), kinder, false));
     });
   }
 
@@ -646,6 +847,8 @@ function rerender(){
   renderFaecher();
   if (viewSeiten.classList.contains("active") && currentFach) goSeiten(currentFach, currentKlasse, currentKlasseLabel);
   else if (viewKlasse.classList.contains("active") && currentFach) goKlasse(currentFach);
+  else if (viewTools.classList.contains("active")) goTools();   // ohne Lehrermodus -> zurück zu den Fächern
+  else showView(viewFach);                                        // Reiter ein-/ausblenden
 }
 
 /* ---------- Lehrermodus (gleicher Code/Look wie auf den Lernseiten).
