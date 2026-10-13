@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Eintrags-Generator · Lernportal</title>
+<!--
+  ============================================================================
+  EINTRAGS-GENERATOR für das Lernportal (index.html)
+  ============================================================================
+  Erzeugt die Code-Zeilen für die Arrays SEITEN und TOOLS der index.html.
+  Ablage: im Ordner "Tools" neben der index.html, Eintrag in TOOLS z. B.:
+    { gruppe:"Portal", titel:"Eintrags-Generator", datei:"Eintrag_Generator.html",
+      beschreibung:"Code-Zeilen für SEITEN und TOOLS erzeugen" },
+
+  Hilfe beim Ausfüllen:
+  - "Datei wählen" liest nur den Dateinamen und (bei Lernseiten) das
+    Lehrermodus-Passwort (data-pw="…") aus der Datei. Es wird nichts
+    hochgeladen, alles passiert im Browser.
+  - Aus Dateinamen nach dem Schema "K7 - LB1 - Hookesches_Gesetz.html"
+    werden Klasse, Lernbereich und Titel vorgeschlagen.
+  - Fächer, Klassenstufen und bekannte Lernbereiche stehen unten im Skript
+    (FAECHER, KLASSEN, LB_VORSCHLAEGE) und können angepasst werden.
+  ============================================================================
+-->
+<style>
+  :root{
+    color-scheme:light;
+    --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7;
+    --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+    --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+    --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+    --color-accent:#33475B;
+    --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+    --color-accent-light:color-mix(in srgb, var(--color-accent) 11%, white);
+    --ok:#2D8B55; --ok-bg:#E8F5EE; --warn:#C2410C; --warn-bg:#FBF1E9;
+    --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+    --shadow-md:0 6px 20px rgba(44,42,40,.10);
+    --radius:10px; --radius-lg:18px; --radius-full:9999px;
+    --font-display:'Bricolage Grotesque',Georgia,serif;
+    --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --font-mono:'JetBrains Mono','Fira Code',Consolas,'Courier New',monospace;
+    --fs-sm:.85rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-h2:1.4rem; --fs-h1:2rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:112.5%;}
+  body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+    line-height:1.6;min-height:100vh;}
+  .wrap{width:min(1100px,100% - 32px);margin:0 auto;}
+  [hidden]{display:none !important;}
+
+  header{padding:30px 0 18px;border-bottom:1px solid var(--color-border);background:var(--color-surface);}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{width:52px;height:52px;border-radius:var(--radius);background:var(--color-accent-light);
+    display:flex;align-items:center;justify-content:center;font-size:var(--fs-h1);flex-shrink:0;}
+  h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+  header p{color:var(--color-text-muted);margin-top:2px;}
+  .back{display:inline-flex;margin-top:14px;font-size:var(--fs-sm);font-weight:600;
+    color:var(--color-text-secondary);text-decoration:none;border:1px solid var(--color-border);
+    border-radius:var(--radius-full);padding:6px 16px;background:var(--color-surface);}
+  .back:hover{border-color:var(--color-accent);color:var(--color-accent);}
+
+  main{padding:24px 0 70px;}
+  .tabbar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .tab-btn{cursor:pointer;border:1px solid var(--color-border);background:var(--color-surface);
+    border-radius:var(--radius-full);padding:8px 20px;font-family:var(--font-body);font-size:var(--fs-sm);
+    font-weight:600;color:var(--color-text-secondary);transition:.15s;}
+  .tab-btn.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff;}
+  .tab-btn:not(.on):hover{border-color:var(--color-accent);color:var(--color-accent);}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start;}
+  @media (max-width:880px){.layout{grid-template-columns:1fr;}}
+  .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    padding:22px 22px 18px;box-shadow:var(--shadow);}
+  .card h2{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;margin-bottom:14px;}
+  .sticky{position:sticky;top:16px;}
+  @media (max-width:880px){.sticky{position:static;}}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  @media (max-width:520px){.grid2{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+  .grid2 .field{margin-bottom:0;}
+  .field.full{grid-column:1/-1;}
+  .lbl{font-size:var(--fs-sm);font-weight:700;color:var(--color-text-secondary);}
+  .lbl .opt{font-weight:500;color:var(--color-text-muted);}
+  .hint{font-size:var(--fs-sm);color:var(--color-text-muted);}
+  input[type=text],select,textarea{font-family:var(--font-body);font-size:var(--fs-base);
+    border:1.5px solid var(--color-border);border-radius:8px;padding:8px 11px;background:var(--color-surface);
+    color:var(--color-text);width:100%;}
+  textarea{resize:vertical;min-height:2.6em;line-height:1.4;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--color-accent);
+    box-shadow:0 0 0 3px var(--color-accent-light);}
+  input.fehlt,textarea.fehlt{border-color:#E7B48F;background:var(--warn-bg);}
+  .row{display:flex;gap:8px;align-items:center;}
+  .row input{flex:1;}
+
+  .btn{font-family:var(--font-body);font-size:var(--fs-sm);font-weight:700;border-radius:8px;
+    padding:8px 14px;cursor:pointer;border:1.5px solid var(--color-accent);background:var(--color-accent);
+    color:#fff;white-space:nowrap;transition:.15s;}
+  .btn:hover{background:var(--color-accent-hover);}
+  .btn.ghost{background:var(--color-surface);color:var(--color-accent);border-color:var(--color-border);}
+  .btn.ghost:hover{border-color:var(--color-accent);background:var(--color-surface-warm);}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+
+  /* Schalter für neu / wip / hidden */
+  .flags{display:grid;gap:8px;margin:4px 0 12px;}
+  .flag{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--color-border);
+    border-radius:var(--radius);padding:10px 12px;cursor:pointer;background:var(--color-surface);transition:.15s;}
+  .flag:hover{border-color:var(--color-accent);}
+  .flag input{margin-top:5px;width:18px;height:18px;accent-color:var(--color-accent);flex-shrink:0;cursor:pointer;}
+  .flag b{display:block;}
+  .flag span.hint{display:block;}
+  .flag.on{background:var(--color-accent-light);border-color:var(--color-accent);}
+
+  .radio{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+  .radio label{display:flex;gap:6px;align-items:center;cursor:pointer;}
+  .radio input{accent-color:var(--color-accent);width:17px;height:17px;}
+
+  /* Ausgabe */
+  .code{font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.7;background:#1E1E2E;color:#CDD6F4;
+    border-radius:var(--radius);padding:14px 16px;white-space:pre-wrap;word-break:break-word;}
+  .code .k{color:#89B4FA;} .code .s{color:#A6E3A1;} .code .b{color:#FAB387;} .code .p{color:#9399B2;}
+  .copy-fb{font-size:var(--fs-sm);color:var(--ok);font-weight:700;align-self:center;}
+  .info{margin-top:14px;border-left:4px solid var(--color-accent);background:var(--color-accent-light);
+    border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:var(--fs-sm);color:var(--color-text-secondary);}
+  .info code,.hint code{font-family:var(--font-mono);background:var(--color-surface);border:1px solid var(--color-border);
+    border-radius:5px;padding:0 5px;color:var(--color-text);}
+  .warns{margin-top:12px;display:grid;gap:6px;}
+  .warn{background:var(--warn-bg);border:1px solid #F0C39A;border-radius:8px;padding:6px 12px;
+    font-size:var(--fs-sm);color:#7C2D12;}
+
+  /* Aufbau der Zeile */
+  .aufbau{width:100%;border-collapse:collapse;margin-top:14px;font-size:var(--fs-sm);}
+  .aufbau th{text-align:left;color:var(--color-text-muted);font-weight:700;padding:4px 8px;border-bottom:1.5px solid var(--color-border);}
+  .aufbau td{padding:5px 8px;border-bottom:1px solid var(--color-border-light);vertical-align:top;}
+  .aufbau td:first-child{font-family:var(--font-mono);color:var(--color-accent);font-weight:700;white-space:nowrap;}
+  .aufbau td:nth-child(2){font-family:var(--font-mono);word-break:break-word;}
+
+  /* Vorschau der Karte wie im Portal */
+  .vorschau-lbl{font-size:var(--fs-sm);font-weight:700;color:var(--color-text-muted);margin:16px 0 6px;}
+  .seite-card{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    border:1px solid var(--color-border);border-radius:var(--radius);background:var(--color-surface);
+    padding:14px 16px;box-shadow:var(--shadow);}
+  .seite-card.wip{background:var(--color-bg-warm);box-shadow:none;}
+  .seite-card.wip .seite-titel{color:var(--color-text-muted);}
+  .seite-card.versteckt{border-style:dashed;border-color:#C9B3DB;}
+  .seite-titel{font-weight:700;white-space:pre-line;}
+  .seite-sub{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
+  .goto{font-size:var(--fs-lg);color:var(--color-accent);}
+  .badge{font-size:var(--fs-sm);font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;white-space:nowrap;}
+  .badge.neu{background:var(--ok-bg);color:var(--ok);}
+  .badge.wip{background:var(--color-border-light);color:var(--color-text-muted);border:1px solid var(--color-border);}
+  .badge.hid{background:#F3E8FD;color:#6B3A8C;}
+
+  /* Sammlung */
+  .sammlung{margin-top:22px;}
+  .sammlung textarea{font-family:var(--font-mono);font-size:var(--fs-sm);min-height:8em;background:var(--color-surface-warm);}
+  .count{font-size:var(--fs-sm);color:var(--color-text-muted);font-weight:500;margin-left:6px;}
+
+  footer{border-top:1px solid var(--color-border);padding:18px 0;text-align:center;color:var(--color-text-muted);font-size:var(--fs-sm);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">🧩</div>
+      <div>
+        <h1>Eintrags-Generator</h1>
+        <p>Code-Zeilen für die <code style="font-family:var(--font-mono)">index.html</code> zusammenklicken und kopieren</p>
+      </div>
+    </div>
+    <a class="back" href="../index.html">← Zurück zum Lernportal</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabbar">
+    <button class="tab-btn on" id="tabSeite">📄 Lernseite (SEITEN)</button>
+    <button class="tab-btn" id="tabTool">🔧 Tool / Link (TOOLS)</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- ===================== EINGABE ===================== -->
+    <div>
+      <!-- Lernseite -->
+      <section class="card" id="formSeite">
+        <h2>Lernseite eintragen</h2>
+
+        <div class="field">
+          <label class="lbl" for="sDateiPick">HTML-Datei <span class="opt">(optional – füllt Felder automatisch)</span></label>
+          <input type="file" id="sDateiPick" accept=".html,.htm">
+          <span class="hint">Liest Dateinamen und Lehrermodus-Passwort aus. Es wird nichts hochgeladen.</span>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label class="lbl" for="sFach">Fach</label>
+            <select id="sFach"></select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="sKlasse">Klasse</label>
+            <select id="sKlasse"></select>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sLb">Lernbereich <code style="font-family:var(--font-mono)">lb</code></label>
+            <input type="text" id="sLb" list="lbListe" placeholder="z. B. LB1 - Kräfte" autocomplete="off">
+            <datalist id="lbListe"></datalist>
+            <span class="hint">Gleicher Text = gleiches Dropdown im Portal. Vorschläge erscheinen beim Klick ins Feld.</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sUlb">Unterbereich <code style="font-family:var(--font-mono)">ulb</code> <span class="opt">(optional)</span></label>
+            <input type="text" id="sUlb" list="ulbListe" placeholder="z. B. Quiz" autocomplete="off">
+            <datalist id="ulbListe"><option value="Quiz"><option value="Übungen"><option value="Zusatzmaterial"></datalist>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sTitel">Titel auf der Karte</label>
+            <textarea id="sTitel" rows="1" placeholder="z. B. Hookesches Gesetz"></textarea>
+            <span class="hint">Enter = Zeilenumbruch auf der Karte (wird als <code>\n</code> eingetragen).</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sDatei">Dateiname <code style="font-family:var(--font-mono)">datei</code></label>
+            <input type="text" id="sDatei" placeholder="K7 - LB1 - Hookesches_Gesetz.html" autocomplete="off">
+            <span class="hint" id="sOrdnerHint"></span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sPw">Passwort der Lernseite <code style="font-family:var(--font-mono)">pw</code> <span class="opt">(optional)</span></label>
+            <input type="text" id="sPw" placeholder="wird nur im Lehrermodus des Portals angezeigt" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px;">
+          <span class="lbl">Status</span>
+        </div>
+        <div class="flags">
+          <label class="flag"><input type="checkbox" id="fNeu">
+            <span><b>Neu</b><span class="hint">Grünes Badge „Neu“ auf der Karte.</span></span></label>
+          <label class="flag"><input type="checkbox" id="fWip">
+            <span><b>In Arbeit</b><span class="hint">Für SuS ausgegraut und nicht anklickbar, im Lehrermodus offen.</span></span></label>
+          <label class="flag"><input type="checkbox" id="fHidden">
+            <span><b>Versteckt</b><span class="hint">Für SuS komplett unsichtbar, nur im Lehrermodus zu sehen.</span></span></label>
+        </div>
+
+        <div class="btns">
+          <button class="btn ghost" id="sNaechste" title="Fach, Klasse, Lernbereich und Unterbereich bleiben stehen">↻ Nächste Seite (gleicher Lernbereich)</button>
+          <button class="btn ghost" id="sLeeren">Alles leeren</button>
+        </div>
+      </section>
+
+      <!-- Tool -->
+      <section class="card" id="formTool" hidden>
+        <h2>Tool oder Link eintragen</h2>
+        <div class="radio">
+          <label><input type="radio" name="tArt" value="datei" checked> Datei im Ordner <code style="font-family:var(--font-mono)">Tools</code></label>
+          <label><input type="radio" name="tArt" value="url"> Externer Link</label>
+        </div>
+
+        <div class="field" id="tPickWrap">
+          <label class="lbl" for="tDateiPick">HTML-Datei <span class="opt">(optional – füllt den Dateinamen)</span></label>
+          <input type="file" id="tDateiPick" accept=".html,.htm,.pdf">
+        </div>
+
+        <div class="grid2">
+          <div class="field full">
+            <label class="lbl" for="tTitel">Titel</label>
+            <input type="text" id="tTitel" placeholder="z. B. Zufallsgenerator" autocomplete="off">
+          </div>
+          <div class="field full" id="tDateiWrap">
+            <label class="lbl" for="tDatei">Dateiname <code style="font-family:var(--font-mono)">datei</code></label>
+            <input type="text" id="tDatei" placeholder="Zufallsgenerator.html" autocomplete="off">
+            <span class="hint">Liegt im Repo unter <code>Tools/</code> – nur den Dateinamen eintragen.</span>
+          </div>
+          <div class="field full" id="tUrlWrap" hidden>
+            <label class="lbl" for="tUrl">Adresse <code style="font-family:var(--font-mono)">url</code></label>
+            <input type="text" id="tUrl" placeholder="https://…" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="tBeschr">Beschreibung <span class="opt">(optional)</span></label>
+            <input type="text" id="tBeschr" placeholder="z. B. Schüler zufällig auswählen" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="tGruppe">Gruppe <span class="opt">(optional – Zwischenüberschrift)</span></label>
+            <input type="text" id="tGruppe" list="gruppenListe" placeholder="z. B. Unterricht" autocomplete="off">
+            <datalist id="gruppenListe"><option value="Unterricht"><option value="Portal"><option value="Quiz & Abfrage"><option value="Simulationen"><option value="Extern"></datalist>
+          </div>
+        </div>
+        <div class="btns">
+          <button class="btn ghost" id="tLeeren">Alles leeren</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===================== AUSGABE ===================== -->
+    <div class="sticky">
+      <section class="card">
+        <h2>Fertige Zeile</h2>
+        <div class="code" id="ausgabe" aria-live="polite"></div>
+        <div class="btns">
+          <button class="btn" id="kopieren">📋 Zeile kopieren</button>
+          <button class="btn ghost" id="sammeln">➕ Zur Sammlung</button>
+          <span class="copy-fb" id="kopierFb"></span>
+        </div>
+        <div class="warns" id="warns"></div>
+        <div class="info" id="wohin"></div>
+
+        <div class="vorschau-lbl" id="vorschauLbl">So sieht die Karte im Portal aus</div>
+        <div id="vorschau"></div>
+
+        <table class="aufbau" id="aufbau">
+          <thead><tr><th>Feld</th><th>Wert</th><th>Bedeutung</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section class="card sammlung">
+        <h2>Sammlung <span class="count" id="sammelCount"></span></h2>
+        <textarea id="sammelText" readonly placeholder="Hier landen alle Zeilen, die du mit „➕ Zur Sammlung“ hinzufügst – praktisch, wenn du mehrere Seiten auf einmal einträgst."></textarea>
+        <div class="btns">
+          <button class="btn" id="sammelKopieren">📋 Alle kopieren</button>
+          <button class="btn ghost" id="sammelLeeren">Sammlung leeren</button>
+          <span class="copy-fb" id="sammelFb"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>Eintrags-Generator für das Lernportal · läuft komplett offline</footer>
+
+<script>
+/* ============================================================
+   KONFIGURATION – passend zur index.html halten
+   ============================================================ */
+const FAECHER = [
+  { id:"physik",     name:"Physik" },
+  { id:"informatik", name:"Informatik" },
+  { id:"biologie",   name:"Biologie" },
+  { id:"englisch",   name:"Englisch" },
+];
+const STUFEN_OBEN = ["11GK","11LK","12GK","12LK"];
+const KLASSEN = {
+  physik:     ["6","7","8","9","10", ...STUFEN_OBEN],
+  informatik: ["7","8","9","10", ...STUFEN_OBEN],
+  biologie:   ["5","6","7","8","9","10", ...STUFEN_OBEN],
+  englisch:   ["5","6","7","8","9","10", ...STUFEN_OBEN],
+};
+// Bereits benutzte Lernbereiche (Vorschläge im Feld "lb"), Schlüssel "fach|klasse"
+const LB_VORSCHLAEGE = {
+  "physik|7":      ["LB0 - Grundlagen", "LB1 - Kräfte"],
+  "physik|8":      ["LB1 - Mechanik der Flüssigkeiten und Gase", "LB3 - Eigenschaften elektrischer Bauelemente"],
+  "physik|10":     ["LB3 - Kosmos, Erde und Mensch"],
+  "physik|11GK":   ["LB0 - Wiederholungen"],
+  "informatik|7":  ["LB1 - Informationen und Daten"],
+  "informatik|9":  ["LB1 - Informationen und Daten"],
+  "informatik|10": ["LB1 - Algorithmen"],
+  "informatik|11GK": ["LB1 - Technische Informatik"],
+  "biologie|8":    ["LB 1 : Sinnesorgane, Nerven- und Hormonsystem des Menschen"],
+  "biologie|9":    ["LB1 1: Anatomie und Physiologie der Samenpflanzen"],
+};
+
+/* ============================================================
+   LOGIK
+   ============================================================ */
+const $ = id => document.getElementById(id);
+let modus = "seite";   // "seite" | "tool"
+
+const klasseLabel = id => /^(\d+)(GK|LK)$/.test(id) ? id.replace(/^(\d+)(GK|LK)$/, "$1 $2") : id;
+const ordnerVon = (fachId, klasse) => {
+  const f = FAECHER.find(f => f.id === fachId);
+  return (f ? f.name : fachId) + "/Klasse_" + klasse.replace(/^(\d+)(GK|LK)$/, "$1_$2");
+};
+// Abschnittsname wie in den Kommentaren der index.html ("Klasse 7", "Klasse GK11")
+const abschnittVon = klasse => /^(\d+)(GK|LK)$/.test(klasse)
+  ? "Klasse " + klasse.replace(/^(\d+)(GK|LK)$/, "$2$1") : "Klasse " + klasse;
+
+// JS-String sicher erzeugen: Backslash, Anführungszeichen, Zeilenumbruch
+const jsStr = s => '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\r?\n/g, "\\n") + '"';
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------- Auswahllisten füllen ---------- */
+function fuelleFaecher(){
+  $("sFach").innerHTML = FAECHER.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("");
+}
+function fuelleKlassen(behalte){
+  const fach = $("sFach").value;
+  const alt = behalte || $("sKlasse").value;
+  $("sKlasse").innerHTML = (KLASSEN[fach] || []).map(k => `<option value="${k}">Klasse ${klasseLabel(k)}</option>`).join("");
+  if ((KLASSEN[fach] || []).includes(alt)) $("sKlasse").value = alt;
+  fuelleLb();
+}
+function fuelleLb(){
+  const liste = LB_VORSCHLAEGE[$("sFach").value + "|" + $("sKlasse").value] || [];
+  $("lbListe").innerHTML = liste.map(l => `<option value="${esc(l)}">`).join("");
+}
+
+/* ---------- Datei auswerten (Lernseite) ---------- */
+function vorschlagAusDateiname(name){
+  // "K7 - LB1 - Hookesches_Gesetz.html", "K11GK - LB2 - ...", "v2_K9 - LB1 - ..."
+  const m = name.match(/^(?:v\d+_)?K(\d+(?:GK|LK)?)_?\s*-\s*((?:LB|WB)\s*\d+)\s*-\s*(.+?)\.html?$/i);
+  if (!m) return null;
+  return { klasse: m[1].toUpperCase(), lbKurz: m[2].replace(/\s+/g, "").toUpperCase(), titel: m[3].replace(/_/g, " ").trim() };
+}
+function passwortAusHtml(text){
+  // Lehrermodus-Passwort der Lernseiten: <div class="teachbar" id="teachbar" data-pw="…">
+  const m = text.match(/id="teachbar"[^>]*data-pw="([^"]*)"/) || text.match(/data-pw="([^"]*)"[^>]*id="teachbar"/)
+         || text.match(/data-pw="([^"]*)"/);
+  if (!m) return null;
+  const t = document.createElement("textarea"); t.innerHTML = m[1]; return t.value;   // &amp; usw. auflösen
+}
+$("sDateiPick").addEventListener("change", e => {
+  const file = e.target.files[0]; if (!file) return;
+  $("sDatei").value = file.name;
+  const v = vorschlagAusDateiname(file.name);
+  if (v){
+    const fach = $("sFach").value;
+    if ((KLASSEN[fach] || []).includes(v.klasse)){ $("sKlasse").value = v.klasse; fuelleLb(); }
+    if (!$("sLb").value.trim()){
+      // passenden langen Lernbereichsnamen nehmen, wenn bekannt ("LB1" -> "LB1 - Kräfte")
+      const bekannt = (LB_VORSCHLAEGE[fach + "|" + $("sKlasse").value] || [])
+        .find(l => l.replace(/\s+/g, "").toUpperCase().startsWith(v.lbKurz + "-"));
+      $("sLb").value = bekannt || v.lbKurz;
+    }
+    if (!$("sTitel").value.trim()) $("sTitel").value = v.titel;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const pw = passwortAusHtml(String(reader.result));
+    if (pw !== null && !$("sPw").value.trim()) $("sPw").value = pw;
+    pwHinweis = (pw === null) ? "In der Datei wurde kein Lehrermodus-Passwort gefunden." : "";
+    aktualisieren();
+  };
+  reader.readAsText(file);
+  aktualisieren();
+});
+let pwHinweis = "";
+
+$("tDateiPick").addEventListener("change", e => {
+  const file = e.target.files[0]; if (!file) return;
+  $("tDatei").value = file.name;
+  if (!$("tTitel").value.trim()) $("tTitel").value = file.name.replace(/\.[^.]+$/, "").replace(/_/g, " ");
+  aktualisieren();
+});
+
+/* ---------- Zeile bauen ---------- */
+function teileSeite(){
+  const t = [
+    ["fach",   $("sFach").value,          "Fach (id aus FAECHER)"],
+    ["klasse", $("sKlasse").value,        "Klassenstufe (id aus KLASSEN)"],
+    ["lb",     $("sLb").value.trim(),     "Lernbereich = Dropdown im Portal"],
+  ];
+  if ($("sUlb").value.trim()) t.push(["ulb", $("sUlb").value.trim(), "Unter-Dropdown im Lernbereich"]);
+  t.push(["titel", $("sTitel").value.replace(/\s+$/, ""), "Text auf der Karte"]);
+  t.push(["datei", $("sDatei").value.trim(), "Dateiname im Klassen-Ordner"]);
+  if ($("sPw").value.trim()) t.push(["pw", $("sPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  if ($("fNeu").checked)    t.push(["neu", true, "Badge „Neu“"]);
+  if ($("fWip").checked)    t.push(["wip", true, "In Arbeit: grau, nur Lehrer klickbar"]);
+  if ($("fHidden").checked) t.push(["hidden", true, "Versteckt: nur im Lehrermodus sichtbar"]);
+  return t;
+}
+function teileTool(){
+  const t = [];
+  if ($("tGruppe").value.trim()) t.push(["gruppe", $("tGruppe").value.trim(), "Zwischenüberschrift"]);
+  t.push(["titel", $("tTitel").value.trim(), "Text auf der Karte"]);
+  if (toolArt() === "datei") t.push(["datei", $("tDatei").value.trim(), "Dateiname im Ordner Tools (selber Tab)"]);
+  else                       t.push(["url",   $("tUrl").value.trim(),   "Externer Link (neuer Tab)"]);
+  if ($("tBeschr").value.trim()) t.push(["beschreibung", $("tBeschr").value.trim(), "Kleiner Text unter dem Titel"]);
+  return t;
+}
+const toolArt = () => document.querySelector('input[name="tArt"]:checked').value;
+
+function zeileText(teile){
+  return "{ " + teile.map(([k, v]) => k + ":" + (v === true ? "true" : jsStr(v))).join(", ") + " },";
+}
+function zeileHtml(teile){
+  return '<span class="p">{ </span>' + teile.map(([k, v]) =>
+    `<span class="k">${k}</span><span class="p">:</span>` +
+    (v === true ? '<span class="b">true</span>' : `<span class="s">${esc(jsStr(v))}</span>`)
+  ).join('<span class="p">, </span>') + '<span class="p"> },</span>';
+}
+
+/* ---------- Anzeige aktualisieren ---------- */
+function aktualisieren(){
+  const teile = modus === "seite" ? teileSeite() : teileTool();
+  $("ausgabe").innerHTML = zeileHtml(teile);
+
+  // Aufbau-Tabelle
+  $("aufbau").querySelector("tbody").innerHTML = teile.map(([k, v, b]) =>
+    `<tr><td>${k}</td><td>${v === true ? "true" : esc(jsStr(v))}</td><td>${esc(b)}</td></tr>`).join("");
+
+  // Pflichtfelder / Hinweise
+  const warns = [];
+  const pflicht = modus === "seite"
+    ? [["sLb","Lernbereich"],["sTitel","Titel"],["sDatei","Dateiname"]]
+    : [["tTitel","Titel"], toolArt() === "datei" ? ["tDatei","Dateiname"] : ["tUrl","Adresse"]];
+  ["sLb","sTitel","sDatei","tTitel","tDatei","tUrl"].forEach(id => $(id).classList.remove("fehlt"));
+  pflicht.forEach(([id, name]) => { if (!$(id).value.trim()){ $(id).classList.add("fehlt"); warns.push(name + " fehlt noch."); } });
+
+  if (modus === "seite"){
+    const d = $("sDatei").value.trim();
+    if (d && !/\.html?$/i.test(d)) warns.push("Der Dateiname endet nicht auf .html.");
+    if (d && /[\/\\]/.test(d)) warns.push("Nur den Dateinamen eintragen – der Ordner kommt automatisch.");
+    if (d && /[äöüÄÖÜß]/.test(d)) warns.push("Umlaute im Dateinamen können auf GitHub Pages Probleme machen.");
+    if ($("fWip").checked && $("fHidden").checked) warns.push("Hinweis: In Arbeit + Versteckt geht, für SuS ist die Seite dann einfach unsichtbar.");
+    if (pwHinweis) warns.push(pwHinweis);
+    const v = vorschlagAusDateiname(d);
+    if (v && v.klasse !== $("sKlasse").value) warns.push(`Der Dateiname sagt Klasse ${klasseLabel(v.klasse)}, ausgewählt ist Klasse ${klasseLabel($("sKlasse").value)}.`);
+  } else if (toolArt() === "url"){
+    const u = $("tUrl").value.trim();
+    if (u && !/^https?:\/\//i.test(u)) warns.push("Die Adresse sollte mit https:// beginnen.");
+  }
+  $("warns").innerHTML = warns.map(w => `<div class="warn">⚠️ ${esc(w)}</div>`).join("");
+
+  // Wohin einfügen / hochladen
+  if (modus === "seite"){
+    const fach = FAECHER.find(f => f.id === $("sFach").value);
+    const ordner = ordnerVon($("sFach").value, $("sKlasse").value);
+    $("sOrdnerHint").innerHTML = `Datei gehört im Repo nach <code>${esc(ordner)}/</code>`;
+    $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>SEITEN</code>, Abschnitt `
+      + `<b>${esc(fach ? fach.name.toUpperCase() : "")}</b> → <b>${esc(abschnittVon($("sKlasse").value))}</b>.<br>`
+      + `<b>Hochladen:</b> die Datei nach <code>${esc(ordner)}/</code>`;
+  } else {
+    $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>TOOLS</code>.`
+      + (toolArt() === "datei" ? `<br><b>Hochladen:</b> die Datei nach <code>Tools/</code>` : "");
+  }
+
+  // Karten-Vorschau
+  if (modus === "seite"){
+    const titel = $("sTitel").value.replace(/\s+$/, "") || "Titel der Seite";
+    const badges = ($("fHidden").checked ? '<span class="badge hid">Versteckt</span>' : "")
+      + ($("fWip").checked ? '<span class="badge wip">In Arbeit</span>' : ($("fNeu").checked ? '<span class="badge neu">Neu</span>' : ""));
+    const pfad = [$("sLb").value.trim() || "Lernbereich", $("sUlb").value.trim()].filter(Boolean).join(" › ");
+    $("vorschau").innerHTML = `<div class="seite-card${$("fWip").checked ? " wip" : ""}${$("fHidden").checked ? " versteckt" : ""}">
+        <div><div class="seite-titel">${esc(titel)}${badges}</div><div class="seite-sub">${esc(pfad)}</div></div>
+        <div class="goto">${$("fWip").checked ? "" : "→"}</div></div>`;
+  } else {
+    const titel = $("tTitel").value.trim() || "Titel des Tools";
+    const sub = $("tBeschr").value.trim();
+    $("vorschau").innerHTML = `<div class="seite-card">
+        <div><div class="seite-titel">${esc(titel)}</div>${sub ? `<div class="seite-sub">${esc(sub)}</div>` : ""}</div>
+        <div class="goto">${toolArt() === "datei" ? "→" : "↗"}</div></div>`;
+  }
+
+  // Schalter optisch markieren
+  document.querySelectorAll(".flag").forEach(l => l.classList.toggle("on", l.querySelector("input").checked));
+  return teile;
+}
+
+/* ---------- Kopieren (funktioniert auch bei file://) ---------- */
+async function kopiere(text, fb){
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){
+    const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t);
+    t.select(); try{ document.execCommand("copy"); }catch(_){} t.remove();
+  }
+  fb.textContent = "✓ kopiert"; clearTimeout(fb._t); fb._t = setTimeout(() => fb.textContent = "", 1800);
+}
+$("kopieren").addEventListener("click", () => kopiere(zeileText(aktualisieren()), $("kopierFb")));
+
+/* ---------- Sammlung (bleibt im Browser gespeichert) ---------- */
+const SAMMEL_KEY = "eintragGenerator.sammlung";
+let sammlung = [];
+try{ sammlung = JSON.parse(localStorage.getItem(SAMMEL_KEY) || "[]"); }catch(e){ sammlung = []; }
+function zeigeSammlung(){
+  $("sammelText").value = sammlung.join("\n");
+  $("sammelCount").textContent = sammlung.length ? `(${sammlung.length} Zeile${sammlung.length === 1 ? "" : "n"})` : "";
+  try{ localStorage.setItem(SAMMEL_KEY, JSON.stringify(sammlung)); }catch(e){}
+}
+$("sammeln").addEventListener("click", () => {
+  sammlung.push(zeileText(aktualisieren())); zeigeSammlung();
+  $("kopierFb").textContent = "✓ zur Sammlung"; setTimeout(() => $("kopierFb").textContent = "", 1500);
+});
+$("sammelKopieren").addEventListener("click", () => kopiere(sammlung.join("\n"), $("sammelFb")));
+$("sammelLeeren").addEventListener("click", () => {
+  if (sammlung.length && !confirm("Sammlung wirklich leeren?")) return;
+  sammlung = []; zeigeSammlung();
+});
+
+/* ---------- Formular-Knöpfe ---------- */
+function leereSeitenFelder(alles){
+  ["sTitel","sDatei","sPw"].concat(alles ? ["sLb","sUlb"] : []).forEach(id => $(id).value = "");
+  ["fNeu","fWip","fHidden"].forEach(id => $(id).checked = false);
+  $("sDateiPick").value = ""; pwHinweis = "";
+  aktualisieren();
+  (alles ? $("sLb") : $("sTitel")).focus();
+}
+$("sNaechste").addEventListener("click", () => leereSeitenFelder(false));
+$("sLeeren").addEventListener("click", () => leereSeitenFelder(true));
+$("tLeeren").addEventListener("click", () => {
+  ["tTitel","tDatei","tUrl","tBeschr","tGruppe"].forEach(id => $(id).value = "");
+  $("tDateiPick").value = ""; aktualisieren();
+});
+
+/* ---------- Reiter ---------- */
+function setModus(m){
+  modus = m;
+  $("tabSeite").classList.toggle("on", m === "seite");
+  $("tabTool").classList.toggle("on", m === "tool");
+  $("formSeite").hidden = m !== "seite";
+  $("formTool").hidden = m !== "tool";
+  aktualisieren();
+}
+$("tabSeite").addEventListener("click", () => setModus("seite"));
+$("tabTool").addEventListener("click", () => setModus("tool"));
+document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener("change", () => {
+  const datei = toolArt() === "datei";
+  $("tDateiWrap").hidden = !datei; $("tPickWrap").hidden = !datei; $("tUrlWrap").hidden = datei;
+  aktualisieren();
+}));
+
+/* ---------- Live-Aktualisierung ---------- */
+$("sFach").addEventListener("change", () => fuelleKlassen());
+$("sKlasse").addEventListener("change", fuelleLb);
+document.querySelectorAll("input, select, textarea").forEach(el => {
+  if (el.type === "file") return;
+  el.addEventListener("input", aktualisieren);
+  el.addEventListener("change", aktualisieren);
+});
+
+// Start
+fuelleFaecher(); fuelleKlassen("7"); zeigeSammlung(); aktualisieren();
+</script>
+</body>
+</html>

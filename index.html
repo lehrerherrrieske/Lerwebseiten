@@ -280,8 +280,24 @@
   .tool-titel{font-weight:700;font-size:var(--fs-base);}
   .tool-meta{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
   .tool-goto{font-size:1.3rem;color:#33475B;flex-shrink:0;}
-  .tool-gruppe{font-size:var(--fs-sm);font-weight:700;color:var(--color-text-muted);margin:18px 0 8px;}
-  .tool-gruppe:first-child{margin-top:0;}
+  /* Tools: Gruppen als Dropdowns, Karten darin wie bei den Lernseiten */
+  .lb-body-inner .tool-card{margin:0 14px 12px;}
+  .tools-lose{margin-bottom:14px;}
+
+  /* Suche in den Tools */
+  .tool-suche{display:flex;align-items:center;gap:10px;background:var(--color-surface);
+    border:1.5px solid var(--color-border);border-radius:var(--radius-full);padding:6px 8px 6px 16px;
+    margin-bottom:10px;box-shadow:var(--shadow);transition:.15s;}
+  .tool-suche:focus-within{border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.15);}
+  .tool-suche-icon{color:var(--color-text-muted);flex-shrink:0;}
+  .tool-suche input{flex:1;min-width:0;border:none;outline:none;background:transparent;
+    font-family:var(--font-body);font-size:var(--fs-base);color:var(--color-text);padding:4px 0;}
+  .tool-suche input::-webkit-search-cancel-button{display:none;}
+  .tool-suche-x{border:none;background:var(--color-bg-warm);color:var(--color-text-secondary);
+    width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:var(--fs-sm);flex-shrink:0;}
+  .tool-suche-x:hover{background:var(--color-border);}
+  .tool-treffer{font-size:var(--fs-sm);color:var(--color-text-muted);margin:0 0 14px 16px;min-height:1.4em;}
+  mark.such{background:#FDF0B4;color:inherit;border-radius:3px;padding:0 1px;}
 
   .lehrer-hinweis{background:#E8F5EE;border:1.5px solid #A7D7BC;border-radius:var(--radius);
     padding:10px 16px;margin-bottom:20px;font-size:var(--fs-sm);color:#14532D;}
@@ -398,6 +414,13 @@
   <!-- Tools & Links (nur im Lehrermodus erreichbar) -->
   <section class="view" id="view-tools">
     <h2 class="section-title">Tools &amp; nützliche Links</h2>
+    <div class="tool-suche" role="search">
+      <span class="tool-suche-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="toolSuche" placeholder="Tools durchsuchen – Titel, Beschreibung oder Gruppe"
+             aria-label="Tools durchsuchen" autocomplete="off">
+      <button class="tool-suche-x" id="toolSucheX" title="Suche leeren" aria-label="Suche leeren" hidden>✕</button>
+    </div>
+    <div class="tool-treffer" id="toolTreffer" aria-live="polite"></div>
     <div id="toolsListe"></div>
   </section>
 
@@ -488,10 +511,6 @@ const SEITEN = [
   // { fach:"physik", klasse:"8", lb:"LB2",
   //   titel:"Stromstärke, Spannung, Widerstand",
   //   datei:"K8 - LB2 - Stromstaerke_Spannung_Widerstand.html", neu:true },
-  // ==========================================================
-  // =====================Tools=============================== 
-  // ==========================================================
-
 
   // ==========================================================
   // =====================PHYSIK=============================== 
@@ -575,7 +594,9 @@ const SEITEN = [
 //   { titel, datei, beschreibung (optional), gruppe (optional) }  -> Datei im Ordner TOOLS_ORDNER
 //   { titel, url,   beschreibung (optional), gruppe (optional) }  -> externer Link (neuer Tab)
 // "datei" ist NUR der Dateiname – der Ordner kommt automatisch aus TOOLS_ORDNER.
-// Einträge mit gleicher "gruppe" werden unter einer Zwischenüberschrift gesammelt.
+// Einträge mit gleicher "gruppe" landen in einem gemeinsamen Dropdown (anfangs zugeklappt),
+// Einträge ohne "gruppe" stehen oben. Über der Liste gibt es eine Suche
+// (Titel, Beschreibung, Gruppe, Dateiname); Gruppen mit Treffern klappen dabei auf.
 // Eigene Tools öffnen sich im selben Tab (Lehrermodus bleibt so aktiv),
 // externe Links in einem neuen Tab.
 const TOOLS_ORDNER = "Tools";   // Ordner neben der index.html
@@ -584,7 +605,8 @@ const TOOLS = [
   //   beschreibung:"Schüler zufällig auswählen" },
   // { gruppe:"Extern", titel:"Kahoot", url:"https://create.kahoot.it/library",
   //   beschreibung:"Eigene Kahoots verwalten" },
-  
+  { titel:"Booklet Generator", url:"https://online2pdf.com/en/create-a-booklet" },
+  { gruppe:"HTML", titel:"CodeZeilen für HTML", datei:"Eintrag_Generator.html"},
   { gruppe:"Bewertung", titel:"Bewertungen", datei:"Korrekturzeichen_Cheat_Sheet.html"},
   { gruppe:"Unterricht", titel:"Zufallsgenerator", url:"https://zufallsgenerator.de"},
   //   beschreibung:"Schüler zufällig auswählen" }
@@ -678,40 +700,158 @@ function goTools(){
   document.body.style.removeProperty("--fach");
   const liste = document.getElementById("toolsListe");
   liste.innerHTML = "";
+  const suchFeld = document.querySelector("#view-tools .tool-suche");
+  suchFeld.hidden = TOOLS.length === 0;
   if (TOOLS.length === 0){
+    document.getElementById("toolTreffer").textContent = "";
     liste.innerHTML = `<div class="empty-state">
         <div class="em-icon">🔧</div>
         Noch keine Tools oder Links eingetragen.<br>
         Einfach im Array TOOLS in der index.html ergänzen.
       </div>`;
   } else {
-    let letzteGruppe = null;
-    TOOLS.forEach(t => {
-      if ((t.gruppe || "") !== (letzteGruppe || "") && t.gruppe){
-        const h = document.createElement("div");
-        h.className = "tool-gruppe";
-        h.textContent = t.gruppe;
-        liste.appendChild(h);
-      }
-      letzteGruppe = t.gruppe || null;
-      const a = document.createElement("a");
-      a.className = "tool-card";
-      if (t.datei){
-        a.href = TOOLS_ORDNER ? `${TOOLS_ORDNER}/${t.datei}` : t.datei;   // eigenes Tool, selber Tab
-      } else {
-        a.href = t.url; a.target = "_blank"; a.rel = "noopener";           // externer Link, neuer Tab
-      }
-      a.innerHTML = `<div>
-          <div class="tool-titel">${t.titel}</div>
-          ${t.beschreibung ? `<div class="tool-meta">${t.beschreibung}</div>` : ""}
-        </div>
-        <div class="tool-goto">${t.datei ? "→" : "↗"}</div>`;
-      liste.appendChild(a);
+    // Tools ohne Gruppe oben, danach je Gruppe ein Dropdown (Reihenfolge des ersten Auftretens)
+    const lose = TOOLS.filter(t => !String(t.gruppe || "").trim());
+    const gruppen = [];
+    TOOLS.filter(t => String(t.gruppe || "").trim()).forEach(t => {
+      const name = String(t.gruppe).trim();
+      let g = gruppen.find(g => g.name === name);
+      if (!g){ g = {name, items: []}; gruppen.push(g); }
+      g.items.push(t);
     });
+
+    if (lose.length){
+      const box = document.createElement("div");
+      box.className = "tools-lose";
+      lose.forEach(t => box.appendChild(toolKarte(t)));
+      liste.appendChild(box);
+    }
+    gruppen.forEach(g => {
+      const block = document.createElement("div");
+      block.className = "lb-group tool-grp";
+      block.dataset.key = g.name;
+      const head = document.createElement("button");
+      const auf = toolOffen.has(g.name);
+      head.className = "lb-head" + (auf ? " open" : "");
+      head.setAttribute("aria-expanded", auf ? "true" : "false");
+      head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count"></span></span>
+        <span class="lb-icon" aria-hidden="true">▲</span>`;
+      head.querySelector(".lb-title").textContent = g.name;
+      head.querySelector(".lb-count").textContent = (g.items.length === 1 ? "1 Eintrag" : g.items.length + " Einträge");
+      head.addEventListener("click", () => {
+        const jetztAuf = head.classList.toggle("open");
+        head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
+        // Gemerkten Zustand nur ändern, wenn gerade nicht gesucht wird
+        if (!toolSuchText()) jetztAuf ? toolOffen.add(g.name) : toolOffen.delete(g.name);
+      });
+      const body = document.createElement("div");
+      body.className = "lb-body";
+      const inner = document.createElement("div");
+      inner.className = "lb-body-inner";
+      g.items.forEach(t => inner.appendChild(toolKarte(t)));
+      body.appendChild(inner);
+      block.appendChild(head);
+      block.appendChild(body);
+      liste.appendChild(block);
+    });
+    filterTools();
   }
   crumbbar.classList.remove("active");
   showView(viewTools);
 }
+
+// Eine Tool-Karte bauen; Suchtext steckt in data-such
+function toolKarte(t){
+  const a = document.createElement("a");
+  a.className = "tool-card";
+  if (t.datei){
+    a.href = TOOLS_ORDNER ? `${TOOLS_ORDNER}/${t.datei}` : t.datei;   // eigenes Tool, selber Tab
+  } else {
+    a.href = t.url; a.target = "_blank"; a.rel = "noopener";           // externer Link, neuer Tab
+  }
+  a.innerHTML = `<div>
+      <div class="tool-titel"></div>
+      ${t.beschreibung ? `<div class="tool-meta"></div>` : ""}
+    </div>
+    <div class="tool-goto">${t.datei ? "→" : "↗"}</div>`;
+  a.querySelector(".tool-titel").textContent = t.titel || "";
+  if (t.beschreibung) a.querySelector(".tool-meta").textContent = t.beschreibung;
+  a.dataset.titel = t.titel || "";
+  a.dataset.beschr = t.beschreibung || "";
+  a.dataset.such = normSuche([t.titel, t.beschreibung, t.gruppe, t.datei, t.url].filter(Boolean).join(" "));
+  return a;
+}
+
+/* ---------- Suche in den Tools ---------- */
+const toolOffen = new Set();   // aufgeklappte Gruppen merken
+// Kleinschreibung, Umlaute/Akzente egal ("ubung" findet "Übung")
+const normSuche = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ß/g, "ss");
+const toolSuchText = () => document.getElementById("toolSuche").value.trim();
+
+// Treffer im Text gelb markieren (sicher, ohne HTML aus den Daten)
+function markiere(el, text, woerter){
+  el.textContent = "";
+  if (!woerter.length){ el.textContent = text; return; }
+  const norm = normSuche(text);
+  // nur möglich, wenn die Normalisierung die Länge nicht verändert
+  if (norm.length !== text.length){ el.textContent = text; return; }
+  const treffer = new Array(text.length).fill(false);
+  woerter.forEach(w => { let i = norm.indexOf(w); while (w && i !== -1){ for (let k = i; k < i + w.length; k++) treffer[k] = true; i = norm.indexOf(w, i + 1); } });
+  let i = 0;
+  while (i < text.length){
+    let j = i; while (j < text.length && treffer[j] === treffer[i]) j++;
+    const stueck = text.slice(i, j);
+    if (treffer[i]){ const m = document.createElement("mark"); m.className = "such"; m.textContent = stueck; el.appendChild(m); }
+    else el.appendChild(document.createTextNode(stueck));
+    i = j;
+  }
+}
+
+function filterTools(){
+  const roh = toolSuchText();
+  const woerter = normSuche(roh).split(/\s+/).filter(Boolean);   // alle Wörter müssen vorkommen
+  document.getElementById("toolSucheX").hidden = !roh;
+  let anzahl = 0;
+  document.querySelectorAll("#toolsListe .tool-card").forEach(a => {
+    const passt = woerter.every(w => a.dataset.such.includes(w));
+    a.hidden = !passt;
+    if (passt) anzahl++;
+    markiere(a.querySelector(".tool-titel"), a.dataset.titel, woerter);
+    const meta = a.querySelector(".tool-meta");
+    if (meta) markiere(meta, a.dataset.beschr, woerter);
+  });
+  // Gruppen: ohne Treffer ausblenden, mit Treffer beim Suchen aufklappen
+  document.querySelectorAll("#toolsListe .tool-grp").forEach(g => {
+    const n = g.querySelectorAll(".tool-card:not([hidden])").length;
+    const gesamt = g.querySelectorAll(".tool-card").length;
+    g.hidden = !n;
+    g.querySelector(".lb-count").textContent = woerter.length ? `${n} von ${gesamt}`
+      : (gesamt === 1 ? "1 Eintrag" : gesamt + " Einträge");
+    const head = g.querySelector(".lb-head");
+    const auf = woerter.length ? n > 0 : toolOffen.has(g.dataset.key);
+    head.classList.toggle("open", auf);
+    head.setAttribute("aria-expanded", auf ? "true" : "false");
+  });
+  const lose = document.querySelector("#toolsListe .tools-lose");
+  if (lose) lose.hidden = !lose.querySelector(".tool-card:not([hidden])");
+
+  const info = document.getElementById("toolTreffer");
+  if (!woerter.length) info.textContent = "";
+  else if (anzahl) info.textContent = anzahl + " Treffer";
+  else info.textContent = "Keine Treffer für „" + roh + "“";
+}
+document.getElementById("toolSuche").addEventListener("input", filterTools);
+document.getElementById("toolSuche").addEventListener("keydown", e => {
+  if (e.key === "Escape"){ e.target.value = ""; filterTools(); }
+  if (e.key === "Enter"){   // Enter öffnet den Treffer, wenn es genau einen gibt
+    const sichtbar = [...document.querySelectorAll("#toolsListe .tool-card:not([hidden])")]
+      .filter(a => !a.closest("[hidden]"));
+    if (toolSuchText() && sichtbar.length === 1) sichtbar[0].click();
+  }
+});
+document.getElementById("toolSucheX").addEventListener("click", () => {
+  const f = document.getElementById("toolSuche"); f.value = ""; filterTools(); f.focus();
+});
 document.getElementById("tabFaecher").addEventListener("click", goFach);
 document.getElementById("tabTools").addEventListener("click", goTools);
 
