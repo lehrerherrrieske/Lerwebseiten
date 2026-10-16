@@ -398,7 +398,7 @@ img{max-width:100%;height:auto;}
 .echo{font-style:italic;color:var(--text-2);}
 .inp-wide{width:16ch;}
 .inline-fb{display:inline-block;margin-left:8px;margin-top:0;}
-.gated{display:none;} .gated.open{display:block;}
+.gated{display:block;}
 .gated.open > .caption:first-child{display:none;}
 .wear-box{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:12px 0;}
 .wear-list{margin:8px 0 8px 22px;color:var(--text-2);}
@@ -449,6 +449,8 @@ img{max-width:100%;height:auto;}
 
 @media print{ .gated,.tool{display:block !important;} .gated > .caption:first-child{display:none !important;} }
 
+/* Lehrermodus: Lösungswege sofort sichtbar */
+body.teacher .solbtn[hidden]{display:inline-block !important;}
 </style>
 </head>
 <body>
@@ -463,7 +465,7 @@ img{max-width:100%;height:auto;}
     <span class="teachbar-status" id="teachbar-status">inaktiv</span>
   </div>
   <div class="lehrer-only" hidden>
-    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet, alle Teile sind aufgedeckt.</span></div>
   </div>
 
   <header class="pagehead">
@@ -610,7 +612,7 @@ img{max-width:100%;height:auto;}
 
       <h3>Wo steckt das Bit?</h3>
       <p>Die Pits sind etwa eine <strong>Viertel Wellenlänge</strong> tief. Licht, das aus dem Pit zurückkommt, hat einen etwas längeren Weg und löscht sich mit dem Licht vom Rand teilweise aus – es kommt <strong>weniger Licht</strong> zurück. Jetzt kommt der Trick, der oft überrascht:</p>
-      <div class="callout">💡 <span>Nicht „Pit = 0" und „Land = 1"! Ein <strong>Wechsel</strong> zwischen Pit und Land wird als <strong>1</strong> gelesen, gleichbleibende Bereiche als <strong>0</strong>. Die Länge von Pits und Lands legt fest, wie viele Nullen zwischen zwei Einsen liegen.</span></div>
+      <div class="callout">💡 <span>Nicht „Pit = 0" und „Land = 1"! Ein <strong>Wechsel</strong> zwischen Pit und Land wird als <strong>1</strong> gelesen, gleichbleibende Bereiche als <strong>0</strong>. Die Länge von Pits und Lands legt fest, wie viele Nullen zwischen zwei Einsen liegen. Weil Pits und Lands auf einer echten CD mindestens drei Takte lang sind, stehen zwischen zwei Einsen immer mindestens zwei Nullen.</span></div>
 
       <div class="ex">
         <p><strong>Aufgabe 1.1 🔎 Lies die Spur selbst:</strong> Die Spur ist in gleich lange Takte aufgeteilt. Lies an jeder Grenze zwischen zwei Takten ein Bit: Wechsel → 1, kein Wechsel → 0. Bei 13 Takten gibt es 12 Grenzen, also 12 Bits.</p>
@@ -677,7 +679,7 @@ img{max-width:100%;height:auto;}
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="quizCheck('q1b', this, 'w')">Die Blu-ray dreht sich schneller.</button>
           <button class="quiz-btn" onclick="quizCheck('q1b', this, 'w')">Die Blu-ray-Scheibe ist in Wirklichkeit größer.</button>
-          <button class="quiz-btn" onclick="quizCheck('q1b', this, 'c')">Zusätzlich gibt es eine effizientere Kodierung; mit mehreren Schichten (Dual Layer) steigt die Kapazität noch weiter.</button>
+          <button class="quiz-btn" onclick="quizCheck('q1b', this, 'c')">Spuren und Pits liegen im Verhältnis zum Lichtfleck noch enger, und die Kodierung braucht weniger Zusatzbits.</button>
         </div>
         <div class="quiz-fb" id="qfb-q1b"></div>
       </div>
@@ -874,8 +876,8 @@ img{max-width:100%;height:auto;}
         </div>
       </div>
 
-      <div class="tool" id="rot-tool" hidden>
-        <div class="tool-head">🔧 Werkzeug freigeschaltet: Drehzahl-Explorer</div>
+      <div class="tool" id="rot-tool">
+        <div class="tool-head">🔧 Werkzeug: Drehzahl-Explorer</div>
         <p>Verschiebe die Drehzahl und beobachte die mittlere Rotationsverzögerung.</p>
         <label for="rot-slider">Drehzahl: <strong id="rot-rpm">7200</strong> U/min</label>
         <input type="range" id="rot-slider" min="4200" max="15000" step="300" value="7200" oninput="rotExplore()">
@@ -975,7 +977,7 @@ img{max-width:100%;height:auto;}
 
     <!-- Teil 1 -->
     <div class="subphase on" id="ph3-sub-1">
-      <h3>Die Flash-Zelle: eine Falle für Elektronen</h3>
+      <h3>Die Flash-Zelle: eine Falle für Elektronen <span class="wichtig">! Wichtig</span></h3>
       <p>Eine Flash-Zelle ist ein <span class="tt" data-tip="Metall-Oxid-Halbleiter-Transistor: ein Schalter, bei dem die Spannung am Gate den Stromfluss im Kanal steuert.">MOS-Transistor</span> mit einer zusätzlichen, <strong>vollständig isolierten</strong> Schicht zwischen Steuer-Gate und Kanal: dem <span class="tt" data-tip="„Schwebendes Gate“: rundum von Oxid umgeben, sodass Elektronen darauf gefangen bleiben.">Floating Gate</span>.</p>
       <figure class="fig">
         <svg viewBox="0 0 640 250" role="img" aria-labelledby="svg-fg-t" class="svgfig">
@@ -1058,8 +1060,8 @@ img{max-width:100%;height:auto;}
         </div>
       </div>
 
-      <div class="tool" id="lv-tool" hidden>
-        <div class="tool-head">🔧 Werkzeug freigeschaltet: Ladungsniveaus sichtbar machen</div>
+      <div class="tool" id="lv-tool">
+        <div class="tool-head">🔧 Werkzeug: Ladungsniveaus sichtbar machen</div>
         <p>Das Spannungsfenster einer Zelle ist immer gleich groß. Wähle einen Zelltyp:</p>
         <div class="lv-btns" role="group" aria-label="Zelltyp wählen">
           <button class="btn btn-ghost btn-sm" onclick="drawLevels(1,this)">SLC</button>
@@ -1106,8 +1108,7 @@ img{max-width:100%;height:auto;}
       </div>
 
       <div id="wear-explain" class="gated" data-gate="poe-wear">
-        <p class="caption">Die Erklärung erscheint, sobald du deine Vermutung festgehalten hast.</p>
-        <div class="wear-box">
+                <div class="wear-box">
           <p><strong>Kurz erklärt:</strong> Das „Verschleißteil" einer Flash-Zelle ist die hauchdünne <strong>Tunneloxid-Schicht</strong> (nur wenige Nanometer, also einige Dutzend Atomlagen). Bei jedem <strong>Schreiben</strong> und <strong>Löschen</strong> werden Elektronen mit hoher Spannung (rund 15 bis 20&nbsp;V) quer durch diese Schicht gedrückt. Das geht nicht spurlos vorbei:</p>
           <ol class="wear-list">
             <li><strong>Elektronen bleiben stecken.</strong> Einige Elektronen schaffen es nicht ganz durch und bleiben <em>im Oxid</em> hängen. Diese Ladung verschiebt die Schwellenspannung – die Zelle „sieht" geladener aus, als sie ist.</li>
@@ -1220,7 +1221,7 @@ img{max-width:100%;height:auto;}
           <tr><td>Bad-Block-Management</td><td>ersetzt defekte Blöcke durch Reserve (<span class="tt" data-tip="Zusätzlicher Speicher, den die SSD ab Werk versteckt vorhält.">Overprovisioning</span>)</td></tr>
           <tr><td>Fehlerkorrektur (ECC, z.&nbsp;B. LDPC)</td><td>korrigiert einzelne falsch gelesene Bits</td></tr>
           <tr><td>Garbage Collection</td><td>räumt Blöcke mit veralteten Seiten auf</td></tr>
-          <tr><td>TRIM</td><td>das Betriebssystem meldet ungenutzte Blöcke</td></tr>
+          <tr><td>TRIM</td><td>das Betriebssystem meldet, welche Daten gelöscht sind – der Controller muss sie nicht mehr umkopieren</td></tr>
           <tr><td>SLC-Cache</td><td>schreibt zuerst schnell im 1-Bit-Modus, sortiert später um</td></tr>
         </table>
 
@@ -1318,7 +1319,7 @@ img{max-width:100%;height:auto;}
             <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
             <span class="m-chip" data-id="s" onclick="matchSelect(this)">SRAM</span>
           </div>
-          <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">sehr schnell, ca. 1&nbsp;ns</span></div>
+          <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">sehr schnell (L1-Cache: ca. 1&nbsp;ns)</span></div>
           <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">hohe Dichte, günstig</span></div>
           <div class="m-zone" data-correct="s" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">wird für Register und Cache verwendet</span></div>
           <div class="m-zone" data-correct="d" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">Arbeitsspeicher (DDR5, LPDDR)</span></div>
@@ -1332,7 +1333,7 @@ img{max-width:100%;height:auto;}
           <div data-tipp>Überlege: Was folgt daraus, dass SRAM 6 Transistoren pro Bit braucht, DRAM nur 1 Transistor und 1 Kondensator?</div>
           <div data-tipp>Viele Bauteile pro Bit → viel Fläche → geringe Dichte, teuer, aber schnell. Wenige Bauteile → dicht und günstig, aber langsamer.</div>
           <div data-tipp>Je drei Aussagen gehören zu jedem RAM. Der teure, schnelle Speicher sitzt im Prozessor (Register, Cache), der günstige auf dem Speicherriegel.</div>
-          <div data-muster><p><strong>SRAM:</strong> sehr schnell (ca. 1&nbsp;ns) · Register und Cache · geringe Dichte, teuer.<br><strong>DRAM:</strong> hohe Dichte, günstig · Arbeitsspeicher (DDR5, LPDDR) · ca. 50 bis 100&nbsp;ns.</p></div>
+          <div data-muster><p><strong>SRAM:</strong> sehr schnell (L1-Cache: ca. 1&nbsp;ns) · Register und Cache · geringe Dichte, teuer.<br><strong>DRAM:</strong> hohe Dichte, günstig · Arbeitsspeicher (DDR5, LPDDR) · ca. 50 bis 100&nbsp;ns.</p></div>
         </div>
       </div>
 
@@ -1388,8 +1389,9 @@ img{max-width:100%;height:auto;}
         <tr><td>L3-Cache</td><td>8 bis 64&nbsp;MB (geteilt)</td><td>ca. 10 bis 20&nbsp;ns</td><td>SRAM</td></tr>
         <tr><td>Arbeitsspeicher</td><td>8 bis 64&nbsp;GB</td><td>ca. 50 bis 100&nbsp;ns</td><td>DRAM (elektronisch, flüchtig)</td></tr>
         <tr><td>SSD</td><td>256&nbsp;GB bis 4&nbsp;TB</td><td>ca. 20 bis 100&nbsp;µs</td><td>Flash (elektronisch)</td></tr>
-        <tr><td>HDD</td><td>1 bis 20&nbsp;TB</td><td>ca. 5 bis 10&nbsp;ms</td><td>elektromagnetisch</td></tr>
-        <tr><td>Optisch / Band</td><td>Scheibe 0,7 bis 25&nbsp;GB, Band mehrere TB</td><td>Sekunden bis Minuten</td><td>optisch bzw. elektromagnetisch</td></tr>
+        <tr><td>HDD</td><td>1 bis 30&nbsp;TB</td><td>ca. 5 bis 15&nbsp;ms</td><td>elektromagnetisch</td></tr>
+        <tr><td>Optisch</td><td>0,7 bis 25&nbsp;GB je Schicht</td><td>ca. 100&nbsp;ms</td><td>optisch</td></tr>
+        <tr><td>Magnetband</td><td>mehrere TB je Kassette (LTO-9: 18&nbsp;TB)</td><td>Sekunden bis Minuten (Spulen)</td><td>elektromagnetisch</td></tr>
       </table>
       </div>
       <p class="caption">Größenordnungen genügen; die Werte hängen vom Gerät ab.</p>
@@ -1463,8 +1465,8 @@ img{max-width:100%;height:auto;}
         </div>
       </div>
 
-      <div class="tool" id="hit-tool" hidden>
-        <div class="tool-head">🔧 Werkzeug freigeschaltet: Trefferraten-Regler</div>
+      <div class="tool" id="hit-tool">
+        <div class="tool-head">🔧 Werkzeug: Trefferraten-Regler</div>
         <label for="hit-slider">Trefferrate: <strong id="hit-rate">95</strong>&nbsp;%</label>
         <input type="range" id="hit-slider" min="50" max="100" step="1" value="95" oninput="hitExplore()">
         <p>Mittlere Zugriffszeit: <strong id="hit-out">5,95&nbsp;ns</strong></p>
@@ -1529,15 +1531,15 @@ img{max-width:100%;height:auto;}
         <h3>💿 Übung S1 · Optische Speicher</h3>
         <div class="ex">
           <p><strong>a)</strong> Lies diese neue Spur aus (Wechsel → 1, kein Wechsel → 0).</p>
-          <div class="track" data-track="PLLLPPLPPPPLL" aria-label="Spur: Pit, Land, Land, Land, Pit, Pit, Land, Pit, Pit, Pit, Pit, Land, Land"></div>
+          <div class="track" data-track="PPPLLLLPPPLLL" aria-label="Spur: Pit, Pit, Pit, Land, Land, Land, Land, Pit, Pit, Pit, Land, Land, Land"></div>
           <p>Bitfolge: <input class="inp inp-wide" id="bits2" placeholder="12 Bits" aria-label="Bitfolge eingeben">
-            <button class="btn btn-primary btn-sm" onclick="checkBits('bits2','PLLLPPLPPPPLL')">✓ Prüfen</button>
+            <button class="btn btn-primary btn-sm" onclick="checkBits('bits2','PPPLLLLPPPLLL')">✓ Prüfen</button>
             <span class="fb grp-fb inline-fb" id="bits2-fb"></span></p>
           <div class="hs" id="hs-s1a">
             <div data-tipp>Gleiche Regel wie in Aufgabe 1.1: Es kommt nicht darauf an, ob Pit oder Land – nur ob sich etwas ändert.</div>
-            <div data-tipp>Takt 1 ist Pit, Takt 2 ist Land → Wechsel → 1. Takt 2 und 3 sind beide Land → 0.</div>
-            <div data-tipp>Die ersten sechs Bits lauten <span class="math">100101</span>. Mach an der Grenze zwischen Takt 7 und 8 weiter.</div>
-            <div data-muster><p>P|L 1 · L|L 0 · L|L 0 · L|P 1 · P|P 0 · P|L 1 · L|P 1 · P|P 0 · P|P 0 · P|P 0 · P|L 1 · L|L 0</p><p>Bitfolge: <span class="math">100101100010</span></p></div>
+            <div data-tipp>Takt 1 und 2 sind beide Pit → 0. Takt 2 und 3 sind ebenfalls beide Pit → 0. Takt 3 ist Pit, Takt 4 ist Land → Wechsel → 1.</div>
+            <div data-tipp>Die ersten sechs Bits lauten <span class="math">001000</span>. Mach an der Grenze zwischen Takt 7 und 8 weiter.</div>
+            <div data-muster><p>P|P 0 · P|P 0 · P|L 1 · L|L 0 · L|L 0 · L|L 0 · L|P 1 · P|P 0 · P|P 0 · P|L 1 · L|L 0 · L|L 0</p><p>Bitfolge: <span class="math">001000100100</span></p><p>Zwischen zwei Einsen stehen immer mindestens zwei Nullen – so wie auf jeder echten CD.</p></div>
           </div>
         </div>
 
@@ -1788,9 +1790,9 @@ img{max-width:100%;height:auto;}
         <table>
           <tr><td><strong>Merkmal</strong></td><td><strong>optisch</strong></td><td><strong>elektromagnetisch</strong></td><td><strong>elektronisch</strong></td></tr>
           <tr><td>Bit</td><td>Pit/Land, Reflexion des Laserlichts</td><td>Magnetisierungsrichtung</td><td>Ladung in der Zelle (Flash)</td></tr>
-          <tr><td>Kapazität</td><td>0,7 bis 25&nbsp;GB je Schicht</td><td>HDD über 20&nbsp;TB, Band z.&nbsp;B. 18&nbsp;TB (LTO-9)</td><td>SSD bis mehrere TB</td></tr>
+          <tr><td>Kapazität</td><td>0,7 bis 25&nbsp;GB je Schicht</td><td>HDD bis ca. 30&nbsp;TB, Band z.&nbsp;B. 18&nbsp;TB (LTO-9)</td><td>SSD bis mehrere TB</td></tr>
           <tr><td>Zugriff</td><td>langsam, Sekundenbruchteile</td><td>HDD: ms; Band: s bis min</td><td>µs</td></tr>
-          <tr><td>Robustheit</td><td>kratzempfindlich, magnetfeldunempfindlich</td><td>stoß- und magnetfeldempfindlich</td><td>stoßfest, Schreibverschleiß</td></tr>
+          <tr><td>Robustheit</td><td>kratzempfindlich, magnetfeldunempfindlich</td><td>HDD stoßempfindlich; Band empfindlich gegen starke Magnetfelder</td><td>stoßfest, Schreibverschleiß</td></tr>
           <tr><td>Preis je GB</td><td>sehr niedrig (Rohling)</td><td>sehr niedrig</td><td>höher</td></tr>
           <tr><td>Einsatz</td><td>Verteilung, Archiv</td><td>Rechenzentrum, Backup, Archiv</td><td>Smartphone, Notebook, Cache</td></tr>
         </table>
@@ -1823,7 +1825,7 @@ img{max-width:100%;height:auto;}
       <h3>🎟️ Exit-Ticket</h3>
       <div class="ex">
         <div class="quiz-item">
-          <div class="quiz-q">1. Ein Fotograf will 40&nbsp;TB Fotos für 20 Jahre sicher und günstig archivieren, braucht aber nur selten Zugriff. Was passt am besten?</div>
+          <div class="quiz-q">1. Eine Fotoagentur will 40&nbsp;TB Bilder für 20 Jahre sicher und günstig archivieren, braucht aber nur selten Zugriff. Was passt am besten?</div>
           <div class="quiz-opts">
             <button class="quiz-btn" onclick="quizCheck('q5a', this, 'w')">Ein großer Arbeitsspeicher.</button>
             <button class="quiz-btn" onclick="quizCheck('q5a', this, 'c')">Magnetband (LTO): sehr günstig pro TB, lange haltbar, offline lagerbar – der langsame Zugriff stört hier kaum.</button>
@@ -2395,8 +2397,8 @@ Object.assign(quizFeedback, {
   q1a: { ok:'✅ <strong>Richtig!</strong> Der Laser „sieht" nur Helligkeit. Ein Kratzer streut das Licht und verfälscht genau die Helligkeitswechsel, in denen die Bits stecken. (Fehlerkorrektur fängt kleine Schäden ab.)',
          ng:'❌ <strong>Nicht ganz.</strong> Optische Scheiben sind nicht magnetisch, und der Leselaser ist viel zu schwach, um etwas zu verbrennen. Entscheidend ist, dass ein Kratzer das reflektierte Licht verfälscht.',
          hint:'Womit „liest" das Laufwerk überhaupt? Und was macht ein Kratzer mit Licht?' },
-  q1b: { ok:'✅ <strong>Richtig!</strong> Kleinerer Fleck, engere Spuren, bessere Kodierung – und bei Dual Layer eine zweite Schicht.',
-         ng:'❌ <strong>Nicht ganz.</strong> Alle drei Scheiben haben 12&nbsp;cm Durchmesser, und die Drehzahl ändert nichts an der Kapazität. Zusätzlich zur Fleckgröße helfen effizientere Kodierung und mehrere Schichten.',
+  q1b: { ok:'✅ <strong>Richtig!</strong> Die Blu-ray nutzt ihren Fleck besser aus: Der Spurabstand beträgt bei der CD etwa 0,9 Fleckbreiten, bei der Blu-ray nur etwa 0,7. Dazu kommt eine effizientere Kodierung mit weniger Zusatzbits.',
+         ng:'❌ <strong>Nicht ganz.</strong> Alle drei Scheiben haben 12&nbsp;cm Durchmesser, und die Drehzahl ändert nichts an der Kapazität. Zusätzlich zur Fleckgröße liegen Spuren und Pits im Verhältnis zum Fleck enger, und die Kodierung ist effizienter.',
          hint:'Die Frage ist, wie viele Bits auf dieselbe Fläche passen – nicht, wie schnell sie gelesen werden.' },
   q2a: { ok:'✅ <strong>Richtig!</strong> Sequenziell entfällt die Kopfbewegung fast ganz. Bei Zufallszugriffen zahlt man jedes Mal rund 12&nbsp;ms Mechanik.',
          ng:'❌ <strong>Nicht ganz.</strong> Die Drehzahl ist konstant, und komprimiert wird hier nichts. Der Unterschied liegt darin, wie oft der Kopf springen und auf den Sektor warten muss.',
@@ -2441,10 +2443,10 @@ const _teachSetUI = teachSetUI;
 teachSetUI = function(active){
   _teachSetUI(active);
   document.body.classList.toggle('teacher', active);
-  document.querySelectorAll('.tool').forEach(t => { t.hidden = !(active || t.dataset.earned === '1'); });
+  document.querySelectorAll('.tool').forEach(t => { t.hidden = false; });   /* Werkzeuge sind für alle frei */
   if (active){
     document.querySelectorAll('.subphase').forEach(s => s.classList.add('on'));   /* zeigt alles, ohne den Fortschritt zu speichern */
-    if (!document.querySelector('.lv-btns .sel')) drawLevels(1, document.querySelector('.lv-btns .btn'));
+    document.querySelectorAll('.substep-chip').forEach(c => { c.classList.remove('locked','active'); c.classList.add('done'); });
   } else { initSubReveal(); }
   updateGates();
 };
@@ -2455,7 +2457,7 @@ function predicted(id){ try{ if (localStorage.getItem('predict_'+id)) return tru
   const o = document.getElementById(id+'-out'); return !!(o && !o.hidden); }
 function updateGates(){
   const teach = hsTeach();
-  document.querySelectorAll('.gated').forEach(g => g.classList.toggle('open', teach || predicted(g.dataset.gate)));
+  document.querySelectorAll('.gated').forEach(g => g.classList.add('open'));   /* keine Sperre mehr – Inhalte für alle frei */
   const echo = document.getElementById('poe-ideal-echo'); let t = null;
   try{ t = localStorage.getItem('predict_poe-ideal'); }catch(e){}
   if (echo && t) echo.textContent = '„' + t + '"';
@@ -2552,7 +2554,9 @@ function hitExplore(){
 }
 
 /* ---------- Init ---------- */
-function initSpeicher(){ buildTracks(); wlReset(); rotExplore(); hitExplore(); updateGates(); }
+function initSpeicher(){ buildTracks(); wlReset(); rotExplore(); hitExplore();
+  if (!document.querySelector('.lv-btns .sel')) drawLevels(1, document.querySelector('.lv-btns .btn'));
+  updateGates(); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSpeicher); else initSpeicher();
 
 </script>

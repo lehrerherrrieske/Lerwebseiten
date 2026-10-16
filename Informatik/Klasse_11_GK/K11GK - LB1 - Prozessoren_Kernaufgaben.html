@@ -547,6 +547,8 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   .step-content,.gate-body{display:block !important;}
 }
 
+/* Lehrermodus: Lösungswege sofort sichtbar */
+body.teacher .solbtn[hidden]{display:inline-block !important;}
 </style>
 </head>
 <body>
@@ -561,7 +563,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
     <span class="teachbar-status" id="teachbar-status">inaktiv</span>
   </div>
   <div class="lehrer-only" hidden>
-    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen, Musterlösungen und Lösungswege sind ohne Wartezeit freigeschaltet, alle Teile sind aufgedeckt.</span></div>
   </div>
 
   <header class="pagehead">
@@ -601,7 +603,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
     <div class="subphase on" id="ph0-sub-1">
       <p>Die Antwort setzt sich aus <strong>vier Bausteinen</strong> zusammen. Jeder beginnt mit einer Frage aus deinem Alltag:</p>
       <div class="two-col">
-        <div class="mini"><span class="pnum">Aufgabe 1</span><h3>Befehlssatz und Maschinencode</h3><p>Eine Handy-App startet nicht auf einem Windows-Laptop, obwohl beide Geräte „Programme ausführen“. Was ist bei den Prozessoren anders – und woraus besteht ein Befehl?</p><button class="btn btn-ghost btn-sm" onclick="showPhase(1)">Zu Aufgabe 1 →</button></div>
+        <div class="mini"><span class="pnum">Aufgabe 1</span><h3>Befehlssatz und Maschinencode</h3><p>Ein Programm für einen alten Intel-Mac startet auf einem neuen Mac mit Apple-Chip nicht direkt – obwohl auf beiden dasselbe Betriebssystem läuft. Was ist bei den Prozessoren anders – und woraus besteht ein Befehl?</p><button class="btn btn-ghost btn-sm" onclick="showPhase(1)">Zu Aufgabe 1 →</button></div>
         <div class="mini"><span class="pnum">Aufgabe 2</span><h3>Taktfrequenz und Leistung</h3><p>Ein Prozessor mit 5&nbsp;GHz ist nicht automatisch schneller als einer mit 3&nbsp;GHz. Wie kann das sein?</p><button class="btn btn-ghost btn-sm" onclick="showPhase(2)">Zu Aufgabe 2 →</button></div>
         <div class="mini"><span class="pnum">Aufgabe 3</span><h3>Energieeffizienz</h3><p>Ein Notebook braucht einen Lüfter, ein Smartphone-Prozessor kommt ohne aus – und beide werden warm. Wohin geht die Energie?</p><button class="btn btn-ghost btn-sm" onclick="showPhase(3)">Zu Aufgabe 3 →</button></div>
         <div class="mini"><span class="pnum">Aufgabe 4</span><h3>Vom Von-Neumann-Rechner zum modernen Prozessor</h3><p>Das Modell stammt aus den 1940er-Jahren, war damals eine Revolution und beschreibt noch heute deinen Prozessor – samt einem berühmten Schwachpunkt.</p><button class="btn btn-ghost btn-sm" onclick="showPhase(4)">Zu Aufgabe 4 →</button></div>
@@ -612,7 +614,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
         <li><span class="wl-thema">Befehlssatz</span> <span class="wl-links"><button class="linkbtn" onclick="jumpTo(1,1,'w-opcode')">Opcode und Operanden</button></span></li>
         <li><span class="wl-thema">Takt und Leistung</span> <span class="wl-links"><button class="linkbtn" onclick="jumpTo(2,1,'calc-k2a')">Befehle pro Sekunde</button> · <button class="linkbtn" onclick="jumpTo(2,3,'calc-k2c')">Warum wächst die Wärme so schnell?</button></span></li>
         <li><span class="wl-thema">Energieeffizienz</span> <span class="wl-links"><button class="linkbtn" onclick="jumpTo(3,2,'calc-k3c')">Spannung senken</button></span></li>
-        <li><span class="wl-thema">Von Neumann</span> <span class="wl-links"><button class="linkbtn" onclick="jumpTo(4,2,'w-innov')">Innovation des Von-Neumann-Rechners</button> · <button class="linkbtn" onclick="jumpTo(4,3,'w-zyklus')">Der Befehlszyklus</button> · <button class="linkbtn" onclick="jumpTo(4,4,'w-bus')">Das Bussystem</button> · <button class="linkbtn" onclick="jumpTo(4,5,'w-flasche')">Der Flaschenhals</button></span></li>
+        <li><span class="wl-thema">Von Neumann</span> <span class="wl-links"><button class="linkbtn" onclick="jumpTo(4,1,'w-aufbau')">Aufbau des Von-Neumann-Rechners</button> · <button class="linkbtn" onclick="jumpTo(4,2,'w-innov')">Innovation des Von-Neumann-Rechners</button> · <button class="linkbtn" onclick="jumpTo(4,3,'w-zyklus')">Der Befehlszyklus</button> · <button class="linkbtn" onclick="jumpTo(4,4,'w-bus')">Das Bussystem</button> · <button class="linkbtn" onclick="jumpTo(4,5,'w-flasche')">Der Flaschenhals</button></span></li>
       </ul>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Schnelltest: Was vermutest du? ↓</button></div>
     </div>
@@ -636,7 +638,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 <section class="phase" id="ph1">
   <div class="card">
     <h2>Aufgabe 1 · Befehlssatz und Maschinencode</h2>
-    <p class="lead">Eine Handy-App startet nicht einfach auf einem Windows-Laptop, ein Windows-Programm nicht auf dem Handy – obwohl beide Geräte „Programme ausführen“. <strong>Was ist bei den Prozessoren anders?</strong></p>
+    <p class="lead">Als Apple 2020 von Intel-Prozessoren auf eigene Apple-Chips umstieg, liefen viele Programme auf den neuen Macs nicht direkt – obwohl das Betriebssystem dasselbe blieb (macOS). Apple musste ein eigenes Übersetzungsprogramm mitliefern. <strong>Was ist bei den Prozessoren anders?</strong></p>
 
     <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="5">
       <span class="substep-label">Teile:</span>
@@ -650,7 +652,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 
     <div class="subphase on" id="ph1-sub-1">
       <h3 id="w-opcode">Opcode und Operanden <span class="tag-wichtig">! Wichtig</span></h3>
-      <p>Ein Programm ist im Speicher nichts anderes als eine lange Liste von Bitfolgen – den <span class="tt" tabindex="0" data-tip="Kleinster Arbeitsauftrag, den ein Prozessor direkt ausführen kann – als Bitfolge gespeichert.">Maschinenbefehlen</span>. Jeder Maschinenbefehl ist ein winziger Arbeitsauftrag und besteht <strong>immer aus zwei Teilen</strong>:</p>
+      <p>Ein Programm ist im Speicher nichts anderes als eine lange Liste von Bitfolgen – den <span class="tt" tabindex="0" data-tip="Kleinster Arbeitsauftrag, den ein Prozessor direkt ausführen kann – als Bitfolge gespeichert.">Maschinenbefehlen</span>. Jeder Maschinenbefehl ist ein winziger Arbeitsauftrag und besteht <strong>aus zwei Teilen</strong> (nur wenige Befehle kommen ganz ohne Operanden aus):</p>
       <div class="two-col">
         <div class="oo-card"><span class="tok op">Opcode</span>
           <p>Der <span class="tt" tabindex="0" data-tip="operation code: legt fest, WELCHE Operation ausgeführt wird (addieren, laden, springen …).">Opcode</span> sagt, <strong>was</strong> passieren soll: addieren, subtrahieren, laden, speichern, springen …</p>
@@ -841,8 +843,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   </div>
 </div>
 <div class="gated" data-gate="calc-k1">
-  <div class="callout callout-info gate-lock">🔒 <span>Die Werkstatt öffnet sich, sobald du die Aufgabe gelöst hast (oder sobald in der Hilfestellung die Musterlösung frei ist).</span></div>
-  <div class="gate-body" hidden>
+  <div class="gate-body">
 <div class="widget befehl-viz">
   <h3>🔧 Befehls-Werkstatt</h3>
   <p>Stelle beliebige Registernummern ein und beobachte, wie sich das Bitmuster verändert. (Modell für den Befehl <em>add</em>, Register x0 bis x31.)</p>
@@ -890,7 +891,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   <div data-muster><ol class="liste"><li>Quelltext schreiben (z. B. in C)</li><li>Compiler übersetzt den Quelltext in Assemblercode</li><li>Assembler erzeugt Objektcode (Maschinenbefehle)</li><li>Linker verbindet Objektdateien und Bibliotheken zur ausführbaren Datei</li></ol></div>
 </div>
       </div>
-      <div class="callout callout-info">💡 <span>Bei <span class="tt" tabindex="0" data-tip="Programme, die den Quelltext während des Ablaufs Zeile für Zeile auswerten (z. B. Python).">Interpretern</span> und <span class="tt" tabindex="0" data-tip="Just-in-time-Compiler: übersetzen Programmteile erst zur Laufzeit in Maschinencode (z. B. bei Java).">JIT-Compilern</span> (z. B. Python, Java) geschieht die Übersetzung erst <strong>zur Laufzeit</strong> – am Ende steht aber auch dort Maschinencode.</span></div>
+      <div class="callout callout-info">💡 <span>Nicht jede Sprache wird vorab in Maschinencode übersetzt. Ein <span class="tt" tabindex="0" data-tip="Programm, das ein anderes Programm Schritt für Schritt ausführt, ohne es vorher in Maschinencode zu übersetzen (z. B. Python).">Interpreter</span> (z. B. bei Python) führt das Programm direkt aus – Maschinencode ist dann nur der Interpreter selbst. Ein <span class="tt" tabindex="0" data-tip="Just-in-time-Compiler: übersetzt Programmteile erst zur Laufzeit in Maschinencode (z. B. bei Java).">JIT-Compiler</span> (z. B. bei Java) übersetzt häufig genutzte Programmteile erst <strong>zur Laufzeit</strong> in Maschinencode.</span></div>
       <p class="connector-text">Das Ergebnis ist Maschinencode für einen ganz bestimmten Befehlssatz. Und genau da liegt die Antwort auf die Eingangsfrage.</p>
 
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,5)">Zwei Grundrichtungen und die App-Frage ↓</button></div>
@@ -898,19 +899,19 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 
     <div class="subphase" id="ph1-sub-5">
       <h3>Zwei Grundrichtungen bei Befehlssätzen</h3>
-      <p><strong>RISC</strong> (<span class="tt" tabindex="0" data-tip="Prozessor mit einem reduzierten Satz weniger, einfacher Befehle.">Reduced Instruction Set Computer</span>) setzt auf wenige, einfache Befehle – z. B. ARM und RISC-V. <strong>CISC</strong> (<span class="tt" tabindex="0" data-tip="Prozessor mit einem großen Satz teils mächtiger Befehle.">Complex Instruction Set Computer</span>) bietet sehr viele, teils mächtige Befehle – z. B. x86-64 in PCs und Notebooks.</p>
+      <p><strong>RISC</strong> (<span class="tt" tabindex="0" data-tip="Prozessor mit einfachen, einheitlich aufgebauten Befehlen. „Reduced“ meint die Komplexität der Befehle, nicht ihre Anzahl.">Reduced Instruction Set Computer</span>) setzt auf einfache, einheitlich aufgebaute Befehle – z. B. ARM und RISC-V. „Reduced“ meint dabei die Komplexität der Befehle, nicht unbedingt ihre Anzahl. <strong>CISC</strong> (<span class="tt" tabindex="0" data-tip="Prozessor mit einem großen Satz teils mächtiger Befehle.">Complex Instruction Set Computer</span>) bietet sehr viele, teils mächtige Befehle – z. B. x86-64 in PCs und Notebooks.</p>
       <div class="tbl-wrap"><table class="tbl">
         <tr><th>Merkmal</th><th>RISC (z. B. ARM, RISC-V)</th><th>CISC (z. B. x86-64)</th></tr>
-        <tr><td>Anzahl der Befehle</td><td>wenige, einfache Befehle</td><td>sehr viele, teils mächtige Befehle</td></tr>
+        <tr><td>Art der Befehle</td><td>einfache, einheitlich aufgebaute Befehle</td><td>sehr viele, teils mächtige Befehle</td></tr>
         <tr><td>Befehlslänge</td><td>meist einheitlich (ARM AArch64: 32&nbsp;Bit)</td><td>variabel (1 bis 15&nbsp;Byte)</td></tr>
         <tr><td>Speicherzugriff</td><td>Rechenbefehle nur auf Registern, Laden und Speichern getrennt</td><td>Speicheroperanden direkt in Befehlen möglich</td></tr>
         <tr><td>Dekodierung</td><td>einfach</td><td>aufwendig (intern Zerlegung in Mikro-Operationen)</td></tr>
-        <tr><td>Energiebedarf (Tendenz)</td><td>geringer pro Befehl, deshalb im Smartphone verbreitet</td><td>traditionell höher; der Unterschied hängt heute stark von Mikroarchitektur und Fertigung ab</td></tr>
+        <tr><td>Energiebedarf</td><td>ARM-Kerne wurden von Anfang an auf geringe Leistungsaufnahme ausgelegt – deshalb im Smartphone verbreitet</td><td>traditionell auf hohe Leistung ausgelegt; heute hängt der Energiebedarf vor allem von Mikroarchitektur und Fertigung ab, kaum vom Befehlssatz</td></tr>
       </table></div>
       <div class="baustein" data-type="mark" id="mark-risc">
         <p><strong>Markiere alle Aussagen, die zu RISC passen.</strong></p>
         <p class="mark-text">
-        <span class="mw" data-correct="1" onclick="markToggle(this)">wenige, einfache Befehle</span><br>
+        <span class="mw" data-correct="1" onclick="markToggle(this)">einfache, einheitlich aufgebaute Befehle</span><br>
         <span class="mw" data-correct="0" onclick="markToggle(this)">Befehle sind 1 bis 15&nbsp;Byte lang</span><br>
         <span class="mw" data-correct="1" onclick="markToggle(this)">meist einheitlich lange Befehle (ARM AArch64: 32&nbsp;Bit)</span><br>
         <span class="mw" data-correct="1" onclick="markToggle(this)">Rechnen nur mit Registern, Laden und Speichern getrennt</span><br>
@@ -921,20 +922,20 @@ table.tbl.codes td:first-child{white-space:nowrap;}
         <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
 <div class="hs" id="hs-mark-risc">
-  <div data-tipp>RISC steht für „reduced“: wenige, einfache Befehle. Welche Aussagen klingen nach „einfach und einheitlich“?</div>
+  <div data-tipp>RISC steht für „reduced“: einfache, einheitlich aufgebaute Befehle. Welche Aussagen klingen nach „einfach und einheitlich“?</div>
   <div data-tipp>Nutze die Tabelle oben und lies nur die Spalte RISC.</div>
   <div data-tipp>Drei Aussagen passen zu RISC. Befehle mit 1 bis 15&nbsp;Byte, Speicheroperanden im Befehl und aufwendige Dekodierung gehören zu CISC (x86-64).</div>
-  <div data-muster><p><strong>Zu RISC passen:</strong> wenige, einfache Befehle · meist einheitlich lange Befehle (AArch64: 32&nbsp;Bit) · Rechnen nur mit Registern, Laden und Speichern getrennt.</p><p><strong>Zu CISC gehören:</strong> Befehle mit 1 bis 15&nbsp;Byte · Speicheroperanden direkt im Befehl · aufwendige Dekodierung.</p></div>
+  <div data-muster><p><strong>Zu RISC passen:</strong> einfache, einheitlich aufgebaute Befehle · meist einheitlich lange Befehle (AArch64: 32&nbsp;Bit) · Rechnen nur mit Registern, Laden und Speichern getrennt.</p><p><strong>Zu CISC gehören:</strong> Befehle mit 1 bis 15&nbsp;Byte · Speicheroperanden direkt im Befehl · aufwendige Dekodierung.</p></div>
 </div>
       </div>
-      <h3>Und warum läuft die App jetzt nicht?</h3>
-      <p>Ein fertiges Programm liegt als Maschinencode vor – als Bitfolgen des Befehlssatzes, für den es übersetzt wurde. Ein ARM-Prozessor kennt die x86-Opcodes nicht. Auch der Registersatz und die <span class="tt" tabindex="0" data-tip="Vereinbarungen, wie Programmteile Parameter und Rückgabewerte übergeben.">Aufrufkonventionen</span> unterscheiden sich. Deshalb startet eine für x86-64 übersetzte Datei nicht auf einem ARM-Prozessor.</p>
+      <h3>Und warum läuft das Intel-Programm auf dem Apple-Chip nicht?</h3>
+      <p>Ein fertiges Programm liegt als Maschinencode vor – als Bitfolgen des Befehlssatzes, für den es übersetzt wurde. Ein ARM-Prozessor kennt die x86-Opcodes nicht. Auch der Registersatz und die <span class="tt" tabindex="0" data-tip="Vereinbarungen, wie Programmteile Parameter und Rückgabewerte übergeben.">Aufrufkonventionen</span> unterscheiden sich. Deshalb startet eine für x86-64 übersetzte Datei nicht direkt auf einem ARM-Prozessor – wie die alten Intel-Programme auf den neuen Macs mit Apple-Chip (ARM).</p>
       <div class="two-col">
         <div class="mini"><h3>Weg 1: neu übersetzen</h3><p>Den Quelltext für den anderen Befehlssatz übersetzen (Cross-Compiler). Deshalb gibt es Programmpakete für mehrere Architekturen.</p></div>
-        <div class="mini"><h3>Weg 2: emulieren</h3><p>Ein Programm übersetzt die Befehle zur Laufzeit (Binärübersetzung), z. B. Rosetta&nbsp;2 bei Apple, x64-Emulation unter Windows auf ARM oder QEMU. Das spart die Neuübersetzung, kostet aber Leistung.</p></div>
+        <div class="mini"><h3>Weg 2: emulieren</h3><p>Ein Übersetzungsprogramm wandelt den fertigen Maschinencode in Befehle des anderen Befehlssatzes um (Binärübersetzung), z. B. Rosetta&nbsp;2 bei Apple (übersetzt meist schon beim ersten Start), x64-Emulation unter Windows auf ARM oder QEMU. Das spart die Neuübersetzung des Quelltexts, kostet aber Leistung.</p></div>
       </div>
 <div class="quiz-item">
-  <div class="quiz-q">Du startest eine für x86-64 übersetzte Programmdatei direkt auf einem ARM-Prozessor. Was passiert?</div>
+  <div class="quiz-q">Du startest eine für x86-64 übersetzte Programmdatei direkt – ohne Übersetzungsprogramm – auf einem ARM-Prozessor. Was passiert?</div>
   <div class="quiz-opts">
     <button class="quiz-btn" onclick="quizCheck('q-arm', this, 'c')">Der ARM-Prozessor kennt die x86-Opcodes nicht und kann die Bitfolgen nicht als Befehle ausführen.</button>
     <button class="quiz-btn" onclick="quizCheck('q-arm', this, 'w')">Das Programm läuft, nur etwas langsamer.</button>
@@ -946,8 +947,8 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   <div class="hefter-label">📓 Heftereintrag — Befehlssatz und Maschinencode</div>
   <ul>
     <li><strong>Maschinenbefehl</strong> = <strong>Opcode</strong> (was? z. B. <span class="math">add</span>, <span class="math">lw</span>, <span class="math">beq</span>) + <strong>Operanden</strong> (womit? Register, Konstanten, Speicheradressen, Sprungziele). Beispiel: <span class="math">add x5, x6, x7</span> → Opcode <span class="math">add</span>, Operanden <span class="math">x5, x6, x7</span>. Länge und Aufteilung der Felder legt der Befehlssatz fest.</li>
-    <li><strong>Weg zum Maschinencode:</strong> Quelltext → Compiler → Assemblercode → Assembler → Objektcode → Linker → ausführbare Datei. Interpreter und JIT übersetzen erst zur Laufzeit.</li>
-    <li><strong>RISC:</strong> wenige, einfache Befehle, meist einheitliche Länge (AArch64: 32&nbsp;Bit), Rechnen nur auf Registern, geringerer Energiebedarf pro Befehl (Tendenz). <strong>CISC:</strong> viele, teils mächtige Befehle, variable Länge (1 bis 15&nbsp;Byte), Speicheroperanden möglich, aufwendige Dekodierung.</li>
+    <li><strong>Weg zum Maschinencode:</strong> Quelltext → Compiler → Assemblercode → Assembler → Objektcode → Linker → ausführbare Datei. Ein Interpreter führt das Programm direkt aus, ohne Maschinencode zu erzeugen; ein JIT-Compiler übersetzt erst zur Laufzeit.</li>
+    <li><strong>RISC:</strong> einfache, einheitlich aufgebaute Befehle, meist einheitliche Länge (AArch64: 32&nbsp;Bit), Rechnen nur auf Registern. ARM-Kerne sind traditionell auf geringe Leistungsaufnahme ausgelegt. <strong>CISC:</strong> viele, teils mächtige Befehle, variable Länge (1 bis 15&nbsp;Byte), Speicheroperanden möglich, aufwendige Dekodierung.</li>
     <li><strong>Warum x86-Programme nicht auf ARM laufen:</strong> Maschinencode gilt nur für seinen Befehlssatz. Lösungen: neu übersetzen oder emulieren (kostet Leistung).</li>
   </ul>
 </div>
@@ -984,7 +985,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
         <tr><th>Größe</th><th>Was ist das?</th></tr>
         <tr><td><strong><span class="tt" tabindex="0" data-tip="Taktfrequenz: Wie oft pro Sekunde das Taktsignal schwingt – gemessen in Hertz.">Takt</span></strong></td><td>Frequenz des Taktsignals in Hertz: 1&nbsp;GHz = 10<sup>9</sup> Takte pro Sekunde. Jeder Takt ist ein Arbeitsschritt des Schaltwerks. Der Takt gibt den Rhythmus vor, sagt aber nicht, <em>wie viel</em> in einem Takt geschieht.</td></tr>
         <tr><td><strong>Kernzahl</strong></td><td>Anzahl unabhängiger Rechenkerne. Mehr Kerne führen mehrere Befehlsfolgen gleichzeitig aus – das nützt aber nur, wenn die Software parallelisierbar ist.</td></tr>
-        <tr><td><strong><span class="tt" tabindex="0" data-tip="Instructions per cycle: im Mittel abgeschlossene Befehle pro Takt.">IPC</span></strong> (instructions per cycle)</td><td>Im Mittel abgeschlossene Befehle pro Takt. Der Kehrwert heißt <span class="tt" tabindex="0" data-tip="Cycles per instruction: Takte pro Befehl, also 1/IPC.">CPI</span> (cycles per instruction). Moderne Kerne erreichen IPC&nbsp;&gt;&nbsp;1, weil sie mehrere Befehle gleichzeitig bearbeiten (<span class="tt" tabindex="0" data-tip="Fließbandprinzip im Prozessor: Ein Befehl wird in Stufen bearbeitet, und mehrere Befehle stecken gleichzeitig in verschiedenen Stufen.">Pipeline</span>, <span class="tt" tabindex="0" data-tip="Ein Kern hat mehrere Ausführungseinheiten und kann pro Takt mehrere Befehle bearbeiten.">superskalar</span>).</td></tr>
+        <tr><td><strong><span class="tt" tabindex="0" data-tip="Instructions per cycle: im Mittel abgeschlossene Befehle pro Takt.">IPC</span></strong> (instructions per cycle)</td><td>Im Mittel abgeschlossene Befehle pro Takt. Der Kehrwert heißt <span class="tt" tabindex="0" data-tip="Cycles per instruction: Takte pro Befehl, also 1/IPC.">CPI</span> (cycles per instruction). Eine <span class="tt" tabindex="0" data-tip="Fließbandprinzip im Prozessor: Ein Befehl wird in Stufen bearbeitet, und mehrere Befehle stecken gleichzeitig in verschiedenen Stufen.">Pipeline</span> bringt die IPC höchstens bis auf 1. Moderne Kerne erreichen IPC&nbsp;&gt;&nbsp;1, weil sie <span class="tt" tabindex="0" data-tip="Ein Kern hat mehrere Ausführungseinheiten und kann pro Takt mehrere Befehle bearbeiten.">superskalar</span> sind: Sie starten pro Takt mehrere Befehle gleichzeitig.</td></tr>
       </table></div>
       <p>Jetzt rechnest du den Vergleich aus dem Einstieg nach:</p>
 <div class="ex calc" id="calc-k2a">
@@ -1034,8 +1035,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   </div>
 </div>
 <div class="gated" data-gate="calc-k2b">
-  <div class="callout callout-info gate-lock">🔒 <span>Der Vergleichs-Regler öffnet sich, sobald du die Aufgabe gelöst hast (oder sobald in der Hilfestellung die Musterlösung frei ist).</span></div>
-  <div class="gate-body" hidden>
+  <div class="gate-body">
 <div class="widget">
   <h3>🎮 Probier’s aus: zwei Prozessoren im Vergleich</h3>
   <p>Stelle Takt und IPC ein. (Modell für <em>einen</em> Kern, Beispielwerte – keine echten Prozessoren.)</p>
@@ -1053,7 +1053,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Warum kann man den Takt nicht endlos steigern? ↓</button></div>
     </div>
     <div class="subphase" id="ph2-sub-3">
-      <p>Bis in die 2000er-Jahre stieg der Takt von Jahr zu Jahr. Seitdem kaum noch. Der Grund steckt in einer Formel für die dynamische Leistungsaufnahme:</p>
+      <p>Bis etwa 2004/05 stieg der Takt von Jahr zu Jahr. Seitdem kaum noch. Der Grund steckt in einer Formel für die dynamische Leistungsaufnahme:</p>
       <div class="formula"><i>P</i> ≈ <i>C</i> · <i>U</i>² · <i>f</i></div>
       <p><i>C</i> ist die geschaltete Kapazität, <i>U</i> die Spannung, <i>f</i> der Takt. Ein höherer Takt braucht meist eine höhere Spannung – deshalb steigt <i>P</i> überproportional. Die Wärme pro Chipfläche ließ sich ab Mitte der 2000er-Jahre nicht mehr abführen: die <strong><span class="tt" tabindex="0" data-tip="Leistungsmauer: Die entstehende Wärme setzt dem Takt eine praktische Grenze.">Power Wall</span></strong>. Dazu kommt: Bei kleineren Transistoren sinkt die Spannung nicht mehr im gleichen Maß, und <span class="tt" tabindex="0" data-tip="Ströme, die auch ohne Schaltvorgang durch die Transistoren fließen und Energie in Wärme verwandeln.">Leckströme</span> nehmen zu.</p>
 <div class="ex calc" id="calc-k2c">
@@ -1170,7 +1170,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 </div>
 <div class="ex calc" id="calc-k3b">
   <div class="ex-title">✏️ Und unter Last?</div>
-  <div class="calc-q">Der Prozessor eines Notebooks nimmt unter Last 25&nbsp;W auf. Wie lange würde derselbe 15-Wh-Akku dann halten? Gib das Ergebnis in Minuten an.</div>
+  <div class="calc-q">Unter Last nimmt das Gerät 25&nbsp;W auf. Wie lange würde derselbe 15-Wh-Akku dann halten? Gib das Ergebnis in Minuten an.</div>
   <div class="calc-in"><label><i>t</i> = <input class="inp" id="k3b-t" autocomplete="off" aria-label="Laufzeit in Minuten"> <span class="unit">min</span></label></div>
   <p class="calc-actions"><button class="btn btn-primary btn-sm" onclick="calcCheck('calc-k3b')">✓ Prüfen</button>
     <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('calc-k3b-sol')">Lösungsweg zeigen</button></p>
@@ -1230,8 +1230,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   </div>
 </div>
 <div class="gated" data-gate="calc-k3d">
-  <div class="callout callout-info gate-lock">🔒 <span>Der Regler öffnet sich, sobald du die Aufgabe gelöst hast (oder sobald in der Hilfestellung die Musterlösung frei ist).</span></div>
-  <div class="gate-body" hidden>
+  <div class="gate-body">
 <div class="widget">
   <h3>🎚️ Probier’s aus: Spannung und Takt</h3>
   <p>Verändere Spannung und Takt (Modell <i>P</i> ≈ <i>C</i> · <i>U</i>² · <i>f</i> mit relativen Werten – keine Messung).</p>
@@ -1316,7 +1315,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 
     <!-- ===================== Teil 1: Aufbau ===================== -->
     <div class="subphase on" id="ph4-sub-1">
-      <h3>Der Aufbau eines Von-Neumann-Rechners</h3>
+      <h3 id="w-aufbau">Der Aufbau eines Von-Neumann-Rechners <span class="tag-wichtig">! Wichtig</span></h3>
       <p>Ein Rechner nach John von Neumann besteht aus fünf Werken. <strong>Steuerwerk</strong> und <strong>Rechenwerk</strong> bilden zusammen die <span class="tt" tabindex="0" data-tip="Central Processing Unit – Zentraleinheit, umgangssprachlich der Prozessor.">CPU</span>. Klicke im Schaubild auf ein Werk, um zu sehen, was es tut.</p>
       <div class="diagram vn-diagram">
 <svg viewBox="0 0 900 380" role="img" aria-labelledby="vn-t vn-d">
@@ -1447,22 +1446,22 @@ table.tbl.codes td:first-child{white-space:nowrap;}
       <div class="baustein" data-type="mark" id="mark-innov">
         <p><strong>Markiere alles, was erst durch das gespeicherte Programm möglich wurde.</strong></p>
         <p class="mark-text">
-        <span class="mw" data-correct="1" onclick="markToggle(this)">ein Update installieren, ohne das Gerät umzubauen</span><br>
+        <span class="mw" data-correct="1" onclick="markToggle(this)">ein Update übers Internet einspielen</span><br>
         <span class="mw" data-correct="0" onclick="markToggle(this)">mit elektronischen Bauteilen rechnen</span><br>
         <span class="mw" data-correct="1" onclick="markToggle(this)">ein Compiler erzeugt ein Programm, das danach ausgeführt wird</span><br>
         <span class="mw" data-correct="0" onclick="markToggle(this)">schneller rechnen als ein Mensch</span><br>
         <span class="mw" data-correct="1" onclick="markToggle(this)">eine App herunterladen und sofort starten</span><br>
-        <span class="mw" data-correct="1" onclick="markToggle(this)">dieselbe Hardware für völlig verschiedene Aufgaben nutzen, indem man nur das Programm tauscht</span><br>
+        <span class="mw" data-correct="0" onclick="markToggle(this)">dieselbe Hardware für völlig verschiedene Aufgaben nutzen, indem man nur das Programm tauscht</span><br>
         </p>
         <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
         <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
         <div class="hs" id="hs-mark-innov">
-          <div data-tipp>Frage bei jeder Aussage: Ging das auch schon mit der ENIAC, die per Steckkabel programmiert wurde?</div>
-          <div data-tipp>Die ENIAC rechnete bereits elektronisch und viel schneller als ein Mensch. Neu war nur, dass das <strong>Programm</strong> als Bitmuster im Speicher liegt und deshalb wie Daten behandelt werden kann.</div>
-          <div data-tipp>Vier Aussagen haben damit zu tun, dass Programme geladen, getauscht oder erzeugt werden. Zwei Aussagen beschreiben Fähigkeiten, die es vorher schon gab.</div>
-          <div data-muster><p><strong>Richtig sind:</strong> Update ohne Umbau · Compiler erzeugt ein Programm · App herunterladen und starten · dieselbe Hardware durch Programmtausch für verschiedene Aufgaben nutzen.</p>
-            <p><strong>Nicht neu:</strong> Elektronisch rechnen und schneller als ein Mensch rechnen konnte schon die ENIAC – sie musste dafür aber für jedes Programm umgesteckt werden.</p></div>
+          <div data-tipp>Frage bei jeder Aussage: Ging das auch schon mit der ENIAC (Steckkabel) oder der Z3 (Programm auf einem Filmstreifen)?</div>
+          <div data-tipp>Die ENIAC rechnete bereits elektronisch und viel schneller als ein Mensch. Bei der Z3 tauschte man einfach den Filmstreifen, um ein anderes Programm laufen zu lassen. Neu war, dass das <strong>Programm</strong> als Bitmuster im Speicher liegt und deshalb wie Daten behandelt – übertragen, gespeichert, erzeugt – werden kann.</div>
+          <div data-tipp>Drei Aussagen haben damit zu tun, dass Programme als Daten übertragen oder erzeugt werden. Drei Aussagen beschreiben Fähigkeiten, die es vorher schon gab.</div>
+          <div data-muster><p><strong>Richtig sind:</strong> Update übers Internet einspielen · Compiler erzeugt ein Programm · App herunterladen und starten. Alle drei setzen voraus, dass Programme Daten im Speicher sind.</p>
+            <p><strong>Nicht neu:</strong> Elektronisch und schneller als ein Mensch rechnen konnte schon die ENIAC. Das Programm tauschen, ohne die Hardware umzubauen, ging schon bei der Z3: Man legte einfach einen anderen Filmstreifen ein. Das Programm konnte dort aber weder gespeichert noch verändert oder von einem anderen Programm erzeugt werden.</p></div>
         </div>
       </div>
 <div class="quiz-item">
@@ -1625,7 +1624,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
         <div class="w-out" id="fh-out" role="status">Drücke ▶ Start.</div>
         <p class="caption">Modell, stark verlangsamt: Ein Transport über den Bus dauert hier 1,4&nbsp;s, das Rechnen 0,3&nbsp;s. Quadrat = Befehl, Kreis = Datum. Im echten Rechner geht es um Nanosekunden – das Verhältnis ist aber ähnlich ungünstig.</p>
       </div>
-      <p>Das Problem heißt <strong>Von-Neumann-Flaschenhals</strong>: Befehle und Daten laufen über <strong>denselben Bus</strong> zum Speicher, und der Speicher ist deutlich langsamer als der Prozessor („<span class="tt" tabindex="0" data-tip="Speichermauer: Der Prozessor rechnet viel schneller, als der Speicher liefern kann.">Memory Wall</span>“). Die CPU kann nicht gleichzeitig einen Befehl und ein Datum holen – sie muss warten, bis der Bus frei ist. Wie bei einer Flasche: Egal wie groß sie ist, es fließt nur so viel heraus, wie durch den engen Hals passt.</p>
+      <p>Das Problem heißt <strong>Von-Neumann-Flaschenhals</strong>: Befehle und Daten laufen über <strong>denselben Bus</strong> zum Speicher, und der Speicher ist deutlich langsamer als der Prozessor. Diese Lücke wird seit Jahrzehnten größer, man nennt sie „<span class="tt" tabindex="0" data-tip="Speichermauer: Die Prozessoren wurden viel schneller als der Speicher – die Lücke zwischen beiden wächst.">Memory Wall</span>“; sie verschärft den Flaschenhals. Die CPU kann nicht gleichzeitig einen Befehl und ein Datum holen – sie muss warten, bis der Bus frei ist. Wie bei einer Flasche: Egal wie groß sie ist, es fließt nur so viel heraus, wie durch den engen Hals passt.</p>
       <h3>Wie mildert man den Flaschenhals?</h3>
       <ul class="liste">
         <li><strong>Cache-Hierarchie</strong> (das zeigt die Animation im zweiten Modus): Kleine, sehr schnelle <span class="tt" tabindex="0" data-tip="Statischer Speicher: sehr schnell, aber teuer und platzaufwendig – deshalb nur in kleinen Mengen.">SRAM</span>-Speicher (L1 bis L3) nahe am Kern halten die zuletzt und in der Nähe benutzten Daten vor (<span class="tt" tabindex="0" data-tip="Wer eine Speicherstelle benutzt hat, braucht bald wieder dieselbe oder eine benachbarte.">Lokalitätsprinzip</span>). Die meisten Zugriffe werden im Cache bedient (hohe <strong>Trefferrate</strong>), nur wenige gehen bis zum RAM. Größenordnung: Cache-Zugriff ca. 1&nbsp;ns, Zugriff im RAM ca. 100&nbsp;ns.</li>
@@ -1673,8 +1672,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   </div>
 </div>
 <div class="gated" data-gate="calc-k4a">
-  <div class="callout callout-info gate-lock">🔒 <span>Der Regler öffnet sich, sobald du die Aufgabe gelöst hast (oder sobald in der Hilfestellung die Musterlösung frei ist).</span></div>
-  <div class="gate-body" hidden>
+  <div class="gate-body">
 <div class="widget">
   <h3>🎚️ Probier’s aus: Trefferrate</h3>
   <p>Verändere die Trefferrate. (Modell mit Größenordnungen: Treffer 1&nbsp;ns, Fehlgriff 100&nbsp;ns – keine Messung.)</p>
@@ -1696,7 +1694,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
       <div class="hefter-box">
   <div class="hefter-label">📓 Heftereintrag — Flaschenhals und Cache</div>
   <ul>
-    <li><strong>Von-Neumann-Flaschenhals:</strong> Befehle und Daten teilen sich einen Bus, immer nur ein Transport zur gleichen Zeit; der Speicher ist viel langsamer als die CPU („Memory Wall“) → die CPU wartet.</li>
+    <li><strong>Von-Neumann-Flaschenhals:</strong> Befehle und Daten teilen sich einen Bus, immer nur ein Transport zur gleichen Zeit; der Speicher ist viel langsamer als die CPU, verschärft durch die „Memory Wall“ → die CPU wartet.</li>
     <li><strong>Mittlere Zugriffszeit:</strong> Trefferrate · Trefferzeit + Fehlrate · Fehlgriffzeit, z. B. 0,9 · 1&nbsp;ns + 0,1 · 100&nbsp;ns = 10,9&nbsp;ns.</li>
     <li><strong>Gegenmittel:</strong> Cache-Hierarchie L1 bis L3 (Lokalitätsprinzip; Cache ca. 1&nbsp;ns, RAM ca. 100&nbsp;ns), getrennte L1-Caches für Befehle und Daten, Prefetching, Pipelining, Out-of-Order, mehrere Speicherkanäle.</li>
   </ul>
@@ -1737,8 +1735,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   <div data-muster><p>Ein höherer Takt erhöht die Verlustleistung überproportional (<i>P</i> ≈ <i>C</i> · <i>U</i>² · <i>f</i>, dazu die höhere Spannung); die Wärme lässt sich nicht mehr abführen (Power Wall). Hersteller steigern die Leistung deshalb über mehr Befehle pro Takt, mehrere Kerne, größere Caches und Spezialeinheiten. Ein Prozessor ist „besser“, wenn er für das eigene Nutzungsprofil mehr Leistung pro Watt und pro Euro liefert – nicht am GHz-Wert allein erkennbar.</p></div>
 </div>
 <div class="gated" data-gate="poe-titel">
-  <div class="callout callout-info gate-lock">🔒 <span>Der Vergleich öffnet sich, sobald du deine Antwort festgehalten hast.</span></div>
-  <div class="gate-body" hidden>
+  <div class="gate-body">
 <div class="callout callout-success"><span>📝 <strong>Eine mögliche Antwort zum Vergleichen:</strong> Ein höherer Takt erhöht die Verlustleistung überproportional (<i>P</i> ≈ <i>C</i> · <i>U</i>² · <i>f</i>, dazu kommt die höhere Spannung), und die entstehende Wärme lässt sich nicht mehr abführen („Power Wall“). Hersteller steigern die Leistung deshalb über mehr Befehle pro Takt, mehrere Kerne, größere Caches und Spezialeinheiten. Ein Prozessor ist „besser“, wenn er für das eigene Nutzungsprofil mehr Leistung pro Watt und pro Euro liefert – erkennbar an Einzel- und Mehrkern-<span class="tt" tabindex="0" data-tip="Standardisierte Leistungstests, die Prozessoren vergleichbar machen sollen.">Benchmarks</span>, Energieeffizienz, Befehlssatz, Cache und Speicheranbindung, nicht am GHz-Wert allein.</span></div>
 <p><strong>Prüfe deine Antwort:</strong></p>
 <ul class="check-list">
@@ -1756,7 +1753,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
   <div class="hefter-label">📓 Heftereintrag — Übersicht: Prozessoren</div>
   <table>
     <tr><th>Themenfeld</th><th>Kernaussage</th><th>Alltagsbeispiel</th></tr>
-    <tr><td>Befehlssatz</td><td>Befehl = Opcode (was?) + Operanden (womit?). Maschinencode ist prozessorspezifisch (x86-64, ARM, RISC-V).</td><td>Eine Handy-App läuft nicht auf einem Windows-Laptop.</td></tr>
+    <tr><td>Befehlssatz</td><td>Befehl = Opcode (was?) + Operanden (womit?). Maschinencode ist prozessorspezifisch (x86-64, ARM, RISC-V).</td><td>Alte Intel-Programme laufen auf einem Mac mit Apple-Chip nur mit Übersetzungsprogramm (Rosetta&nbsp;2).</td></tr>
     <tr><td>Takt und Leistung</td><td>Leistung ≈ Takt × IPC × Kerne.</td><td>5&nbsp;GHz mit IPC&nbsp;1 sind langsamer als 3&nbsp;GHz mit IPC&nbsp;2,5.</td></tr>
     <tr><td>Energieeffizienz</td><td><i>P</i> ≈ <i>C</i> · <i>U</i>² · <i>f</i>; DVFS und Effizienzkerne sparen Energie.</td><td>15-Wh-Akku bei 3&nbsp;W: 5 Stunden Laufzeit.</td></tr>
     <tr><td>Von Neumann</td><td>Programm und Daten im selben Speicher (Universalrechner); Daten-, Adress- und Steuerbus; gemeinsamer Bus → Flaschenhals, Caches mildern ihn.</td><td>Neue App laden statt Gerät umbauen; Cache-Zugriff ca. 1&nbsp;ns statt ca. 100&nbsp;ns im RAM.</td></tr>
@@ -1803,7 +1800,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 <div class="hs" id="hs-q-exit2">
   <div data-tipp>Woran scheitert das Programm auf dem anderen Prozessor – an der Hardware-Ausstattung oder an der „Sprache“?</div>
   <div data-tipp>Maschinencode gilt nur für seinen Befehlssatz. Es braucht also eine Übersetzung – entweder vorher oder während das Programm läuft.</div>
-  <div data-tipp>Vorher übersetzen heißt Cross-Compiler, zur Laufzeit übersetzen heißt Emulation (z. B. Rosetta&nbsp;2).</div>
+  <div data-tipp>Den Quelltext für den anderen Befehlssatz übersetzen geht mit einem Cross-Compiler; den fertigen Maschinencode übersetzen heißt Emulation bzw. Binärübersetzung (z. B. Rosetta&nbsp;2).</div>
   <div data-muster><p><strong>Richtig:</strong> Den Quelltext für den anderen Befehlssatz neu übersetzen oder das Programm zur Laufzeit emulieren. Mehr Speicher oder eine neue Dateiendung ändern nichts an den Opcodes.</p></div>
 </div>
 <div class="quiz-item">
@@ -1856,7 +1853,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Befehlssatz und Maschinencode</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Ein Maschinenbefehl besteht aus Opcode (was? z. B. <span class="math">add</span>) und Operanden (womit? Register, Konstanten, Adressen, Sprungziele). Programme sind Maschinencode für genau einen Befehlssatz – deshalb läuft eine App nicht ohne Neuübersetzung oder Emulation auf einem anderen Prozessor.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Ein Maschinenbefehl besteht aus Opcode (was? z. B. <span class="math">add</span>) und Operanden (womit? Register, Konstanten, Adressen, Sprungziele). Programme sind Maschinencode für genau einen Befehlssatz – deshalb läuft ein Programm nicht ohne Neuübersetzung oder Emulation auf einem Prozessor mit anderem Befehlssatz.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
@@ -2489,12 +2486,13 @@ function calcCheck(id){
    poe-… : Vermutung/Antwort festgehalten ODER Lehrermodus */
 function hsMusterFrei(hsId){ const t=parseInt(lsGet('hs_'+hsId)||'0',10); return !!t && (Date.now()-t)>=10*60000; }
 function gateOpen(name){
+  return true;   /* Werkzeuge und Vergleiche sind für alle frei */
   if(hsTeach()) return true;
   if(name.indexOf('calc-')===0) return calcSolved(name) || hsMusterFrei('hs-'+name);
   if(name.indexOf('poe-')===0){ const out=document.getElementById(name+'-out'); return !!out && !out.hidden; }
   return false; }
 function gateTick(){ document.querySelectorAll('.gated').forEach(g=>{
-  const open=gateOpen(g.dataset.gate); g.querySelector('.gate-lock').hidden=open; g.querySelector('.gate-body').hidden=!open; }); }
+  const open=gateOpen(g.dataset.gate); const l=g.querySelector('.gate-lock'); if(l) l.hidden=open; g.querySelector('.gate-body').hidden=!open; }); }
 
 /* ---------- Schritt-Navigation (immer nur ein Schritt sichtbar) ---------- */
 function showStep(prefix,n,btn){
@@ -2669,11 +2667,21 @@ function fhReset(){ if(!fh) return; fhPause(); fhResetState(); fhDraw(); documen
 function fhMode(m){ if(!fh) return; fh.mode=m; fhResetState(); fhDraw();
   if(!fh.run) document.getElementById('fh-out').textContent='Modus gewechselt – drücke ▶ Start.'; }
 
+/* ---------- Lehrermodus: alles aufdecken, ohne den Fortschritt zu speichern ---------- */
+function teachUnlockAll(active){
+  document.body.classList.toggle('teacher', active);
+  if(active){
+    document.querySelectorAll('.subphase').forEach(s=>s.classList.add('on'));
+    document.querySelectorAll('.substep-chip').forEach(c=>{ c.classList.remove('locked','active'); c.classList.add('done'); });
+  } else { initSubReveal(); }
+}
+
 /* ---------- Init dieser Seite ---------- */
 function initExtra(){
   befehlInit(); leistUpdate(); energieUpdate(); cacheUpdate(); ooInit(); vnInit(); fhInit();
   /* Lehrermodus soll auch die gesperrten Bereiche sofort öffnen */
-  const _teachSetUI=teachSetUI; teachSetUI=function(a){ _teachSetUI(a); gateTick(); };
+  const _teachSetUI=teachSetUI; teachSetUI=function(a){ _teachSetUI(a); teachUnlockAll(a); gateTick(); };
+  if(hsTeach()) teachUnlockAll(true);
   gateTick(); setInterval(gateTick,2000);
 }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initExtra); } else { initExtra(); }
