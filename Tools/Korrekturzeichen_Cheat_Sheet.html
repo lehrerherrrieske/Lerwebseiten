@@ -1274,12 +1274,36 @@ function beCalc(){
     ? (isDef?'Voreinstellung = Standard-Verteilung (15 Punkte ab 95&nbsp;%, 05 ab 45&nbsp;%, 01 ab 20&nbsp;%). Sie weicht bei 03 Punkten von den Abitur-Skalen der VwV ab (dort 33&nbsp;% statt 35&nbsp;%) – für die Abiturprüfung selbst gelten die amtlichen Tabellen (Teil 8).':'Eigene Prozentverteilung aktiv – für die Abiturprüfung gelten die amtlichen Skalen (VwV VII.1c).')
     : 'Für Klassenarbeiten in SEK I gibt es keine landesweite Punkte-Skala – maßgeblich ist der Beschluss deiner Fachkonferenz (§ 24 SOGYA).'+(isDef?' Voreinstellung = Standard-Verteilung (Note 1 ab 95&nbsp;%, 2 ab 80&nbsp;%, 3 ab 65&nbsp;%, 4 ab 45&nbsp;%, 5 ab 25&nbsp;%).':' Eigene Prozentverteilung aktiv.')+(tend?' Tendenzen: „−“ an der Untergrenze, „+“ direkt unter der nächstbesseren Note; „1+“ nur mit Zusatzpunkten über der Höchstpunktzahl, Note 6 ohne Tendenz.':'');
 }
-function beCopy(btn){
-  const rows=[...document.querySelectorAll('#be-tab tr')].map(tr=>[...tr.children].map(td=>td.textContent.replace(/ /g,' ')).join('\t')).join('\n');
-  const fb=document.getElementById('be-copyfb'); const done=()=>{ fb.textContent='✓ kopiert – in Word oder Excel einfügen'; setTimeout(()=>fb.textContent='',2500); };
-  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(rows).then(done,()=>beCopyFallback(rows,done)); } else beCopyFallback(rows,done);
+/* Notenschlüssel als Tabelle kopieren: Spaltenköpfe = Noten bzw. Notenpunkte, darunter % und Mindestpunktzahl */
+function beKeyData(){
+  const max=beNum('be-max'), step=parseFloat(document.getElementById('be-step').value);
+  if(!isFinite(max)||max<=0) return null;
+  const rows=beRows(max,step,bePctLoad(BE_MODE));
+  return { head:['Note'].concat(rows.map(r=>String(parseInt(r.lab,10)))),
+           pct:['%'].concat(rows.map(r=>beFmt(r.pct))),
+           min:['min. Pkt.'].concat(rows.map(r=>r.to<r.from?'–':beFmt(r.from))) };
 }
-function beCopyFallback(t,done){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
+function beCopy(btn){
+  const k=beKeyData(), fb=document.getElementById('be-copyfb');
+  if(!k){ fb.textContent='Bitte zuerst eine maximale Punktzahl eintragen.'; return; }
+  const lines=[k.head,k.pct,k.min];
+  const txt=lines.map(r=>r.join('\t')).join('\n');
+  const td='border:1px solid #000;padding:2px 8px;text-align:right;';
+  const html='<table style="border-collapse:collapse;">'+lines.map(r=>'<tr>'+r.map(c=>'<td style="'+td+'">'+c+'</td>').join('')+'</tr>').join('')+'</table>';
+  const stufe=BE_MODE==='s1'?'SEK I':'SEK II';
+  const done=()=>{ fb.textContent='✓ Notenschlüssel '+stufe+' kopiert – in Word oder Excel einfügen'; setTimeout(()=>fb.textContent='',3000); };
+  if(navigator.clipboard && window.ClipboardItem){
+    navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([txt],{type:'text/plain'})})])
+      .then(done,()=>beCopyFallback(html,done));
+  } else beCopyFallback(html,done);
+}
+function beCopyFallback(html,done){            /* markierte HTML-Tabelle kopieren – behält die Tabellenform */
+  const box=document.createElement('div'); box.contentEditable='true'; box.style.cssText='position:fixed;left:-9999px;top:0;';
+  box.innerHTML=html; document.body.appendChild(box);
+  const r=document.createRange(); r.selectNodeContents(box); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  sel.removeAllRanges(); box.remove();
+}
 /* ── Folgefehler-Check ── */
 const FF=[null,null,null,null];
 function ffSet(i,v,btn){
