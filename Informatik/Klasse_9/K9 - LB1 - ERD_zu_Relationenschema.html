@@ -1385,25 +1385,23 @@ body:not(.teach-on) .access-part{display:none;}
 
     <div class="subphase" id="ph4-sub-5">
       <h3>Schritt 3 · Schlüssel und Datentypen festlegen</h3>
-      <p>Jetzt wie in Aufgabe 1: Wähle für jedes Attribut <strong>Schlüssel</strong>, <strong>Datentyp</strong> und <strong>Länge</strong>. Denk an die Regel: <strong>int nur, wenn damit gerechnet wird.</strong></p>
+      <p>Wie in Aufgabe 1 – aber ohne Vorschau: Wähle für jedes Attribut <strong>Schlüssel</strong>, <strong>Datentyp</strong> und <strong>Länge</strong>. Denk an die Regel: <strong>int nur, wenn damit gerechnet wird.</strong></p>
       <div class="ex">
         <p><strong>Aufgabe 2b:</strong> Erstelle das Relationenschema für den Schulkiosk.</p>
         <div class="bk-grid" id="bk2-ui" data-req="bk2"></div>
         <div class="btn-row">
           <button class="btn btn-primary btn-sm" onclick="bkCheck('bk2')">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="bkReset('bk2')">↺ Zurücksetzen</button>
-          <button class="btn btn-ghost btn-sm" onclick="downloadText('Kiosk_Relationenschema.drawio', erdDrawio(bkModel('bk2')), 'application/xml')">📥 Mein Diagramm als draw.io-Datei</button>
         </div>
         <div class="fb grp-fb" id="bk2-fb"></div>
-        <p class="caption">Live-Vorschau deines Tabellendiagramms:</p>
-        <div class="erd-wrap" id="bk2-preview"></div>
+        <div class="callout callout-info">✏️ <span>Diesmal gibt es keine Vorschau – das Tabellendiagramm zeichnest du in Schritt 4 selbst in draw.io. Deine Auswahl hier ist dein Bauplan dafür.</span></div>
         <div class="hs" id="hs-bk2">
           <div data-tipp>Alle Längen stehen im Sachverhalt. Frag bei jeder Nummer: Wird damit gerechnet – oder dient sie nur zum Erkennen?</div>
           <div data-tipp>Telefonnummer und die beiden Nummern mit Buchstaben sind Text. Mit dem Preis rechnet die Kasse, mit dem Lagerbestand wird heruntergezählt – das sind ganze Zahlen. Vertragsbeginn ist ein Datum, vegan ein Ja/Nein.</div>
           <div data-tipp>Die n-Seite sind die Produkte – dort kommt in der hellen Zeile der FK Lieferanten_Nr hinein, mit demselben Datentyp wie der PK in „Lieferanten“: String(5).</div>
           <div data-muster><p><strong>Lieferanten:</strong> <u><strong>PK Lieferanten_Nr String(5)</strong></u> · Firmenname String(40) · Telefonnummer String(20) · Vertragsbeginn date · (keine weitere Zeile)<br>
             <strong>Produkte:</strong> <u><strong>PK Produkt_Nr String(6)</strong></u> · <u><strong>FK Lieferanten_Nr String(5)</strong></u> · Bezeichnung String(30) · Preis_Cent int(4) · Lagerbestand int(3) · vegan bool</p>
-            <div class="erd-wrap" id="erd-bk2-muster"></div></div>
+</div>
         </div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,6)">Weiter zu Schritt 4: Zeichnen &amp; hochladen ↓</button></div>
@@ -1429,7 +1427,7 @@ body:not(.teach-on) .access-part{display:none;}
         <div class="sol" id="sol-kiosk"><p>Vergleiche dein Diagramm mit der Musterlösung:</p><div class="erd-wrap" id="erd-kiosk-sol"></div></div>
         <div class="hs" id="hs-upload-kiosk">
           <div data-tipp>Starte mit der leeren Vorlage – dann stimmt das Format schon.</div>
-          <div data-tipp>Übertrage Zeile für Zeile aus deinem Baukasten (Schritt 3) – die Live-Vorschau dort ist deine Vorlage.</div>
+          <div data-tipp>Übertrage Zeile für Zeile aus deinem Baukasten (Schritt 3): Schlüssel in die linke Spalte, Attributname in die Mitte, Datentyp(Länge) nach rechts.</div>
           <div data-tipp>Exportieren: <em>Datei → Exportieren als → PNG</em> → <em>Exportieren</em> → Speicherort wählen. Diese Datei lädst du hier hoch.</div>
           <div data-muster><div class="erd-wrap" id="erd-kiosk-muster"></div></div>
         </div>
@@ -2586,7 +2584,7 @@ function bkCheck(k){
   });
   const fb=document.getElementById(k+'-fb');
   fb.className='fb grp-fb '+(ok===total?'ok':'err');
-  fb.innerHTML=ok===total?'✓ Alles richtig! Dein Diagramm entspricht genau dem Sachverhalt.':(ok+' von '+total+' Angaben richtig. Rot markierte Felder noch einmal mit dem Text vergleichen.');
+  fb.innerHTML=ok===total?(k==='bk2'?'✓ Alles richtig! Damit hast du den Bauplan für dein Diagramm in draw.io.':'✓ Alles richtig! Dein Diagramm entspricht genau dem Sachverhalt.'):(ok+' von '+total+' Angaben richtig. Rot markierte Felder noch einmal mit dem Text vergleichen.');
   const allSet=bkRows(k).every(r=>r.classList.contains('bk-extra')||r.querySelector('.bk-type').value);
   if(allSet) markDone(k); else fb.innerHTML+=' <strong>Wähle zuerst für jedes Attribut einen Datentyp</strong> – dann zählt die Aufgabe als bearbeitet.';
 }
