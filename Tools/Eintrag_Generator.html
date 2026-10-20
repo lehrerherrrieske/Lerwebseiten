@@ -9,7 +9,8 @@
   ============================================================================
   EINTRAGS-GENERATOR für das Lernportal (index.html)
   ============================================================================
-  Erzeugt die Code-Zeilen für die Arrays SEITEN und TOOLS der index.html.
+  Erzeugt die Code-Zeilen für die Arrays SEITEN und TOOLS der index.html
+  sowie für das Array LINKS der Linksammlung (Tools/Linksammlung.html).
   Ablage: im Ordner "Tools" neben der index.html, Eintrag in TOOLS z. B.:
     { gruppe:"Portal", titel:"Eintrags-Generator", datei:"Eintrag_Generator.html",
       beschreibung:"Code-Zeilen für SEITEN und TOOLS erzeugen" },
@@ -22,6 +23,11 @@
     werden Klasse, Lernbereich und Titel vorgeschlagen.
   - Fächer, Klassenstufen und bekannte Lernbereiche stehen unten im Skript
     (FAECHER, KLASSEN, LB_VORSCHLAEGE) und können angepasst werden.
+  - Tools: "gruppe" = Dropdown, "ugruppe" = Unterordner darin.
+  - Linksammlung: Fächer und Kategorien (LINK_FAECHER, LINK_KATEGORIEN) müssen
+    zu den gleichnamigen Listen in Tools/Linksammlung.html passen. Liegt der
+    Generator neben der Linksammlung (online auf GitHub Pages), warnt er,
+    wenn ein Link dort schon eingetragen ist.
   ============================================================================
 -->
 <style>
@@ -153,6 +159,10 @@
   .badge.wip{background:var(--color-border-light);color:var(--color-text-muted);border:1px solid var(--color-border);}
   .badge.hid{background:#F3E8FD;color:#6B3A8C;}
 
+  .seite-titel .host{margin-left:8px;font-weight:500;font-size:.78rem;}
+  .hinweis-badge{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;color:#7A4B12;
+    background:#FDF3E1;border:1px solid #F1D9AE;border-radius:6px;padding:1px 8px;}
+
   /* Sammlung */
   .sammlung{margin-top:22px;}
   .sammlung textarea{font-family:var(--font-mono);font-size:var(--fs-sm);min-height:8em;background:var(--color-surface-warm);}
@@ -169,7 +179,7 @@
       <div class="brand-mark">🧩</div>
       <div>
         <h1>Eintrags-Generator</h1>
-        <p>Code-Zeilen für die <code style="font-family:var(--font-mono)">index.html</code> zusammenklicken und kopieren</p>
+        <p>Code-Zeilen für die <code style="font-family:var(--font-mono)">index.html</code> und die Linksammlung zusammenklicken und kopieren</p>
       </div>
     </div>
     <a class="back" href="../index.html">← Zurück zum Lernportal</a>
@@ -180,6 +190,7 @@
   <div class="tabbar">
     <button class="tab-btn on" id="tabSeite">📄 Lernseite (SEITEN)</button>
     <button class="tab-btn" id="tabTool">🔧 Tool / Link (TOOLS)</button>
+    <button class="tab-btn" id="tabLink">🔗 Linksammlung (LINKS)</button>
   </div>
 
   <div class="layout">
@@ -282,13 +293,56 @@
             <input type="text" id="tBeschr" placeholder="z. B. Schüler zufällig auswählen" autocomplete="off">
           </div>
           <div class="field full">
-            <label class="lbl" for="tGruppe">Gruppe <span class="opt">(optional – Zwischenüberschrift)</span></label>
-            <input type="text" id="tGruppe" list="gruppenListe" placeholder="z. B. Unterricht" autocomplete="off">
-            <datalist id="gruppenListe"><option value="Unterricht"><option value="Portal"><option value="Quiz & Abfrage"><option value="Simulationen"><option value="Extern"></datalist>
+            <label class="lbl" for="tGruppe">Gruppe <code style="font-family:var(--font-mono)">gruppe</code> <span class="opt">(optional – Dropdown)</span></label>
+            <input type="text" id="tGruppe" list="gruppenListe" placeholder="z. B. Physik Tools" autocomplete="off">
+            <datalist id="gruppenListe"><option value="Allgemeine Tools"><option value="Physik Tools"><option value="Unterricht"><option value="Portal"><option value="Quiz & Abfrage"></datalist>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="tUgruppe">Unterordner <code style="font-family:var(--font-mono)">ugruppe</code> <span class="opt">(optional – Dropdown in der Gruppe)</span></label>
+            <input type="text" id="tUgruppe" list="ugruppenListe" placeholder="z. B. Simulationen & Schaltpläne" autocomplete="off">
+            <datalist id="ugruppenListe"></datalist>
+            <span class="hint">Nur zusammen mit einer Gruppe. Gleicher Text = gleicher Unterordner.</span>
           </div>
         </div>
         <div class="btns">
           <button class="btn ghost" id="tLeeren">Alles leeren</button>
+        </div>
+      </section>
+
+      <!-- Linksammlung -->
+      <section class="card" id="formLink" hidden>
+        <h2>Link für die Linksammlung</h2>
+        <div class="grid2">
+          <div class="field">
+            <label class="lbl" for="lFach">Fach <code style="font-family:var(--font-mono)">fach</code></label>
+            <select id="lFach"></select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="lKat">Kategorie <code style="font-family:var(--font-mono)">kat</code></label>
+            <select id="lKat"></select>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="lUrl">Adresse <code style="font-family:var(--font-mono)">url</code></label>
+            <input type="text" id="lUrl" placeholder="https://…" autocomplete="off">
+            <span class="hint">Tracking-Anhänge wie <code>?gclid=…</code> oder <code>utm_…</code> werden automatisch entfernt.</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="lTitel">Titel</label>
+            <input type="text" id="lTitel" placeholder="z. B. PhET – Physik-Simulationen" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="lBeschr">Beschreibung <span class="opt">(optional, empfohlen)</span></label>
+            <textarea id="lBeschr" rows="2" placeholder="Was bietet die Seite, wofür ist sie im Unterricht gut?"></textarea>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="lHinweis">Hinweis <span class="opt">(optional – kleines Schild auf der Karte)</span></label>
+            <input type="text" id="lHinweis" list="hinweisListe" placeholder="z. B. kostenpflichtig" autocomplete="off">
+            <datalist id="hinweisListe"><option value="kostenpflichtig"><option value="Anmeldung nötig"><option value="Abo – evtl. über Schullizenz"><option value="Lösungen nach kostenloser Anmeldung"><option value="Lizenz/Namensnennung beachten"></datalist>
+          </div>
+        </div>
+        <div class="btns">
+          <button class="btn ghost" id="lNaechste" title="Fach und Kategorie bleiben stehen">↻ Nächster Link (gleiche Kategorie)</button>
+          <button class="btn ghost" id="lLeeren">Alles leeren</button>
         </div>
       </section>
     </div>
@@ -317,7 +371,7 @@
 
       <section class="card sammlung">
         <h2>Sammlung <span class="count" id="sammelCount"></span></h2>
-        <textarea id="sammelText" readonly placeholder="Hier landen alle Zeilen, die du mit „➕ Zur Sammlung“ hinzufügst – praktisch, wenn du mehrere Seiten auf einmal einträgst."></textarea>
+        <textarea id="sammelText" readonly placeholder="Hier landen alle Zeilen, die du mit „➕ Zur Sammlung“ hinzufügst – praktisch, wenn du mehrere Seiten oder Links auf einmal einträgst. Tipp: SEITEN-, TOOLS- und LINKS-Zeilen nicht mischen, sie gehören in verschiedene Arrays."></textarea>
         <div class="btns">
           <button class="btn" id="sammelKopieren">📋 Alle kopieren</button>
           <button class="btn ghost" id="sammelLeeren">Sammlung leeren</button>
@@ -361,11 +415,31 @@ const LB_VORSCHLAEGE = {
   "biologie|9":    ["LB1 1: Anatomie und Physiologie der Samenpflanzen"],
 };
 
+// Linksammlung (Tools/Linksammlung.html): Fächer und Kategorien – ids müssen dort gleich sein
+const LINK_FAECHER = [
+  ...FAECHER.map(f => ({ id:f.id, name:f.name })),
+  { id:"allgemein", name:"Fächerübergreifend" },
+];
+const LINK_KATEGORIEN = [
+  { id:"wiki",      name:"📖 Wiki & Nachschlagewerke" },
+  { id:"material",  name:"🧰 Unterrichtsmaterial" },
+  { id:"aufgaben",  name:"✏️ Aufgabensammlungen" },
+  { id:"lernpfade", name:"🧭 Digitale Lernpfade" },
+  { id:"medien",    name:"🎬 Medien & Simulationen" },
+  { id:"tools",     name:"🛠️ Tools" },
+  { id:"entwuerfe", name:"📂 Materialien & Entwürfe" },
+];
+// Unterordner der Tools (Vorschläge im Feld "ugruppe"), Schlüssel = gruppe
+const UGRUPPEN_VORSCHLAEGE = {
+  "Physik Tools": ["Schulbücher & Nachschlagen", "Arbeitsblätter & Aufgaben", "Unterricht anderer Lehrkräfte",
+                   "Simulationen & Schaltpläne", "Experimente & Videos", "Astronomie", "Planung, Methoden & Archiv"],
+};
+
 /* ============================================================
    LOGIK
    ============================================================ */
 const $ = id => document.getElementById(id);
-let modus = "seite";   // "seite" | "tool"
+let modus = "seite";   // "seite" | "tool" | "link"
 
 const klasseLabel = id => /^(\d+)(GK|LK)$/.test(id) ? id.replace(/^(\d+)(GK|LK)$/, "$1 $2") : id;
 const ordnerVon = (fachId, klasse) => {
@@ -390,6 +464,14 @@ function fuelleKlassen(behalte){
   $("sKlasse").innerHTML = (KLASSEN[fach] || []).map(k => `<option value="${k}">Klasse ${klasseLabel(k)}</option>`).join("");
   if ((KLASSEN[fach] || []).includes(alt)) $("sKlasse").value = alt;
   fuelleLb();
+}
+function fuelleLinkListen(){
+  $("lFach").innerHTML = LINK_FAECHER.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("");
+  $("lKat").innerHTML = LINK_KATEGORIEN.map(k => `<option value="${k.id}">${esc(k.name)}</option>`).join("");
+}
+function fuelleUgruppen(){
+  const liste = UGRUPPEN_VORSCHLAEGE[$("tGruppe").value.trim()] || [];
+  $("ugruppenListe").innerHTML = liste.map(u => `<option value="${esc(u)}">`).join("");
 }
 function fuelleLb(){
   const liste = LB_VORSCHLAEGE[$("sFach").value + "|" + $("sKlasse").value] || [];
@@ -462,7 +544,8 @@ function teileSeite(){
 }
 function teileTool(){
   const t = [];
-  if ($("tGruppe").value.trim()) t.push(["gruppe", $("tGruppe").value.trim(), "Zwischenüberschrift"]);
+  if ($("tGruppe").value.trim()) t.push(["gruppe", $("tGruppe").value.trim(), "Dropdown im Reiter Tools"]);
+  if ($("tUgruppe").value.trim()) t.push(["ugruppe", $("tUgruppe").value.trim(), "Unterordner in der Gruppe"]);
   t.push(["titel", $("tTitel").value.trim(), "Text auf der Karte"]);
   if (toolArt() === "datei") t.push(["datei", $("tDatei").value.trim(), "Dateiname im Ordner Tools (selber Tab)"]);
   else                       t.push(["url",   $("tUrl").value.trim(),   "Externer Link (neuer Tab)"]);
@@ -470,6 +553,40 @@ function teileTool(){
   return t;
 }
 const toolArt = () => document.querySelector('input[name="tArt"]:checked').value;
+
+// Tracking-Parameter aus Links entfernen (gclid, utm_…, fbclid, srsltid …)
+function saubereUrl(u){
+  u = String(u).trim();
+  try{
+    const url = new URL(u);
+    [...url.searchParams.keys()].forEach(k => {
+      if (/^(utm_|gclid$|gbraid$|wbraid$|gad_|fbclid$|srsltid$|em_src$|em_cmp$|mc_)/i.test(k)) url.searchParams.delete(k);
+    });
+    let out = url.toString();
+    if (!url.search && u.indexOf("?") === -1 && out.endsWith("/") && !u.endsWith("/")) out = out.slice(0, -1);
+    return out;
+  }catch(e){ return u; }
+}
+const hostVon = u => { try{ return new URL(u).hostname.replace(/^www\./, ""); }catch(e){ return ""; } };
+
+function teileLink(){
+  const t = [
+    ["fach",  $("lFach").value, "Fach (id aus LINK_FAECHER der Linksammlung)"],
+    ["kat",   $("lKat").value,  "Kategorie = Dropdown im Fach"],
+    ["titel", $("lTitel").value.trim(), "Text auf der Karte"],
+    ["url",   saubereUrl($("lUrl").value), "Adresse (öffnet im neuen Tab)"],
+  ];
+  if ($("lBeschr").value.trim())  t.push(["beschreibung", $("lBeschr").value.trim().replace(/\s*\n\s*/g, " "), "Text unter dem Titel"]);
+  if ($("lHinweis").value.trim()) t.push(["hinweis", $("lHinweis").value.trim(), "Kleines Schild auf der Karte"]);
+  return t;
+}
+
+// Schon vorhandene Links der Linksammlung laden (klappt nur online neben der Linksammlung)
+let bekannteLinks = null;
+fetch("Linksammlung.html", { cache:"no-store" }).then(r => r.ok ? r.text() : "").then(txt => {
+  const urls = [...String(txt).matchAll(/url\s*:\s*"([^"]+)"/g)].map(m => m[1].replace(/\/$/, ""));
+  if (urls.length){ bekannteLinks = new Set(urls); aktualisieren(); }
+}).catch(() => {});
 
 function zeileText(teile){
   return "{ " + teile.map(([k, v]) => k + ":" + (v === true ? "true" : jsStr(v))).join(", ") + " },";
@@ -483,7 +600,7 @@ function zeileHtml(teile){
 
 /* ---------- Anzeige aktualisieren ---------- */
 function aktualisieren(){
-  const teile = modus === "seite" ? teileSeite() : teileTool();
+  const teile = modus === "seite" ? teileSeite() : modus === "tool" ? teileTool() : teileLink();
   $("ausgabe").innerHTML = zeileHtml(teile);
 
   // Aufbau-Tabelle
@@ -494,8 +611,10 @@ function aktualisieren(){
   const warns = [];
   const pflicht = modus === "seite"
     ? [["sLb","Lernbereich"],["sTitel","Titel"],["sDatei","Dateiname"]]
-    : [["tTitel","Titel"], toolArt() === "datei" ? ["tDatei","Dateiname"] : ["tUrl","Adresse"]];
-  ["sLb","sTitel","sDatei","tTitel","tDatei","tUrl"].forEach(id => $(id).classList.remove("fehlt"));
+    : modus === "tool"
+    ? [["tTitel","Titel"], toolArt() === "datei" ? ["tDatei","Dateiname"] : ["tUrl","Adresse"]]
+    : [["lTitel","Titel"],["lUrl","Adresse"]];
+  ["sLb","sTitel","sDatei","tTitel","tDatei","tUrl","lTitel","lUrl"].forEach(id => $(id).classList.remove("fehlt"));
   pflicht.forEach(([id, name]) => { if (!$(id).value.trim()){ $(id).classList.add("fehlt"); warns.push(name + " fehlt noch."); } });
 
   if (modus === "seite"){
@@ -507,9 +626,19 @@ function aktualisieren(){
     if (pwHinweis) warns.push(pwHinweis);
     const v = vorschlagAusDateiname(d);
     if (v && v.klasse !== $("sKlasse").value) warns.push(`Der Dateiname sagt Klasse ${klasseLabel(v.klasse)}, ausgewählt ist Klasse ${klasseLabel($("sKlasse").value)}.`);
-  } else if (toolArt() === "url"){
-    const u = $("tUrl").value.trim();
-    if (u && !/^https?:\/\//i.test(u)) warns.push("Die Adresse sollte mit https:// beginnen.");
+  } else if (modus === "tool"){
+    if (toolArt() === "url"){
+      const u = $("tUrl").value.trim();
+      if (u && !/^https?:\/\//i.test(u)) warns.push("Die Adresse sollte mit https:// beginnen.");
+    }
+    if ($("tUgruppe").value.trim() && !$("tGruppe").value.trim())
+      warns.push("Ein Unterordner braucht eine Gruppe – sonst wird er ignoriert.");
+  } else {
+    const roh = $("lUrl").value.trim(), u = saubereUrl(roh);
+    if (roh && !/^https?:\/\//i.test(roh)) warns.push("Die Adresse sollte mit https:// beginnen.");
+    if (roh && u !== roh) warns.push("Tracking-Anhänge wurden aus der Adresse entfernt.");
+    if (u && bekannteLinks && bekannteLinks.has(u.replace(/\/$/, ""))) warns.push("Diesen Link gibt es schon in der Linksammlung.");
+    if (!$("lBeschr").value.trim()) warns.push("Tipp: Eine kurze Beschreibung hilft beim späteren Wiederfinden (Suche).");
   }
   $("warns").innerHTML = warns.map(w => `<div class="warn">⚠️ ${esc(w)}</div>`).join("");
 
@@ -521,9 +650,17 @@ function aktualisieren(){
     $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>SEITEN</code>, Abschnitt `
       + `<b>${esc(fach ? fach.name.toUpperCase() : "")}</b> → <b>${esc(abschnittVon($("sKlasse").value))}</b>.<br>`
       + `<b>Hochladen:</b> die Datei nach <code>${esc(ordner)}/</code>`;
-  } else {
-    $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>TOOLS</code>.`
+  } else if (modus === "tool"){
+    const g = $("tGruppe").value.trim(), u = $("tUgruppe").value.trim();
+    $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>TOOLS</code>`
+      + (g ? ` – zu den anderen Einträgen der Gruppe <b>${esc(g)}</b>${u ? ` › <b>${esc(u)}</b>` : ""}` : "") + "."
       + (toolArt() === "datei" ? `<br><b>Hochladen:</b> die Datei nach <code>Tools/</code>` : "");
+  } else {
+    const f = LINK_FAECHER.find(f => f.id === $("lFach").value);
+    const k = LINK_KATEGORIEN.find(k => k.id === $("lKat").value);
+    $("wohin").innerHTML = `<b>Einfügen:</b> in <code>Tools/Linksammlung.html</code> im Array <code>LINKS</code>, `
+      + `Abschnitt <b>${esc(f ? f.name.toUpperCase() : "")}</b> → <b>${esc(k ? k.name : "")}</b>.<br>`
+      + `In der <code>index.html</code> muss dafür nichts geändert werden.`;
   }
 
   // Karten-Vorschau
@@ -535,6 +672,18 @@ function aktualisieren(){
     $("vorschau").innerHTML = `<div class="seite-card${$("fWip").checked ? " wip" : ""}${$("fHidden").checked ? " versteckt" : ""}">
         <div><div class="seite-titel">${esc(titel)}${badges}</div><div class="seite-sub">${esc(pfad)}</div></div>
         <div class="goto">${$("fWip").checked ? "" : "→"}</div></div>`;
+  } else if (modus === "link"){
+    const titel = $("lTitel").value.trim() || "Titel des Links";
+    const u = saubereUrl($("lUrl").value);
+    const sub = $("lBeschr").value.trim();
+    const hin = $("lHinweis").value.trim();
+    const k = LINK_KATEGORIEN.find(k => k.id === $("lKat").value);
+    $("vorschau").innerHTML = `<div class="seite-sub" style="margin-bottom:6px">${esc(k ? k.name : "")}</div>
+      <div class="seite-card">
+        <div><div class="seite-titel">${esc(titel)}<span class="seite-sub host">${esc(hostVon(u))}</span></div>
+        ${sub ? `<div class="seite-sub">${esc(sub)}</div>` : ""}
+        ${hin ? `<span class="hinweis-badge">ℹ️ ${esc(hin)}</span>` : ""}</div>
+        <div class="goto">↗</div></div>`;
   } else {
     const titel = $("tTitel").value.trim() || "Titel des Tools";
     const sub = $("tBeschr").value.trim();
@@ -543,6 +692,7 @@ function aktualisieren(){
         <div class="goto">${toolArt() === "datei" ? "→" : "↗"}</div></div>`;
   }
 
+  $("vorschauLbl").textContent = modus === "link" ? "So sieht die Karte in der Linksammlung aus" : "So sieht die Karte im Portal aus";
   // Schalter optisch markieren
   document.querySelectorAll(".flag").forEach(l => l.classList.toggle("on", l.querySelector("input").checked));
   return teile;
@@ -589,21 +739,33 @@ function leereSeitenFelder(alles){
 $("sNaechste").addEventListener("click", () => leereSeitenFelder(false));
 $("sLeeren").addEventListener("click", () => leereSeitenFelder(true));
 $("tLeeren").addEventListener("click", () => {
-  ["tTitel","tDatei","tUrl","tBeschr","tGruppe"].forEach(id => $(id).value = "");
+  ["tTitel","tDatei","tUrl","tBeschr","tGruppe","tUgruppe"].forEach(id => $(id).value = "");
   $("tDateiPick").value = ""; aktualisieren();
 });
+
+function leereLinkFelder(){
+  ["lTitel","lUrl","lBeschr","lHinweis"].forEach(id => $(id).value = "");
+  aktualisieren(); $("lUrl").focus();
+}
+$("lNaechste").addEventListener("click", leereLinkFelder);
+$("lLeeren").addEventListener("click", () => { $("lFach").selectedIndex = 0; $("lKat").selectedIndex = 0; leereLinkFelder(); });
+// Beim Verlassen des Adressfelds: Tracking-Anhänge direkt aus dem Feld entfernen
+$("lUrl").addEventListener("blur", () => { const u = saubereUrl($("lUrl").value); if (u !== $("lUrl").value){ $("lUrl").value = u; aktualisieren(); } });
 
 /* ---------- Reiter ---------- */
 function setModus(m){
   modus = m;
   $("tabSeite").classList.toggle("on", m === "seite");
   $("tabTool").classList.toggle("on", m === "tool");
+  $("tabLink").classList.toggle("on", m === "link");
   $("formSeite").hidden = m !== "seite";
   $("formTool").hidden = m !== "tool";
+  $("formLink").hidden = m !== "link";
   aktualisieren();
 }
 $("tabSeite").addEventListener("click", () => setModus("seite"));
 $("tabTool").addEventListener("click", () => setModus("tool"));
+$("tabLink").addEventListener("click", () => setModus("link"));
 document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener("change", () => {
   const datei = toolArt() === "datei";
   $("tDateiWrap").hidden = !datei; $("tPickWrap").hidden = !datei; $("tUrlWrap").hidden = datei;
@@ -613,6 +775,7 @@ document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener(
 /* ---------- Live-Aktualisierung ---------- */
 $("sFach").addEventListener("change", () => fuelleKlassen());
 $("sKlasse").addEventListener("change", fuelleLb);
+$("tGruppe").addEventListener("input", fuelleUgruppen);
 document.querySelectorAll("input, select, textarea").forEach(el => {
   if (el.type === "file") return;
   el.addEventListener("input", aktualisieren);
@@ -620,7 +783,7 @@ document.querySelectorAll("input, select, textarea").forEach(el => {
 });
 
 // Start
-fuelleFaecher(); fuelleKlassen("7"); zeigeSammlung(); aktualisieren();
+fuelleFaecher(); fuelleKlassen("7"); fuelleLinkListen(); fuelleUgruppen(); zeigeSammlung(); aktualisieren();
 </script>
 </body>
 </html>

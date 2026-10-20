@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Linksammlung</title>
+<!--
+  ============================================================================
+  LINKSAMMLUNG – Seite zum Lernportal
+  ============================================================================
+  Liegt im Ordner "Tools" neben der index.html (Tools/Linksammlung.html).
+  Erreichbar über den Reiter "🔗 Linksammlung" im Lernportal (der Reiter ist
+  nur im Lehrermodus sichtbar). Die Seite selbst ist frei aufrufbar.
+
+  AUFBAU:
+    1) Fach wählen (Karten wie im Portal, Liste LINK_FAECHER)
+    2) Links des Fachs, sortiert in Kategorien (KATEGORIEN) – jede Kategorie
+       ist ein Dropdown, anfangs alle eingeklappt. Die Suche durchsucht das
+       gewählte Fach und klappt Kategorien mit Treffern auf.
+  Direktlink auf ein Fach: Linksammlung.html#physik
+
+  NEUEN LINK EINTRAGEN: im Array LINKS (Abschnitt "// >>> LINKS") eine Zeile
+  ergänzen – am einfachsten mit dem Eintrags-Generator (Reiter "Linksammlung"):
+    { fach:"physik", kat:"medien", titel:"PhET", url:"https://…", beschreibung:"…" }
+  fach         : eine id aus LINK_FAECHER (physik, informatik, biologie,
+                 englisch, allgemein)
+  kat          : eine id aus KATEGORIEN (wiki, material, aufgaben, lernpfade,
+                 medien, tools, entwuerfe)
+  beschreibung : optional, kurzer Text unter dem Titel
+  hinweis      : optional, kleiner Hinweis (z. B. "kostenpflichtig")
+
+  NEUES FACH: in LINK_FAECHER eine Zeile ergänzen (gleiche id wie in der
+  index.html, damit die Farben passen).
+  ============================================================================
+-->
+<style>
+  :root{
+    --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7;
+    --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+    --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+    --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+    --color-accent:#33475B;
+    --color-accent-light:color-mix(in srgb, var(--color-accent) 11%, white);
+    --fach:var(--color-accent);
+    --fach-light:color-mix(in srgb, var(--fach) 12%, white);
+    --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+    --shadow-md:0 6px 20px rgba(44,42,40,.10);
+    --radius:10px; --radius-lg:18px; --radius-full:9999px;
+    --font-display:'Bricolage Grotesque',Georgia,serif;
+    --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --fs-sm:.85rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-h2:1.4rem; --fs-h1:2rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:112.5%;}
+  body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+    line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
+  .wrap{width:min(980px,100% - 32px);margin:0 auto;}
+  [hidden]{display:none !important;}
+
+  /* ── Kopf wie im Portal ── */
+  header{padding:30px 0 20px;border-bottom:1px solid var(--color-border);background:var(--color-surface);}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{width:52px;height:52px;border-radius:var(--radius);background:var(--color-accent-light);
+    display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+  h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+  header p{color:var(--color-text-muted);margin-top:2px;}
+  .crumbbar{display:flex;align-items:center;gap:10px;padding:16px 0 0;flex-wrap:wrap;}
+  .btn-back{display:inline-flex;align-items:center;gap:6px;background:var(--color-surface);
+    border:1px solid var(--color-border);border-radius:var(--radius-full);padding:7px 16px;
+    font-family:var(--font-body);font-size:var(--fs-sm);font-weight:600;color:var(--color-text-secondary);
+    text-decoration:none;cursor:pointer;transition:.15s;}
+  .btn-back:hover{border-color:var(--fach);color:var(--fach);}
+  .crumb-path{font-size:var(--fs-sm);color:var(--color-text-muted);}
+  .crumb-path b{color:var(--color-text);}
+
+  main{flex:1;padding:28px 0 70px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fadeUp .35s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── Fachauswahl (identisch zur index.html) ── */
+  .lead{font-size:var(--fs-lg);color:var(--color-text-secondary);margin-bottom:26px;}
+  .fach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:20px;}
+  .fach-card{
+    --fc-accent:var(--fach);
+    --fc-light:color-mix(in srgb, var(--fach) 12%, white);
+    cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    background:var(--color-surface);padding:30px 26px;text-align:left;font-family:var(--font-body);
+    display:flex;flex-direction:column;gap:12px;transition:.18s;box-shadow:var(--shadow);
+  }
+  .fach-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+  .fach-card:focus-visible{outline:3px solid var(--fc-accent);outline-offset:2px;}
+  .fach-card .icon{width:56px;height:56px;border-radius:var(--radius);display:flex;align-items:center;
+    justify-content:center;font-size:1.8rem;background:var(--fc-light);}
+  .fach-card h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--fc-accent);}
+  .fach-card p{color:var(--color-text-muted);font-size:var(--fs-sm);}
+  .fach-card .arrow{margin-top:6px;font-weight:700;color:var(--fc-accent);font-size:var(--fs-sm);}
+  .fach-card.leer-fach{opacity:.75;}
+
+  h2.section-title{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;margin-bottom:18px;}
+
+  /* ── Suche ── */
+  .suche{display:flex;align-items:center;gap:10px;background:var(--color-surface);
+    border:1.5px solid var(--color-border);border-radius:var(--radius-full);padding:6px 8px 6px 16px;
+    margin-bottom:10px;box-shadow:var(--shadow);transition:.15s;}
+  .suche:focus-within{border-color:var(--fach);box-shadow:0 0 0 3px var(--fach-light);}
+  .suche input{flex:1;min-width:0;border:none;outline:none;background:transparent;
+    font-family:var(--font-body);font-size:var(--fs-base);color:var(--color-text);padding:4px 0;}
+  .suche input::-webkit-search-cancel-button{display:none;}
+  .suche-x{border:none;background:var(--color-bg-warm);color:var(--color-text-secondary);
+    width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:var(--fs-sm);flex-shrink:0;}
+  .suche-x:hover{background:var(--color-border);}
+  .treffer{font-size:var(--fs-sm);color:var(--color-text-muted);margin:0 0 14px 16px;min-height:1.4em;}
+
+  /* ── Kategorien als Dropdown (wie die Lernbereiche im Portal) ── */
+  .lb-group{border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    background:var(--color-surface);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);}
+  .lb-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:transparent;border:none;cursor:pointer;padding:15px 20px;text-align:left;font-family:var(--font-body);}
+  .lb-head:hover{background:var(--color-surface-warm);}
+  .lb-head:focus-visible{outline:3px solid var(--fach);outline-offset:-3px;}
+  .lb-title{font-size:var(--fs-base);font-weight:700;color:var(--color-text);}
+  .lb-count{font-size:var(--fs-sm);color:var(--color-text-muted);font-weight:500;margin-left:10px;white-space:nowrap;}
+  .lb-icon{color:var(--color-text-muted);font-size:var(--fs-lg);line-height:1;flex-shrink:0;
+    transform:rotate(180deg);transition:transform .22s ease;}
+  .lb-head.open .lb-icon{transform:none;}
+  .lb-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease;}
+  .lb-head.open + .lb-body{grid-template-rows:1fr;}
+  .lb-body-inner{overflow:hidden;min-height:0;}
+  .lb-head:not(.open) + .lb-body .lb-body-inner{visibility:hidden;}
+  .kat-text{font-size:var(--fs-sm);color:var(--color-text-muted);margin:0 20px 10px;}
+
+  /* ── Link-Karten (wie die Tool-Karten im Portal) ── */
+  .link-card{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    border:1px solid var(--color-border);border-radius:var(--radius);background:var(--color-surface);
+    padding:14px 18px;margin:0 14px 12px;text-decoration:none;color:var(--color-text);
+    transition:.15s;box-shadow:var(--shadow);}
+  .link-card:hover{border-color:var(--fach);box-shadow:var(--shadow-md);transform:translateX(2px);}
+  .link-card:focus-visible{outline:3px solid var(--fach);outline-offset:2px;}
+  .link-titel{font-weight:700;font-size:var(--fs-base);}
+  .link-host{font-size:.78rem;color:var(--color-text-muted);margin-left:8px;font-weight:500;}
+  .link-meta{font-size:var(--fs-sm);color:var(--color-text-muted);margin-top:2px;}
+  .link-hinweis{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;color:#7A4B12;
+    background:#FDF3E1;border:1px solid #F1D9AE;border-radius:6px;padding:1px 8px;}
+  .link-goto{font-size:1.3rem;color:var(--fach);flex-shrink:0;}
+  mark.such{background:#FDF0B4;color:inherit;border-radius:3px;padding:0 1px;}
+
+  .empty-state{border:1px dashed var(--color-border);border-radius:var(--radius-lg);
+    padding:44px 24px;text-align:center;color:var(--color-text-muted);}
+  .empty-state .em-icon{font-size:2rem;margin-bottom:10px;}
+  .empty-state code{font-family:ui-monospace,Consolas,monospace;background:var(--color-surface);
+    border:1px solid var(--color-border);border-radius:5px;padding:0 5px;color:var(--color-text);}
+
+  footer{border-top:1px solid var(--color-border);padding:20px 0;text-align:center;
+    color:var(--color-text-muted);font-size:var(--fs-sm);}
+  @media (max-width:560px){
+    h1{font-size:1.6rem;}
+    .lb-head{padding:13px 16px;}
+    .link-card{margin:0 10px 10px;padding:12px 14px;}
+    .link-host{display:block;margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">🔗</div>
+      <div>
+        <h1>Linksammlung</h1>
+        <p>Material, Aufgaben, Medien und Werkzeuge für die Unterrichtsvorbereitung</p>
+      </div>
+    </div>
+    <div class="crumbbar">
+      <a class="btn-back" id="btnPortal" href="../index.html">← Lernportal</a>
+      <button class="btn-back" id="btnFaecher" hidden>← Fächer</button>
+      <span class="crumb-path" id="crumbPath"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- Schritt 1: Fach -->
+  <section class="view active" id="view-faecher">
+    <p class="lead">Wähle ein Fach:</p>
+    <div class="fach-grid" id="fachGrid"></div>
+  </section>
+
+  <!-- Schritt 2: Links des Fachs -->
+  <section class="view" id="view-links">
+    <h2 class="section-title" id="linksTitel">Links</h2>
+    <div class="suche" role="search" id="sucheBox">
+      <span aria-hidden="true">🔍</span>
+      <input type="search" id="suche" placeholder="Links durchsuchen – Titel, Beschreibung, Adresse"
+             aria-label="Links durchsuchen" autocomplete="off">
+      <button class="suche-x" id="sucheX" aria-label="Suche leeren" hidden>✕</button>
+    </div>
+    <div class="treffer" id="treffer" aria-live="polite"></div>
+    <div id="liste"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Externe Links öffnen in einem neuen Tab.</div>
+</footer>
+
+<script>
+// >>> FÄCHER (ids und Farben wie in der index.html)
+const LINK_FAECHER = [
+  { id:"physik",     name:"Physik",     icon:"⚛️", farbe:"#3F5E8C",
+    text:"Lehrbücher, Material, Aufgaben, Simulationen und Experimente für den Physikunterricht." },
+  { id:"informatik", name:"Informatik", icon:"💻", farbe:"#1C7168" },
+  { id:"biologie",   name:"Biologie",   icon:"🌱", farbe:"#5B7F2E" },
+  { id:"englisch",   name:"Englisch",   icon:"🗣️", farbe:"#9A3F5C" },
+  { id:"allgemein",  name:"Fächerübergreifend", icon:"🧰", farbe:"#7A5C3E",
+    text:"Werkzeuge und Portale, die in jedem Fach helfen – Quiz, Umfragen, Timer, Sitzpläne …" },
+];
+
+// >>> KATEGORIEN (Reihenfolge = Reihenfolge der Dropdowns)
+const KATEGORIEN = [
+  { id:"wiki",      icon:"📖", name:"Wiki & Nachschlagewerke", text:"Freie Online-Lehrbücher und Plattformen zum Nachschlagen." },
+  { id:"material",  icon:"🧰", name:"Unterrichtsmaterial",     text:"Fertige Reihen, Arbeitsblätter und Skripte – kostenlos und kostenpflichtig." },
+  { id:"aufgaben",  icon:"✏️", name:"Aufgabensammlungen",      text:"Aufgaben für Übung, Tests und Leistungskontrollen." },
+  { id:"lernpfade", icon:"🧭", name:"Digitale Lernpfade",      text:"Interaktive Lernumgebungen und Bildschirmexperimente für selbstständiges Arbeiten." },
+  { id:"medien",    icon:"🎬", name:"Medien & Simulationen",   text:"Simulationen, Experimentvideos und Versuchssammlungen." },
+  { id:"tools",     icon:"🛠️", name:"Tools",                   text:"Werkzeuge für Unterricht und Vorbereitung." },
+  { id:"entwuerfe", icon:"📂", name:"Materialien & Entwürfe",  text:"Unterrichtsentwürfe und Materialpools." },
+];
+
+// >>> LINKS
+const LINKS = [
+  /* ================= PHYSIK ================= */
+  // --- Wiki & Nachschlagewerke ---
+  { fach:"physik", kat:"wiki", titel:"Physik Libre", url:"https://physikbuch.schule/",
+    beschreibung:"Freies Online-Physikbuch für die Sekundarstufe II (CC BY-SA) – Texte und Grafiken dürfen für eigenes Material weiterverwendet werden." },
+  { fach:"physik", kat:"wiki", titel:"SchuBu – Physik", url:"https://de.schubu.org/t6",
+    beschreibung:"Interaktives Gratis-Schulbuch für die Sek I in drei Bänden: Licht & Schall, Mechanik, E-Lehre, Wärme, Radioaktivität – jeweils mit Kapitelquiz." },
+  { fach:"physik", kat:"wiki", titel:"Ulf Konrad – Lernplattform", url:"https://www.ulfkonrad.de/",
+    beschreibung:"Physik und Mathe nach Klassenstufen (5/6 bis 12/13) mit Aufgaben, Lösungen, Projekten, Glossar und Toolbox." },
+
+  // --- Unterrichtsmaterial ---
+  { fach:"physik", kat:"material", titel:"LEIFIphysik", url:"https://www.leifiphysik.de/",
+    beschreibung:"Grundwissen, Versuche, Aufgaben mit Lösungen und Simulationen – direkt filterbar nach Bundesland Sachsen und Klassenstufe." },
+  { fach:"physik", kat:"material", titel:"Landesbildungsserver BW – Physik", url:"https://www.schule-bw.de/faecher-und-schularten/mathematisch-naturwissenschaftliche-faecher/physik/unterrichtsmaterialien",
+    beschreibung:"Unterrichtsmaterialien Physik aus Baden-Württemberg.",
+    hinweis:"leitet inzwischen auf das Lehrerfortbildungsportal BW weiter" },
+  { fach:"physik", kat:"material", titel:"RAAbits Physik (Raabe)", url:"https://www.raabe.de/raabits",
+    beschreibung:"Komplett ausgearbeitete Unterrichtseinheiten mit Arbeitsblättern, Lösungen und Tests vom Raabe-Verlag.",
+    hinweis:"kostenpflichtig" },
+  { fach:"physik", kat:"material", titel:"meinUnterricht – Physik", url:"https://www.meinunterricht.de/arbeitsblaetter/physik/",
+    beschreibung:"Arbeitsblätter und Unterrichtsmaterial vieler Bildungsverlage an einem Ort.",
+    hinweis:"Abo – evtl. über Schullizenz" },
+  { fach:"physik", kat:"material", titel:"eduki – Physik", url:"https://eduki.com/de/suchergebnisse?query=physik",
+    beschreibung:"Marktplatz für Material von Lehrkräften für Lehrkräfte – vieles kostenlos, manches kostenpflichtig." },
+  { fach:"physik", kat:"material", titel:"4teachers – Physik", url:"https://www.4teachers.de/?action=search&searchstring=physik&searchtype=0",
+    beschreibung:"Kostenlose Materialbörse von Lehrkräften: Arbeitsblätter, Stundenentwürfe, Tests – Qualität schwankt, vorher prüfen." },
+  { fach:"physik", kat:"material", titel:"dwu-Unterrichtsmaterialien", url:"https://dwu-unterrichtsmaterialien.de/umaptg.htm",
+    beschreibung:"Physik nach Teilgebieten (Akustik bis Wärmelehre): Animationen, Arbeitsblätter und Schaltungs-Puzzles." },
+  { fach:"physik", kat:"material", titel:"physikdigital.de", url:"https://www.physikdigital.de/",
+    beschreibung:"Komplette Unterrichtsreihen von Sek I bis LK: anpassbare Arbeitsblätter, Experimentvideos, Animationen und Musterlösungen." },
+  { fach:"physik", kat:"material", titel:"Chemie-Physik-Skripte (A. Reichert)", url:"https://www.chemiephysikskripte.de/index.htm",
+    beschreibung:"Skripte, Arbeitsblätter und Schülerversuche – u. a. Quantenmechanik, Relativitätstheorie, Fotoeffekt, E-Feld, Versuche mit dem Handy." },
+  { fach:"physik", kat:"material", titel:"Karl-Heinrich Meyberg – Materialien", url:"https://gfs.khmeyberg.de/",
+    beschreibung:"Klassenarbeiten und Klausuren mit Lösungen, Abituraufgaben, GeoGebra-Applets und Unterrichts-Einsichten (Mathe, Physik, Informatik)." },
+  { fach:"physik", kat:"material", titel:"Energie macht Schule", url:"https://www.energie-macht-schule.de/themenuebersicht/",
+    beschreibung:"Energiethemen für den Unterricht – erneuerbare Energien, Netze, Wasserstoff – mit Handreichungen, Glossar, Wettbewerben und Exkursionstipps." },
+  { fach:"physik", kat:"material", titel:"ESERO Germany – Unterricht", url:"https://www.esero.de/unterricht",
+    beschreibung:"Kostenlose Unterrichtsmaterialien und fertige Reihen rund um Raumfahrt, Weltraum und Erdbeobachtung – auch fächerübergreifend." },
+
+  // --- Aufgabensammlungen ---
+  { fach:"physik", kat:"aufgaben", titel:"IQB – Schule", url:"https://www.iqb.hu-berlin.de/de/schule/",
+    beschreibung:"Infos zu Bildungsstandards, VERA und IQB-Bildungstrend samt Aufgabenbeispielen – Orientierung für kompetenzorientierte Aufgaben." },
+  { fach:"physik", kat:"aufgaben", titel:"Pittys Physikseite", url:"https://physikaufgaben.de/",
+    beschreibung:"Große Aufgabensammlung aus Sachsen, nach Themen sortiert und mit 1–3 Sternen gestuft – ideal zum Differenzieren.",
+    hinweis:"Lösungen nach kostenloser Anmeldung" },
+  { fach:"physik", kat:"aufgaben", titel:"SMART – Uni Bayreuth", url:"https://smart.uni-bayreuth.de/",
+    beschreibung:"Aufgabendatenbank der Uni Bayreuth für Mathematik und Naturwissenschaften – Aufgaben nach Fach, Thema und Jahrgangsstufe." },
+  { fach:"physik", kat:"aufgaben", titel:"Frank Haberecht – Physik-Material", url:"https://www.frank-haberecht.de/ph/ph_material.htm",
+    beschreibung:"Tabelle für Kl. 6–8: zu jedem Thema Arbeitsblatt mit Lösung, Übungen, Protokolle für Schülerexperimente, PhET-Simulation und Videos." },
+
+  // --- Digitale Lernpfade ---
+  { fach:"physik", kat:"lernpfade", titel:"tet.folio – Zentrale Experimente Physik", url:"https://tetfolio.fu-berlin.de/web/NRW-Physik-Experimente",
+    beschreibung:"Interaktive Bildschirmexperimente (FU Berlin) zu Photoeffekt, Fadenstrahlrohr, Franck-Hertz, Elektronenbeugung, Schwingungen, Radioaktivität u. v. m. – mit Aufgaben, Lösungen und Offline-Download." },
+  { fach:"physik", kat:"lernpfade", titel:"ZUM-Unterrichten – Physik", url:"https://unterrichten.zum.de/wiki/Kategorie:Physik",
+    beschreibung:"Frei lizenzierte Lernpfade und Materialien der Zentrale für Unterrichtsmedien – zum Nutzen, Kopieren und Mitschreiben." },
+  { fach:"physik", kat:"lernpfade", titel:"zebis.digital", url:"https://zebis.digital/",
+    beschreibung:"Schweizer Bildungsportal mit digitalen Unterrichtseinheiten und Lernsequenzen, nach Fach und Stufe durchsuchbar." },
+  { fach:"physik", kat:"lernpfade", titel:"Virtuelle Experimente", url:"https://virtuelle-experimente.de/index.php",
+    beschreibung:"Simulationen und Bildschirmexperimente, u. a. Elektronenkanone und Elektronen im E- und B-Feld (von der LMU-Physikdidaktik genutzt)." },
+  { fach:"physik", kat:"lernpfade", titel:"Physik im Advent", url:"https://www.physik-im-advent.de/",
+    beschreibung:"Adventskalender: vom 1. bis 24. Dezember jeden Tag ein Experiment oder Rätsel zum Nachmachen – mit Archiv und Gewinnspiel.",
+    hinweis:"jährliche Registrierung" },
+
+  // --- Medien & Simulationen ---
+  { fach:"physik", kat:"medien", titel:"PhET – Physik-Simulationen", url:"https://phet.colorado.edu/de/simulations/filter?subjects=physics&type=html",
+    beschreibung:"Die bekannten interaktiven Simulationen der University of Colorado – auf Deutsch, im Browser, auch am Tablet." },
+  { fach:"physik", kat:"medien", titel:"MintApps – Physik", url:"https://mintapps.org/html/mint-index-physics.html",
+    beschreibung:"Freie Web-Apps für den Physikunterricht – sofort am Beamer oder Tablet einsetzbar." },
+  { fach:"physik", kat:"medien", titel:"cg-physics", url:"https://www.cg-physics.org/index.php/de/",
+    beschreibung:"Computeranimierte Experimente, Erklärvideos, Bilderserien, interaktive Simulationen, AR und Arbeitsblätter – Bilder dürfen auf Arbeitsblättern genutzt werden." },
+  { fach:"physik", kat:"medien", titel:"PhySX – Physikalische Schulexperimente", url:"https://www.physikalische-schulexperimente.de/physo/Hauptseite",
+    beschreibung:"Wiki der HU Berlin mit Schulexperimenten nach Gebieten – inkl. didaktischer Einordnung, Aufbau und Sicherheitshinweisen." },
+  { fach:"physik", kat:"medien", titel:"Uni Marburg – Hörsaalversuche", url:"https://www.uni-marburg.de/de/fb13/fachbereich/infrastruktur/hoersaele/versuche",
+    beschreibung:"Hunderte Demonstrationsversuche (Mechanik bis Atomphysik) als frei nutzbare Kurzfilme – gut für Versuche, die die Sammlung nicht hergibt.",
+    hinweis:"Quelle angeben: FB Physik Marburg, Georg Otto" },
+  { fach:"physik", kat:"medien", titel:"LMU – „Stumme Videos“", url:"https://www.didaktik.physik.uni-muenchen.de/lehrerbildung/lehrerbildung_lmu/video/index.html",
+    beschreibung:"Unvertonte Videos von Standard-Demoversuchen (Mechanik, E-Lehre, Optik, Wärme, Atom) – Schüler vertonen und erklären selbst." },
+
+  // --- Tools ---
+  { fach:"physik", kat:"tools", titel:"Fehlerfortpflanzungs-Rechner", url:"http://www.julianibus.de/",
+    beschreibung:"Gaußsche Fehlerfortpflanzung für jede Formel – Messunsicherheit des Ergebnisses berechnen (Dezimalpunkt statt Komma)." },
+
+  /* ================= FÄCHERÜBERGREIFEND ================= */
+  // --- Tools ---
+  { fach:"allgemein", kat:"tools", titel:"WolframAlpha", url:"https://www.wolframalpha.com/",
+    beschreibung:"Rechnen, Gleichungen lösen, Einheiten umrechnen, Konstanten und Daten nachschlagen." },
+  { fach:"allgemein", kat:"tools", titel:"Kahoot", url:"https://create.kahoot.it/auth/login",
+    beschreibung:"Quizze für Einstieg, Wiederholung und Abfrage erstellen und spielen." },
+  { fach:"allgemein", kat:"tools", titel:"Mentimeter", url:"https://www.mentimeter.com/auth/de-DE/login?continue=%2Fapp%2Fhome",
+    beschreibung:"Live-Umfragen, Wortwolken und Quiz – Schülervorstellungen anonym sammeln." },
+  { fach:"allgemein", kat:"tools", titel:"QR-Code-Generator (TU Chemnitz)", url:"https://www.tu-chemnitz.de/urz/apps/qrcode/",
+    beschreibung:"QR-Codes für Arbeitsblätter und Folien erzeugen – ohne Werbung." },
+  { fach:"allgemein", kat:"tools", titel:"Flaticon", url:"https://www.flaticon.com/",
+    beschreibung:"Riesige Icon-Sammlung für Folien und Arbeitsblätter.",
+    hinweis:"Lizenz/Namensnennung beachten" },
+  { fach:"allgemein", kat:"tools", titel:"t1p.de – Kurz-URLs", url:"https://t1p.de/",
+    beschreibung:"Lange Links in kurze, gut abtippbare Adressen verwandeln." },
+  { fach:"allgemein", kat:"tools", titel:"Zotero", url:"https://www.zotero.org/",
+    beschreibung:"Kostenlose Literaturverwaltung – praktisch für Quellenverzeichnisse in Unterrichtsentwürfen." },
+  { fach:"allgemein", kat:"tools", titel:"Shuffle Buddy", url:"https://www.shufflebuddy.com/",
+    beschreibung:"Sitzpläne per Klick zufällig erstellen, mit eigenen Regeln (z. B. wer nicht nebeneinander sitzen soll)." },
+  { fach:"allgemein", kat:"tools", titel:"Online Stopwatch", url:"https://www.online-stopwatch.com/",
+    beschreibung:"Countdown-Timer und Stoppuhren fürs Beamerbild – für Arbeitsphasen und Experimente." },
+
+  // --- Materialien & Entwürfe ---
+  { fach:"allgemein", kat:"entwuerfe", titel:"Schulportal", url:"https://schulportal.de/",
+    beschreibung:"Unterrichtsentwürfe und Materialien. Nach der Anmeldung wird ein Freischaltcode an die Schule geschickt.",
+    hinweis:"Downloads kosten Punkte – angemeldet kann man aber alles ansehen" },
+];
+
+/* ============================================================
+   LOGIK – muss normalerweise nicht angepasst werden
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const normSuche = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ß/g, "ss");
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch(e){ return ""; } };
+const linkText = n => n === 1 ? "1 Link" : n + " Links";
+const linksVon = fachId => LINKS.filter(l => l.fach === fachId);
+let aktuellesFach = null;
+const offen = new Set();   // von Hand aufgeklappte Kategorien (nur im aktuellen Fach)
+
+/* ---------- Schritt 1: Fachkarten ---------- */
+function renderFaecher(){
+  const grid = $("fachGrid");
+  grid.innerHTML = "";
+  LINK_FAECHER.forEach(f => {
+    const n = linksVon(f.id).length;
+    const card = document.createElement("button");
+    card.className = "fach-card" + (n ? "" : " leer-fach");
+    card.style.setProperty("--fach", f.farbe || "var(--color-accent)");
+    card.innerHTML = `<div class="icon"></div><h2></h2><p></p><span class="arrow"></span>`;
+    card.querySelector(".icon").textContent = f.icon || "📘";
+    card.querySelector("h2").textContent = f.name;
+    card.querySelector("p").textContent = f.text || (n ? "Nützliche Links für " + f.name + "." : "Noch keine Links eingetragen.");
+    card.querySelector(".arrow").textContent = (n ? linkText(n) + " · " : "") + "Zu " + f.name + " →";
+    card.addEventListener("click", () => { location.hash = f.id; });
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- Schritt 2: Links eines Fachs ---------- */
+function markiere(el, text, woerter){
+  el.textContent = "";
+  const norm = normSuche(text);
+  if (!woerter.length || norm.length !== text.length){ el.textContent = text; return; }
+  const t = new Array(text.length).fill(false);
+  woerter.forEach(w => { let i = norm.indexOf(w); while (w && i !== -1){ for (let k = i; k < i + w.length; k++) t[k] = true; i = norm.indexOf(w, i + 1); } });
+  let i = 0;
+  while (i < text.length){
+    let j = i; while (j < text.length && t[j] === t[i]) j++;
+    const stueck = text.slice(i, j);
+    if (t[i]){ const m = document.createElement("mark"); m.className = "such"; m.textContent = stueck; el.appendChild(m); }
+    else el.appendChild(document.createTextNode(stueck));
+    i = j;
+  }
+}
+
+function linkKarte(l){
+  const a = document.createElement("a");
+  a.className = "link-card"; a.href = l.url; a.target = "_blank"; a.rel = "noopener";
+  a.innerHTML = `<div>
+      <div><span class="link-titel"></span><span class="link-host"></span></div>
+      ${l.beschreibung ? '<div class="link-meta"></div>' : ""}
+      ${l.hinweis ? '<span class="link-hinweis"></span>' : ""}
+    </div><div class="link-goto" aria-hidden="true">↗</div>`;
+  a.querySelector(".link-host").textContent = host(l.url);
+  if (l.hinweis) a.querySelector(".link-hinweis").textContent = "ℹ️ " + l.hinweis;
+  a._l = l;
+  a.dataset.such = normSuche([l.titel, l.beschreibung, l.hinweis, host(l.url)].filter(Boolean).join(" "));
+  return a;
+}
+
+function katDropdown(k, items){
+  const block = document.createElement("div");
+  block.className = "lb-group kat";
+  block.dataset.kat = k.id;
+  const head = document.createElement("button");
+  head.className = "lb-head";                       // standardmäßig eingeklappt
+  head.setAttribute("aria-expanded", "false");
+  head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count"></span></span>
+    <span class="lb-icon" aria-hidden="true">▲</span>`;
+  head.querySelector(".lb-title").textContent = (k.icon ? k.icon + " " : "") + k.name;
+  head.querySelector(".lb-count").textContent = linkText(items.length);
+  head.addEventListener("click", () => {
+    const auf = head.classList.toggle("open");
+    head.setAttribute("aria-expanded", auf ? "true" : "false");
+    if (!$("suche").value.trim()) auf ? offen.add(k.id) : offen.delete(k.id);
+  });
+  const body = document.createElement("div");
+  body.className = "lb-body";
+  const inner = document.createElement("div");
+  inner.className = "lb-body-inner";
+  if (k.text){ const p = document.createElement("p"); p.className = "kat-text"; p.textContent = k.text; inner.appendChild(p); }
+  items.forEach(l => inner.appendChild(linkKarte(l)));
+  body.appendChild(inner);
+  block.appendChild(head); block.appendChild(body);
+  return block;
+}
+
+function goFach(fachId){
+  const f = LINK_FAECHER.find(f => f.id === fachId);
+  if (!f){ goStart(); return; }
+  aktuellesFach = f;
+  offen.clear();
+  document.body.style.setProperty("--fach", f.farbe || "var(--color-accent)");
+  $("linksTitel").textContent = (f.icon ? f.icon + " " : "") + f.name + " — Linksammlung";
+  $("crumbPath").innerHTML = "Linksammlung › <b></b>";
+  $("crumbPath").querySelector("b").textContent = f.name;
+  $("btnFaecher").hidden = false;
+  $("suche").value = "";
+
+  const liste = $("liste");
+  liste.innerHTML = "";
+  const links = linksVon(f.id);
+  $("sucheBox").hidden = !links.length;
+  if (!links.length){
+    liste.innerHTML = `<div class="empty-state"><div class="em-icon">🔗</div>
+      Für dieses Fach sind noch keine Links eingetragen.<br>
+      Im Array <code>LINKS</code> eine Zeile mit <code>fach:"${f.id}"</code> ergänzen –
+      am einfachsten mit dem Eintrags-Generator.</div>`;
+  } else {
+    KATEGORIEN.forEach(k => {
+      const items = links.filter(l => l.kat === k.id);
+      if (items.length) liste.appendChild(katDropdown(k, items));
+    });
+    // Links mit unbekannter Kategorie nicht verschlucken
+    const ids = KATEGORIEN.map(k => k.id);
+    const rest = links.filter(l => !ids.includes(l.kat));
+    if (rest.length) liste.appendChild(katDropdown({ id:"_rest", icon:"📌", name:"Sonstiges" }, rest));
+    const leer = document.createElement("div");
+    leer.className = "empty-state"; leer.id = "keineTreffer"; leer.hidden = true;
+    liste.appendChild(leer);
+  }
+  filtern();
+  zeige("view-links");
+  window.scrollTo(0, 0);
+}
+
+function goStart(){
+  aktuellesFach = null;
+  document.body.style.removeProperty("--fach");
+  $("btnFaecher").hidden = true;
+  $("crumbPath").textContent = "";
+  zeige("view-faecher");
+}
+
+function zeige(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === id));
+}
+
+/* ---------- Suche im gewählten Fach ---------- */
+function filtern(){
+  const roh = $("suche").value.trim();
+  const woerter = normSuche(roh).split(/\s+/).filter(Boolean);
+  $("sucheX").hidden = !roh;
+  let gesamt = 0;
+  document.querySelectorAll("#liste .kat").forEach(g => {
+    let n = 0;
+    const karten = g.querySelectorAll(".link-card");
+    karten.forEach(a => {
+      const passt = woerter.every(w => a.dataset.such.includes(w));
+      a.hidden = !passt; if (passt) n++;
+      markiere(a.querySelector(".link-titel"), a._l.titel, woerter);
+      const m = a.querySelector(".link-meta"); if (m) markiere(m, a._l.beschreibung, woerter);
+    });
+    gesamt += n;
+    g.hidden = !n;
+    g.querySelector(".lb-count").textContent = woerter.length ? `${n} von ${karten.length}` : linkText(karten.length);
+    const head = g.querySelector(".lb-head");
+    const auf = woerter.length ? n > 0 : offen.has(g.dataset.kat);   // ohne Suche: eingeklappt bzw. wie von Hand gesetzt
+    head.classList.toggle("open", auf);
+    head.setAttribute("aria-expanded", auf ? "true" : "false");
+  });
+  const leer = $("keineTreffer");
+  if (leer){ leer.hidden = !(woerter.length && !gesamt); leer.textContent = `Keine Treffer für „${roh}“.`; }
+  $("treffer").textContent = woerter.length && gesamt ? gesamt + " Treffer" : "";
+}
+$("suche").addEventListener("input", filtern);
+$("suche").addEventListener("keydown", e => {
+  if (e.key === "Escape"){ e.target.value = ""; filtern(); }
+  if (e.key === "Enter"){   // genau ein Treffer -> öffnen
+    const s = [...document.querySelectorAll("#liste .link-card")].filter(a => !a.hidden && !a.closest("[hidden]"));
+    if (e.target.value.trim() && s.length === 1) s[0].click();
+  }
+});
+$("sucheX").addEventListener("click", () => { $("suche").value = ""; filtern(); $("suche").focus(); });
+
+/* ---------- Navigation über #fach (Zurück-Taste des Browsers funktioniert) ---------- */
+$("btnFaecher").addEventListener("click", () => {
+  history.pushState("", document.title, location.pathname + location.search);
+  goStart();
+});
+function route(){
+  const id = decodeURIComponent(location.hash.replace(/^#/, ""));
+  if (id && LINK_FAECHER.some(f => f.id === id)) goFach(id); else goStart();
+}
+window.addEventListener("hashchange", route);
+window.addEventListener("popstate", route);
+
+renderFaecher();
+route();
+</script>
+</body>
+</html>

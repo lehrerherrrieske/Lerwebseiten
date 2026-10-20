@@ -79,7 +79,18 @@
   Passwort steht oben im HTML bei <div class="teachbar" ... data-pw="...">.
   Aktiv: WIP-Seiten öffnen, versteckte Seiten sehen, Seiten-Passwörter sehen,
   Seitenzahlen inkl. WIP/versteckt und Reiter "Tools & Links" über der
-  Fachauswahl (Inhalt aus dem Array TOOLS im Skript).
+  Fachauswahl (Inhalt aus dem Array TOOLS im Skript). Tools können mit
+  "gruppe" in Dropdowns und mit "ugruppe" in Unterordner sortiert werden.
+  Dritter Reiter "Linksammlung": öffnet Tools/Linksammlung.html (eigene Seite,
+  Links dort im Array LINKS pflegen). Nur der Reiter ist an den Lehrermodus
+  gebunden, die Seite selbst ist frei aufrufbar.
+
+  ADRESSEN (#…) – damit die Zurück-Taste des Browsers funktioniert und man
+  Ansichten direkt verlinken / als Lesezeichen speichern kann:
+    index.html              Fachauswahl
+    index.html#physik       Klassenstufen eines Fachs (id aus FAECHER)
+    index.html#physik/7     Lernseiten einer Klasse (id aus KLASSEN, z. B. 11GK)
+    index.html#tools        Tools & Links (nur im Lehrermodus, sonst Fachauswahl)
 
   Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
   automatisch einen freundlichen Platzhaltertext – kein Fehler.
@@ -283,6 +294,8 @@
   /* Tools: Gruppen als Dropdowns, Karten darin wie bei den Lernseiten */
   .lb-body-inner .tool-card{margin:0 14px 12px;}
   .tools-lose{margin-bottom:14px;}
+  .lb-group.ulb .tool-card{margin:0 12px 10px;}   /* Tool-Karten in Unterordnern */
+  a.tab-btn{text-decoration:none;display:inline-block;}
 
   /* Suche in den Tools */
   .tool-suche{display:flex;align-items:center;gap:10px;background:var(--color-surface);
@@ -390,6 +403,7 @@
   <div class="tabbar lehrer-only" id="tabbar" hidden>
     <button class="tab-btn on" id="tabFaecher">📚 Fächer</button>
     <button class="tab-btn" id="tabTools">🔧 Tools &amp; nützliche Links</button>
+    <a class="tab-btn" id="tabLinks" href="Tools/Linksammlung.html">🔗 Linksammlung</a>
   </div>
 
   <!-- Schritt 1: Fach -->
@@ -416,7 +430,7 @@
     <h2 class="section-title">Tools &amp; nützliche Links</h2>
     <div class="tool-suche" role="search">
       <span class="tool-suche-icon" aria-hidden="true">🔍</span>
-      <input type="search" id="toolSuche" placeholder="Tools durchsuchen – Titel, Beschreibung oder Gruppe"
+      <input type="search" id="toolSuche" placeholder="Tools durchsuchen – Titel, Beschreibung, Gruppe oder Unterordner"
              aria-label="Tools durchsuchen" autocomplete="off">
       <button class="tool-suche-x" id="toolSucheX" title="Suche leeren" aria-label="Suche leeren" hidden>✕</button>
     </div>
@@ -592,15 +606,21 @@ const SEITEN = [
 
 // >>> TOOLS & LINKS: nur im Lehrermodus über den Reiter "Tools & nützliche Links"
 // sichtbar. Jede Zeile entweder
-//   { titel, datei, beschreibung (optional), gruppe (optional) }  -> Datei im Ordner TOOLS_ORDNER
-//   { titel, url,   beschreibung (optional), gruppe (optional) }  -> externer Link (neuer Tab)
+//   { titel, datei, beschreibung (optional), gruppe (optional), ugruppe (optional) }  -> Datei im Ordner TOOLS_ORDNER
+//   { titel, url,   beschreibung (optional), gruppe (optional), ugruppe (optional) }  -> externer Link (neuer Tab)
 // "datei" ist NUR der Dateiname – der Ordner kommt automatisch aus TOOLS_ORDNER.
 // Einträge mit gleicher "gruppe" landen in einem gemeinsamen Dropdown (anfangs zugeklappt),
-// Einträge ohne "gruppe" stehen oben. Über der Liste gibt es eine Suche
-// (Titel, Beschreibung, Gruppe, Dateiname); Gruppen mit Treffern klappen dabei auf.
+// Einträge ohne "gruppe" stehen oben.
+// "ugruppe" = Unterordner innerhalb einer Gruppe (wie "ulb" bei den Lernseiten):
+// alle Einträge mit gleicher gruppe UND gleicher ugruppe landen in einem Unter-Dropdown, z. B.
+//   { gruppe:"Physik Tools", ugruppe:"Simulationen", titel:"EveryCircuit", url:"https://everycircuit.com/app" }
+// Über der Liste gibt es eine Suche (Titel, Beschreibung, Gruppe, Unterordner, Dateiname);
+// Gruppen und Unterordner mit Treffern klappen dabei auf.
 // Eigene Tools öffnen sich im selben Tab (Lehrermodus bleibt so aktiv),
 // externe Links in einem neuen Tab.
 const TOOLS_ORDNER = "Tools";   // Ordner neben der index.html
+// Die Linksammlung ist eine eigene Seite im TOOLS_ORDNER (Reiter "Linksammlung", nur Lehrermodus)
+const LINKSAMMLUNG_DATEI = "Linksammlung.html";
 const TOOLS = [
   // { gruppe:"Unterricht", titel:"Zufallsgenerator", datei:"Zufallsgenerator.html",
   //   beschreibung:"Schüler zufällig auswählen" },
@@ -615,6 +635,94 @@ const TOOLS = [
   { gruppe:"Allgemeine Tools", titel:"Kahoot", url:"https://create.kahoot.it/library", beschreibung:"Eigene Kahoots verwalten" },
   
   { gruppe:"Physik Tools", titel:"Physik Apps", url:"https://www.teacher.dev/apps", beschreibung:"Erstellung von Physikalischen Zeichnungen und Anwendungen" },
+
+  // --- Physik Tools › Schulbücher & Nachschlagen ---
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"Physik Libre", url:"https://physikbuch.schule/index.html",
+    beschreibung:"Freies Online-Physikbuch für die Sek II (CC BY-SA) – Texte und Abbildungen dürfen fürs Arbeitsblatt weiterverwendet werden" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"SchuBu – Physik", url:"https://de.schubu.org/t6",
+    beschreibung:"Interaktives Gratis-Schulbuch Sek I (3 Bände): Optik, Mechanik, E-Lehre, Wärme, Radioaktivität – mit Kapitelquiz" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"LEIFIphysik", url:"https://www.leifiphysik.de/",
+    beschreibung:"Der Klassiker: Grundwissen, Versuche, Aufgaben mit Lösungen und Simulationen – filterbar nach Sachsen und Klassenstufe" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"Abi-Physik – Magnetische Flussdichte", url:"https://www.abi-physik.de/buch/das-magnetfeld/magnetische-flussdichte/",
+    beschreibung:"Kompaktes Oberstufen-Lernportal: Flussdichte, Permeabilität, Feld von Leiter, Spule und Helmholtz-Spule mit Formeln" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"Grundwissen Physik – Elektrische Ladung", url:"https://www.grund-wissen.de/physik/elektrizitaet-und-magnetismus/ladung.html",
+    beschreibung:"Sek-I-Grundlagen zu Ladung, Ladungstrennung, Bandgenerator, Elektroskop und Glimmlampe – mit SVG-Grafiken, Experimenten und Aufgaben" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"supermagnete – Entmagnetisierung", url:"https://www.supermagnete.de/magnetismus/Entmagnetisierung",
+    beschreibung:"Magnetismus-Lexikon: wie Stöße, Hitze (Curie-Temperatur) oder Gegenfelder Magnete entmagnetisieren – Elementarmagnet-Modell" },
+  { gruppe:"Physik Tools", ugruppe:"Schulbücher & Nachschlagen", titel:"tec-science – Strahlung trifft Materie", url:"https://www.tec-science.com/de/optik/geometrische-optik/wechselwirkung-strahlung-licht-materie/",
+    beschreibung:"Optik: Absorption, Transmission, Reflexion (gerichtet/diffus) mit Fotos und kurzen Animationen – gut für Einstiege" },
+
+  // --- Physik Tools › Arbeitsblätter & Aufgaben ---
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"Pittys Physikseite – Aufgaben", url:"https://physikaufgaben.de/aufgaben_zeige_an.php?thid=3&tab=7&auswahl_t3=211&thid=3&tab=7&auswahl_n3=4",
+    beschreibung:"Riesige Aufgabensammlung aus Sachsen mit 1–3 Sternen (Differenzierung!), hier Optik/ebene Spiegel – Lösungen nach kostenloser Anmeldung" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"MAX Academy – Magnetischer Fluss", url:"https://www.max-academy.de/contentPool/606ac4fcd6a1480064c6c797",
+    beschreibung:"Anspruchsvolle Aufgaben mit Lösungen zu Ringspule, Eisenkreis und Fluss – eher LK/Studium, gut als Knobelaufgabe für Starke" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"Übungskönig – Ohmsches Gesetz", url:"https://www.uebungskoenig.de/physik/7-klasse/ohmsches-gesetz/",
+    beschreibung:"Kostenlose Arbeitsblätter mit Lösungen zu I, U, R und Ohmschem Gesetz – Einheiten umrechnen, Schaltskizzen" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"Schulportal – Arbeitsblätter Kl. 5/6", url:"https://schulportal.de/?cmd=suche&smd%5Btyp%5D%5B6%5D=6&smd%5Bf%5D%5B10%5D=10&smd%5Bks%5D%5B500%5D=500&smd%5Bks%5D%5B5%5D=5&smd%5Bks%5D%5B6%5D=6&o=e&a=DESC&ls=40",
+    beschreibung:"Gespeicherte Suche: Physik-Arbeitsblätter für Klasse 5/6 – Anmeldung nötig, Downloads kosten Punkte" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"dwu-Unterrichtsmaterialien – Physik", url:"https://dwu-unterrichtsmaterialien.de/umaptg.htm",
+    beschreibung:"Sammlung nach Teilgebieten: Animationen, Arbeitsblätter und Schaltungs-Puzzles von Akustik bis Wärmelehre" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"raschweb – Physik & Mathe", url:"http://www.raschweb.de/",
+    beschreibung:"Tests, Aufgaben- und Arbeitsblätter für Physik 7–11 und Astrophysik (bayer. G8) – nicht mehr aktualisiert, aber noch online" },
+  { gruppe:"Physik Tools", ugruppe:"Arbeitsblätter & Aufgaben", titel:"Ingo Bartling – Material", url:"https://www.ingo-bartling.de/",
+    beschreibung:"Übungsaufgaben, Online-Tests und Software für Physik 7–11, Mathe und Informatik (Bayern)" },
+
+  // --- Physik Tools › Unterricht anderer Lehrkräfte ---
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Ulf Konrad – Physik", url:"https://www.ulfkonrad.de/physik",
+    beschreibung:"Lernplattform nach Klassen 5/6 bis 12/13 mit Projekten (Mausefalle, Tauchen, Foto), Größen & Messen, Glossar, Toolbox" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Ulf Konrad – Startseite", url:"https://www.ulfkonrad.de/",
+    beschreibung:"Einstieg zur Plattform (Physik & Mathe) mit aktuellen Beiträgen, z. B. Stromkreis, Leiter/Isolatoren" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Findi – Physik 10 (Sachsen)", url:"https://www.findi.de/index.php/physik-10",
+    beschreibung:"Komplette Stundenplanung Kl. 10 nach sächsischem Lehrplan (Schwingungen, Wellen, Licht, Hertzsche Wellen) mit Präsentationen, ABs, SE" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Physik Gusic – 10C", url:"https://physikgusic.wordpress.com/10c/",
+    beschreibung:"Unterrichtsblog einer Klasse 10 – Hinweis: Seite war beim letzten Prüfen nicht erreichbar (404)" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Physik in Klasse 12 (Klassenblog)", url:"https://bbstphysik12.wordpress.com/",
+    beschreibung:"Schüler-Stundenprotokolle zu E-Feld, Lorentzkraft, Hall-Effekt, Messunsicherheiten – Idee für eigene Protokoll-Blogs" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"physikdigital.de", url:"https://www.physikdigital.de/",
+    beschreibung:"Komplette Unterrichtsreihen Sek I bis LK: anpassbare Arbeitsblätter, Experimentvideos, Animationen, Musterlösungen" },
+  { gruppe:"Physik Tools", ugruppe:"Unterricht anderer Lehrkräfte", titel:"Physikunterricht-Online – Fadenpendel", url:"https://physikunterricht-online.de/jahrgang-11/das-fadenpendel/",
+    beschreibung:"Saubere Herleitung T = 2π√(l/g) über Rückstellkraft und Kleinwinkelnäherung – Kl. 7 bis Q2 auf der Seite" },
+
+  // --- Physik Tools › Simulationen & Schaltpläne ---
+  { gruppe:"Physik Tools", ugruppe:"Simulationen & Schaltpläne", titel:"EveryCircuit", url:"https://everycircuit.com/app",
+    beschreibung:"Schaltungssimulator im Browser: Ströme und Spannungen werden live animiert – stark für Reihen-/Parallelschaltung" },
+  { gruppe:"Physik Tools", ugruppe:"Simulationen & Schaltpläne", titel:"GeoGebra – Schaltplan erstellen", url:"https://www.geogebra.org/m/FeuwyUjj",
+    beschreibung:"Schaltpläne per Baukasten zeichnen und als Grafik für Arbeitsblätter/LKs exportieren" },
+  { gruppe:"Physik Tools", ugruppe:"Simulationen & Schaltpläne", titel:"Visual Paradigm – Circuit Diagram", url:"https://online.visual-paradigm.com/app/diagrams/#diagram:proj=0&type=CircuitDiagram&width=11&height=8.5&unit=inch",
+    beschreibung:"Online-Zeichenprogramm, direkt im Schaltplan-Modus – für saubere Schaltskizzen (Konto nötig)" },
+  { gruppe:"Physik Tools", ugruppe:"Simulationen & Schaltpläne", titel:"MintApps", url:"https://mintapps.org/html/mint-index.html",
+    beschreibung:"Freie Web-Apps für den MINT-Unterricht: knobeln, entdecken, verstehen – sofort am Beamer oder Tablet einsetzbar" },
+  { gruppe:"Physik Tools", ugruppe:"Simulationen & Schaltpläne", titel:"LMU – Elektronenkanone", url:"https://www.didaktik.physik.uni-muenchen.de/multimedia/elektronenablenkroehre/elektronenkanone1/index.html",
+    beschreibung:"Aufbau, Theorie und Simulation der Elektronenkanone inkl. relativistischer Rechnung und Aufgaben mit Lösungen (Sek II)" },
+
+  // --- Physik Tools › Experimente & Videos ---
+  { gruppe:"Physik Tools", ugruppe:"Experimente & Videos", titel:"PhySX – Versuchsreihe Stromkreise", url:"https://www.physikalische-schulexperimente.de/physo/Versuchsreihe_zu_Stromkreisen_als_Einf%C3%BChrung_in_die_Elektrizit%C3%A4tslehre",
+    beschreibung:"4 Einstiegsexperimente Kl. 5–8 (u. a. „Mensch als Leiter“, Schmelzsicherung) – mit Schülervorstellungen zum Stromkreis" },
+  { gruppe:"Physik Tools", ugruppe:"Experimente & Videos", titel:"Uni Konstanz – Elektroskop", url:"https://www.physik.uni-konstanz.de/fr/vs/themen/em-lehre/elektrostatik/elektrische-ladungen-und-influenz/elektroskop/",
+    beschreibung:"Vorlesungsversuch Elektroskop (Ladung & Influenz) mit Aufbau und Beschreibung" },
+  { gruppe:"Physik Tools", ugruppe:"Experimente & Videos", titel:"Physik mit c (YouTube)", url:"https://www.youtube.com/@Physikmitc/videos",
+    beschreibung:"YouTube-Kanal mit Erklärvideos zur Schulphysik" },
+
+  // --- Physik Tools › Astronomie ---
+  { gruppe:"Physik Tools", ugruppe:"Astronomie", titel:"Astronomie.de", url:"https://www.astronomie.de/",
+    beschreibung:"Aktueller Sternenhimmel, Sternkarten, Mond- und Planetenlauf, Astrofoto des Monats, eigener Bereich „Astronomie in der Schule“" },
+  { gruppe:"Physik Tools", ugruppe:"Astronomie", titel:"LFB BW – Unser Sonnensystem (Lösungen)", url:"https://lehrerfortbildung-bw.de/u_matnatech/astronomie/gym/bp2016/fb1/4_loesungen/1_us/",
+    beschreibung:"Fortbildungsmaterial Astronomie Kl. 11/12: Kepler, Sternkarte, Sonne – Kopiervorlagen, Lösungen, Präsentationen" },
+  { gruppe:"Physik Tools", ugruppe:"Astronomie", titel:"MPS – Auswirkungen von Sonnenstürmen", url:"https://www.mps.mpg.de/sonnenstuerme-sonnenaktivitaet-faq/4",
+    beschreibung:"Max-Planck-FAQ: Polarlichter, Stromnetze, Satelliten, GPS, Astronauten – toller Alltagsbezug für Magnetfeld & Induktion" },
+
+  // --- Physik Tools › Planung, Methoden & Archiv ---
+  { gruppe:"Physik Tools", ugruppe:"Planung, Methoden & Archiv", titel:"RECC – Jahresplanungen Physik", url:"https://recc.tsn.at/physik/materialien-linktipps/jahresplanungen-physik",
+    beschreibung:"Kompetenzorientierte Jahresplanungen (Österreich, 2.–4. Klasse ≈ Kl. 6–8) als Vorlage für eigene Stoffverteilung" },
+  { gruppe:"Physik Tools", ugruppe:"Planung, Methoden & Archiv", titel:"Friedrich+ – Vier konkurrierende Stromkreismodelle", url:"https://www.friedrich-verlag.de/friedrich-plus/sekundarstufe/physik/elektrizitaet-magnetismus/vier-konkurrierende-stromkreismodelle-2581",
+    beschreibung:"Gruppenpuzzle zu Schülervorstellungen im Stromkreis (Friedrich+, Abo nötig)" },
+  { gruppe:"Physik Tools", ugruppe:"Planung, Methoden & Archiv", titel:"Mathematik alpha – DDR-Physiklehrbücher", url:"https://mathematikalpha.de/physiklehrbuecher",
+    beschreibung:"Alle 56 Volk-und-Wissen-Physikbücher 1945–1989 als PDF, dazu Aufgabensammlungen, DDR-Abiaufgaben, Schulversuche" },
+  { gruppe:"Physik Tools", ugruppe:"Planung, Methoden & Archiv", titel:"Mathematik alpha – Unterrichtshilfen & Lehrpläne", url:"https://mathematikalpha.de/unterrichtshilfen-lehrplaene",
+    beschreibung:"DDR-Unterrichtshilfen Physik Kl. 6–12, Methodik des Physikunterrichts, alte Lehrpläne – Fundgrube für Experimente" },
+  { gruppe:"Physik Tools", ugruppe:"Planung, Methoden & Archiv", titel:"JuLei-App – Spielesammlung", url:"https://julei-app.de/spiele/",
+    beschreibung:"Über 100 erprobte Gruppenspiele, filterbar nach Dauer, Gruppengröße, drinnen/draußen – für Wandertag, Klassenfahrt, Vertretung" },
 ];
 
 /* ============================================================
@@ -663,7 +771,7 @@ function renderFaecher(){
       <h2>${f.name}</h2>
       <p>${f.text || "Lernseiten zu allen Lernbereichen, sortiert nach Klassenstufe."}</p>
       <span class="arrow">${anzahl ? seitenText(anzahl) + " · " : ""}Zu ${f.name} →</span>`;
-    card.addEventListener("click", () => goKlasse(f.id));
+    card.addEventListener("click", () => navi(f.id));
     grid.appendChild(card);
   });
 }
@@ -712,15 +820,22 @@ function goTools(){
         Einfach im Array TOOLS in der index.html ergänzen.
       </div>`;
   } else {
-    // Tools ohne Gruppe oben, danach je Gruppe ein Dropdown (Reihenfolge des ersten Auftretens)
-    const lose = TOOLS.filter(t => !String(t.gruppe || "").trim());
-    const gruppen = [];
-    TOOLS.filter(t => String(t.gruppe || "").trim()).forEach(t => {
-      const name = String(t.gruppe).trim();
-      let g = gruppen.find(g => g.name === name);
-      if (!g){ g = {name, items: []}; gruppen.push(g); }
-      g.items.push(t);
-    });
+    // Tools ohne Gruppe oben, danach je Gruppe ein Dropdown (Reihenfolge des ersten Auftretens).
+    // Innerhalb einer Gruppe: erst Tools ohne Unterordner, dann je "ugruppe" ein Unter-Dropdown
+    // (genau wie lb / ulb bei den Lernseiten).
+    const txt = v => String(v || "").trim();
+    const gruppiereTools = (items, feld) => {
+      const out = [];
+      items.forEach(t => {
+        const name = txt(t[feld]);
+        let g = out.find(g => g.name === name);
+        if (!g){ g = {name, items: []}; out.push(g); }
+        g.items.push(t);
+      });
+      return out;
+    };
+    const lose = TOOLS.filter(t => !txt(t.gruppe));
+    const gruppen = gruppiereTools(TOOLS.filter(t => txt(t.gruppe)), "gruppe");
 
     if (lose.length){
       const box = document.createElement("div");
@@ -729,37 +844,48 @@ function goTools(){
       liste.appendChild(box);
     }
     gruppen.forEach(g => {
-      const block = document.createElement("div");
-      block.className = "lb-group tool-grp";
-      block.dataset.key = g.name;
-      const head = document.createElement("button");
-      const auf = toolOffen.has(g.name);
-      head.className = "lb-head" + (auf ? " open" : "");
-      head.setAttribute("aria-expanded", auf ? "true" : "false");
-      head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count"></span></span>
-        <span class="lb-icon" aria-hidden="true">▲</span>`;
-      head.querySelector(".lb-title").textContent = g.name;
-      head.querySelector(".lb-count").textContent = (g.items.length === 1 ? "1 Eintrag" : g.items.length + " Einträge");
-      head.addEventListener("click", () => {
-        const jetztAuf = head.classList.toggle("open");
-        head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
-        // Gemerkten Zustand nur ändern, wenn gerade nicht gesucht wird
-        if (!toolSuchText()) jetztAuf ? toolOffen.add(g.name) : toolOffen.delete(g.name);
-      });
-      const body = document.createElement("div");
-      body.className = "lb-body";
-      const inner = document.createElement("div");
-      inner.className = "lb-body-inner";
-      g.items.forEach(t => inner.appendChild(toolKarte(t)));
-      body.appendChild(inner);
-      block.appendChild(head);
-      block.appendChild(body);
-      liste.appendChild(block);
+      const direkt = g.items.filter(t => !txt(t.ugruppe));
+      const unter = gruppiereTools(g.items.filter(t => txt(t.ugruppe)), "ugruppe");
+      const kinder = direkt.map(toolKarte).concat(
+        unter.map(u => toolDropdown(g.name + "|" + u.name, u.name, u.items.length, u.items.map(toolKarte), true))
+      );
+      liste.appendChild(toolDropdown(g.name, g.name, g.items.length, kinder, false));
     });
     filterTools();
   }
   crumbbar.classList.remove("active");
   showView(viewTools);
+}
+
+// Dropdown für eine Tool-Gruppe (unter=false) oder einen Unterordner (unter=true)
+const eintragText = n => n === 1 ? "1 Eintrag" : n + " Einträge";
+function toolDropdown(key, titel, n, kinder, unter){
+  const block = document.createElement("div");
+  block.className = "lb-group " + (unter ? "ulb tool-ugrp" : "tool-grp");
+  block.dataset.key = key;
+  const head = document.createElement("button");
+  const auf = toolOffen.has(key);
+  head.className = "lb-head" + (auf ? " open" : "");
+  head.setAttribute("aria-expanded", auf ? "true" : "false");
+  head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count"></span></span>
+    <span class="lb-icon" aria-hidden="true">▲</span>`;
+  head.querySelector(".lb-title").textContent = titel;
+  head.querySelector(".lb-count").textContent = eintragText(n);
+  head.addEventListener("click", () => {
+    const jetztAuf = head.classList.toggle("open");
+    head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
+    // Gemerkten Zustand nur ändern, wenn gerade nicht gesucht wird
+    if (!toolSuchText()) jetztAuf ? toolOffen.add(key) : toolOffen.delete(key);
+  });
+  const body = document.createElement("div");
+  body.className = "lb-body";
+  const inner = document.createElement("div");
+  inner.className = "lb-body-inner";
+  kinder.forEach(k => inner.appendChild(k));
+  body.appendChild(inner);
+  block.appendChild(head);
+  block.appendChild(body);
+  return block;
 }
 
 // Eine Tool-Karte bauen; Suchtext steckt in data-such
@@ -780,7 +906,7 @@ function toolKarte(t){
   if (t.beschreibung) a.querySelector(".tool-meta").textContent = t.beschreibung;
   a.dataset.titel = t.titel || "";
   a.dataset.beschr = t.beschreibung || "";
-  a.dataset.such = normSuche([t.titel, t.beschreibung, t.gruppe, t.datei, t.url].filter(Boolean).join(" "));
+  a.dataset.such = normSuche([t.titel, t.beschreibung, t.gruppe, t.ugruppe, t.datei, t.url].filter(Boolean).join(" "));
   return a;
 }
 
@@ -822,14 +948,15 @@ function filterTools(){
     const meta = a.querySelector(".tool-meta");
     if (meta) markiere(meta, a.dataset.beschr, woerter);
   });
-  // Gruppen: ohne Treffer ausblenden, mit Treffer beim Suchen aufklappen
-  document.querySelectorAll("#toolsListe .tool-grp").forEach(g => {
+  // Gruppen und Unterordner: ohne Treffer ausblenden, mit Treffer beim Suchen aufklappen
+  document.querySelectorAll("#toolsListe .tool-grp, #toolsListe .tool-ugrp").forEach(g => {
     const n = g.querySelectorAll(".tool-card:not([hidden])").length;
     const gesamt = g.querySelectorAll(".tool-card").length;
     g.hidden = !n;
-    g.querySelector(".lb-count").textContent = woerter.length ? `${n} von ${gesamt}`
-      : (gesamt === 1 ? "1 Eintrag" : gesamt + " Einträge");
-    const head = g.querySelector(".lb-head");
+    // ":scope >" – nur der eigene Kopf, nicht der eines Unterordners
+    g.querySelector(":scope > .lb-head .lb-count").textContent = woerter.length ? `${n} von ${gesamt}`
+      : eintragText(gesamt);
+    const head = g.querySelector(":scope > .lb-head");
     const auf = woerter.length ? n > 0 : toolOffen.has(g.dataset.key);
     head.classList.toggle("open", auf);
     head.setAttribute("aria-expanded", auf ? "true" : "false");
@@ -854,8 +981,10 @@ document.getElementById("toolSuche").addEventListener("keydown", e => {
 document.getElementById("toolSucheX").addEventListener("click", () => {
   const f = document.getElementById("toolSuche"); f.value = ""; filterTools(); f.focus();
 });
-document.getElementById("tabFaecher").addEventListener("click", goFach);
-document.getElementById("tabTools").addEventListener("click", goTools);
+document.getElementById("tabFaecher").addEventListener("click", () => navi(""));
+document.getElementById("tabTools").addEventListener("click", () => navi("tools"));
+// Reiter "Linksammlung": eigene Seite im Tools-Ordner, öffnet im selben Tab (Lehrermodus bleibt aktiv)
+document.getElementById("tabLinks").href = (TOOLS_ORDNER ? TOOLS_ORDNER + "/" : "") + LINKSAMMLUNG_DATEI;
 
 function goKlasse(fach){
   currentFach = fach; currentKlasse = null;
@@ -878,13 +1007,13 @@ function goKlasse(fach){
     btn.className = "klasse-btn";
     btn.innerHTML = `Klasse ${k.label}${k.sub ? `<small>${k.sub}</small>` : ""}`
       + (anzahl ? `<span class="count">${seitenText(anzahl)}</span>` : "");
-    btn.addEventListener("click", () => goSeiten(fach, k.id, k.label + (k.sub ? " " + k.sub : "")));
+    btn.addEventListener("click", () => navi(fach + "/" + k.id));
     grid.appendChild(btn);
   });
 
   crumbbar.classList.add("active");
   crumbPath.innerHTML = `<b>${FACHNAME[fach]}</b>`;
-  btnBack.onclick = goFach;
+  btnBack.onclick = () => navi("");
   showView(viewKlasse);
 }
 
@@ -980,18 +1109,50 @@ function goSeiten(fach, klasseId, klasseLabel){
 
   crumbbar.classList.add("active");
   crumbPath.innerHTML = `<b>${FACHNAME[fach]}</b> · Klasse ${klasseLabel}`;
-  btnBack.onclick = () => goKlasse(fach);
+  btnBack.onclick = () => navi(fach);
   showView(viewSeiten);
 }
 
 // Aktuelle Ansicht neu zeichnen (nach Wechsel des Lehrermodus)
 function rerender(){
   renderFaecher();
-  if (viewSeiten.classList.contains("active") && currentFach) goSeiten(currentFach, currentKlasse, currentKlasseLabel);
-  else if (viewKlasse.classList.contains("active") && currentFach) goKlasse(currentFach);
-  else if (viewTools.classList.contains("active")) goTools();   // ohne Lehrermodus -> zurück zu den Fächern
-  else showView(viewFach);                                        // Reiter ein-/ausblenden
+  route();   // aktuelle Ansicht (laut Adresse) neu zeichnen, Reiter ein-/ausblenden
 }
+
+/* ---------- Adressen (#fach/klasse) für Zurück-Taste und Direktlinks ----------
+   navi(h) legt einen neuen Verlaufseintrag an und zeichnet die Ansicht,
+   route() liest die Adresse und zeichnet passend (auch bei Zurück/Vor). */
+const aktuellerPfad = () => decodeURIComponent(location.hash.replace(/^#/, ""));
+function adresseFuer(h){ return h ? "#" + h : location.pathname + location.search; }
+function navi(h){
+  if (h !== aktuellerPfad()) history.pushState(null, "", adresseFuer(h));
+  route();
+  window.scrollTo(0, 0);
+}
+function route(){
+  const [fach, klasse] = aktuellerPfad().split("/");
+  const korrigiere = () => history.replaceState(null, "", adresseFuer(""));   // ungültige Adresse -> Startseite
+  let titel = "Lernportal";
+  if (fach === "tools"){
+    if (teach){ goTools(); titel += " – Tools"; }
+    else { korrigiere(); goFach(); }
+  } else if (fach && FACH[fach]){
+    const k = klasse ? (KLASSEN[fach] || []).find(k => k.id === klasse) : null;
+    if (k){
+      goSeiten(fach, k.id, k.label + (k.sub ? " " + k.sub : ""));
+      titel += " – " + FACHNAME[fach] + " Klasse " + k.label + (k.sub ? " " + k.sub : "");
+    } else {
+      if (klasse) history.replaceState(null, "", adresseFuer(fach));   // unbekannte Klasse -> Fach
+      goKlasse(fach);
+      titel += " – " + FACHNAME[fach];
+    }
+  } else {
+    if (fach) korrigiere();
+    goFach();
+  }
+  document.title = titel;
+}
+window.addEventListener("popstate", route);   // Zurück/Vor im Browser und von Hand geänderte Adresse
 
 /* ---------- Lehrermodus (gleicher Code/Look wie auf den Lernseiten).
    Zustand nur für die Sitzung (sessionStorage, Schlüssel "teachmode") –
