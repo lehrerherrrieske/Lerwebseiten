@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-DD1A27 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-DD1A27" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-DD1A27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 10 · LB3 · Lernpfad: Die Sonne</title>
 <style>
+/* lh:MR-20261023-DD1A27 */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -435,6 +440,7 @@ details.star[open] summary{margin-bottom:8px;}
 .reset-line{margin-top:18px;}
 @media print{ .lp-status,.reset-line,#cp-banner,#cp-banner-end{display:none !important;} details.star{display:block;} }
 
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -451,8 +457,8 @@ details.star[open] summary{margin-bottom:8px;}
 
   <header class="pagehead">
     <div class="eyebrow">Klasse 10 · LB3 · Kosmos, Erde und Mensch</div>
-    <h1>Lernpfad: Die Sonne</h1>
-    <div class="goal">🎯 Du erklärst Aufbau und Energiequelle der Sonne, indem du den Lernpfad Station für Station bearbeitest, die Leuchtkraft der Sonne aus der Solarkonstante berechnest und deine Ergebnisse nach jeder Station selbst kontrollierst.</div>
+    <h1>Lernpfad: Die Sonne⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌​​​‌​​​‌​​​​‌‌​​​‌​‌​​​​​‌​​‌‌​​‌​​​‌‌​‌‌‌⁠</h1>
+    <div class="goal">🎯 Du erklärst Aufbau und Energiequelle der Sonne, indem du den Lernpfad Station für Station bearbeitest, die Leuchtkraft der Sonne aus der Solarkonstante berechnest und deine Ergebnisse nach jeder Station selbst kontrollierst.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌​​​‌​​​‌​​​​‌‌​​​‌​‌​​​​​‌​​‌‌​​‌​​​‌‌​‌‌‌⁠</div>
     <div class="lp-status" aria-live="polite">
       <span class="lp-clock" id="lp-clock">⏱ Lernzeit: noch nicht gestartet</span>
       <span class="lp-chip" id="lpc1">Station 1 · offen</span>
@@ -653,6 +659,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-beschriftung">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Fang mit den Nummern an, bei denen du dir sicher bist – etwa mit dem hell leuchtenden Zentrum. Die Nummern 1 bis 3 liegen im Inneren, 4 bis 7 an oder über der Oberfläche.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Im Inneren liegen von innen nach außen: Kern → Strahlungszone → Konvektionszone. Außen siehst du die Oberfläche mit dunklen Stellen, einen Bogen über dem Rand und den Strahlenkranz.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Nummer 1 ist die äußerste Schicht des Inneren, also die Konvektionszone. Nummer 4 ragt als Bogen über den Rand hinaus – das ist eine Protuberanz.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p>1 Konvektionszone · 2 Strahlungszone · 3 Kern · 4 Protuberanz · 5 Sonnenflecken · 6 Photosphäre (Oberfläche) · 7 Korona</p></div></div>
+        </div>
+      </div>
 
       <h3>Von innen nach außen</h3>
       <div class="callout">🧠 <span>Eselsbrücke: „<strong>K</strong>luge <strong>S</strong>chüler <strong>k</strong>ochen <strong>p</strong>erfekte <strong>C</strong>hili-(<strong>U</strong>don)-<strong>K</strong>reationen.“</span></div>
@@ -669,6 +685,16 @@ details.star[open] summary{margin-bottom:8px;}
         </div>
         <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
         <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-schichten">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Nutze die Eselsbrücke über der Aufgabe: Jeder Anfangsbuchstabe steht für eine Schicht.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Zuerst kommen die drei Schichten des Inneren, danach die vier Schichten der Sonnenatmosphäre – beginnend mit der sichtbaren Oberfläche.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>K – S – K – P – C – Ü – K: Kern, Strahlungszone, Konvektionszone, Photosphäre … Wie geht es weiter?</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><ol><li>Kern</li><li>Strahlungszone</li><li>Konvektionszone</li><li>Photosphäre</li><li>Chromosphäre</li><li>Übergangsregion</li><li>Korona</li></ol></div></div>
+        </div>
       </div>
 
       <div class="hefter-box">
@@ -757,6 +783,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
         <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-begriff">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die erste Lücke steht direkt hinter dem Wort „Leuchtkraft“ – dort fehlt ihr Formelzeichen.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Leistung ist Energie pro Zeit. Ihre Einheit kennst du von Glühlampen und Haushaltsgeräten.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Ein Stern strahlt nicht nur zur Erde, sondern gleichmäßig in alle … – das zeigt auch das Kugelbild weiter unten.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p>Die Leuchtkraft <i>L</i> ist die gesamte <strong>Strahlungsleistung</strong> eines Sterns: die Energie pro <strong>Zeit</strong>, die der Stern in Form von Strahlung in alle <strong>Richtungen</strong> und über alle Wellenlängenbereiche abgibt. Ihre Einheit ist das <strong>Watt</strong> (1&nbsp;W = 1&nbsp;J/s).</p></div></div>
+        </div>
       </div>
       <h3>Die Solarkonstante – auf der Erde messbar</h3>
       <div class="two-col">
@@ -1161,6 +1197,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-zuordnen">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Achte auf die Schlüsselwörter in den Beschreibungen: „Fusion“, „Photonen“, „auf- und absteigend“, „sichtbar“, „rötlich“, „Temperatur steigt stark“, „weit ins All“.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die drei inneren Zonen unterscheiden sich darin, was mit der Energie passiert: Sie entsteht, sie wird durch Strahlung weitergereicht oder sie wird durch strömendes Plasma transportiert.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die vier äußeren Schichten folgen von innen nach außen: Photosphäre (sichtbar) – Chromosphäre (rötlich) – Übergangsregion (Temperatursprung) – Korona (reicht weit ins All).</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p><strong>Kern:</strong> Energie entsteht durch Fusion · <strong>Strahlungszone:</strong> Absorbieren und Emittieren von Photonen · <strong>Konvektionszone:</strong> auf- und absteigendes Plasma · <strong>Photosphäre:</strong> sichtbare Oberfläche · <strong>Chromosphäre:</strong> dünne, rötliche Gasschicht · <strong>Übergangsregion:</strong> starker Temperaturanstieg · <strong>Korona:</strong> extrem heiße, dünne äußere Atmosphäre</p></div></div>
+        </div>
+      </div>
       <p>Zwei Arten, Energie zu transportieren: In der <span class="tt" tabindex="0" data-tip="Energie wird von Photonen getragen, die ständig absorbiert und neu ausgesendet werden">Strahlungszone</span> braucht ein Photon zwischen etwa 10&nbsp;000 und 170&nbsp;000 Jahren für den Weg nach außen. In der <span class="tt" tabindex="0" data-tip="Energietransport durch Strömung: heißes Plasma steigt auf, abgekühltes sinkt ab – wie in einem Topf mit kochendem Wasser">Konvektionszone</span> steigt heißes Plasma auf und sinkt abgekühlt wieder ab.</p>
       <p class="connector-text">Jetzt wird es spannend: Stimmt deine Vermutung zur Temperatur?</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Dichte und Temperatur ansehen ↓</button></div>
@@ -1315,6 +1361,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-flecken">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Schau dir das Foto an: Wie wirken die Flecken im Vergleich zu ihrer Umgebung?</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Weniger Licht bedeutet hier: weniger heiß. Überlege, was die heißen Plasmaströme von unten an diesen Stellen aufhält.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die Zahl in der Wortliste ist der Temperaturunterschied in Kelvin. Ein Magnetfeldbogen hat immer zwei Enden – daraus folgt das letzte Wort.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p>Sonnenflecken sind <strong>dunkle</strong> Stellen auf der Photosphäre, die <strong>kühler</strong> als ihre Umgebung sind. Ihre Temperatur ist um etwa <strong>1&nbsp;500</strong>&nbsp;K niedriger. Sie entstehen dort, wo starke <strong>Magnetfelder</strong> die Konvektion bremsen. Sonnenflecken treten <strong>paarweise</strong> auf.</p></div></div>
+        </div>
+      </div>
       <p><strong>Ordne zu:</strong></p>
       <div class="baustein" data-type="match" id="match-umbra">
         <div class="m-pool">
@@ -1326,6 +1382,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
         <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-umbra">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Beide Begriffe kommen aus dem Lateinischen: <em>umbra</em> heißt „Schatten“.</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden><em>paene</em> heißt „fast“ – die Penumbra ist also der „Fast-Schatten“, der Halbschatten.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Welcher Teil des Flecks ist der dunkelste, also der volle Schatten?</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p><strong>Umbra:</strong> der dunkle Kern eines Sonnenflecks · <strong>Penumbra:</strong> der hellere Rand mit fadenförmiger Struktur</p></div></div>
+        </div>
       </div>
       <div class="callout callout-info">🔄 <span><strong>Warum verdrehen sich die Magnetfelder?</strong> Die Sonne rotiert nicht wie ein fester Körper: Am Äquator braucht sie für eine Umdrehung etwa 25&nbsp;Tage, in Polnähe über 30&nbsp;Tage. Dadurch wird das innere Magnetfeld verzerrt, lokale Feldbögen brechen durch die Photosphäre.</span></div>
       <div class="callout">📈 <span><strong>Solarzyklus:</strong> Die Zahl der Sonnenflecken schwankt mit einer mittleren Periode von 11,1&nbsp;Jahren. Der aktuelle 25. Zyklus begann im Dezember 2019 und erreichte um Oktober 2024 sein Maximum.</span></div>
@@ -1362,6 +1428,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-protu">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Lies den Satz Stück für Stück: Was wird nach oben geleitet – und entlang wovon?</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Die Sonne besteht aus Plasma. Magnetfelder lenken die geladenen Teilchen entlang ihrer Feldlinien.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Das letzte Wort beschreibt die Form, die du auf dem Foto siehst.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p>Heißes <strong>Plasma</strong> wird entlang der <strong>Magnetfeldlinien</strong> nach oben geleitet. So entstehen große, leuchtende <strong>Plasmabögen</strong>, die als Protuberanzen sichtbar sind.</p></div></div>
+        </div>
+      </div>
       <p><span class="tt" tabindex="0" data-tip="Bogen aus Plasma, der von Magnetfeldern über der Sonnenoberfläche gehalten wird">Protuberanzen</span> erreichen im Durchschnitt etwa 40&nbsp;000&nbsp;km Höhe; die Bögen können bis zu 200&nbsp;000&nbsp;km lang werden – mehr als 15 Erddurchmesser. Ihr Plasma hat etwa 15&nbsp;000&nbsp;K.</p>
       <p class="connector-text">Manchmal reißen solche Magnetfeldstrukturen auf – dann schleudert die Sonne Plasma bis zur Erde. Was bedeutet das für uns?</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,3)">Auswirkungen auf die Erde ↓</button></div>
@@ -1381,6 +1457,16 @@ details.star[open] summary{margin-bottom:8px;}
         <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
         <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-auswirkungen">
+        <button class="hs-btn" onclick="hsOpen(this)" aria-expanded="false">Hilfestellungen</button>
+        <div class="hs-panel" hidden>
+          <div class="hs-title">Hilfestellung</div>
+          <div class="hs-item" data-min="2"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 1</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Frag dich bei jeder Auswirkung: Schadet sie Menschen oder Technik?</div></div>
+          <div class="hs-item" data-min="4"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 2</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Starke Teilchenströme der Sonne erzeugen in langen Leitungen und in Elektronik zusätzliche Ströme und stören Funksignale. Menschen außerhalb der schützenden Atmosphäre trifft die Strahlung direkt.</div></div>
+          <div class="hs-item" data-min="6"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Tipp 3</span> <span class="hs-t"></span></button><div class="hs-body" hidden>Nur eine der fünf Auswirkungen ist harmlos – sie ist sogar ein schönes Naturschauspiel.</div></div>
+          <div class="hs-item" data-min="10"><button class="hs-head" disabled onclick="hsToggle(this)"><span class="hs-name">Musterlösung</span> <span class="hs-t"></span></button><div class="hs-body" hidden><p><strong>Ein Problem sein können:</strong> Störungen von Satelliten, Störungen im Funkverkehr, Störungen in Stromnetzen, erhöhte Strahlenbelastung für Astronauten.</p><p><strong>Kein Problem:</strong> Polarlichter – sie sind ungefährlich.</p></div></div>
+        </div>
       </div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Sonnenaktivität</div>
@@ -1457,7 +1543,7 @@ details.star[open] summary{margin-bottom:8px;}
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="finalQuiz('s4', this, 'w')"><i>L</i> = <i>S</i> · 4π<i>R</i>² mit dem Sonnenradius <i>R</i></button>
           <button class="quiz-btn" onclick="finalQuiz('s4', this, 'c')"><i>L</i> = <i>S</i> · 4π<i>r</i>² mit dem Abstand Erde–Sonne <i>r</i></button>
-          <button class="quiz-btn" onclick="finalQuiz('s4', this, 'w')"><i>L</i> = <i>S</i> / <i>r</i></button>
+          <button class="quiz-btn" onclick="finalQuiz('s4', this, 'w')"><i>L</i> = <span class="frac"><span class="fn"><i>S</i></span><span class="fd"><i>r</i></span></span></button>
         </div>
         <div class="quiz-fb" id="qfb-s4"></div>
       </div>
@@ -1605,9 +1691,21 @@ details.star[open] summary{margin-bottom:8px;}
   </div>
 </section>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-DD1A27" title="Kennnummer MR-20261023-DD1A27">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ============================================================
    Seiten-Engine Lern-HTML
    Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
@@ -1621,9 +1719,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -1707,13 +1808,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1768,20 +1869,20 @@ function teachActivate(){
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
 /* ---------- Gestufte Hilfe: Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -1982,7 +2083,7 @@ function cpSelf(btn,lvl){
 function selfRate(btn){ btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('picked')); btn.classList.add('picked'); }
 function lpReset(){
   if(!confirm('Lernzeit, abgeschlossene Stationen und Aufdeck-Fortschritt zurücksetzen?')) return;
-  try{ Object.keys(localStorage).filter(k=>k.startsWith('sonne_')||k.startsWith('subreveal_ph')||k.startsWith('predict_')||k.startsWith('hilfe')).forEach(k=>localStorage.removeItem(k)); }catch(e){}
+  try{ Object.keys(localStorage).filter(k=>k.startsWith('sonne_')||k.startsWith(LH_NS+'subreveal_ph')||k.startsWith(LH_NS+'predict_')||k.startsWith(LH_NS+'hilfe')).forEach(k=>localStorage.removeItem(k)); }catch(e){}
   location.reload();
 }
 /* ---------- Abstands-Regler ---------- */
@@ -2017,7 +2118,7 @@ function hsOpen(btn){
   hsTick();
 }
 function hsTick(){
-  let teach=false; try{ teach=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let teach=false; try{ teach=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   document.querySelectorAll('.hs').forEach(box=>{
     const st=parseInt(lsGet('sonne_hs_'+box.id)||'0',10);
     box.querySelectorAll('.hs-item').forEach(it=>{
@@ -2034,7 +2135,7 @@ function hsToggle(h){ if(h.disabled) return; const b=h.parentElement.querySelect
 /* ---------- Quelle zuerst öffnen, dann Aufgaben ---------- */
 function srcOpen(n){ lsSet('sonne_src_'+n,'1'); setTimeout(srcRender,50); }
 function srcRender(){
-  let teach=false; try{ teach=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let teach=false; try{ teach=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   for(let n=1;n<=5;n++){
     const open=lsGet('sonne_src_'+n)==='1', unlocked=open||teach;
     const c=document.getElementById('gate-c-'+n); if(c) c.classList.toggle('locked',!unlocked);
@@ -2048,6 +2149,58 @@ function initLernpfad(){ srcRender(); hsTick(); setInterval(hsTick,1000); render
   if(document.getElementById('sl-r')) slUpdate(); setInterval(lpTick,20000); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initLernpfad); } else { initLernpfad(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-DD1A27",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

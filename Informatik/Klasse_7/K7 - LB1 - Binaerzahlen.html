@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-298E6C · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-298E6C" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-298E6C">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 7 · LB1 · Binärzahlen – Die Sprache der Computer</title>
 <style>
+/* lh:MR-20261023-298E6C */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -333,15 +338,77 @@ img{max-width:100%;height:auto;}
   border:1.5px solid var(--border);border-radius:8px;}
 .hand-readout .hr-label{font-family:var(--font);font-size:var(--fs-sm);color:var(--text-3);}
 .hand-controls{display:flex;gap:8px;flex-wrap:wrap;}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+@media print{.teachbar{display:none !important;}.lehrer-only{display:block !important;}.hs-panel,.hs-body{display:block !important;}.hs-btn,.hs-time,.hs-icon{display:none !important;}}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
+.inp[placeholder="00000000"]{width:12ch;}   /* 8-Bit-Eingaben: alle acht Ziffern sichtbar */
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <div class="teachbar" id="teachbar" data-pw="Byte256">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+
   <header class="pagehead">
     <div class="eyebrow">Klasse 7 · LB1</div>
-    <h1>Binärzahlen – Die Sprache der Computer</h1>
-    <div class="goal">🎯 Die Lernenden wandeln Dualzahlen in Dezimalzahlen um und umgekehrt, indem sie die Bits eines 8-Bit-Schalters gezielt setzen und die Stellenwerte addieren.</div>
+    <h1>Binärzahlen – Die Sprache der Computer⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌​​​‌‌‌​​‌​​‌‌‌​​​​‌​​​‌​‌​​‌‌​‌‌​​‌​​​​‌‌⁠</h1>
+    <div class="goal">🎯 Die Lernenden wandeln Dualzahlen in Dezimalzahlen um und umgekehrt, indem sie die Bits eines 8-Bit-Schalters gezielt setzen und die Stellenwerte addieren.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌​​​‌‌‌​​‌​​‌‌‌​​​​‌​​​‌​‌​​‌‌​‌‌​​‌​​​​‌‌⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -557,60 +624,116 @@ img{max-width:100%;height:auto;}
 
     <div class="subphase on" id="ph2-sub-1">
 
-      <p><strong>Aufgabe 1</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
-      <p><span class="math">0000&nbsp;0101</span> = <input class="inp" id="a1" size="4"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a1', 5, 0]])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a1')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a1">Nur die 1er- und 4er-Stelle sind gesetzt: 4 + 1 = 5.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 1</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
+        <p><span class="math">0000&nbsp;0101</span> = <input class="inp" id="a1" size="4"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a1', 5, 0]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a1')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a1">Nur die 1er- und 4er-Stelle sind gesetzt: 4 + 1 = 5.</div>
+        <div class="hs" id="hs-a1">
+          <div data-tipp>Schreib unter jede Ziffer ihren Stellenwert: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</div>
+          <div data-tipp>Addiere nur die Stellenwerte, unter denen eine 1 steht.</div>
+          <div data-tipp>Die beiden Einsen stehen an der 4er- und an der 1er-Stelle.</div>
+          <div data-muster><p class="heft">0000&nbsp;0101 → 4 + 1 = <u>5</u></p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 2</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
-      <p><span class="math">0001&nbsp;0000</span> = <input class="inp" id="a2" size="4"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a2', 16, 0]])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a2')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a2">Nur die 16er-Stelle ist gesetzt: 16.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 2</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
+        <p><span class="math">0001&nbsp;0000</span> = <input class="inp" id="a2" size="4"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a2', 16, 0]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a2')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a2">Nur die 16er-Stelle ist gesetzt: 16.</div>
+        <div class="hs" id="hs-a2">
+          <div data-tipp>Schreib unter jede Ziffer ihren Stellenwert: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</div>
+          <div data-tipp>Hier gibt es nur eine einzige 1. Zähle von rechts, an welcher Stelle sie steht.</div>
+          <div data-tipp>Von rechts: 1, 2, 4, 8, 16 – die 1 steht an der fünften Stelle.</div>
+          <div data-muster><p class="heft">Nur das 16er-Bit ist gesetzt: 0001&nbsp;0000 = <u>16</u></p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 3</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
-      <p><span class="math">0000&nbsp;0000</span> = <input class="inp" id="a3" size="4"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a3', 0, 0]])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a3')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a3">Kein einziges Bit ist gesetzt — es gibt nichts zu addieren, also 0.
-        Auch „nichts" ist ein gültiger, eindeutiger Wert im Dualsystem.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 3</strong> — Wandle die Dualzahl in eine Dezimalzahl um.</p>
+        <p><span class="math">0000&nbsp;0000</span> = <input class="inp" id="a3" size="4"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a3', 0, 0]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a3')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a3">Kein einziges Bit ist gesetzt — es gibt nichts zu addieren, also 0.
+          Auch „nichts" ist ein gültiger, eindeutiger Wert im Dualsystem.</div>
+        <div class="hs" id="hs-a3">
+          <div data-tipp>Wie viele Einsen siehst du in dieser Dualzahl?</div>
+          <div data-tipp>Ohne gesetztes Bit gibt es nichts zu addieren.</div>
+          <div data-tipp>Was ergibt eine Summe, in der nichts dazukommt?</div>
+          <div data-muster><p class="heft">Kein Bit ist gesetzt: 0000&nbsp;0000 = <u>0</u></p><p>Auch „nichts“ ist ein gültiger, eindeutiger Wert.</p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 4</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.
-        Tipp: Probiere es mit dem Schalter oben aus und lies die Bits ab.</p>
-      <p>12 = <input class="inp" id="a4" placeholder="00000000" size="10"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a4','00001100']])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a4')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a4">12 = 8 + 4 → Bits an den Stellen 8 und 4 setzen: 0000 1100.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 4</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.
+          Tipp: Probiere es mit dem Schalter oben aus und lies die Bits ab.</p>
+        <p>12 = <input class="inp" id="a4" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a4','00001100']])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a4')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a4">12 = 8 + 4 → Bits an den Stellen 8 und 4 setzen: 0000 1100.</div>
+        <div class="hs" id="hs-a4">
+          <div data-tipp>Suche den größten Stellenwert, der noch in 12 hineinpasst.</div>
+          <div data-tipp>8 passt in 12, 16 ist zu groß. Was bleibt übrig, wenn du 8 abziehst?</div>
+          <div data-tipp>12 − 8 = 4 – und 4 ist selbst ein Stellenwert. Setze also die Bits bei 8 und bei 4.</div>
+          <div data-muster><p class="heft">12 = 8 + 4 → <u>0000&nbsp;1100</u></p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 5</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</p>
-      <p>41 = <input class="inp" id="a5" placeholder="00000000" size="10"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a5','00101001']])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a5')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a5">41 = 32 + 8 + 1 → Bits an den Stellen 32, 8 und 1 setzen: 0010 1001.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 5</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</p>
+        <p>41 = <input class="inp" id="a5" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a5','00101001']])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a5')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a5">41 = 32 + 8 + 1 → Bits an den Stellen 32, 8 und 1 setzen: 0010 1001.</div>
+        <div class="hs" id="hs-a5">
+          <div data-tipp>Suche den größten Stellenwert, der noch in 41 hineinpasst.</div>
+          <div data-tipp>32 passt in 41, 64 ist zu groß. Rest: 41 − 32 = 9. Wie zerlegst du 9?</div>
+          <div data-tipp>9 = 8 + 1. Setze also die Bits bei 32, 8 und 1.</div>
+          <div data-muster><p class="heft">41 = 32 + 8 + 1 → <u>0010&nbsp;1001</u></p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 6</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</p>
-      <p>100 = <input class="inp" id="a6" placeholder="00000000" size="10"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a6','01100100']])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a6')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a6">100 = 64 + 32 + 4 → Bits an den Stellen 64, 32 und 4 setzen: 0110 0100.</div>
+      <div class="ex">
+        <p><strong>Aufgabe 6</strong> — Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</p>
+        <p>100 = <input class="inp" id="a6" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a6','01100100']])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a6')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a6">100 = 64 + 32 + 4 → Bits an den Stellen 64, 32 und 4 setzen: 0110 0100.</div>
+        <div class="hs" id="hs-a6">
+          <div data-tipp>Suche den größten Stellenwert, der noch in 100 hineinpasst.</div>
+          <div data-tipp>64 passt in 100, 128 ist zu groß. Rest: 100 − 64 = 36. Welcher Stellenwert passt in 36?</div>
+          <div data-tipp>36 = 32 + 4. Setze also die Bits bei 64, 32 und 4.</div>
+          <div data-muster><p class="heft">100 = 64 + 32 + 4 → <u>0110&nbsp;0100</u></p></div>
+        </div>
+      </div>
 
-      <p style="margin-top:16px"><strong>Aufgabe 7</strong> — Wie viele verschiedene Zahlen lassen sich mit 8 Bit
-        insgesamt darstellen, und welches ist die größte davon?</p>
-      <p>Anzahl der Zahlen: <input class="inp" id="a7a" size="5"> &nbsp; Größte Zahl: <input class="inp" id="a7b" size="5"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a7a', 256, 0],['a7b', 255, 0]])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a7')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a7">Jedes der 8 Bit kann 0 oder 1 sein, das ergibt
-        2·2·2·2·2·2·2·2 = 2⁸ = 256 Kombinationen. Da man bei 0 zu zählen beginnt,
-        reichen sie von 0 bis 255 — die größte darstellbare Zahl ist also 255
-        (alle Bits auf 1: 1111 1111 = 128+64+32+16+8+4+2+1 = 255).</div>
+      <div class="ex">
+        <p><strong>Aufgabe 7</strong> — Wie viele verschiedene Zahlen lassen sich mit 8 Bit
+          insgesamt darstellen, und welches ist die größte davon?</p>
+        <p>Anzahl der Zahlen: <input class="inp" id="a7a" size="5"> &nbsp; Größte Zahl: <input class="inp" id="a7b" size="5"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a7a', 256, 0],['a7b', 255, 0]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a7')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a7">Jedes der 8 Bit kann 0 oder 1 sein, das ergibt
+          2·2·2·2·2·2·2·2 = 2⁸ = 256 Kombinationen. Da man bei 0 zu zählen beginnt,
+          reichen sie von 0 bis 255 — die größte darstellbare Zahl ist also 255
+          (alle Bits auf 1: 1111 1111 = 128+64+32+16+8+4+2+1 = 255).</div>
+        <div class="hs" id="hs-a7">
+          <div data-tipp>Jedes Bit hat zwei Möglichkeiten. Wie viele Möglichkeiten haben 2 Bit zusammen, wie viele 3 Bit?</div>
+          <div data-tipp>Mit jedem weiteren Bit verdoppelt sich die Anzahl: 2, 4, 8, 16 … Rechne so weiter bis 8 Bit.</div>
+          <div data-tipp>Es gibt 256 Kombinationen. Denk daran, dass die 0 mitzählt – welche Zahl ist dann die größte?</div>
+          <div data-muster><p class="heft">2 · 2 · 2 · 2 · 2 · 2 · 2 · 2 = 2⁸ = <u>256</u> Kombinationen, von 0 bis 255.<br>Größte Zahl: 1111&nbsp;1111 = 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = <u>255</u></p></div>
+        </div>
+      </div>
 
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Weiter zu den Profi-Aufgaben ↓</button></div>
     </div>
@@ -619,41 +742,65 @@ img{max-width:100%;height:auto;}
       <p>🌟 Diese drei Aufgaben verlangen etwas mehr Kopfarbeit — genau richtig
         für alle, die schon sicher umwandeln können.</p>
 
-      <p><strong>★ Aufgabe 8</strong> — Ein einfacher Lichtsensor speichert die
-        Helligkeit nicht mit 8 Bit, sondern nur mit <strong>4 Bit</strong>.
-        Wie viele unterschiedliche Helligkeitsstufen kann er dann höchstens
-        unterscheiden?</p>
-      <p>Anzahl der Stufen: <input class="inp" id="a8" size="5"></p>
-      <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a8', 16, 0]])">✓ Prüfen</button>
-      <div class="fb grp-fb"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a8')">Lösungsweg zeigen</button>
-      <div class="sol" id="sol-a8">Mit 4 Bit gibt es 2⁴ = 16 mögliche Kombinationen,
-        also 16 Helligkeitsstufen (0 bis 15). Weniger Bit bedeuten weniger
-        mögliche Abstufungen.</div>
-
-      <div class="quiz-item">
-        <div class="quiz-q">★ Aufgabe 9 — Lina behauptet: „0011 hat vier Ziffern,
-          111 nur drei. Also muss 0011 die größere Zahl sein." Hat sie recht?</div>
-        <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')">Ja, mehr Ziffern bedeuten immer eine größere Zahl.</button>
-          <button class="quiz-btn" onclick="quizCheck('lina', this, 'c')">Nein — 0011 ist 3, aber 111 ist 7. Führende Nullen zählen nicht als eigener Wert.</button>
-          <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')">Man kann es ohne Umrechnen nicht wissen.</button>
+      <div class="ex">
+        <p><strong>★ Aufgabe 8</strong> — Ein einfacher Lichtsensor speichert die
+          Helligkeit nicht mit 8 Bit, sondern nur mit <strong>4 Bit</strong>.
+          Wie viele unterschiedliche Helligkeitsstufen kann er dann höchstens
+          unterscheiden?</p>
+        <p>Anzahl der Stufen: <input class="inp" id="a8" size="5"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a8', 16, 0]])">✓ Prüfen</button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a8')">Lösungsweg zeigen</button>
+        <div class="sol" id="sol-a8">Mit 4 Bit gibt es 2⁴ = 16 mögliche Kombinationen,
+          also 16 Helligkeitsstufen (0 bis 15). Weniger Bit bedeuten weniger
+          mögliche Abstufungen.</div>
+        <div class="hs" id="hs-a8">
+          <div data-tipp>Das funktioniert wie bei Aufgabe 7 – nur mit weniger Bit.</div>
+          <div data-tipp>Jedes Bit verdoppelt die Anzahl: 1 Bit → 2, 2 Bit → 4, 3 Bit → …</div>
+          <div data-tipp>Rechne 2 · 2 · 2 · 2.</div>
+          <div data-muster><p class="heft">2⁴ = 2 · 2 · 2 · 2 = <u>16</u> Helligkeitsstufen (0 bis 15)</p></div>
         </div>
-        <div class="quiz-fb" id="qfb-lina"></div>
       </div>
 
-      <div class="poe-box" id="poe-warum">
-        <div class="poe-label">🤔 ★ Aufgabe 10 — Kurz begründen</div>
-        <textarea id="poe-warum-in" rows="3" placeholder="Warum benutzen Computer intern das Dualsystem und nicht gleich unser gewohntes Dezimalsystem?"></textarea>
-        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-warum')">Antwort festhalten</button>
-        <div class="poe-locked" id="poe-warum-out" hidden></div>
+      <div class="ex">
+        <div class="quiz-item">
+          <div class="quiz-q">★ Aufgabe 9 — Lina behauptet: „0011 hat vier Ziffern,
+            111 nur drei. Also muss 0011 die größere Zahl sein." Hat sie recht?</div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')">Ja, mehr Ziffern bedeuten immer eine größere Zahl.</button>
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'c')">Nein — 0011 ist 3, aber 111 ist 7. Führende Nullen zählen nicht als eigener Wert.</button>
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')">Man kann es ohne Umrechnen nicht wissen.</button>
+          </div>
+          <div class="quiz-fb" id="qfb-lina"></div>
+        </div>
+        <div class="hs" id="hs-a9">
+          <div data-tipp>Rechne beide Dualzahlen in Dezimalzahlen um, bevor du entscheidest.</div>
+          <div data-tipp>0011: Stellenwerte 8 · 4 · 2 · 1, Einsen bei 2 und 1. 111: Stellenwerte 4 · 2 · 1.</div>
+          <div data-tipp>Vergleiche 3 und 7. Was bewirken die Nullen vorne bei 0011?</div>
+          <div data-muster><p class="heft">0011 = 2 + 1 = 3 · 111 = 4 + 2 + 1 = 7</p><p>Lina hat nicht recht: Führende Nullen ändern den Wert nicht – genau wie 007 = 7 im Dezimalsystem.</p></div>
+        </div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="showSol('sol-a10')">Musterantwort zeigen</button>
-      <div class="sol" id="sol-a10">Ein Stromkreis lässt sich technisch sehr
-        zuverlässig in genau zwei Zuständen bauen: Strom fließt (1) oder fließt
-        nicht (0). Zehn unterscheidbare Spannungsstufen für ein Dezimalsystem
-        wären viel störanfälliger — schon kleine Schwankungen könnten dann zu
-        Fehlern führen.</div>
+
+      <div class="ex">
+        <div class="poe-box" id="poe-warum">
+          <div class="poe-label">🤔 ★ Aufgabe 10 — Kurz begründen</div>
+          <textarea id="poe-warum-in" rows="3" placeholder="Warum benutzen Computer intern das Dualsystem und nicht gleich unser gewohntes Dezimalsystem?"></textarea>
+          <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-warum'); var sb=document.getElementById('solbtn-a10'); if(sb) sb.hidden=false;">Antwort festhalten</button>
+          <div class="poe-locked" id="poe-warum-out" hidden></div>
+        </div>
+        <button class="btn btn-ghost btn-sm solbtn" id="solbtn-a10" hidden onclick="showSol('sol-a10')">Musterantwort zeigen</button>
+        <div class="sol" id="sol-a10">Ein Stromkreis lässt sich technisch sehr
+          zuverlässig in genau zwei Zuständen bauen: Strom fließt (1) oder fließt
+          nicht (0). Zehn unterscheidbare Spannungsstufen für ein Dezimalsystem
+          wären viel störanfälliger — schon kleine Schwankungen könnten dann zu
+          Fehlern führen.</div>
+        <div class="hs" id="hs-a10">
+          <div data-tipp>Denk an den Einstieg: Wie viele Zustände kennt ein einzelner Schalter im Computer?</div>
+          <div data-tipp>Wie viele unterscheidbare Spannungsstufen bräuchte ein Computer für die Ziffern 0 bis 9?</div>
+          <div data-tipp>Was passiert, wenn die Spannung ein wenig schwankt – bei nur 2 Stufen und bei 10 Stufen?</div>
+          <div data-muster><p>Ein Stromkreis lässt sich technisch sehr zuverlässig in genau zwei Zuständen bauen: Strom fließt (1) oder fließt nicht (0). Zehn unterscheidbare Spannungsstufen für ein Dezimalsystem wären viel störanfälliger — schon kleine Schwankungen könnten dann zu Fehlern führen.</p></div>
+        </div>
+      </div>
 
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Wichtige Regeln</div>
@@ -787,8 +934,20 @@ img{max-width:100%;height:auto;}
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-298E6C" title="Kennnummer MR-20261023-298E6C">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ============================================================
    Seiten-Engine Lern-HTML
    Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
@@ -802,9 +961,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -878,22 +1040,25 @@ function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
   let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
   const fb=btn.parentElement.querySelector('.grp-fb');
   if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
   return ok===spec.length;
 }
 function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen“-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('.ex')||btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
 
 /* ---------- Vorhersage: erst raten, dann auflösen ---------- */
 function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -929,8 +1094,105 @@ function initHefter(){
   }
 }
 
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); }
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -1061,6 +1323,7 @@ function checkBinGroup(btn, spec){       /* spec: [[id, sollBinaerString], …] 
   let ok = 0; spec.forEach(s=>{ if(checkBin(s[0], s[1])) ok++; });
   const fb = btn.parentElement.querySelector('.grp-fb');
   if(fb){ fb.textContent = ok+' von '+spec.length+' richtig.'; fb.className = 'fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
   return ok === spec.length;
 }
 
@@ -1109,6 +1372,58 @@ function initBitswitches(){ document.querySelectorAll('.bitswitch').forEach(c=>b
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBitswitches); } else { initBitswitches(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initHandWidget); } else { initHandWidget(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-298E6C",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-05254F · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-05254F" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-05254F">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 7 · LB1 · Das Hooke&#x27;sche Gesetz</title>
 <style>
+/* lh:MR-20261023-05254F */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -362,6 +367,7 @@ img{max-width:100%;height:auto;}
 .hh-sol.frei .hh-btn{color:#166534;}
 .hh-sol .hh-body{background:var(--ok-bg);padding-top:10px;}
 @media print{.hh{display:none !important;}}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -378,8 +384,8 @@ img{max-width:100%;height:auto;}
 
   <header class="pagehead">
     <div class="eyebrow">Klasse 7 · LB1 · Kräfte</div>
-    <h1>1.3 Das Hooke'sche Gesetz</h1>
-    <div class="goal">🎯 Die Lernenden bestimmen die Federkonstante einer Feder, indem sie das Hooke'sche Gesetz <i>F</i> = <i>D</i> · <i>s</i> anwenden, mit einem Federkraftmesser eine Messreihe aufnehmen und daraus ein <i>F</i>(<i>s</i>)-Diagramm zeichnen.</div>
+    <h1>1.3 Das Hooke'sche Gesetz⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​​​​​‌‌​‌​‌​​‌‌​​‌​​​‌‌​‌​‌​​‌‌​‌​​​‌​​​‌‌​⁠</h1>
+    <div class="goal">🎯 Die Lernenden bestimmen die Federkonstante einer Feder, indem sie das Hooke'sche Gesetz <i>F</i> = <i>D</i> · <i>s</i> anwenden, mit einem Federkraftmesser eine Messreihe aufnehmen und daraus ein <i>F</i>(<i>s</i>)-Diagramm zeichnen.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​​​​​‌‌​‌​‌​​‌‌​​‌​​​‌‌​‌​‌​​‌‌​‌​​​‌​​​‌‌​⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -1132,6 +1138,8 @@ img{max-width:100%;height:auto;}
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-05254F" title="Kennnummer MR-20261023-05254F">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 
 <script>
@@ -1148,9 +1156,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -1216,13 +1227,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1277,20 +1288,20 @@ function teachActivate(){
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
 /* ---------- Gestufte Hilfe: Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -1493,7 +1504,7 @@ markCheck = function(btn){ const s=bs(btn); let ok=0,bad=0,miss=0;
    ============================================================ */
 function hhKey(box){ return 'hh_'+box.id; }
 function hhStart(box){ let t=null; try{ t=localStorage.getItem(hhKey(box)); }catch(e){} return t?parseInt(t,10):(box._start||null); }
-function hhLehrer(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hhLehrer(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
 function hhOpen(btn){
   const box=btn.closest('.hh'), panel=box.querySelector('.hh-panel');
   if(hhStart(box)===null){ box._start=Date.now(); try{ localStorage.setItem(hhKey(box), String(box._start)); }catch(e){} }
@@ -1712,7 +1723,7 @@ function diagStart(){
 function diagTick(){
   const btn=document.getElementById('diag-btn'), st=document.getElementById('diag-status');
   const min=(Date.now()-diagStart())/60000;
-  let lehrer=false; try{ lehrer=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let lehrer=false; try{ lehrer=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   const frei = lehrer || min>=DIAG_MIN;
   if(btn) btn.disabled=!frei;
   if(st){
@@ -1758,6 +1769,58 @@ function drawGrenze(){
 function initHooke(){ simDraw(); drawGrenze(); diagTick(); hhInit(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initHooke); } else { initHooke(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-05254F",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

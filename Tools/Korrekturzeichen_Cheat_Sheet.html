@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-27F117 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-27F117" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-27F117">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Korrekturzeichen &amp; Korrekturregeln · Ph · Inf · Ma · Bio</title>
 <style>
+/* lh:MR-20261023-27F117 */
 
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
@@ -492,6 +497,7 @@ a.ref:hover,a.ref:focus-visible{background:var(--accent);color:#fff;border-color
 @media print{.kz-searchbar,.kz-quick,.kz-qlabel,.kz-count,#kz-empty,.kz-chev,.kz-docs{display:none !important;} a.ref::after{content:"";}
   .kz-entry,.kz-teil{display:block !important;break-inside:avoid;} .kz-zeichen{display:grid !important;} mark.hl{background:none;}}
 
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -511,8 +517,8 @@ a.ref:hover,a.ref:focus-visible{background:var(--accent);color:#fff;border-color
 
   <header class="pagehead">
     <div class="eyebrow">Physik · Informatik · Mathematik · Biologie · Stand 10/2026</div>
-    <h1>Korrekturzeichen &amp; Korrekturregeln</h1>
-    <div class="goal">🎯 Du findest jedes Korrekturzeichen und jede Korrekturregel in Sekunden, indem du nach Zeichen, Stichwort oder Fundstelle suchst – und entscheidest Folgefehler-Fälle sicher, indem du die drei Bedingungen der VwV prüfst.</div>
+    <h1>Korrekturzeichen &amp; Korrekturregeln⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​‌‌‌​‌​​​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​‌‌‌⁠</h1>
+    <div class="goal">🎯 Du findest jedes Korrekturzeichen und jede Korrekturregel in Sekunden, indem du nach Zeichen, Stichwort oder Fundstelle suchst – und entscheidest Folgefehler-Fälle sicher, indem du die drei Bedingungen der VwV prüfst.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​‌‌‌​‌​​​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​‌‌‌⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -642,6 +648,8 @@ a.ref:hover,a.ref:focus-visible{background:var(--accent);color:#fff;border-color
     <p class="caption" style="margin-top:14px">Quellen: <a href="https://www.revosax.sachsen.de/vorschrift/21062-VwV-Durchfuehrung-Oberstufe-und-Abiturpruefung" target="_blank" rel="noopener">VwV Durchführung Oberstufe und Abiturprüfung vom 13.08.2024</a> (Ziff. IV, VI–VIII, XI; aktuelle Fassung ab 03.05.2025); <a href="https://www.revosax.sachsen.de/vorschrift/20003-Schulordnung-Gymnasien-Abiturpruefung" target="_blank" rel="noopener"> Schulordnung Gymnasien Abiturprüfung (SOGYA)</a> vom 30.05.2023, Fassung ab 01.08.2026. „Praxis-Auslegung“ = Hilfe zur Anwendung, keine Rechtsvorschrift.</p>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-27F117" title="Kennnummer MR-20261023-27F117">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
 
@@ -658,9 +666,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -729,13 +740,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -791,13 +802,13 @@ function teachActivate(){
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
@@ -806,7 +817,7 @@ function initTeachbar(){
    Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -867,7 +878,7 @@ function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b));
    Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
    hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
 const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
-function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
 function hsMarkup(id,tips,muster){
   return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
 }
@@ -882,13 +893,13 @@ function buildHS(box){
       '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
       '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
       '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
-  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
   if(t0) box._t0=parseInt(t0,10);
   hsTick(box);
 }
 function hsRequest(btn){
   const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
-  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
   const open=panel.hidden; panel.hidden=!open;
   btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
   hsTick(box);
@@ -1370,6 +1381,58 @@ function opFold(open){ document.querySelectorAll('#op-list details').forEach(d=>
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
 
+</script>
+<script>
+var __LH={i:"MR-20261023-27F117",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

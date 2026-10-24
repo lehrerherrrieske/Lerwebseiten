@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-332D47 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-332D47" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-332D47">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 9 · LB1 · ER-Modelle erstellen – Übungsaufgaben</title>
 <style>
+/* lh:MR-20261023-332D47 */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -355,6 +360,33 @@ img{max-width:100%;height:auto;}
 .ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
 .ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
 
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+@media print{.teachbar{display:none !important;}.lehrer-only{display:block !important;}.hs-panel,.hs-body{display:block !important;}.hs-btn,.hs-time,.hs-icon{display:none !important;}}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -371,8 +403,8 @@ img{max-width:100%;height:auto;}
 
   <header class="pagehead">
     <div class="eyebrow">Klasse 9 · LB1</div>
-    <h1>ER-Modelle erstellen – Übungsaufgaben</h1>
-    <div class="goal">🎯 Die Lernenden erstellen ER-Modelle mit zwei oder drei Entitäten, indem sie aus einem Text Entitäten, Attribute und die Kardinalitäten 1:n und m:n ableiten.</div>
+    <h1>ER-Modelle erstellen – Übungsaufgaben⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌‌​​‌‌​​‌‌​​‌‌​​‌​​‌​​​‌​​​​‌‌​‌​​​​‌‌​‌‌‌⁠</h1>
+    <div class="goal">🎯 Die Lernenden erstellen ER-Modelle mit zwei oder drei Entitäten, indem sie aus einem Text Entitäten, Attribute und die Kardinalitäten 1:n und m:n ableiten.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​‌‌​​‌‌​​‌‌​​‌‌​​‌​​‌​​​‌​​​​‌‌​‌​​​​‌‌​‌‌‌⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -438,6 +470,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb" aria-live="polite"></div>
       </div>
+      <div class="hs" id="hs-gs-attribute">
+        <div data-tipp>Lies den Text Absatz für Absatz: Zu jeder Entität gibt es einen eigenen Absatz, der ihre Eigenschaften aufzählt.</div>
+        <div data-tipp>Jede Entität bekommt genau vier Kärtchen: ihre ID und drei Attribute. Die ID erkennst du an der Formulierung „hat eine eindeutige …-ID“.</div>
+        <div data-tipp>Prüfe bei jedem Kärtchen, ob das Wort überhaupt im Text vorkommt. 3 Kärtchen findest du dort nicht – sie gehören in die letzte Spalte.</div>
+        <div data-muster><p><strong>Räume:</strong> <u>Raum-ID</u>, Raumbezeichnung, Etage, Anzahl der Sitzplätze · <strong>Rechner:</strong> <u>Rechner-ID</u>, Modell, Betriebssystem, Anschaffungsjahr · <strong>Wartungen:</strong> <u>Wartungs-ID</u>, Datum, Beschreibung, Dauer</p><p><strong>Steht nicht im Text:</strong> Hersteller, Kosten, Name des Technikers</p><p>Die ID ist jeweils der Primärschlüssel (unterstrichen).</p></div>
+      </div>
       <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
@@ -476,12 +514,11 @@ img{max-width:100%;height:auto;}
         <div class="quiz-fb" id="qfb-kard3"></div>
       </div>
 
-      <div class="hilfe-box" id="hilfe-er-aufgabe">
-        <button class="btn btn-ghost btn-sm hilfe-request" onclick="hilfeRequest(this)">🆘 Hilfe anfordern</button>
-        <small class="hilfe-status" hidden></small>
-        <div class="callout hilfe-stufe" data-min="2" hidden>💡 <span>Tipp 1: Zeichne zuerst drei Kästchen für Raum, Rechner und Wartung und trage in jedes nur die ID als Primärschlüssel ein.</span></div>
-        <div class="callout hilfe-stufe" data-min="4" hidden>💡 <span>Tipp 2: Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</span></div>
-        <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Die Kette lautet Raum 1:n Rechner 1:n Wartung. Der Fremdschlüssel RaumID steht in der Tabelle Rechner, der Fremdschlüssel RechnerID steht in der Tabelle Wartung.</span></div>
+      <div class="hs" id="hs-er-aufgabe">
+        <div data-tipp>Zeichne zuerst drei Kästchen für Raum, Rechner und Wartung und trage in jedes nur die ID als Primärschlüssel ein.</div>
+        <div data-tipp>Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</div>
+        <div data-tipp>Die Kette lautet Raum 1:n Rechner 1:n Wartung. Der Fremdschlüssel RaumID steht in der Tabelle Rechner, der Fremdschlüssel RechnerID steht in der Tabelle Wartung.</div>
+        <div data-muster><p><strong>Entitäten:</strong> Räume (<u>Raum-ID</u>, Raumbezeichnung, Etage, Anzahl der Sitzplätze) · Rechner (<u>Rechner-ID</u>, Modell, Betriebssystem, Anschaffungsjahr) · Wartungen (<u>Wartungs-ID</u>, Datum, Beschreibung, Dauer)</p><p><strong>Beziehungen:</strong> Räume <strong>1 : n</strong> Rechner („stehen“) · Rechner <strong>1 : n</strong> Wartungen („wird gewartet“)</p><p><strong>Relationenmodell:</strong> Raum(<u>RaumID</u>, Raumbezeichnung, Etage, Sitzplätze) · Rechner(<u>RechnerID</u>, Modell, Betriebssystem, Anschaffungsjahr, <i>RaumID</i>) · Wartung(<u>WartungsID</u>, Datum, Beschreibung, Dauer_Min, <i>RechnerID</i>)</p></div>
       </div>
 
       <div class="lehrer-only" hidden>
@@ -621,6 +658,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb" aria-live="polite"></div>
       </div>
+      <div class="hs" id="hs-gs-attribute-1">
+        <div data-tipp>Lies den Text Absatz für Absatz: Zu jeder Entität gibt es einen eigenen Absatz, der ihre Eigenschaften aufzählt.</div>
+        <div data-tipp>Jede Entität bekommt genau vier Kärtchen: ihre ID und drei Attribute. Die ID erkennst du an der Formulierung „hat eine eindeutige …-ID“.</div>
+        <div data-tipp>Prüfe bei jedem Kärtchen, ob das Wort überhaupt im Text vorkommt. 3 Kärtchen findest du dort nicht – sie gehören in die letzte Spalte.</div>
+        <div data-muster><p><strong>Regale:</strong> <u>Regal-ID</u>, Standort, Fachgebiet, Anzahl der Fächer · <strong>Bücher:</strong> <u>Buch-ID</u>, Titel, Autor, Erscheinungsjahr · <strong>Exemplare:</strong> <u>Exemplar-ID</u>, Zustand, Anschaffungsdatum, Preis</p><p><strong>Steht nicht im Text:</strong> Verlag, Ausleihfrist, Name des Lesers</p><p>Die ID ist jeweils der Primärschlüssel (unterstrichen).</p></div>
+      </div>
       <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
@@ -659,12 +702,11 @@ img{max-width:100%;height:auto;}
         <div class="quiz-fb" id="qfb-a2k3"></div>
       </div>
 
-      <div class="hilfe-box" id="hilfe-er-aufgabe-2">
-        <button class="btn btn-ghost btn-sm hilfe-request" onclick="hilfeRequest(this)">🆘 Hilfe anfordern</button>
-        <small class="hilfe-status" hidden></small>
-        <div class="callout hilfe-stufe" data-min="2" hidden>💡 <span>Tipp 1: Unterscheide gut: Ein <em>Buch</em> ist der Titel (z. B. ein bestimmter Roman), ein <em>Exemplar</em> ist ein einzelnes gedrucktes Stück davon. Das sind zwei verschiedene Entitäten.</span></div>
-        <div class="callout hilfe-stufe" data-min="4" hidden>💡 <span>Tipp 2: Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</span></div>
-        <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Die Kette lautet Regal 1:n Buch 1:n Exemplar. Der Fremdschlüssel RegalID steht in der Tabelle Buch, der Fremdschlüssel BuchID steht in der Tabelle Exemplar.</span></div>
+      <div class="hs" id="hs-er-aufgabe-2">
+        <div data-tipp>Unterscheide gut: Ein <em>Buch</em> ist der Titel (z. B. ein bestimmter Roman), ein <em>Exemplar</em> ist ein einzelnes gedrucktes Stück davon. Das sind zwei verschiedene Entitäten.</div>
+        <div data-tipp>Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</div>
+        <div data-tipp>Die Kette lautet Regal 1:n Buch 1:n Exemplar. Der Fremdschlüssel RegalID steht in der Tabelle Buch, der Fremdschlüssel BuchID steht in der Tabelle Exemplar.</div>
+        <div data-muster><p><strong>Entitäten:</strong> Regale (<u>Regal-ID</u>, Standort, Fachgebiet, Anzahl der Fächer) · Bücher (<u>Buch-ID</u>, Titel, Autor, Erscheinungsjahr) · Exemplare (<u>Exemplar-ID</u>, Zustand, Anschaffungsdatum, Preis)</p><p><strong>Beziehungen:</strong> Regale <strong>1 : n</strong> Bücher („enthält“) · Bücher <strong>1 : n</strong> Exemplare („existiert als“)</p><p><strong>Relationenmodell:</strong> Regal(<u>RegalID</u>, Standort, Fachgebiet, Anzahl_Fächer) · Buch(<u>BuchID</u>, Titel, Autor, Erscheinungsjahr, <i>RegalID</i>) · Exemplar(<u>ExemplarID</u>, Zustand, Anschaffungsdatum, Preis, <i>BuchID</i>)</p></div>
       </div>
 
       <div class="lehrer-only" hidden>
@@ -801,6 +843,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb" aria-live="polite"></div>
       </div>
+      <div class="hs" id="hs-gs-attribute-2">
+        <div data-tipp>Lies den Text Absatz für Absatz: Zu jeder Entität gibt es einen eigenen Absatz, der ihre Eigenschaften aufzählt.</div>
+        <div data-tipp>Jede Entität bekommt genau vier Kärtchen: ihre ID und drei Attribute. Die ID erkennst du an der Formulierung „hat eine eindeutige …-ID“.</div>
+        <div data-tipp>Prüfe bei jedem Kärtchen, ob das Wort überhaupt im Text vorkommt. 3 Kärtchen findest du dort nicht – sie gehören in die letzte Spalte.</div>
+        <div data-muster><p><strong>Ausgaben:</strong> <u>Ausgabe-ID</u>, Erscheinungsdatum, Titelthema, Auflage · <strong>Artikel:</strong> <u>Artikel-ID</u>, Überschrift, Seitenzahl, Anzahl der Wörter · <strong>Redakteure:</strong> <u>Redakteur-ID</u>, Name, Klasse, E-Mail-Adresse</p><p><strong>Steht nicht im Text:</strong> Preis, Druckerei, Anzahl der Leser</p><p>Die ID ist jeweils der Primärschlüssel (unterstrichen).</p></div>
+      </div>
       <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
@@ -839,12 +887,11 @@ img{max-width:100%;height:auto;}
         <div class="quiz-fb" id="qfb-a3k3"></div>
       </div>
 
-      <div class="hilfe-box" id="hilfe-er-aufgabe-3">
-        <button class="btn btn-ghost btn-sm hilfe-request" onclick="hilfeRequest(this)">🆘 Hilfe anfordern</button>
-        <small class="hilfe-status" hidden></small>
-        <div class="callout hilfe-stufe" data-min="2" hidden>💡 <span>Tipp 1: Überlege zuerst, welche der drei Entitäten mit <em>beiden</em> anderen verbunden ist. Sie steht in deinem ER-Modell in der Mitte.</span></div>
-        <div class="callout hilfe-stufe" data-min="4" hidden>💡 <span>Tipp 2: Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</span></div>
-        <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Artikel ist bei beiden Beziehungen die n-Seite: Ausgabe 1:n Artikel und Redakteur 1:n Artikel. Deshalb bekommt die Tabelle Artikel zwei Fremdschlüssel: AusgabeID und RedakteurID.</span></div>
+      <div class="hs" id="hs-er-aufgabe-3">
+        <div data-tipp>Überlege zuerst, welche der drei Entitäten mit <em>beiden</em> anderen verbunden ist. Sie steht in deinem ER-Modell in der Mitte.</div>
+        <div data-tipp>Achte auf die Formulierungen „beliebig viele" (das ist die n-Seite) und „genau ein" (das ist die 1-Seite) — sie stehen bei jeder Beziehung im Text.</div>
+        <div data-tipp>Artikel ist bei beiden Beziehungen die n-Seite: Ausgabe 1:n Artikel und Redakteur 1:n Artikel. Deshalb bekommt die Tabelle Artikel zwei Fremdschlüssel: AusgabeID und RedakteurID.</div>
+        <div data-muster><p><strong>Entitäten:</strong> Ausgaben (<u>Ausgabe-ID</u>, Erscheinungsdatum, Titelthema, Auflage) · Artikel (<u>Artikel-ID</u>, Überschrift, Seitenzahl, Anzahl der Wörter) · Redakteure (<u>Redakteur-ID</u>, Name, Klasse, E-Mail-Adresse)</p><p><strong>Beziehungen:</strong> Ausgaben <strong>1 : n</strong> Artikel („enthält“) · Redakteure <strong>1 : n</strong> Artikel („schreibt“)</p><p><strong>Relationenmodell:</strong> Ausgabe(<u>AusgabeID</u>, Erscheinungsdatum, Titelthema, Auflage) · Artikel(<u>ArtikelID</u>, Überschrift, Seitenzahl, Wortanzahl, <i>AusgabeID</i>, <i>RedakteurID</i>) · Redakteur(<u>RedakteurID</u>, Name, Klasse, E_Mail)</p></div>
       </div>
 
       <div class="lehrer-only" hidden>
@@ -976,6 +1023,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="gsReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb" aria-live="polite"></div>
       </div>
+      <div class="hs" id="hs-gs-attribute-3">
+        <div data-tipp>Lies den Text Absatz für Absatz: Zu jeder Entität gibt es einen eigenen Absatz, der ihre Eigenschaften aufzählt.</div>
+        <div data-tipp>Jede Entität bekommt genau vier Kärtchen: ihre ID und drei Attribute. Die ID erkennst du an der Formulierung „hat eine eindeutige …-ID“.</div>
+        <div data-tipp>Prüfe bei jedem Kärtchen, ob das Wort überhaupt im Text vorkommt. 3 Kärtchen findest du dort nicht – sie gehören in die letzte Spalte.</div>
+        <div data-muster><p><strong>Schüler:</strong> <u>Schüler-ID</u>, Vorname, Nachname, Klasse · <strong>AGs:</strong> <u>AG-ID</u>, Bezeichnung, Wochentag, Uhrzeit</p><p><strong>Steht nicht im Text:</strong> Anzahl der Plätze, Geburtsdatum, Zeugnisnote</p><p>Die ID ist jeweils der Primärschlüssel (unterstrichen).</p></div>
+      </div>
       <div class="callout callout-info">🔑 <span>Denk auch an den <strong>Primärschlüssel</strong> jeder Entität — er wird im Text bei jeder Entität erwähnt (…„hat eine eindeutige …-ID"). Im ER-Modell wird er <u>unterstrichen</u>.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
@@ -1014,12 +1067,11 @@ img{max-width:100%;height:auto;}
         <div class="quiz-fb" id="qfb-a4k3"></div>
       </div>
 
-      <div class="hilfe-box" id="hilfe-er-aufgabe-4">
-        <button class="btn btn-ghost btn-sm hilfe-request" onclick="hilfeRequest(this)">🆘 Hilfe anfordern</button>
-        <small class="hilfe-status" hidden></small>
-        <div class="callout hilfe-stufe" data-min="2" hidden>💡 <span>Tipp 1: Denk an ein konkretes Beispiel aus deiner Schule: Kennst du jemanden, der in mehr als einer AG ist? Und wie viele Leute sind in einer AG?</span></div>
-        <div class="callout hilfe-stufe" data-min="4" hidden>💡 <span>Tipp 2: In den Aufgaben 01 bis 03 stand bei jeder Beziehung einmal „beliebig viele“ und einmal „genau ein“. Suche im letzten Satz nach „genau ein“ — findest du es?</span></div>
-        <div class="callout hilfe-stufe" data-min="6" hidden>💡 <span>Tipp 3: Auf beiden Seiten steht „beliebig viele“. Die Kardinalität ist deshalb m:n. Im ER-Modell steht m an der Seite von Schüler und n an der Seite von AGs, dazwischen die Raute „nimmt teil an“.</span></div>
+      <div class="hs" id="hs-er-aufgabe-4">
+        <div data-tipp>Denk an ein konkretes Beispiel aus deiner Schule: Kennst du jemanden, der in mehr als einer AG ist? Und wie viele Leute sind in einer AG?</div>
+        <div data-tipp>In den Aufgaben 01 bis 03 stand bei jeder Beziehung einmal „beliebig viele“ und einmal „genau ein“. Suche im letzten Satz nach „genau ein“ — findest du es?</div>
+        <div data-tipp>Auf beiden Seiten steht „beliebig viele“. Die Kardinalität ist deshalb m:n. Im ER-Modell steht m an der Seite von Schüler und n an der Seite von AGs, dazwischen die Raute „nimmt teil an“.</div>
+        <div data-muster><p><strong>Entitäten:</strong> Schüler (<u>Schüler-ID</u>, Vorname, Nachname, Klasse) · AGs (<u>AG-ID</u>, Bezeichnung, Wochentag, Uhrzeit)</p><p><strong>Beziehung:</strong> Schüler <strong>m : n</strong> AGs („nimmt teil an“). Wie man eine m:n-Beziehung in Tabellen umsetzt, ist Thema der nächsten Stunde.</p></div>
       </div>
 
       <div class="lehrer-only" hidden>
@@ -1110,8 +1162,20 @@ img{max-width:100%;height:auto;}
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-332D47" title="Kennnummer MR-20261023-332D47">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ============================================================
    Seiten-Engine Lern-HTML
    Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
@@ -1125,9 +1189,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -1250,13 +1317,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1307,26 +1374,28 @@ function teachSetUI(active){
   document.documentElement.classList.toggle('teach-on',active);
   hilfeRefresh();   /* Lehrermodus zeigt alle Tipps sofort, Deaktivieren stellt den Timer-Zustand wieder her */
 }
+/* Lehrermodus schaltet auch die Hilfestellungen frei */
+(function(){ const _t=teachSetUI; teachSetUI=function(a){ _t(a); document.querySelectorAll('.hs').forEach(hsTick); }; })();
 function teachActivate(){
   const bar=document.getElementById('teachbar'); if(!bar)return;
   const pw=document.getElementById('teachbar-pw'); if(!pw)return;
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
 /* ---------- Gestufte Hilfe: Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -1440,9 +1509,72 @@ function initGs(g){
   });
 }
 
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
 /* ---------- Init ---------- */
 function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initTeachbar(); initHilfe();
-  document.querySelectorAll('.gs').forEach(initGs); }
+  document.querySelectorAll('.gs').forEach(initGs); initHS(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -1565,6 +1697,58 @@ function initBausteine(){ document.querySelectorAll('.baustein').forEach(functio
   else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); }); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-332D47",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>
