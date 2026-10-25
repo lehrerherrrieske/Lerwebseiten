@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-F45CF9 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-F45CF9" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-F45CF9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 8 · LB1 · Druck und hydraulische Anlagen – vertiefen und entdecken</title>
 <style>
+/* lh:MR-20261023-F45CF9 */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -222,8 +227,8 @@ img{max-width:100%;height:auto;}
 /* ── Klassische Bruchdarstellung für Formeln ── */
 .frac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
   vertical-align:middle;margin:0 6px;line-height:1.3;}
-.frac .num{padding:0 8px 3px;border-bottom:2.5px solid currentColor;}
-.frac .den{padding:3px 8px 0;}
+.frac>.fn{padding:0 8px 3px;border-bottom:2.5px solid currentColor;}
+.frac>.fd{padding:3px 8px 0;}
 .formula .frac{font-size:var(--fs-lg);}
 
 /* ── Gestufte Hilfestellungen (zeitgesteuert) ── */
@@ -346,15 +351,68 @@ img{max-width:100%;height:auto;}
 .ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
 .ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
 
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+@media print{.teachbar{display:none !important;}.lehrer-only{display:block !important;}.hs-panel,.hs-body{display:block !important;}.hs-btn,.hs-time,.hs-icon{display:none !important;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <div class="teachbar" id="teachbar" data-pw="Pumpenkolben">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+
   <header class="pagehead">
     <div class="eyebrow">Klasse 8 · LB1</div>
-    <h1>Druck und hydraulische Anlagen – vertiefen und entdecken</h1>
-    <div class="goal">🎯 Die Lernenden vertiefen ihr Verständnis von Druck und hydraulischen Anlagen, indem sie Animationen erkunden und gestufte Übungsaufgaben mit Hilfestellungen bearbeiten.</div>
+    <h1>Druck und hydraulische Anlagen – vertiefen und entdecken⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌‌​​​‌‌​‌​​​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌‌​​​‌‌‌​​‌⁠</h1>
+    <div class="goal">🎯 Die Lernenden vertiefen ihr Verständnis von Druck und hydraulischen Anlagen, indem sie Animationen erkunden und gestufte Übungsaufgaben mit Hilfestellungen bearbeiten.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌‌​​​‌‌​‌​​​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌‌​​​‌‌‌​​‌⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -402,7 +460,7 @@ img{max-width:100%;height:auto;}
 
     <div class="subphase" id="ph0-sub-2">
       <p>Genau darum geht es heute noch einmal — aber diesmal steuerst du die Teilchen selbst, drückst virtuell Kisten auf den Boden und lässt eine Hydraulikbremse Kräfte übersetzen. Du entdeckst die Zusammenhänge in Animationen neu und übst sie an gestuften Aufgaben mit Hilfestellungen, die du dir bei Bedarf freischalten kannst.</p>
-      <div class="callout">🎯 <span>Heute vertiefst du: Druck &amp; Einheiten, das Teilchenmodell, den Auflagedruck <i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span> und hydraulische Anlagen.</span></div>
+      <div class="callout">🎯 <span>Heute vertiefst du: Druck &amp; Einheiten, das Teilchenmodell, den Auflagedruck <i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> und hydraulische Anlagen.</span></div>
     <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter →</button></div>
     </div>
   </div>
@@ -422,7 +480,7 @@ img{max-width:100%;height:auto;}
     </div>
 
     <div class="subphase on" id="ph1-sub-1">
-      <div class="formula"><i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span> &nbsp;·&nbsp; 1&nbsp;<span class="unit">bar</span> = 100.000&nbsp;<span class="unit">Pa</span> = 100&nbsp;<span class="unit">kPa</span></div>
+      <div class="formula"><i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> &nbsp;·&nbsp; 1&nbsp;<span class="unit">bar</span> = 100.000&nbsp;<span class="unit">Pa</span> = 100&nbsp;<span class="unit">kPa</span></div>
       <p>Probiere den Umrechner aus. Trage einen Wert ein und beobachte, wie sich die anderen Einheiten sofort mitändern — so bekommst du ein Gefühl für die Größenordnungen, bevor du selbst rechnest.</p>
       <div class="tool-box">
         <div class="tool-row">
@@ -456,25 +514,11 @@ img{max-width:100%;height:auto;}
       <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u1', 25, 0.05],['u2', 1200, 2],['u3', 350000, 500],['u4', 5, 0.05]])">✓ Prüfen</button>
       <div class="fb grp-fb"></div>
 
-      <div class="hint-box" id="hint-einheiten">
-        <button class="btn btn-ghost btn-sm hint-startbtn" id="hint-einheiten-startbtn" onclick="hintStart('hint-einheiten')">🛟 Hilfe anfordern (3 Hinweise, je nach 3 Minuten verfügbar)</button>
-        <div class="hint-timerwrap" id="hint-einheiten-timerwrap" hidden>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 1 <span class="hint-cd" id="hint-einheiten-cd-1">3:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-einheiten-btn-1" disabled onclick="hintReveal(this,'hint-einheiten',1)">Hinweis 1 anzeigen</button>
-            <div class="hint-body" id="hint-einheiten-body-1" hidden>Merke dir nur zwei Zehnerpotenzen: 1&nbsp;<span class="unit">kPa</span> = 1000&nbsp;<span class="unit">Pa</span> und 1&nbsp;<span class="unit">bar</span> = 100&nbsp;000&nbsp;<span class="unit">Pa</span>. „Hekto" bedeutet 100.</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 2 <span class="hint-cd" id="hint-einheiten-cd-2">6:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-einheiten-btn-2" disabled onclick="hintReveal(this,'hint-einheiten',2)">Hinweis 2 anzeigen</button>
-            <div class="hint-body" id="hint-einheiten-body-2" hidden>Rechne über Pascal als Zwischenschritt: Wandle zuerst alles in Pa um, erst danach in die gefragte Zieleinheit.</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 3 <span class="hint-cd" id="hint-einheiten-cd-3">9:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-einheiten-btn-3" disabled onclick="hintReveal(this,'hint-einheiten',3)">Hinweis 3 anzeigen</button>
-            <div class="hint-body" id="hint-einheiten-body-3" hidden>Beispielrechnung: 12&nbsp;<span class="unit">hPa</span> = 12 · 100&nbsp;<span class="unit">Pa</span> = 1200&nbsp;<span class="unit">Pa</span>. Übertrage das Prinzip auf die anderen drei Aufgaben.</div>
-          </div>
-        </div>
+      <div class="hs" id="hs-einheiten">
+        <div data-tipp>Merke dir nur zwei Zehnerpotenzen: 1&nbsp;<span class="unit">kPa</span> = 1000&nbsp;<span class="unit">Pa</span> und 1&nbsp;<span class="unit">bar</span> = 100&nbsp;000&nbsp;<span class="unit">Pa</span>. „Hekto" bedeutet 100.</div>
+        <div data-tipp>Rechne über Pascal als Zwischenschritt: Wandle zuerst alles in Pa um, erst danach in die gefragte Zieleinheit.</div>
+        <div data-tipp>Beispielrechnung: 12&nbsp;<span class="unit">hPa</span> = 12 · 100&nbsp;<span class="unit">Pa</span> = 1200&nbsp;<span class="unit">Pa</span>. Übertrage das Prinzip auf die anderen drei Aufgaben.</div>
+        <div data-muster><p class="heft">25&nbsp;000&nbsp;Pa = <span class="frac"><span class="fn">25&nbsp;000</span><span class="fd">1000</span></span>&nbsp;kPa = <u>25&nbsp;kPa</u><br>12&nbsp;hPa = 12 · 100&nbsp;Pa = <u>1200&nbsp;Pa</u><br>3,5&nbsp;bar = 3,5 · 100&nbsp;000&nbsp;Pa = <u>350&nbsp;000&nbsp;Pa</u><br>500&nbsp;000&nbsp;Pa = <span class="frac"><span class="fn">500&nbsp;000</span><span class="fd">100&nbsp;000</span></span>&nbsp;bar = <u>5&nbsp;bar</u></p></div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Weiter zu Teil 3 ↓</button></div>
     </div>
@@ -583,6 +627,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-teilchen">
+        <div data-tipp>Lies jede Aussage einzeln und prüfe: Passt sie zu dem, was du in der Simulation beobachtet hast?</div>
+        <div data-tipp>Erinnere dich: In welche Richtungen stoßen die Teilchen gegen die Wände? Und was passierte mit der Anzeige, als du die Teilchen schneller gemacht hast?</div>
+        <div data-tipp>Zwei Aussagen sind falsch: eine über die <strong>Richtung</strong> des Drucks und eine über die <strong>Geschwindigkeit</strong> der Teilchen.</div>
+        <div data-muster><p><strong>Falsch</strong> sind:</p><ul><li>„Der Druck wirkt nur nach unten, wie die Schwerkraft.“ – Die Teilchen stoßen gegen alle Wände, der Druck wirkt in alle Richtungen gleich.</li><li>„Schnellere Teilchen verringern den Druck.“ – Schnellere Teilchen stoßen häufiger und heftiger, der Druck <strong>steigt</strong>.</li></ul><p>Die anderen drei Aussagen sind richtig.</p></div>
+      </div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Teilchenmodell des Drucks</div>
         <p>Teilchen bewegen sich ständig ungeordnet und stoßen gegen die Gefäßwände. Druck entsteht durch die Kraftwirkung der Teilchen (Teilchenstöße) auf die Gefäßwände und wirkt in alle Richtungen gleich.</p>
@@ -607,7 +657,7 @@ img{max-width:100%;height:auto;}
     </div>
 
     <div class="subphase on" id="ph3-sub-1">
-      <div class="formula"><i>p</i> = <span class="frac"><span class="num"><i>F<sub>G</sub></i></span><span class="den"><i>A</i></span></span></div>
+      <div class="formula"><i>p</i> = <span class="frac"><span class="fn"><i>F<sub>G</sub></i></span><span class="fd"><i>A</i></span></span></div>
       <p>Verändere Gewichtskraft und Auflagefläche und beobachte, wie sich der Auflagedruck und die Pfeildichte am Untergrund ändern.</p>
       <div class="sim-box">
         <svg id="druck-svg" viewBox="0 0 560 240" width="100%" height="240" role="img" aria-label="Block auf einer Fläche, der Druck auf den Untergrund ausübt"></svg>
@@ -638,25 +688,11 @@ img{max-width:100%;height:auto;}
       <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['e1', 700, 5],['e3', 15556, 100],['e4', 1944, 20]])">✓ Prüfen</button>
       <div class="fb grp-fb"></div>
 
-      <div class="hint-box" id="hint-elefant">
-        <button class="btn btn-ghost btn-sm hint-startbtn" id="hint-elefant-startbtn" onclick="hintStart('hint-elefant')">🛟 Hilfe anfordern (3 Hinweise, je nach 3 Minuten verfügbar)</button>
-        <div class="hint-timerwrap" id="hint-elefant-timerwrap" hidden>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 1 <span class="hint-cd" id="hint-elefant-cd-1">3:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-elefant-btn-1" disabled onclick="hintReveal(this,'hint-elefant',1)">Hinweis 1 anzeigen</button>
-            <div class="hint-body" id="hint-elefant-body-1" hidden>Gewichtskraft: <i>F<sub>G</sub></i> = <i>m</i> · <i>g</i>. Setze für <i>g</i> = 10&nbsp;<span class="unit">N/kg</span> ein — die Gewichtskraft ist in beiden Fällen (Stiefel und Schneeschuhe) dieselbe.</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 2 <span class="hint-cd" id="hint-elefant-cd-2">6:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-elefant-btn-2" disabled onclick="hintReveal(this,'hint-elefant',2)">Hinweis 2 anzeigen</button>
-            <div class="hint-body" id="hint-elefant-body-2" hidden>Teile in beiden Fällen dieselbe Gewichtskraft durch die jeweilige Auflagefläche: einmal durch 0,045&nbsp;m² (Stiefel), einmal durch 0,36&nbsp;m² (Schneeschuhe).</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 3 <span class="hint-cd" id="hint-elefant-cd-3">9:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-elefant-btn-3" disabled onclick="hintReveal(this,'hint-elefant',3)">Hinweis 3 anzeigen</button>
-            <div class="hint-body" id="hint-elefant-body-3" hidden>Rechenweg Stiefel: <i>p</i> = 700&nbsp;<span class="unit">N</span> / 0,045&nbsp;<span class="unit">m²</span> ≈ 15&nbsp;556&nbsp;<span class="unit">Pa</span>. Rechne die Schneeschuhe mit derselben Gewichtskraft und der größeren Fläche analog.</div>
-          </div>
-        </div>
+      <div class="hs" id="hs-schneeschuhe">
+        <div data-tipp>Gewichtskraft: <i>F<sub>G</sub></i> = <i>m</i> · <i>g</i>. Setze für <i>g</i> = 10&nbsp;<span class="unit">N/kg</span> ein — die Gewichtskraft ist in beiden Fällen (Stiefel und Schneeschuhe) dieselbe.</div>
+        <div data-tipp>Teile in beiden Fällen dieselbe Gewichtskraft durch die jeweilige Auflagefläche: einmal durch 0,045&nbsp;m² (Stiefel), einmal durch 0,36&nbsp;m² (Schneeschuhe).</div>
+        <div data-tipp>Rechenweg Stiefel: <i>p</i> = <span class="frac"><span class="fn">700&nbsp;<span class="unit">N</span></span><span class="fd">0,045&nbsp;<span class="unit">m²</span></span></span> ≈ 15&nbsp;556&nbsp;<span class="unit">Pa</span>. Rechne die Schneeschuhe mit derselben Gewichtskraft und der größeren Fläche analog.</div>
+        <div data-muster><p class="heft">geg.: <i>m</i> = 70&nbsp;kg, <i>g</i> = 10&nbsp;N/kg, <i>A</i><sub>Stiefel</sub> = 0,045&nbsp;m², <i>A</i><sub>Schneeschuhe</sub> = 0,36&nbsp;m² · ges.: <i>F</i><sub>G</sub>, <i>p</i><sub>Stiefel</sub>, <i>p</i><sub>Schneeschuhe</sub><br>a) <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i> = 70&nbsp;kg · 10&nbsp;N/kg = <u>700&nbsp;N</u><br>b) <i>p</i><sub>Stiefel</sub> = <span class="frac"><span class="fn"><i>F</i><sub>G</sub></span><span class="fd"><i>A</i><sub>Stiefel</sub></span></span> = <span class="frac"><span class="fn">700&nbsp;N</span><span class="fd">0,045&nbsp;m²</span></span> <u>≈ 15&nbsp;556&nbsp;Pa</u><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>p</i><sub>Schneeschuhe</sub> = <span class="frac"><span class="fn"><i>F</i><sub>G</sub></span><span class="fd"><i>A</i><sub>Schneeschuhe</sub></span></span> = <span class="frac"><span class="fn">700&nbsp;N</span><span class="fd">0,36&nbsp;m²</span></span> <u>≈ 1944&nbsp;Pa</u></p><p>Mit Winterstiefeln drückt Mara mit etwa 15&nbsp;556&nbsp;Pa auf den Schnee, mit Schneeschuhen nur mit etwa 1944&nbsp;Pa – achtmal weniger, weil die Fläche achtmal so groß ist.</p></div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Weiter zu Teil 3 ↓</button></div>
     </div>
@@ -679,10 +715,16 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-auflagedruck">
+        <div data-tipp>Achte bei jeder Beschreibung auf die Einheit – sie verrät dir die Größe.</div>
+        <div data-tipp>Die Formelzeichen kommen aus dem Englischen: <i>p</i> wie <em>pressure</em>, <i>F</i> wie <em>force</em>, <i>A</i> wie <em>area</em>.</div>
+        <div data-tipp>Pascal gehört zum Druck, Newton zur Kraft, Quadratmeter zur Fläche.</div>
+        <div data-muster><p><i>p</i> → Druck (Kraft pro Fläche, Pascal) · <i>F</i><sub>G</sub> → Gewichtskraft (Newton) · <i>A</i> → Auflagefläche (Quadratmeter)</p></div>
+      </div>
       <div class="callout callout-success">🎉 <span>Die Schneeschuhe verteilen dieselbe Gewichtskraft auf eine achtmal größere Fläche — der Druck auf den Schnee sinkt entsprechend stark, sodass Mara nicht einsinkt. Bei gleicher Gewichtskraft ist der Druck umso kleiner, je größer die Auflagefläche ist.</span></div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Auflagedruck</div>
-        <p><strong>Auflagedruck:</strong> <i>p</i> = <span class="frac"><span class="num"><i>F<sub>G</sub></i></span><span class="den"><i>A</i></span></span> mit <i>F<sub>G</sub></i> = <i>m</i> · <i>g</i></p>
+        <p><strong>Auflagedruck:</strong> <i>p</i> = <span class="frac"><span class="fn"><i>F<sub>G</sub></i></span><span class="fd"><i>A</i></span></span> mit <i>F<sub>G</sub></i> = <i>m</i> · <i>g</i></p>
         <table>
           <tr><td><i>F<sub>G</sub></td><td>Gewichtskraft</td><td>Newton (N)</td></tr>
           <tr><td><i>A</i></td><td>Auflagefläche</td><td>Quadratmeter (m²)</td></tr>
@@ -710,7 +752,7 @@ img{max-width:100%;height:auto;}
 
     <div class="subphase on" id="ph4-sub-1">
       <p>In einer Flüssigkeit breitet sich Druck überall gleich stark aus (Flüssigkeiten sind inkompressibel). Deshalb gilt für zwei verbundene Kolben:</p>
-      <div class="formula"><i>p</i> = <span class="frac"><span class="num"><i>F<sub>1</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="num"><i>F<sub>2</sub></i></span><span class="den"><i>A<sub>2</sub></i></span></span></div>
+      <div class="formula"><i>p</i> = <span class="frac"><span class="fn"><i>F<sub>1</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="fn"><i>F<sub>2</sub></i></span><span class="fd"><i>A<sub>2</sub></i></span></span></div>
       <p>Stelle Fläche 1 (Pumpenkolben) und Fläche 2 (Arbeitskolben) ein, gib eine Kraft <i>F<sub>1</sub></i> vor und drücke „Kraft ausüben" — beobachte, wie der kleine Kolben einen großen Weg zurücklegt, während der große Kolben nur wenig, dafür mit großer Kraft, angehoben wird.</p>
       <div class="sim-box">
         <svg id="hydraulik-svg" viewBox="0 0 560 260" width="100%" height="260" role="img" aria-label="Hydraulische Anlage mit zwei verbundenen Zylindern"></svg>
@@ -755,25 +797,11 @@ img{max-width:100%;height:auto;}
       <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['b1', 1800, 20]])">✓ Prüfen</button>
       <div class="fb grp-fb"></div>
 
-      <div class="hint-box" id="hint-bremse">
-        <button class="btn btn-ghost btn-sm hint-startbtn" id="hint-bremse-startbtn" onclick="hintStart('hint-bremse')">🛟 Hilfe anfordern (3 Hinweise, je nach 3 Minuten verfügbar)</button>
-        <div class="hint-timerwrap" id="hint-bremse-timerwrap" hidden>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 1 <span class="hint-cd" id="hint-bremse-cd-1">3:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-bremse-btn-1" disabled onclick="hintReveal(this,'hint-bremse',1)">Hinweis 1 anzeigen</button>
-            <div class="hint-body" id="hint-bremse-body-1" hidden>Nutze die Formel <span class="frac"><span class="num"><i>F<sub>1</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="num"><i>F<sub>2</sub></i></span><span class="den"><i>A<sub>2</sub></i></span></span> und forme nach <i>F<sub>2</sub></i> um.</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 2 <span class="hint-cd" id="hint-bremse-cd-2">6:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-bremse-btn-2" disabled onclick="hintReveal(this,'hint-bremse',2)">Hinweis 2 anzeigen</button>
-            <div class="hint-body" id="hint-bremse-body-2" hidden>Es gilt <i>F<sub>2</sub></i> = <i>F<sub>1</sub></i> · <span class="frac"><span class="num"><i>A<sub>2</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span>. Setze <i>F<sub>1</sub></i> = 60&nbsp;N, <i>A<sub>1</sub></i> = 1,5&nbsp;cm², <i>A<sub>2</sub></i> = 45&nbsp;cm² ein.</div>
-          </div>
-          <div class="hint-item">
-            <div class="hint-item-head">Hinweis 3 <span class="hint-cd" id="hint-bremse-cd-3">9:00 min</span></div>
-            <button class="btn btn-primary btn-sm" id="hint-bremse-btn-3" disabled onclick="hintReveal(this,'hint-bremse',3)">Hinweis 3 anzeigen</button>
-            <div class="hint-body" id="hint-bremse-body-3" hidden>Rechenweg: <i>F<sub>2</sub></i> = 60&nbsp;N · (45&nbsp;cm² / 1,5&nbsp;cm²) = 60&nbsp;N · 30 = 1800&nbsp;N.</div>
-          </div>
-        </div>
+      <div class="hs" id="hs-wagenheber">
+        <div data-tipp>Nutze die Formel <span class="frac"><span class="fn"><i>F<sub>1</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="fn"><i>F<sub>2</sub></i></span><span class="fd"><i>A<sub>2</sub></i></span></span> und forme nach <i>F<sub>2</sub></i> um.</div>
+        <div data-tipp>Es gilt <i>F<sub>2</sub></i> = <i>F<sub>1</sub></i> · <span class="frac"><span class="fn"><i>A<sub>2</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span>. Setze <i>F<sub>1</sub></i> = 60&nbsp;N, <i>A<sub>1</sub></i> = 1,5&nbsp;cm², <i>A<sub>2</sub></i> = 45&nbsp;cm² ein.</div>
+        <div data-tipp>Rechenweg: <i>F</i><sub>2</sub> = 60&nbsp;N · <span class="frac"><span class="fn">45&nbsp;cm²</span><span class="fd">1,5&nbsp;cm²</span></span> = 60&nbsp;N · 30 – rechne das aus.</div>
+        <div data-muster><p class="heft">geg.: <i>F</i><sub>1</sub> = 60&nbsp;N, <i>A</i><sub>1</sub> = 1,5&nbsp;cm², <i>A</i><sub>2</sub> = 45&nbsp;cm² · ges.: <i>F</i><sub>2</sub><br><span class="frac"><span class="fn"><i>F</i><sub>1</sub></span><span class="fd"><i>A</i><sub>1</sub></span></span> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub></span><span class="fd"><i>A</i><sub>2</sub></span></span> &nbsp;⇒&nbsp; <i>F</i><sub>2</sub> = <i>F</i><sub>1</sub> · <span class="frac"><span class="fn"><i>A</i><sub>2</sub></span><span class="fd"><i>A</i><sub>1</sub></span></span><br><i>F</i><sub>2</sub> = 60&nbsp;N · <span class="frac"><span class="fn">45&nbsp;cm²</span><span class="fd">1,5&nbsp;cm²</span></span> = 60&nbsp;N · 30 = <u>1800&nbsp;N</u></p><p>Der Arbeitskolben hebt das Auto mit einer Kraft von 1800&nbsp;N an – dreißigmal so viel, wie Ben aufwendet.</p></div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,3)">Weiter zu Teil 3 ↓</button></div>
     </div>
@@ -801,7 +829,7 @@ img{max-width:100%;height:auto;}
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Hydraulische Anlagen</div>
         <p>In einer Flüssigkeit breitet sich Druck überall gleich aus:</p>
-        <div class="formula"><i>p</i> = <span class="frac"><span class="num"><i>F<sub>1</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="num"><i>F<sub>2</sub></i></span><span class="den"><i>A<sub>2</sub></i></span></span></div>
+        <div class="formula"><i>p</i> = <span class="frac"><span class="fn"><i>F<sub>1</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="fn"><i>F<sub>2</sub></i></span><span class="fd"><i>A<sub>2</sub></i></span></span></div>
         <p>Kraft-Weg-Ausgleich: <i>s<sub>1</sub></i> · <i>F<sub>1</sub></i> = <i>s<sub>2</sub></i> · <i>F<sub>2</sub></i> &nbsp;und&nbsp; <i>s<sub>1</sub></i> · <i>A<sub>1</sub></i> = <i>s<sub>2</sub></i> · <i>A<sub>2</sub></i></p>
         <p>Ein kleiner Kolben mit kleiner Kraft, der einen großen Weg zurücklegt, bewegt einen großen Kolben mit großer Kraft über einen kleinen Weg — „Kraft gewinnen, Weg verlieren".</p>
       </div>
@@ -834,6 +862,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-ghost btn-sm" id="cw-druck-solbtn" disabled>🔒 Erst nach einem eigenen Prüf-Versuch verfügbar</button>
         <div class="fb grp-fb"></div>
       </div>
+      <div class="hs" id="hs-kreuzwort">
+        <div data-tipp>Alle Lösungswörter stehen in den Heftereinträgen dieser Stunde. Fang mit den Begriffen an, bei denen du dir sicher bist.</div>
+        <div data-tipp>Messgerät und Einheiten findest du im Heftereintrag „Der Druck“, das bewegliche Bauteil und das Prinzip bei den hydraulischen Anlagen.</div>
+        <div data-tipp>Anfangsbuchstaben – waagerecht: 1 K… · 5 M… · 6 H… &nbsp;|&nbsp; senkrecht: 1 K… · 2 B… · 3 P… · 4 D…</div>
+        <div data-muster><p><strong>Waagerecht:</strong> 1 KOLBEN · 5 MANOMETER · 6 HYDRAULIK<br><strong>Senkrecht:</strong> 1 KRAFT · 2 BAR · 3 PASCAL · 4 DRUCK</p></div>
+      </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Weiter zu Teil 2 ↓</button></div>
     </div>
 
@@ -847,9 +881,15 @@ img{max-width:100%;height:auto;}
         </div>
         <div class="quiz-fb" id="qfb-exit1"></div>
       </div>
+      <div class="hs" id="hs-exit">
+        <div data-tipp>Welche Formel verknüpft Druck, Kraft und Fläche?</div>
+        <div data-tipp><i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> – die Kraft wird durch die Fläche <strong>geteilt</strong>, nicht mit ihr malgenommen.</div>
+        <div data-tipp>Setze ein: <i>p</i> = <span class="frac"><span class="fn">450&nbsp;N</span><span class="fd">0,15&nbsp;m²</span></span>. Tipp: 0,15 passt dreimal in 0,45.</div>
+        <div data-muster><p class="heft"><i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> = <span class="frac"><span class="fn">450&nbsp;N</span><span class="fd">0,15&nbsp;m²</span></span> = <u>3000&nbsp;Pa</u></p><p>Der Karton übt einen Druck von 3000&nbsp;Pa auf die Fläche aus.</p></div>
+      </div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Zusammenfassung</div>
-        <p><i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span> — egal ob Auflagedruck fester Körper oder Druck in Gasen/Flüssigkeiten. In Gasen und Flüssigkeiten entsteht der Druck durch die Kraftwirkung der Teilchen (Teilchenstöße) auf die Gefäßwände und wirkt in alle Richtungen gleich. In hydraulischen Anlagen wird dieser gleichmäßig wirkende Druck genutzt, um Kräfte zu übersetzen: <span class="frac"><span class="num"><i>F<sub>1</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="num"><i>F<sub>2</sub></i></span><span class="den"><i>A<sub>2</sub></i></span></span>.</p>
+        <p><i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> — egal ob Auflagedruck fester Körper oder Druck in Gasen/Flüssigkeiten. In Gasen und Flüssigkeiten entsteht der Druck durch die Kraftwirkung der Teilchen (Teilchenstöße) auf die Gefäßwände und wirkt in alle Richtungen gleich. In hydraulischen Anlagen wird dieser gleichmäßig wirkende Druck genutzt, um Kräfte zu übersetzen: <span class="frac"><span class="fn"><i>F<sub>1</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="fn"><i>F<sub>2</sub></i></span><span class="fd"><i>A<sub>2</sub></i></span></span>.</p>
       </div>
     </div>
   </div>
@@ -861,7 +901,7 @@ img{max-width:100%;height:auto;}
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Druck</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner"><i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span>, Einheit Pascal; 1&nbsp;bar = 100&nbsp;000&nbsp;Pa.</div></div>
+        <div class="acc-body"><div class="acc-body-inner"><i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span>, Einheit Pascal; 1&nbsp;bar = 100&nbsp;000&nbsp;Pa.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
@@ -876,7 +916,7 @@ img{max-width:100%;height:auto;}
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Hydraulische Anlagen</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Gleichmäßig wirkender Druck in Flüssigkeiten übersetzt kleine Kräfte in große: <span class="frac"><span class="num"><i>F<sub>1</sub></i></span><span class="den"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="num"><i>F<sub>2</sub></i></span><span class="den"><i>A<sub>2</sub></i></span></span>.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Gleichmäßig wirkender Druck in Flüssigkeiten übersetzt kleine Kräfte in große: <span class="frac"><span class="fn"><i>F<sub>1</sub></i></span><span class="fd"><i>A<sub>1</sub></i></span></span> = <span class="frac"><span class="fn"><i>F<sub>2</sub></i></span><span class="fd"><i>A<sub>2</sub></i></span></span>.</div></div>
       </div>
     </div>
     <div class="callout callout-success">🎉 <span>Du kannst jetzt Druck berechnen und umrechnen, das Teilchenmodell erklären und hydraulische Kraftübersetzung anwenden.</span></div>
@@ -884,8 +924,20 @@ img{max-width:100%;height:auto;}
     <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-F45CF9" title="Kennnummer MR-20261023-F45CF9">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ============================================================
    Seiten-Engine Lern-HTML
    Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
@@ -899,9 +951,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -933,7 +988,7 @@ const quizFeedback = {
   hy1: {
     ok: '✅ <strong>Richtig!</strong> Der Druck ist überall in der Flüssigkeit gleich groß; bei größerer Fläche entsteht bei gleichem Druck automatisch eine größere Kraft.',
     ng: '❌ <strong>Nicht ganz.</strong> Die Flüssigkeit erzeugt keine eigene Energie — sie überträgt nur den vorhandenen Druck.',
-    hint: 'Schau dir die Formel <i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span> zweimal an: einmal für den kleinen, einmal für den großen Kolben. Was ist auf beiden Seiten gleich?'
+    hint: 'Schau dir die Formel <i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> zweimal an: einmal für den kleinen, einmal für den großen Kolben. Was ist auf beiden Seiten gleich?'
   },
   hy2: {
     ok: '✅ <strong>Richtig!</strong> Nach <i>s<sub>1</sub></i>·<i>A<sub>1</sub></i> = <i>s<sub>2</sub></i>·<i>A<sub>2</sub></i> müsste bei größerem <i>A<sub>2</sub></i> viel mehr Flüssigkeitsvolumen nachfließen, damit sich der Arbeitskolben überhaupt bewegt — der Wagenheber wäre kaum noch praktisch nutzbar.',
@@ -946,9 +1001,9 @@ const quizFeedback = {
     hint: 'Was braucht eine hydraulische Anlage unbedingt, damit sich Druck überhaupt aufbauen und übertragen kann?'
   },
   exit1: {
-    ok: '✅ <strong>Richtig!</strong> <i>p</i> = 450&nbsp;N / 0,15&nbsp;m² = 3000&nbsp;Pa.',
+    ok: '✅ <strong>Richtig!</strong> <i>p</i> = <span class="frac"><span class="fn">450&nbsp;N</span><span class="fd">0,15&nbsp;m²</span></span> = 3000&nbsp;Pa.',
     ng: '❌ <strong>Nicht ganz.</strong> Prüfe, ob du wirklich Kraft durch Fläche geteilt hast — nicht Fläche durch Kraft.',
-    hint: 'Nutze <i>p</i> = <span class="frac"><span class="num"><i>F</i></span><span class="den"><i>A</i></span></span> und setze die Werte direkt ein.'
+    hint: 'Nutze <i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> und setze die Werte direkt ein.'
   }
 };
 function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
@@ -994,13 +1049,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1036,8 +1091,105 @@ function initHefter(){
   }
 }
 
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); }
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -1149,7 +1301,7 @@ function hintTick(id, startMs){
   hintIntervals[id]=setInterval(upd,1000);
 }
 function hintStart(id){
-  const key='hintstart_'+id;
+  const key=LH_NS+'hintstart_'+id;
   let t=null; try{ t=localStorage.getItem(key); }catch(e){}
   if(!t){ t=String(Date.now()); try{ localStorage.setItem(key,t); }catch(e){} }
   hintTick(id, parseInt(t,10));
@@ -1162,7 +1314,7 @@ function hintReveal(btn,id,n){
 }
 function initHints(){
   document.querySelectorAll('.hint-box').forEach(function(box){
-    let t=null; try{ t=localStorage.getItem('hintstart_'+box.id); }catch(e){}
+    let t=null; try{ t=localStorage.getItem(LH_NS+'hintstart_'+box.id); }catch(e){}
     if(t){ hintTick(box.id, parseInt(t,10));
       const btn=document.getElementById(box.id+'-startbtn'); if(btn) btn.hidden=true;
       const wrap=document.getElementById(box.id+'-timerwrap'); if(wrap) wrap.hidden=false; }
@@ -1437,7 +1589,7 @@ function cwCheckGated(btn){
   if(box) cwSolutionEnsureStarted(box.id);
 }
 function cwSolutionEnsureStarted(id){
-  const key = 'cwsolstart_'+id;
+  const key = LH_NS+'cwsolstart_'+id;
   let t = null; try{ t = localStorage.getItem(key); }catch(e){}
   if(!t){ t = String(Date.now()); try{ localStorage.setItem(key,t); }catch(e){} }
   cwSolutionTick(id, parseInt(t,10));
@@ -1465,12 +1617,64 @@ function cwSolutionTick(id, startMs){
 }
 function initCwSolutionGate(){
   document.querySelectorAll('.baustein[data-type="crossword"]').forEach(function(box){
-    let t=null; try{ t = localStorage.getItem('cwsolstart_'+box.id); }catch(e){}
+    let t=null; try{ t = localStorage.getItem(LH_NS+'cwsolstart_'+box.id); }catch(e){}
     if(t) cwSolutionTick(box.id, parseInt(t,10));
   });
 }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initCwSolutionGate); } else { initCwSolutionGate(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-F45CF9",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

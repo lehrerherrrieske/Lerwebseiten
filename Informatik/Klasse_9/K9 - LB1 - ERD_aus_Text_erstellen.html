@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-D11F2D · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-D11F2D" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-D11F2D">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 9 · LB1 · Vom Text zum ER-Diagramm</title>
 <style>
+/* lh:MR-20261023-D11F2D */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -321,15 +326,74 @@ img{max-width:100%;height:auto;}
 .fc-controls{justify-content:center;}
 .btn:disabled{opacity:.55;cursor:default;}
 .btn:disabled:hover{background:transparent;}
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+@media print{.teachbar{display:none !important;}.lehrer-only{display:block !important;}.hs-panel,.hs-body{display:block !important;}.hs-btn,.hs-time,.hs-icon{display:none !important;}}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <div class="teachbar" id="teachbar" data-pw="Turniertag">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+
   <header class="pagehead">
     <div class="eyebrow">Klasse 9 · LB1</div>
-    <h1>Vom Text zum ER-Diagramm</h1>
-    <div class="goal">🎯 Die Lernenden entwerfen zu einem beschreibenden Text ein ER-Diagramm, indem sie Entitäten mit ihrem Primärschlüssel und deren Attribute bestimmen, Beziehungen benennen und die Kardinalitäten festlegen.</div>
+    <h1>Vom Text zum ER-Diagramm⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌​​​​‌‌​​​‌​​‌‌​​​‌​‌​​​‌‌​​​‌‌​​‌​​‌​​​‌​​⁠</h1>
+    <div class="goal">🎯 Die Lernenden entwerfen zu einem beschreibenden Text ein ER-Diagramm, indem sie Entitäten mit ihrem Primärschlüssel und deren Attribute bestimmen, Beziehungen benennen und die Kardinalitäten festlegen.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​‌​​​​‌‌​​​‌​​‌‌​​​‌​‌​​​‌‌​​​‌‌​​‌​​‌​​​‌​​⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -417,6 +481,12 @@ img{max-width:100%;height:auto;}
         <button class="btn btn-primary btn-sm" onclick="sortCheckTimed(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm sort-sol-btn" disabled onclick="sortShowSolution(this)">🔒 Lösung nach 4 Minuten</button>
         <div class="fb grp-fb"></div>
+      </div>
+      <div class="hs" id="hs-fahrplan">
+        <div data-tipp>Was musst du wissen, bevor du überhaupt etwas zeichnen kannst?</div>
+        <div data-tipp>Arbeite vom Groben zum Feinen: erst die Dinge finden, dann ihre Eigenschaften, dann die Verbindungen zwischen ihnen.</div>
+        <div data-tipp>Wie viele zu wie vielen gehören, kannst du erst festlegen, wenn die Beziehung schon eingezeichnet ist.</div>
+        <div data-muster><ol><li>Festlegen, worum es überhaupt geht – und was weggelassen wird</li><li>Die Entitäten finden, über die Daten gespeichert werden</li><li>Zu jeder Entität die Attribute ergänzen und den Primärschlüssel festlegen</li><li>Beziehungen einzeichnen und mit einem Verb benennen</li><li>Für jede Beziehung festlegen, wie viele zu wie vielen gehören</li></ol></div>
       </div>
 
       <div class="quiz-item">
@@ -527,6 +597,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-biblio">
+          <div data-tipp>Ein Rechteck ist ein Ding, über das man eine eigene Liste führen könnte. Eine Ellipse beschreibt so ein Ding nur näher.</div>
+          <div data-tipp>Frag bei jedem Wort: Ist das ein eigenes Objekt – oder eine Eigenschaft von etwas anderem? „Titel“ zum Beispiel beschreibt ein Buch.</div>
+          <div data-tipp>Es sind genau drei Rechtecke – in jedem Satz eines.</div>
+          <div data-muster><p><strong>Rechtecke (Entitäten):</strong> Bücher, Regal, Leser</p><p><strong>Ellipsen (Attribute):</strong> Titel, ISBN, Erscheinungsjahr, Regalnummer, Nachname, Geburtsdatum</p></div>
         </div>
       </div>
 
@@ -698,6 +774,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
         </div>
+        <div class="hs" id="hs-beziehung">
+          <div data-tipp>Schau dir im Beispiel-Diagramm die Form an, die zwischen zwei Rechtecken steht.</div>
+          <div data-tipp>Eine Beziehung beschreibt, was zwischen zwei Entitäten passiert. Welche Wortart drückt ein Tun aus?</div>
+          <div data-tipp>Zwischen Leser und Buch gibt es zum Beispiel „leiht aus“ und „hat vorgemerkt“. Wie viele Beziehungen sind also zwischen denselben beiden Entitäten möglich?</div>
+          <div data-muster><p>Ein Beziehungstyp wird als <strong>Raute</strong> gezeichnet und mit einem <strong>Verb</strong> beschriftet. Er verbindet zwei <strong>Rechtecke</strong>. Zwischen denselben beiden Entitätstypen kann es <strong>mehrere</strong> Beziehungen geben.</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -740,6 +822,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-begriffe">
+          <div data-tipp>Lies jede Beschreibung und achte auf die Beispiele darin.</div>
+          <div data-tipp>Eine Beschreibung sagt „wird später zu einer Tabelle“, eine andere „wird später zu einer Spalte“. Was davon ist das Ding, was die Eigenschaft?</div>
+          <div data-tipp>Die Beschreibung mit „Verbindung“ gehört zur Beziehung, die mit „Modell … grafisch“ zum ER-Diagramm.</div>
+          <div data-muster><p><strong>ER-Diagramm:</strong> Modell, das den Aufbau einer Datenbank grafisch darstellt · <strong>Entität:</strong> Objekt, über das Daten gespeichert werden (später eine Tabelle) · <strong>Attribut:</strong> Eigenschaft (später eine Spalte) · <strong>Beziehung:</strong> Verbindung zwischen zwei Entitäten</p></div>
         </div>
       </div>
 
@@ -833,6 +921,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-formen">
+          <div data-tipp>Schau in die Legende über der Aufgabe: Welche Form steht wofür?</div>
+          <div data-tipp>„Mannschaft“ ist eine Entität, „Trikotfarbe“ ein Attribut, „bestreitet“ eine Beziehung.</div>
+          <div data-tipp>Der Primärschlüssel wird in seiner Ellipse besonders markiert. Die Zahlen der Kardinalität stehen an der Verbindung zwischen den Formen.</div>
+          <div data-muster><p>„Mannschaft“ wird ein <strong>Rechteck</strong>, „Trikotfarbe“ eine <strong>Ellipse</strong> und „bestreitet“ eine <strong>Raute</strong>. Der Primärschlüssel PK_Mannschaft wird <strong>unterstrichen</strong>. Die Zahlen der Kardinalität stehen an der <strong>Linie</strong>.</p></div>
         </div>
       </div>
 
@@ -970,6 +1064,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
         </div>
+        <div class="hs" id="hs-kardinalitaet">
+          <div data-tipp>Lies jedes Satzpaar in beide Richtungen: Wie viele … gehören zu einem …?</div>
+          <div data-tipp>„Genau ein …“ ergibt eine 1, „mehrere …“ ergibt n bzw. m.</div>
+          <div data-tipp>Steht in beiden Sätzen „mehrere“, ist es n:m. Steht in beiden „genau ein“, ist es 1:1. Gemischt ergibt 1:n.</div>
+          <div data-muster><p><strong>1:n</strong> – Halle und Spiel (eine Halle, mehrere Spiele)<br><strong>n:m</strong> – Buch und Leser (beide Seiten „mehrere“)<br><strong>1:1</strong> – Klasse und Klassenraum (beide Seiten „genau ein“)</p></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -1060,10 +1160,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="showSol('tipp-ent')">🛟 Wenn du nicht weiterkommst</button>
-        <div class="sol" id="tipp-ent">Frag dich bei jedem Wort: Könnte ich darüber eine eigene Liste führen, in
-          der jede Zeile eine eigene Entität ist? Über „Mannschaften“ ja – über „rot“ nicht. Und: Nicht alles, was im
-          Text steht, gehört in die Datenbank.</div>
+        <div class="hs" id="hs-turnier">
+          <div data-tipp>Frag dich bei jedem Wort: Könnte ich darüber eine eigene Liste führen, in der jede Zeile eine eigene Entität ist? Über „Mannschaften“ ja – über „rot“ nicht.</div>
+          <div data-tipp>Mannschaftsname, Startnummer, Rückennummer, Anstoßzeit und Platzanzahl beschreiben etwas anderes näher – sie werden Ellipsen.</div>
+          <div data-tipp>Es sind vier Entitäten. Das Wort, das gar nicht in die Datenbank gehört, hat mit dem Turnier selbst nichts zu tun.</div>
+          <div data-muster><p><strong>Rechtecke (Entitäten):</strong> Mannschaft, Spieler, Spiel, Halle</p><p><strong>Gehört nicht in die Datenbank:</strong> Kuchen</p><p>Alle anderen Wörter sind Attribute.</p></div>
+        </div>
       </div>
 
       <div class="task">
@@ -1087,6 +1189,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-attribute">
+          <div data-tipp>Lies im Text nach, bei welcher Entität die Eigenschaften aufgezählt werden – jede Gruppe steht in einem eigenen Satz.</div>
+          <div data-tipp>„Rückennummer“ trägt eine Person, „Trikotfarbe“ eine ganze Mannschaft.</div>
+          <div data-tipp>„Platzanzahl“ gehört zu einem Ort, „Anstoßzeit“ zu einem Ereignis.</div>
+          <div data-muster><p><strong>Mannschaft:</strong> Mannschaftsname, Startnummer, Trikotfarbe<br><strong>Spieler:</strong> Vorname, Nachname, Klasse, Rückennummer<br><strong>Spiel:</strong> Spielnummer, Anstoßzeit, Ergebnis<br><strong>Halle:</strong> Hallenname, Platzanzahl</p></div>
         </div>
       </div>
 
@@ -1363,6 +1471,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-ghost btn-sm sort-sol-btn" disabled onclick="sortShowSolution(this)">🔒 Lösung nach 4 Minuten</button>
           <div class="fb grp-fb"></div>
         </div>
+        <div class="hs" id="hs-drawio">
+          <div data-tipp>Bevor du Formen aufziehen kannst, muss das Programm die passenden Formen anbieten.</div>
+          <div data-tipp>Erst kommen die Rechtecke, dann das, was an ihnen hängt, dann die Verbindungen zwischen ihnen.</div>
+          <div data-tipp>Speichern und Exportieren kommt ganz zum Schluss.</div>
+          <div data-muster><ol><li>Formenbibliothek „Entity Relation“ einschalten</li><li>Rechtecke für die Entitätstypen aufziehen und beschriften</li><li>Attribute als Ellipsen anhängen, Primärschlüssel unterstreichen</li><li>Rauten setzen, Linien ziehen und Kardinalitäten eintragen</li><li>Datei speichern und als Bild exportieren</li></ol></div>
+        </div>
       </div>
 
       <div class="quiz-item">
@@ -1431,6 +1545,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-merksatz">
+          <div data-tipp>Alle Wörter stehen im Heftereintrag „Formen und Kardinalität“.</div>
+          <div data-tipp>Aus jedem Rechteck wird später eine Tabelle, aus jedem Attribut eine Spalte. Was wird unterstrichen?</div>
+          <div data-tipp>PK_ steht für den Primärschlüssel, FK_ für den Fremdschlüssel.</div>
+          <div data-muster><p>Ein ER-Diagramm ist der <strong>Bauplan</strong> einer Datenbank. Jede Entität wird als <strong>Rechteck</strong> gezeichnet und später zu einer <strong>Tabelle</strong>; jedes Attribut wird später zu einer <strong>Spalte</strong>. Jede Entität bekommt einen <strong>Primärschlüssel</strong>, der unterstrichen wird und mit PK_ beginnt. Eine Beziehung steht in einer <strong>Raute</strong>, und die <strong>Kardinalität</strong> sagt, wie viele Datensätze einander zugeordnet werden. Verbunden werden die Tabellen später über einen <strong>Fremdschlüssel</strong> mit dem Namen FK_…</p></div>
         </div>
       </div>
 
@@ -1517,6 +1637,12 @@ img{max-width:100%;height:auto;}
           <button class="btn btn-ghost btn-sm" onclick="cwReveal(this)">Lösung zeigen</button>
           <div class="fb grp-fb"></div>
         </div>
+        <div class="hs" id="hs-kreuzwort">
+          <div data-tipp>Alle vier Begriffe kommen in dieser Stunde vor – schau notfalls in die Heftereinträge.</div>
+          <div data-tipp>3 waagerecht ist eine Abkürzung aus drei Buchstaben. 4 waagerecht ist das, wozu ein Rechteck in der Datenbank wird.</div>
+          <div data-tipp>Anfangsbuchstaben: 1 A… · 2 E… · 3 E… · 4 T…</div>
+          <div data-muster><p><strong>Waagerecht:</strong> 3 ERD · 4 TABELLE<br><strong>Senkrecht:</strong> 1 ATTRIBUT · 2 ELLIPSE</p></div>
+        </div>
       </div>
 
       <div class="callout callout-success">🎉 <span>Du kannst jetzt aus einem beschreibenden Text ein ER-Diagramm
@@ -1583,8 +1709,20 @@ img{max-width:100%;height:auto;}
       Informationen und Daten.</p>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-D11F2D" title="Kennnummer MR-20261023-D11F2D">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ============================================================
    Seiten-Engine Lern-HTML
    Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
@@ -1598,9 +1736,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -1666,13 +1807,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1708,8 +1849,105 @@ function initHefter(){
   }
 }
 
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); }
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -1895,7 +2133,7 @@ function sortSolTick(s, b, end){
 
 function sortSolStart(s){
   var b = s.querySelector('.sort-sol-btn'); if(!b || s._solTimer || !b.disabled) return;
-  var key = 'sortsol_' + s.id, end = 0;
+  var key = LH_NS+'sortsol_' + s.id, end = 0;
   try{ end = parseInt(localStorage.getItem(key)||'0', 10) || 0; }catch(e){}
   if(!end){ end = Date.now() + SORT_SOL_WAIT; try{ localStorage.setItem(key, String(end)); }catch(e){} }
   s._solTimer = setInterval(function(){ sortSolTick(s, b, end); }, 1000);
@@ -1916,7 +2154,7 @@ function sortShowSolution(btn){
 function initSortSol(){
   document.querySelectorAll('.baustein[data-type="sort"]').forEach(function(s){
     var b = s.querySelector('.sort-sol-btn'); if(!b) return;
-    var end = 0; try{ end = parseInt(localStorage.getItem('sortsol_'+s.id)||'0', 10) || 0; }catch(e){}
+    var end = 0; try{ end = parseInt(localStorage.getItem(LH_NS+'sortsol_'+s.id)||'0', 10) || 0; }catch(e){}
     if(!end) return;
     if(Date.now() >= end){ b.disabled = false; b.textContent = 'Lösung anzeigen'; }
     else { s._solTimer = setInterval(function(){ sortSolTick(s, b, end); }, 1000); sortSolTick(s, b, end); }
@@ -1963,6 +2201,58 @@ quizFeedback['fk3'] = {
   ng:'❌ <strong>Nicht ganz.</strong> Im Regal stehen viele Bücher; die passen nicht in eine einzelne Zelle. Und doppelt speichern führt genau zu den Widersprüchen vom Stundenanfang.',
   hint:'Welche der beiden Seiten hat immer nur einen einzigen Partner?'
 };
+</script>
+<script>
+var __LH={i:"MR-20261023-D11F2D",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

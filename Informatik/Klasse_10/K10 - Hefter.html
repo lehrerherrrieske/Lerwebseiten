@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-C0F734 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-C0F734" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-C0F734">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python – Unsere Befehlssammlung · Klasse 10</title>
 <style>
+/* lh:MR-20261023-C0F734 */
 /* ============================================================
    Design-Tokens (warme Palette, Farbschema_LernHTML)
    Akzent: Schiefer-Blau — kennzeichnet diese Sammlung
@@ -349,6 +354,13 @@ body.lehrermodus-aktiv .lehrer-nur-aktiv{display:inline-block;}
   .karten-icon{display:none !important;}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -363,8 +375,8 @@ body.lehrermodus-aktiv .lehrer-nur-aktiv{display:inline-block;}
 
   <header class="pagehead">
     <div class="eyebrow">Informatik · Klasse 10 · Python-Sammlung</div>
-    <h1>Unsere Python-Werkzeugkiste</h1>
-    <div class="goal"><span>Hier sammeln wir alle Python-Befehle und Konzepte, die wir im Unterricht besprochen haben. Diese Seite wächst mit jeder Stunde weiter und ist dein Nachschlagewerk anstelle des Heftereintrags.</span></div>
+    <h1>Unsere Python-Werkzeugkiste⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​​‌‌​​‌‌​​​​​‌​​​‌‌​​​‌‌​‌‌‌​​‌‌​​‌‌​​‌‌​‌​​⁠</h1>
+    <div class="goal"><span>Hier sammeln wir alle Python-Befehle und Konzepte, die wir im Unterricht besprochen haben. Diese Seite wächst mit jeder Stunde weiter und ist dein Nachschlagewerk anstelle des Heftereintrags.</span>⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​‌​​​​‌‌​​‌‌​​​​​‌​​​‌‌​​​‌‌​‌‌‌​​‌‌​​‌‌​​‌‌​‌​​⁠</div>
   </header>
 
   <!-- ============================================================
@@ -3648,9 +3660,21 @@ else:
     <button class="btn btn-ghost" id="hefter-all">Gesamte Sammlung in den Hefter kopieren</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-C0F734" title="Kennnummer MR-20261023-C0F734">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 
 <script>
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
 /* ---------- Reiter (Phasen) ---------- */
 function showPhase(n){
   if(typeof sucheLeeren==='function') sucheLeeren();
@@ -3661,6 +3685,8 @@ function showPhase(n){
 
 /* ---------- Lehrermodus ---------- */
 const LEHRER_PW = 'InfoIstCool';
+/* Lehrermodus gilt nur für diese Sitzung und nur für diese Seite (Schlüssel mit Kennnummer) */
+const LM_KEY = (document.documentElement.getAttribute('data-lh') || 'k10hefter') + '_lehrermodus';
 function setLehrermodus(an){
   document.body.classList.toggle('lehrermodus-aktiv', an);
   const status = document.getElementById('lehrer-status');
@@ -3684,7 +3710,7 @@ function aktiviereLehrermodus(){
   const feld = document.getElementById('lehrer-pw');
   const status = document.getElementById('lehrer-status');
   if(feld.value === LEHRER_PW){
-    try{ localStorage.setItem('lehrermodus','1'); }catch(e){}
+    try{ sessionStorage.setItem(LM_KEY,'1'); }catch(e){}
     setLehrermodus(true);
   } else {
     status.textContent = 'falsches Passwort';
@@ -3694,7 +3720,7 @@ function aktiviereLehrermodus(){
   feld.value='';
 }
 function deaktiviereLehrermodus(){
-  try{ localStorage.removeItem('lehrermodus'); }catch(e){}
+  try{ sessionStorage.removeItem(LM_KEY); }catch(e){}
   setLehrermodus(false);
   resetHilfeBoxen();
 }
@@ -3717,7 +3743,9 @@ function resetHilfeBoxen(){
 }
 function initLehrermodus(){
   let gespeichert=false;
-  try{ gespeichert = localStorage.getItem('lehrermodus')==='1'; }catch(e){}
+  try{ gespeichert = sessionStorage.getItem(LM_KEY)==='1'; }catch(e){}
+  /* alter, dauerhaft gespeicherter Lehrermodus (vor 10/2026) wird entfernt */
+  try{ localStorage.removeItem('lehrermodus'); }catch(e){}
   if(gespeichert) setLehrermodus(true);
 }
 
@@ -4100,5 +4128,57 @@ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded
 </script>
 
 <div id="tt-popup" role="tooltip"></div>
+<script>
+var __LH={i:"MR-20261023-C0F734",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
+</script>
 </body>
 </html>

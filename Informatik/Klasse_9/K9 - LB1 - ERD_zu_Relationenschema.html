@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-401F7D · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-401F7D" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-401F7D">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Klasse 9 · LB1 · Vom ERD zum Relationenschema – und ab in Access</title>
+<title>Klasse 9 · LB1 · Vom ERD zum Relationenschema</title>
 <style>
+/* lh:MR-20261023-401F7D */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -415,7 +420,7 @@ img{max-width:100%;height:auto;}
 .schema{background:var(--surface-2);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:var(--radius);
   padding:12px 16px;margin:10px 0;line-height:2;overflow-x:auto;white-space:nowrap;color:var(--text);}
 .schema u{text-decoration-thickness:2px;text-underline-offset:3px;}
-.fk{color:var(--accent-hover);font-weight:700;}
+.schema .fk,.schema .pkfk{color:var(--accent-hover);font-weight:700;}
 
 /* Datentyp-Karten */
 .dtgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0;}
@@ -570,12 +575,22 @@ body:not(.teach-on) .access-part{display:none;}
 .teachbar-danger{color:var(--err);border-color:var(--err-b);}
 .teachbar-danger:hover{background:var(--err-bg);}
 
+/* ---------- Schlüssel-Kennzeichnung: PK durchgezogen, FK gestrichelt, PK+FK beides ---------- */
+u.fk{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1.5px;text-underline-offset:3px;}
+u.pkfk{text-decoration-line:underline;text-decoration-style:solid;text-decoration-thickness:1.5px;text-underline-offset:2px;
+  border-bottom:1.5px dashed currentColor;padding-bottom:3px;}
+.schema u.fk,.schema u.pkfk{text-decoration-thickness:2px;}
+.dtw-gap[data-ul].filled{border-bottom-color:transparent;}
+.dtw-gap[data-ul="pk"].filled{text-decoration:underline solid 2px;text-underline-offset:4px;}
+.dtw-gap[data-ul="fk"].filled{text-decoration:underline dashed 2px;text-underline-offset:4px;}
+
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="teachbar" id="teachbar" data-pw="Informatik9">
+  <div class="teachbar" id="teachbar" data-pw="Fremdschluessel">
     <span class="teachbar-label">Lehrermodus</span>
     <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
            onkeydown="if(event.key==='Enter'){teachActivate();}">
@@ -591,8 +606,8 @@ body:not(.teach-on) .access-part{display:none;}
 
   <header class="pagehead">
     <div class="eyebrow">Klasse 9 · LB1</div>
-    <h1>Vom ERD zum Relationenschema – und ab in Access</h1>
-    <div class="goal">🎯 Die Lernenden überführen ein ERD in ein Relationenschema, indem sie Entitätstypen in Tabellen umwandeln, Primär- und Fremdschlüssel festlegen und jedem Attribut einen Datentyp mit Länge zuordnen – und zeichnen es als Tabellendiagramm in draw.io.</div>
+    <h1>Vom ERD zum Relationenschema⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​‌​​​​‌‌​​​​​​‌‌​​​‌​‌​​​‌‌​​​‌‌​‌‌‌​‌​​​‌​​⁠</h1>
+    <div class="goal">🎯 Die Lernenden überführen ein ERD in ein Relationenschema, indem sie Entitätstypen in Tabellen umwandeln, Primär- und Fremdschlüssel festlegen und jedem Attribut einen Datentyp mit Länge zuordnen – und zeichnen es als Tabellendiagramm in draw.io.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​‌​​​​‌‌​​​​​​‌‌​​​‌​‌​​​‌‌​​​‌‌​‌‌‌​‌​​​‌​​⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -864,12 +879,12 @@ body:not(.teach-on) .access-part{display:none;}
         <div class="step-next"><button class="btn btn-primary btn-sm" onclick="ueGo(3)">Weiter zu Schritt 3 · Primärschlüssel →</button></div>
       </div>
       <div class="step-content" id="ue-step-3">
-        <div class="callout callout-info">3️⃣ <span><strong>Das Schlüsselattribut wird zum Primärschlüssel (PK).</strong> Es bekommt in der linken Spalte das Kürzel <strong>PK</strong>, wird fett und unterstrichen und rückt nach oben. Ein Strich trennt die Schlüssel von den übrigen Attributen.</span></div>
+        <div class="callout callout-info">3️⃣ <span><strong>Das Schlüsselattribut wird zum Primärschlüssel (PK).</strong> Es bekommt in der linken Spalte das Kürzel <strong>PK</strong>, wird fett und <strong>durchgezogen unterstrichen</strong> und rückt nach oben. Ein Strich trennt die Schlüssel von den übrigen Attributen.</span></div>
         <div class="erd-wrap" id="erd-step-3"></div>
         <div class="step-next"><button class="btn btn-primary btn-sm" onclick="ueGo(4)">Weiter zu Schritt 4 · Fremdschlüssel →</button></div>
       </div>
       <div class="step-content" id="ue-step-4">
-        <div class="callout callout-info">4️⃣ <span><strong>Bei 1:n bekommt die Tabelle auf der n-Seite einen Fremdschlüssel (FK).</strong> Der Primärschlüssel der 1-Seite (Raum_ID) wird als zusätzliche Spalte in die Tabelle der n-Seite (Rechner) kopiert. Der Pfeil zeigt vom Primärschlüssel zum Fremdschlüssel.</span></div>
+        <div class="callout callout-info">4️⃣ <span><strong>Bei 1:n bekommt die Tabelle auf der n-Seite einen Fremdschlüssel (FK).</strong> Der Primärschlüssel der 1-Seite (Raum_ID) wird als zusätzliche Spalte in die Tabelle der n-Seite (Rechner) kopiert. Er bekommt das Kürzel <strong>FK</strong>, wird fett und <strong>gestrichelt unterstrichen</strong>. Der Pfeil zeigt vom Primärschlüssel zum Fremdschlüssel.</span></div>
         <div class="erd-wrap" id="erd-step-4"></div>
         <div class="step-next"><button class="btn btn-primary btn-sm" onclick="ueGo(5)">Weiter zu Schritt 5 · Datentypen →</button></div>
       </div>
@@ -883,9 +898,9 @@ body:not(.teach-on) .access-part{display:none;}
         <div class="hefter-label">📓 Heftereintrag — Regeln: vom ERD zum Relationenschema</div>
         <p><strong>1.</strong> Jeder Entitätstyp wird eine Tabelle (Relation).<br>
            <strong>2.</strong> Jedes Attribut wird eine Spalte.<br>
-           <strong>3.</strong> Das Schlüsselattribut wird Primärschlüssel (PK).<br>
-           <strong>4.</strong> Beziehung 1:n → Der PK der 1-Seite wird als Fremdschlüssel (FK) in die Tabelle der n-Seite aufgenommen.<br>
-           <strong>5.</strong> Beziehung n:m → eigene Zwischentabelle mit beiden PKs als FKs.<br>
+           <strong>3.</strong> Das Schlüsselattribut wird Primärschlüssel (PK) – <u>durchgezogen unterstrichen</u>.<br>
+           <strong>4.</strong> Beziehung 1:n → Der PK der 1-Seite wird als Fremdschlüssel (FK) in die Tabelle der n-Seite aufgenommen – <u class="fk" style="text-decoration-style:dashed;text-underline:dash">gestrichelt unterstrichen</u>.<br>
+           <strong>5.</strong> Beziehung n:m → eigene Zwischentabelle mit beiden PKs als FKs; zusammen bilden sie den PK – <u class="pkfk" style="border-bottom:1.5px dashed">beide Linien</u>.<br>
            <strong>6.</strong> Jede Spalte bekommt einen Datentyp; FK und zugehöriger PK haben denselben Datentyp.</p>
       </div>
             <div class="subphase-next" id="ue-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Geht das auch ohne Zeichnung? ↓</button></div>
@@ -896,9 +911,9 @@ body:not(.teach-on) .access-part{display:none;}
       <p>Für schnelle Notizen (und in Klassenarbeiten!) schreibt man das Relationenschema als eine Zeile pro Tabelle:</p>
       <div class="schema">
         Räume(<u>Raum_ID</u>, Raumbezeichnung, Etage, Anzahl_Sitzplaetze, Beamer)<br>
-        Rechner(<u>Rechner_ID</u>, <span class="fk">↑Raum_ID</span>, Betriebssystem, Modell, Anschaffungsdatum)
+        Rechner(<u>Rechner_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Raum_ID</u>, Betriebssystem, Modell, Anschaffungsdatum)
       </div>
-      <div class="callout">💡 <span>Tabellenname, dann in Klammern alle Spalten. <strong>Primärschlüssel unterstrichen</strong>, <strong>Fremdschlüssel mit Pfeil ↑</strong> (manche Bücher unterstreichen ihn stattdessen gestrichelt). Datentypen lässt man in der Textform meist weg – die stehen im Tabellendiagramm.</span></div>
+      <div class="callout">💡 <span>Tabellenname, dann in Klammern alle Spalten. <strong>Primärschlüssel durchgezogen unterstrichen</strong> (<u>Rechner_ID</u>), <strong>Fremdschlüssel gestrichelt unterstrichen</strong> (<u class="fk" style="text-decoration-style:dashed;text-underline:dash">Raum_ID</u>). Ist eine Spalte beides, bekommt sie beide Linien (<u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>). Datentypen lässt man in der Textform meist weg – die stehen im Tabellendiagramm.</span></div>
 
       <div class="quiz-item">
         <div class="quiz-q">Warum steht der Fremdschlüssel in der Tabelle <strong>Rechner</strong> und nicht in der Tabelle <strong>Räume</strong>?</div>
@@ -914,32 +929,34 @@ body:not(.teach-on) .access-part{display:none;}
         <p><strong>Aufgabe 4:</strong> Vervollständige das Relationenschema und die Regel. Ziehe die Bausteine in die Lücken (oder erst Baustein, dann Lücke antippen).</p>
         <div class="baustein" data-type="dtw" id="dtw-schema">
           <div class="dtw-pool">
-            <span class="dtw-word" data-w="↑Raum_ID" onclick="dtwSelect(this)">↑Raum_ID</span>
+            <span class="dtw-word" data-w="Raum_ID" onclick="dtwSelect(this)">Raum_ID</span>
             <span class="dtw-word" data-w="Rechner_ID" onclick="dtwSelect(this)">Rechner_ID</span>
-            <span class="dtw-word" data-w="↑Rechner_ID" onclick="dtwSelect(this)">↑Rechner_ID</span>
-            <span class="dtw-word" data-w="unterstrichen" onclick="dtwSelect(this)">unterstrichen</span>
+            <span class="dtw-word" data-w="Modell" onclick="dtwSelect(this)">Modell</span>
+            <span class="dtw-word" data-w="durchgezogen" onclick="dtwSelect(this)">durchgezogen</span>
+            <span class="dtw-word" data-w="gestrichelt" onclick="dtwSelect(this)">gestrichelt</span>
+            <span class="dtw-word" data-w="doppelt" onclick="dtwSelect(this)">doppelt</span>
             <span class="dtw-word" data-w="n-Seite" onclick="dtwSelect(this)">n-Seite</span>
             <span class="dtw-word" data-w="1-Seite" onclick="dtwSelect(this)">1-Seite</span>
           </div>
-          <p class="dtw-text tcode">Rechner( <span class="dtw-gap" data-answer="Rechner_ID" onclick="dtwPlace(this)">______</span> , <span class="dtw-gap" data-answer="↑Raum_ID" onclick="dtwPlace(this)">______</span> , Betriebssystem, Modell, Anschaffungsdatum)</p>
-          <p class="dtw-text">Der Primärschlüssel (hier die erste Lücke) wird <span class="dtw-gap" data-answer="unterstrichen" onclick="dtwPlace(this)">______</span>. Der Fremdschlüssel kommt bei einer 1:n-Beziehung immer in die Tabelle auf der <span class="dtw-gap" data-answer="n-Seite" onclick="dtwPlace(this)">______</span>.</p>
+          <p class="dtw-text tcode">Rechner( <span class="dtw-gap" data-ul="pk" data-answer="Rechner_ID" onclick="dtwPlace(this)">______</span> , <span class="dtw-gap" data-ul="fk" data-answer="Raum_ID" onclick="dtwPlace(this)">______</span> , Betriebssystem, Modell, Anschaffungsdatum)</p>
+          <p class="dtw-text">Der Primärschlüssel wird <span class="dtw-gap" data-answer="durchgezogen" onclick="dtwPlace(this)">______</span> unterstrichen, der Fremdschlüssel <span class="dtw-gap" data-answer="gestrichelt" onclick="dtwPlace(this)">______</span>. Der Fremdschlüssel kommt bei einer 1:n-Beziehung immer in die Tabelle auf der <span class="dtw-gap" data-answer="n-Seite" onclick="dtwPlace(this)">______</span>.</p>
           <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
         </div>
         <div class="hs" id="hs-rs">
           <div data-tipp>Schau dir noch einmal Schritt 3 und Schritt 4 der Überführung oben an.</div>
-          <div data-tipp>Was identifiziert einen Rechner eindeutig? Und welcher Schlüssel einer <em>anderen</em> Tabelle wird in „Rechner“ gebraucht?</div>
+          <div data-tipp>Was identifiziert einen Rechner eindeutig? Und welcher Schlüssel einer <em>anderen</em> Tabelle wird in „Rechner“ gebraucht? Die erste Lücke wird durchgezogen, die zweite gestrichelt unterstrichen – daran erkennst du PK und FK.</div>
           <div data-tipp>Der Fremdschlüssel in „Rechner“ zeigt auf den Raum. Im Satz „Ein Raum enthält mehrere Rechner“ steht der Rechner auf der Seite mit „mehrere“.</div>
-          <div data-muster><p class="schema">Rechner(<u>Rechner_ID</u>, <span class="fk">↑Raum_ID</span>, Betriebssystem, Modell, Anschaffungsdatum)</p><p>Der Primärschlüssel wird <strong>unterstrichen</strong>. Der Fremdschlüssel kommt in die Tabelle auf der <strong>n-Seite</strong>.</p></div>
+          <div data-muster><p class="schema">Rechner(<u>Rechner_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Raum_ID</u>, Betriebssystem, Modell, Anschaffungsdatum)</p><p>Der Primärschlüssel wird <strong>durchgezogen</strong> unterstrichen, der Fremdschlüssel <strong>gestrichelt</strong>. Der Fremdschlüssel kommt in die Tabelle auf der <strong>n-Seite</strong>.</p></div>
         </div>
       </div>
 
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Relationenschema in Textform</div>
-        <p>Tabellenname(<u>Primärschlüssel</u>, ↑Fremdschlüssel, Attribut, …)</p>
+        <p>Tabellenname(<u>Primärschlüssel</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Fremdschlüssel</u>, Attribut, …)</p>
         <p>Räume(<u>Raum_ID</u>, Raumbezeichnung, Etage, Anzahl_Sitzplaetze, Beamer)<br>
-           Rechner(<u>Rechner_ID</u>, ↑Raum_ID, Betriebssystem, Modell, Anschaffungsdatum)</p>
+           Rechner(<u>Rechner_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Raum_ID</u>, Betriebssystem, Modell, Anschaffungsdatum)</p>
       </div>
       <p class="connector-text">Bei 1:n reicht ein Fremdschlüssel. Aber was, wenn auf <em>beiden</em> Seiten „viele“ stehen?</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Den Sonderfall anschauen ↓</button></div>
@@ -956,7 +973,7 @@ body:not(.teach-on) .access-part{display:none;}
       <p>Versuchen wir es wie bei 1:n und kopieren den Primärschlüssel von Software als Fremdschlüssel in die Tabelle Rechner:</p>
       <div class="datatab-wrap">
         <table class="datatab" aria-label="Fehlversuch: mehrere Software-IDs in einem Feld">
-          <tr><th>Rechner_ID</th><th>Modell</th><th>↑Software_ID</th></tr>
+          <tr><th>Rechner_ID</th><th>Modell</th><th><u class="fk" style="text-decoration-style:dashed;text-underline:dash">Software_ID</u></th></tr>
           <tr><td>PC-214-01</td><td>ThinkCentre M70q</td><td class="cell-bad">SW-007, SW-012, SW-019 ❌</td></tr>
           <tr><td>PC-214-02</td><td>ThinkCentre M70q</td><td class="cell-bad">SW-007, SW-019 ❌</td></tr>
         </table>
@@ -985,13 +1002,13 @@ body:not(.teach-on) .access-part{display:none;}
 
     <div class="subphase" id="ph2-sub-4">
       <h3>Die Lösung: eine Zwischentabelle</h3>
-      <div class="callout callout-info">🧩 <span><strong>Regel für n:m:</strong> Die Beziehung wird zu einer <strong>eigenen Tabelle</strong> (Zwischentabelle). Sie enthält die Primärschlüssel <em>beider</em> Tabellen als Fremdschlüssel. Zusammen bilden diese beiden ihren Primärschlüssel. Attribute der Beziehung – hier das Installationsdatum – kommen ebenfalls in die Zwischentabelle.</span></div>
+      <div class="callout callout-info">🧩 <span><strong>Regel für n:m:</strong> Die Beziehung wird zu einer <strong>eigenen Tabelle</strong> (Zwischentabelle). Sie enthält die Primärschlüssel <em>beider</em> Tabellen als Fremdschlüssel. Zusammen bilden diese beiden ihren Primärschlüssel – deshalb bekommen sie im Schema <strong>beide Linien</strong>: durchgezogen (PK) und gestrichelt (FK), z. B. <u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>. Attribute der Beziehung – hier das Installationsdatum – kommen ebenfalls in die Zwischentabelle.</span></div>
       <p>Aus der Raute „hat installiert“ wird die Tabelle <strong>Installation</strong>. Jede Zeile darin ist genau <em>eine</em> Installation:</p>
       <div class="erd-wrap" id="erd-nm"></div>
       <p class="erd-cap">Aus einer n:m-Beziehung werden zwei 1:n-Beziehungen: Ein Rechner hat mehrere Installationen, eine Software hat mehrere Installationen. In der linken Spalte steht „PK, FK“, weil die Spalte beides gleichzeitig ist.</p>
       <div class="datatab-wrap">
         <table class="datatab" aria-label="Beispieldaten der Tabelle Installation">
-          <tr><th><u>↑Rechner_ID</u></th><th><u>↑Software_ID</u></th><th>Installationsdatum</th></tr>
+          <tr><th><u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u></th><th><u class="pkfk" style="border-bottom:1.5px dashed">Software_ID</u></th><th>Installationsdatum</th></tr>
           <tr><td>PC-214-01</td><td>SW-007</td><td>15.09.2026</td></tr>
           <tr><td>PC-214-01</td><td>SW-012</td><td>15.09.2026</td></tr>
           <tr><td>PC-214-01</td><td>SW-019</td><td>02.10.2026</td></tr>
@@ -1012,15 +1029,16 @@ body:not(.teach-on) .access-part{display:none;}
 
       <div class="ex">
         <p><strong>Aufgabe 5:</strong> Notiere die Tabellen <em>Software</em> und <em>Installation</em> als Relationenschema in Textform.</p>
+        <p class="caption">Im Textfeld: Primärschlüssel <span class="math">_Name_</span>, Fremdschlüssel <span class="math">-Name-</span>, beides <span class="math">_-Name-_</span>.</p>
         <textarea class="selfwrite" id="ta-nm" rows="3" placeholder="Software(…)&#10;Installation(…)"></textarea>
         <p><button class="btn btn-primary btn-sm" onclick="cmpSol(this,'ta-nm','sol-nm')">✓ Fertig – vergleichen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-nm"><div class="schema">Software(<u>Software_ID</u>, Name, Version)<br>Installation(<u><span class="fk">↑Rechner_ID</span>, <span class="fk">↑Software_ID</span></u>, Installationsdatum)</div></div>
+        <div class="sol" id="sol-nm"><div class="schema">Software(<u>Software_ID</u>, Name, Version)<br>Installation(<u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>, <u class="pkfk" style="border-bottom:1.5px dashed">Software_ID</u>, Installationsdatum)</div></div>
         <div class="hs" id="hs-nm">
           <div data-tipp>Schau ins Tabellendiagramm: Welche Zeilen stehen in „Software“, welche in „Installation“?</div>
-          <div data-tipp>Form: Tabellenname(<u>Primärschlüssel</u>, ↑Fremdschlüssel, weitere Attribute). In „Installation“ sind zwei Spalten gleichzeitig Primär- <em>und</em> Fremdschlüssel.</div>
-          <div data-tipp>Installation(<u>↑Rechner_ID, ↑Software_ID</u>, …) – es fehlt nur noch das Attribut der Beziehung.</div>
-          <div data-muster><div class="schema">Software(<u>Software_ID</u>, Name, Version)<br>Installation(<u>↑Rechner_ID, ↑Software_ID</u>, Installationsdatum)</div><p>Beide Fremdschlüssel sind unterstrichen, weil sie zusammen den Primärschlüssel bilden.</p></div>
+          <div data-tipp>Form: Tabellenname(<u>Primärschlüssel</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Fremdschlüssel</u>, weitere Attribute). In „Installation“ sind zwei Spalten gleichzeitig Primär- <em>und</em> Fremdschlüssel – sie bekommen beide Linien.</div>
+          <div data-tipp>Installation(<u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>, <u class="pkfk" style="border-bottom:1.5px dashed">Software_ID</u>, …) – es fehlt nur noch das Attribut der Beziehung.</div>
+          <div data-muster><div class="schema">Software(<u>Software_ID</u>, Name, Version)<br>Installation(<u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>, <u class="pkfk" style="border-bottom:1.5px dashed">Software_ID</u>, Installationsdatum)</div><p>Beide Spalten sind durchgezogen <em>und</em> gestrichelt unterstrichen: Sie sind Fremdschlüssel und bilden zusammen den Primärschlüssel.</p></div>
         </div>
       </div>
 
@@ -1029,7 +1047,7 @@ body:not(.teach-on) .access-part{display:none;}
         <p>Bei einer <strong>n:m-Beziehung</strong> entsteht eine eigene <strong>Zwischentabelle</strong>. Sie enthält die Primärschlüssel beider Tabellen als Fremdschlüssel; zusammen bilden sie ihren Primärschlüssel. Attribute der Beziehung kommen mit hinein.</p>
         <p>Rechner(<u>Rechner_ID</u>, Modell, …)<br>
            Software(<u>Software_ID</u>, Name, Version)<br>
-           Installation(<u>↑Rechner_ID, ↑Software_ID</u>, Installationsdatum)</p>
+           Installation(<u class="pkfk" style="border-bottom:1.5px dashed">Rechner_ID</u>, <u class="pkfk" style="border-bottom:1.5px dashed">Software_ID</u>, Installationsdatum)</p>
       </div>
       <p class="connector-text">Die Tabellen stehen. Doch eine Datenbank stellt beim Anlegen jeder Spalte eine unbequeme Frage: „Was für Daten kommen hier hinein?“</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zu Kapitel 4: Datentypen &amp; draw.io →</button></div>
@@ -1144,16 +1162,16 @@ body:not(.teach-on) .access-part{display:none;}
           <tr><td>Linke Spalte</td><td>nur bei Schlüsseln: <strong>PK</strong> (Primärschlüssel) oder <strong>FK</strong> (Fremdschlüssel), sonst leer</td></tr>
           <tr><td>Mittlere Spalte</td><td>Attributname ohne Leerzeichen und Umlaute</td></tr>
           <tr><td>Rechte Spalte</td><td>Datentyp im Format <span class="math">Datentyp(Länge)</span>; bei bool und date ohne Klammer</td></tr>
-          <tr><td>Schlüsselzeilen</td><td>stehen oben, sind <strong><u>fett und unterstrichen</u></strong>, darunter eine Trennlinie</td></tr>
+          <tr><td>Schlüsselzeilen</td><td>stehen oben und sind fett; <strong><u>PK durchgezogen unterstrichen</u></strong>, <strong><u class="fk" style="text-decoration-style:dashed;text-underline:dash">FK gestrichelt unterstrichen</u></strong>; darunter eine Trennlinie</td></tr>
           <tr><td>Pfeil</td><td>vom Primärschlüssel (1-Seite) zum Fremdschlüssel (n-Seite)</td></tr>
         </table>
       </div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Tabellendiagramm (draw.io)</div>
         <p>Jede Tabelle: Kopf mit Tabellenname · Spalte 1: PK/FK · Spalte 2: Attribut · Spalte 3: Datentyp(Länge).<br>
-           Schlüsselzeilen oben, fett und unterstrichen, darunter eine Linie. Pfeil von PK (1-Seite) zu FK (n-Seite).</p>
+           Schlüsselzeilen oben und fett: PK <u>durchgezogen unterstrichen</u>, FK <u class="fk" style="text-decoration-style:dashed;text-underline:dash">gestrichelt unterstrichen</u>; darunter eine Linie. Pfeil von PK (1-Seite) zu FK (n-Seite).</p>
         <p>Räume: <u>PK Raum_ID String(20)</u> · Raumbezeichnung String(20) · Etage String(10) · Anzahl_Sitzplaetze int(2) · Beamer bool<br>
-           Rechner: <u>PK Rechner_ID String(20)</u> · <u>FK Raum_ID String(20)</u> · Betriebssystem String(50) · Modell String(50) · Anschaffungsdatum date</p>
+           Rechner: <u>PK Rechner_ID String(20)</u> · <u class="fk" style="text-decoration-style:dashed;text-underline:dash">FK Raum_ID String(20)</u> · Betriebssystem String(50) · Modell String(50) · Anschaffungsdatum date</p>
       </div>
       <p class="connector-text">Abschreiben ist gut, selbst zeichnen ist besser. Auf zu draw.io!</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,4)">In draw.io zeichnen ↓</button></div>
@@ -1174,7 +1192,7 @@ body:not(.teach-on) .access-part{display:none;}
         <li><strong>Vorlage nutzen (empfohlen):</strong> Öffne die <em>leere Vorlage</em> von oben. Dort sind die Tabellen schon im richtigen Format mit drei Spalten angelegt.</li>
         <li><strong>Oder selbst bauen:</strong> Links unten <em>+ Weitere Formen</em> → Haken bei <em>Entity Relation</em> → <em>Übernehmen</em>. Zieh eine Tabellen-Form mit Schlüsselspalte auf die Fläche. Fehlt die Spalte für den Datentyp, markiere die Tabelle und füge rechts im Format-Bereich (Reiter <em>Anordnen</em>) eine Spalte hinzu.</li>
         <li><strong>Beschriften:</strong> Doppelklick auf eine Zelle, Text eintippen. Weitere Zeile: Zeile markieren und mit <span class="kbd">Strg</span>+<span class="kbd">D</span> duplizieren.</li>
-        <li><strong>Schlüssel formatieren:</strong> PK- und FK-Zeilen nach oben, Text markieren, <span class="kbd">Strg</span>+<span class="kbd">B</span> (fett) und <span class="kbd">Strg</span>+<span class="kbd">U</span> (unterstrichen). Unter der letzten Schlüsselzeile soll eine Linie sein.</li>
+        <li><strong>Schlüssel formatieren:</strong> PK- und FK-Zeilen nach oben. <em>PK-Zeile:</em> Text markieren, <span class="kbd">Strg</span>+<span class="kbd">B</span> (fett) und <span class="kbd">Strg</span>+<span class="kbd">U</span> (durchgezogen unterstrichen). <em>FK-Zeile:</em> Eine gestrichelte Unterstreichung hat draw.io nicht als Knopf – nimm deshalb die FK-Zeile aus der Vorlage: Zeile markieren, mit <span class="kbd">Strg</span>+<span class="kbd">D</span> duplizieren, per Doppelklick nur den Text überschreiben. Die gestrichelte Linie bleibt erhalten. Unter der letzten Schlüsselzeile soll eine Linie sein.</li>
         <li><strong>Pfeil ziehen:</strong> Mit der Maus über die PK-Zeile fahren, am kleinen blauen Pfeil ziehen und auf der FK-Zeile der anderen Tabelle loslassen.</li>
         <li><strong>Speichern &amp; abgeben:</strong> <em>Datei → Speichern</em> (.drawio) und für die Abgabe <em>Datei → Exportieren als → PNG</em>.</li>
       </ol>
@@ -1271,7 +1289,7 @@ body:not(.teach-on) .access-part{display:none;}
           <div data-tipp>Je Tabelle genau ein PK (die Nummer). Mit Team-Nummer, Spieler-Nummer und Klassenstufe wird nicht gerechnet („T-07“, „inf 12“) – also Text. Bei „Gebühr bezahlt“ und „Kapitän“ gibt es nur ja/nein, Anmeldedatum ist ein Datum – beide ohne Länge.</div>
           <div data-tipp>Beziehung „Team hat Spieler“ ist 1:n. Die n-Seite sind die Spieler – also bekommt die Tabelle <em>Spieler</em> einen FK. In „Teams“ kommt keine weitere Zeile dazu. Der FK hat denselben Datentyp wie der PK, auf den er zeigt.</div>
           <div data-muster><p><strong>Teams:</strong> <u><strong>PK Team_Nr String(4)</strong></u> · Teamname String(30) · Anmeldedatum date · Gebuehr_bezahlt bool · (keine weitere Zeile)<br>
-            <strong>Spieler:</strong> <u><strong>PK Spieler_Nr String(6)</strong></u> · <u><strong>FK Team_Nr String(4)</strong></u> · Nickname String(20) · Klassenstufe String(6) · Kapitaen bool</p>
+            <strong>Spieler:</strong> <u><strong>PK Spieler_Nr String(6)</strong></u> · <u class="fk" style="text-decoration-style:dashed;text-underline:dash"><strong>FK Team_Nr String(4)</strong></u> · Nickname String(20) · Klassenstufe String(6) · Kapitaen bool</p>
             <div class="erd-wrap" id="erd-bk-muster"></div></div>
         </div>
       </div>
@@ -1289,16 +1307,17 @@ body:not(.teach-on) .access-part{display:none;}
 
     <div class="subphase" id="ph4-sub-3">
       <div class="ex">
-        <p><strong>Aufgabe 1c:</strong> Notiere das Relationenschema des Turniers in Textform. Kennzeichne Primärschlüssel durch Unterstreichen (hier: <span class="math">_Team_Nr_</span>) und Fremdschlüssel mit ↑.</p>
+        <p><strong>Aufgabe 1c:</strong> Notiere das Relationenschema des Turniers in Textform. Kennzeichne die Schlüssel wie im Heft: Primärschlüssel durchgezogen, Fremdschlüssel gestrichelt unterstrichen.</p>
+        <p class="caption">Im Textfeld kannst du nicht unterstreichen. Schreib deshalb: Primärschlüssel <span class="math">_Name_</span> (durchgezogen), Fremdschlüssel <span class="math">-Name-</span> (gestrichelt), beides <span class="math">_-Name-_</span>. Im Heft unterstreichst du richtig.</p>
         <textarea class="selfwrite" id="ta-turnier" rows="3" placeholder="Teams(…)&#10;Spieler(…)"></textarea>
         <p><button class="btn btn-primary btn-sm" onclick="cmpSol(this,'ta-turnier','sol-turnier')">✓ Fertig – vergleichen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-turnier"><div class="schema">Teams(<u>Team_Nr</u>, Teamname, Anmeldedatum, Gebuehr_bezahlt)<br>Spieler(<u>Spieler_Nr</u>, <span class="fk">↑Team_Nr</span>, Nickname, Klassenstufe, Kapitaen)</div></div>
+        <div class="sol" id="sol-turnier"><div class="schema">Teams(<u>Team_Nr</u>, Teamname, Anmeldedatum, Gebuehr_bezahlt)<br>Spieler(<u>Spieler_Nr</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Team_Nr</u>, Nickname, Klassenstufe, Kapitaen)</div></div>
         <div class="hs" id="hs-rs2">
           <div data-tipp>Nimm dein Diagramm aus dem Baukasten als Vorlage – dort steht schon alles.</div>
-          <div data-tipp>Form: Tabellenname(<u>PK</u>, ↑FK, übrige Attribute). Zwei Zeilen, eine pro Tabelle.</div>
-          <div data-tipp>Teams(<u>Team_Nr</u>, …) und Spieler(<u>Spieler_Nr</u>, ↑Team_Nr, …).</div>
-          <div data-muster><div class="schema">Teams(<u>Team_Nr</u>, Teamname, Anmeldedatum, Gebuehr_bezahlt)<br>Spieler(<u>Spieler_Nr</u>, ↑Team_Nr, Nickname, Klassenstufe, Kapitaen)</div></div>
+          <div data-tipp>Form: Tabellenname(<u>PK</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">FK</u>, übrige Attribute). Zwei Zeilen, eine pro Tabelle.</div>
+          <div data-tipp>Teams(<u>Team_Nr</u>, …) und Spieler(<u>Spieler_Nr</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Team_Nr</u>, …).</div>
+          <div data-muster><div class="schema">Teams(<u>Team_Nr</u>, Teamname, Anmeldedatum, Gebuehr_bezahlt)<br>Spieler(<u>Spieler_Nr</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Team_Nr</u>, Nickname, Klassenstufe, Kapitaen)</div></div>
         </div>
       </div>
       <p class="connector-text">Aufgabe 1 ist geschafft – mit fertigem ERD als Hilfe. Kannst du das auch ganz ohne Vorlage?</p>
@@ -1400,7 +1419,7 @@ body:not(.teach-on) .access-part{display:none;}
           <div data-tipp>Telefonnummer und die beiden Nummern mit Buchstaben sind Text. Mit dem Preis rechnet die Kasse, mit dem Lagerbestand wird heruntergezählt – das sind ganze Zahlen. Vertragsbeginn ist ein Datum, vegan ein Ja/Nein.</div>
           <div data-tipp>Die n-Seite sind die Produkte – dort kommt in der hellen Zeile der FK Lieferanten_Nr hinein, mit demselben Datentyp wie der PK in „Lieferanten“: String(5).</div>
           <div data-muster><p><strong>Lieferanten:</strong> <u><strong>PK Lieferanten_Nr String(5)</strong></u> · Firmenname String(40) · Telefonnummer String(20) · Vertragsbeginn date · (keine weitere Zeile)<br>
-            <strong>Produkte:</strong> <u><strong>PK Produkt_Nr String(6)</strong></u> · <u><strong>FK Lieferanten_Nr String(5)</strong></u> · Bezeichnung String(30) · Preis_Cent int(4) · Lagerbestand int(3) · vegan bool</p>
+            <strong>Produkte:</strong> <u><strong>PK Produkt_Nr String(6)</strong></u> · <u class="fk" style="text-decoration-style:dashed;text-underline:dash"><strong>FK Lieferanten_Nr String(5)</strong></u> · Bezeichnung String(30) · Preis_Cent int(4) · Lagerbestand int(3) · vegan bool</p>
 </div>
         </div>
       </div>
@@ -1409,7 +1428,7 @@ body:not(.teach-on) .access-part{display:none;}
 
     <div class="subphase" id="ph4-sub-6">
       <h3>Schritt 4 · Das ERD in draw.io zeichnen und hochladen</h3>
-      <p>Jetzt wird es ernst: Zeichne dein Tabellendiagramm für den Schulkiosk selbst – genau im Format aus Kapitel 4 (PK/FK · Attribut · Datentyp(Länge), Schlüssel fett und unterstrichen, Pfeil vom PK zum FK).</p>
+      <p>Jetzt wird es ernst: Zeichne dein Tabellendiagramm für den Schulkiosk selbst – genau im Format aus Kapitel 4 (PK/FK · Attribut · Datentyp(Länge), Schlüssel fett, PK durchgezogen und FK gestrichelt unterstrichen, Pfeil vom PK zum FK).</p>
       <div class="btn-row">
         <a class="extlink" href="https://app.diagrams.net/" target="_blank" rel="noopener">🖊️ draw.io öffnen</a>
         <button class="btn btn-ghost" onclick="downloadText('Vorlage_Leer.drawio', erdDrawio(MODEL_LEER), 'application/xml')">📥 Leere Vorlage als draw.io-Datei</button>
@@ -1683,7 +1702,7 @@ body:not(.teach-on) .access-part{display:none;}
     <div class="subphase on" id="ph6-sub-1">
       <p>Klicke auf eine Karte, um sie umzudrehen. Sag die Antwort erst laut (oder im Kopf), bevor du umdrehst.</p>
       <div class="baustein" data-type="flashcards" id="fc-erd"
-           data-cards='[["Entitätstyp wird zu …","einer Tabelle (Relation)"],["Attribut wird zu …","einer Spalte"],["Primärschlüssel (PK)","identifiziert jeden Datensatz eindeutig – im Schema unterstrichen"],["Fremdschlüssel (FK)","Kopie des PK einer anderen Tabelle – im Schema mit ↑"],["1:n – wohin kommt der FK?","in die Tabelle der n-Seite"],["n:m wird zu …","einer Zwischentabelle mit beiden PKs als FKs"],["String(20)","Text mit höchstens 20 Zeichen"],["int(2)","ganze Zahl mit höchstens 2 Stellen (0 bis 99)"],["bool · date","wahr/falsch · Datum – beide ohne Länge"],["Die drei Spalten im Tabellendiagramm","PK/FK · Attribut · Datentyp(Länge)"]]'>
+           data-cards='[["Entitätstyp wird zu …","einer Tabelle (Relation)"],["Attribut wird zu …","einer Spalte"],["Primärschlüssel (PK)","identifiziert jeden Datensatz eindeutig – im Schema durchgezogen unterstrichen"],["Fremdschlüssel (FK)","Kopie des PK einer anderen Tabelle – im Schema gestrichelt unterstrichen"],["1:n – wohin kommt der FK?","in die Tabelle der n-Seite"],["n:m wird zu …","einer Zwischentabelle mit beiden PKs als FKs"],["String(20)","Text mit höchstens 20 Zeichen"],["int(2)","ganze Zahl mit höchstens 2 Stellen (0 bis 99)"],["bool · date","wahr/falsch · Datum – beide ohne Länge"],["Die drei Spalten im Tabellendiagramm","PK/FK · Attribut · Datentyp(Länge)"]]'>
         <div class="fc-card" onclick="fcFlip(this)"><span class="fc-face">Entitätstyp wird zu …</span></div>
         <div class="fc-controls">
           <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
@@ -1700,7 +1719,7 @@ body:not(.teach-on) .access-part{display:none;}
         <div class="quiz-q">1) Welche Zeile ist ein korrekt notiertes Relationenschema?</div>
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="quizCheck('q-x1', this, 'w')">Rechner(Rechner_ID, <u>Raum_ID</u>, Modell)</button>
-          <button class="quiz-btn" onclick="quizCheck('q-x1', this, 'c')">Rechner(<u>Rechner_ID</u>, ↑Raum_ID, Modell)</button>
+          <button class="quiz-btn" onclick="quizCheck('q-x1', this, 'c')">Rechner(<u>Rechner_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Raum_ID</u>, Modell)</button>
           <button class="quiz-btn" onclick="quizCheck('q-x1', this, 'w')">Rechner: Rechner_ID, Raum_ID, Modell</button>
         </div>
         <div class="quiz-fb" id="qfb-q-x1"></div>
@@ -1717,9 +1736,9 @@ body:not(.teach-on) .access-part{display:none;}
       <div class="quiz-item">
         <div class="quiz-q">3) Ein Schüler besucht mehrere AGs, eine AG hat mehrere Schüler. Wie setzt du diese Beziehung um?</div>
         <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'w')">Schueler(<u>Schueler_ID</u>, ↑AG_ID, …) – ein Fremdschlüssel in der Schülertabelle</button>
-          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'c')">Teilnahme(<u>↑Schueler_ID, ↑AG_ID</u>) – eine eigene Zwischentabelle</button>
-          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'w')">AGs(<u>AG_ID</u>, ↑Schueler_ID, …) – ein Fremdschlüssel in der AG-Tabelle</button>
+          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'w')">Schueler(<u>Schueler_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">AG_ID</u>, …) – ein Fremdschlüssel in der Schülertabelle</button>
+          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'c')">Teilnahme(<u class="pkfk" style="border-bottom:1.5px dashed">Schueler_ID</u>, <u class="pkfk" style="border-bottom:1.5px dashed">AG_ID</u>) – eine eigene Zwischentabelle</button>
+          <button class="quiz-btn" onclick="quizCheck('q-x3', this, 'w')">AGs(<u>AG_ID</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Schueler_ID</u>, …) – ein Fremdschlüssel in der AG-Tabelle</button>
         </div>
         <div class="quiz-fb" id="qfb-q-x3"></div>
       </div>
@@ -1728,19 +1747,20 @@ body:not(.teach-on) .access-part{display:none;}
         <p><strong>4) Aufgabe 11:</strong> Eine Schulbibliothek speichert Verlage und Bücher. Ein Verlag hat eine Verlags-Nr. wie „V-12“ (höchstens 4 Zeichen) und einen Namen (höchstens 40 Zeichen). Ein Buch hat eine ISBN wie <span class="math">978-3-16-148410-0</span> (17 Zeichen), einen Titel (höchstens 80 Zeichen), ein Erscheinungsdatum und die Angabe, ob es vergriffen ist. Jedes Buch stammt von genau einem Verlag.</p>
         <div class="erd-wrap" id="chen-exit"></div>
         <p>a) Notiere das Relationenschema in Textform. b) Gib für jede Spalte der Tabelle <em>Buecher</em> den Datentyp an.</p>
+        <p class="caption">Im Textfeld: Primärschlüssel <span class="math">_Name_</span>, Fremdschlüssel <span class="math">-Name-</span>.</p>
         <textarea class="selfwrite" id="ta-exit" rows="4" placeholder="Verlage(…)&#10;Buecher(…)&#10;Datentypen: …"></textarea>
         <p><button class="btn btn-primary btn-sm" onclick="cmpSol(this,'ta-exit','sol-exit')">✓ Fertig – vergleichen</button></p>
         <div class="fb grp-fb"></div>
         <div class="sol" id="sol-exit">
-          <div class="schema">Verlage(<u>Verlags_Nr</u>, Name)<br>Buecher(<u>ISBN</u>, <span class="fk">↑Verlags_Nr</span>, Titel, Erscheinungsdatum, vergriffen)</div>
+          <div class="schema">Verlage(<u>Verlags_Nr</u>, Name)<br>Buecher(<u>ISBN</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Verlags_Nr</u>, Titel, Erscheinungsdatum, vergriffen)</div>
           <div class="erd-wrap" id="erd-exit"></div>
           <p>Die ISBN ist ein <strong>String(17)</strong> – sie enthält Bindestriche, und niemand rechnet mit ihr. Mit der Verlags-Nr. wird nicht gerechnet, also <strong>String(4)</strong> – der FK Verlags_Nr hat denselben Typ wie der PK.</p>
         </div>
         <div class="hs" id="hs-exit">
           <div data-tipp>Geh die Regeln aus Kapitel 3 der Reihe nach durch: Tabellen, Spalten, Primärschlüssel, Fremdschlüssel, Datentypen.</div>
           <div data-tipp>„Jedes Buch stammt von genau einem Verlag, ein Verlag hat viele Bücher“ – das ist 1:n. Die Bücher sind die n-Seite.</div>
-          <div data-tipp>Buecher(<u>ISBN</u>, ↑Verlags_Nr, …). Achtung bei der ISBN: Sie enthält Bindestriche – ist sie wirklich eine Zahl?</div>
-          <div data-muster><div class="schema">Verlage(<u>Verlags_Nr</u>, Name)<br>Buecher(<u>ISBN</u>, ↑Verlags_Nr, Titel, Erscheinungsdatum, vergriffen)</div>
+          <div data-tipp>Buecher(<u>ISBN</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Verlags_Nr</u>, …). Achtung bei der ISBN: Sie enthält Bindestriche – ist sie wirklich eine Zahl?</div>
+          <div data-muster><div class="schema">Verlage(<u>Verlags_Nr</u>, Name)<br>Buecher(<u>ISBN</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">Verlags_Nr</u>, Titel, Erscheinungsdatum, vergriffen)</div>
             <p>Datentypen Buecher: ISBN String(17) · Verlags_Nr String(4) · Titel String(80) · Erscheinungsdatum date · vergriffen bool.</p></div>
         </div>
         <p><strong>c) Zusatzaufgabe:</strong> Zeichne das Relationenschema der Schulbibliothek als Tabellendiagramm in draw.io (PK/FK · Attribut · Datentyp(Länge)) und lade es als PNG hoch.</p>
@@ -1766,7 +1786,7 @@ body:not(.teach-on) .access-part{display:none;}
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Vom ERD zum Relationenschema</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Entitätstyp → Tabelle, Attribut → Spalte, Schlüsselattribut → Primärschlüssel. Bei 1:n wandert der PK der 1-Seite als Fremdschlüssel in die n-Seite; n:m bekommt eine Zwischentabelle. Textform: Tabelle(<u>PK</u>, ↑FK, …).</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Entitätstyp → Tabelle, Attribut → Spalte, Schlüsselattribut → Primärschlüssel. Bei 1:n wandert der PK der 1-Seite als Fremdschlüssel in die n-Seite; n:m bekommt eine Zwischentabelle. Textform: Tabelle(<u>PK</u>, <u class="fk" style="text-decoration-style:dashed;text-underline:dash">FK</u>, …).</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Datentypen im Format Datentyp(Länge)</span><span class="acc-icon">▼</span></button>
@@ -1774,7 +1794,7 @@ body:not(.teach-on) .access-part{display:none;}
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Tabellendiagramm in draw.io</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Drei Spalten: PK/FK · Attribut · Datentyp(Länge). Schlüssel oben, fett und unterstrichen, mit Trennlinie. Pfeil vom PK zum FK.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Drei Spalten: PK/FK · Attribut · Datentyp(Länge). Schlüssel oben und fett, PK durchgezogen, FK gestrichelt unterstrichen, mit Trennlinie. Pfeil vom PK zum FK.</div></div>
       </div>
       <div class="acc-item access-part">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Umsetzung in Access</span><span class="acc-icon">▼</span></button>
@@ -1787,6 +1807,8 @@ body:not(.teach-on) .access-part{display:none;}
     <button class="btn btn-ghost btn-sm" id="hefter-all" hidden>📋 Gesamten Hefter übernehmen</button>
   </div>
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-401F7D" title="Kennnummer MR-20261023-401F7D">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
 /* ============================================================
@@ -1802,9 +1824,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -1873,13 +1898,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -1935,13 +1960,13 @@ function teachActivate(){
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
@@ -1950,7 +1975,7 @@ function initTeachbar(){
    Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -2011,7 +2036,7 @@ function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b));
    Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
    hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
 const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
-function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
 function hsMarkup(id,tips,muster){
   return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
 }
@@ -2026,13 +2051,13 @@ function buildHS(box){
       '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
       '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
       '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
-  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
   if(t0) box._t0=parseInt(t0,10);
   hsTick(box);
 }
 function hsRequest(btn){
   const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
-  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
   const open=panel.hidden; panel.hidden=!open;
   btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
   hsTick(box);
@@ -2317,10 +2342,12 @@ function erdSVG(model){
       const ry=t.y+C.headH+i*C.rowH, by=ry+C.rowH/2+5, key=!!r.key;
       if(r.hl==='row') s+='<rect x="'+(t.x+1)+'" y="'+(ry+1)+'" width="'+(t.w-2)+'" height="'+(C.rowH-2)+'" fill="#FFEDA8"/>';
       if(r.hl==='type') s+='<rect x="'+(t.x+C.c1+t.c2+1)+'" y="'+(ry+1)+'" width="'+(C.c3-2)+'" height="'+(C.rowH-2)+'" fill="#FFEDA8"/>';
-      const fw=key?'700':'400', td=key?' text-decoration="underline"':'';
+      const fw=key?'700':'400', td='';
       if(r.key) s+='<text x="'+(t.x+C.c1/2)+'" y="'+by+'" text-anchor="middle" font-weight="700" font-size="14" fill="#3F5E8C">'+xmlEsc(r.key)+'</text>';
       s+='<text x="'+(t.x+C.c1+10)+'" y="'+by+'" font-weight="'+fw+'"'+td+' font-size="15" fill="#111111">'+xmlEsc(r.name)+'</text>';
-      if(r.type) s+='<text x="'+(t.x+C.c1+t.c2+10)+'" y="'+by+'" font-weight="'+fw+'"'+td+' font-size="15" fill="#111111">'+xmlEsc(r.type)+'</text>';
+      s+=erdUl(t.x+C.c1+10,by,r.name,r.key);
+      if(r.type){ s+='<text x="'+(t.x+C.c1+t.c2+10)+'" y="'+by+'" font-weight="'+fw+'"'+td+' font-size="15" fill="#111111">'+xmlEsc(r.type)+'</text>';
+        s+=erdUl(t.x+C.c1+t.c2+10,by,r.type,r.key); }
     });
     if(t.rows.length){
       s+='<line x1="'+(t.x+C.c1)+'" y1="'+(t.y+C.headH)+'" x2="'+(t.x+C.c1)+'" y2="'+(t.y+t.h)+'" stroke="#2B2B2B" stroke-width="1.2"/>';
@@ -2345,6 +2372,19 @@ function erdSVG(model){
   });
   return s+'</svg>';
 }
+let _erdMc=null;
+function erdTxtW(str,size,bold){
+  try{ _erdMc=_erdMc||document.createElement('canvas').getContext('2d');
+    _erdMc.font=(bold?'700 ':'400 ')+size+"px 'Segoe UI','DM Sans',Arial,sans-serif"; return _erdMc.measureText(String(str)).width; }
+  catch(e){ return String(str).length*size*0.56; }
+}
+function erdUl(x,y,str,key){
+  const pk=/PK/.test(key||''), fk=/FK/.test(key||''); if(!pk&&!fk) return '';
+  const w=Math.round(erdTxtW(str,15,true)); let s='';
+  if(pk) s+='<line x1="'+x+'" y1="'+(y+3)+'" x2="'+(x+w)+'" y2="'+(y+3)+'" stroke="#111111" stroke-width="1.3"/>';
+  if(fk) s+='<line x1="'+x+'" y1="'+(y+(pk?6.5:3))+'" x2="'+(x+w)+'" y2="'+(y+(pk?6.5:3))+'" stroke="#111111" stroke-width="1.3" stroke-dasharray="4 3"/>';
+  return s;
+}
 function renderERD(id,model){ const el=document.getElementById(id); if(el) el.innerHTML=erdSVG(model); }
 
 /* ---------- Export als .drawio (in draw.io: Datei → Öffnen von → Gerät) ---------- */
@@ -2358,8 +2398,11 @@ function erdDrawio(model){
       c.push('<mxCell id="'+rid+'" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom='+(lastKey?1:0)+';html=1;" vertex="1" parent="'+tid+'"><mxGeometry y="'+(C.headH+ri*C.rowH)+'" width="'+t.w+'" height="'+C.rowH+'" as="geometry"/></mxCell>');
       const cols=[[r.key||'',0,C.c1,'center'],[r.name,C.c1,t.c2,'left'],[r.type||'',C.c1+t.c2,C.c3,'left']];
       cols.forEach((cc,ci)=>{
-        const fs=r.key?(ci===0?1:5):0;
-        c.push('<mxCell id="'+rid+'c'+ci+'" value="'+xmlEsc(cc[0])+'" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right='+(ci<2?1:0)+';align='+cc[3]+';spacingLeft='+(ci?8:0)+';fontStyle='+fs+';overflow=hidden;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="'+rid+'"><mxGeometry x="'+cc[1]+'" width="'+cc[2]+'" height="'+C.rowH+'" as="geometry"><mxRectangle width="'+cc[2]+'" height="'+C.rowH+'" as="alternateBounds"/></mxGeometry></mxCell>');
+        const isPK=/PK/.test(r.key||''), isFK=/FK/.test(r.key||'');
+        let fs=r.key?(ci===0?1:(isPK&&!isFK?5:1)):0, val=xmlEsc(cc[0]);
+        if(ci>0 && isFK && cc[0]){ const st=isPK?'text-decoration: underline; border-bottom: 1px dashed #000000; padding-bottom: 2px;':'text-decoration: underline dashed;';
+          val=xmlEsc('<span style="'+st+'">'+xmlEsc(cc[0])+'</span>'); }
+        c.push('<mxCell id="'+rid+'c'+ci+'" value="'+val+'" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right='+(ci<2?1:0)+';align='+cc[3]+';spacingLeft='+(ci?8:0)+';fontStyle='+fs+';overflow=hidden;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="'+rid+'"><mxGeometry x="'+cc[1]+'" width="'+cc[2]+'" height="'+C.rowH+'" as="geometry"><mxRectangle width="'+cc[2]+'" height="'+C.rowH+'" as="alternateBounds"/></mxGeometry></mxCell>');
       });
     });
   });
@@ -2637,7 +2680,7 @@ function accReset(){ accBuild(); const fb=document.getElementById('accsim-fb'); 
 function cmpSol(btn,taId,solId){
   const ta=document.getElementById(taId), fb=btn.parentElement.querySelector('.grp-fb');
   if(!ta || ta.value.trim().length<15){ if(fb){fb.textContent='Schreib zuerst deine eigene Lösung auf – dann darfst du vergleichen.'; fb.className='fb grp-fb err';} return; }
-  if(fb){fb.textContent='Vergleiche Zeichen für Zeichen: Tabellenname, unterstrichener Primärschlüssel, Fremdschlüssel mit ↑.'; fb.className='fb grp-fb ok';}
+  if(fb){fb.textContent='Vergleiche Zeichen für Zeichen: Tabellenname, Primärschlüssel (_Name_ = durchgezogen), Fremdschlüssel (-Name- = gestrichelt).'; fb.className='fb grp-fb ok';}
   showSol(solId); markDone('ta:'+taId);
 }
 
@@ -2680,7 +2723,7 @@ Object.assign(quizFeedback,{
     hint:'In jedes Feld darf nur ein einziger Wert – schau dir die Beispieldaten der Tabelle Installation an.'},
   'q-nmfk':{ok:'✅ <strong>Genau!</strong> Ein Rechner hat mehrere Programme, ein Programm liegt auf mehreren Rechnern – egal wo der Fremdschlüssel stünde, das Feld müsste mehrere Werte fassen.',
     ng:'❌ <strong>Nicht ganz.</strong> Beide Tabellen haben einen Primärschlüssel, und n:m-Beziehungen sind ganz normal. Das Problem ist das Feld: Es darf nur einen Wert enthalten.',
-    hint:'Schau dir den Fehlversuch in der Tabelle oben an. Was steht in der Spalte ↑Software_ID?'},
+    hint:'Schau dir den Fehlversuch in der Tabelle oben an. Was steht in der Spalte Software_ID?'},
   'q-plz':{ok:'✅ <strong>Richtig!</strong> Mit Postleitzahlen rechnet niemand, und als Zahl würde aus 01069 einfach 1069. Also: String(5).',
     ng:'❌ <strong>Nicht ganz.</strong> Eine PLZ ist kein Datum, und als Zahl ginge die führende 0 verloren (01069 → 1069). Richtig ist String(5).',
     hint:'Was passiert mit der ersten Ziffer, wenn du 01069 in einen Taschenrechner tippst?'},
@@ -2705,8 +2748,8 @@ Object.assign(quizFeedback,{
   'q-ri':{ok:'✅ <strong>Richtig!</strong> Mit referentieller Integrität darf kein Rechner auf einen Raum zeigen, den es nicht mehr gibt. Erst müssen die Rechner umgezogen oder gelöscht werden.',
     ng:'❌ <strong>Nicht ganz.</strong> Automatisch mitgelöscht wird nur, wenn man zusätzlich die „Löschweitergabe“ anhakt. Ohne sie verweigert Access das Löschen.',
     hint:'Referentielle Integrität heißt: Jeder Fremdschlüssel muss auf etwas Existierendes zeigen.'},
-  'q-x1':{ok:'✅ <strong>Richtig!</strong> Tabellenname, Klammern, PK unterstrichen, FK mit ↑.',
-    ng:'❌ <strong>Nicht ganz.</strong> Der PK eines Rechners ist Rechner_ID (unterstrichen), der FK Raum_ID bekommt den Pfeil ↑. Die Form ist Tabelle(…).',
+  'q-x1':{ok:'✅ <strong>Richtig!</strong> Tabellenname, Klammern, PK durchgezogen und FK gestrichelt unterstrichen.',
+    ng:'❌ <strong>Nicht ganz.</strong> Der PK eines Rechners ist Rechner_ID (durchgezogen unterstrichen), der FK Raum_ID wird gestrichelt unterstrichen. Die Form ist Tabelle(…).',
     hint:'Welches Attribut kennzeichnet einen Rechner eindeutig – und wie markiert man Fremdschlüssel?'},
   'q-x2':{ok:'✅ <strong>Richtig!</strong> Ausgeliehen: ja oder nein – das ist ein Wahrheitswert, also bool.',
     ng:'❌ <strong>Nicht ganz.</strong> Text oder Zahl würden auch „vielleicht“ oder 7 zulassen. Für genau zwei Möglichkeiten gibt es bool.',
@@ -3019,13 +3062,65 @@ function teachLernappReset(){
   const del=[];
   try{
     for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf(GATE_NS)===0) del.push(k); }
-    document.querySelectorAll('.poe-box').forEach(b=>del.push('predict_'+b.id));
-    document.querySelectorAll('.hs[id]').forEach(b=>del.push('hs_'+b.id));
+    document.querySelectorAll('.poe-box').forEach(b=>del.push(LH_NS+'predict_'+b.id));
+    document.querySelectorAll('.hs[id]').forEach(b=>del.push(LH_NS+'hs_'+b.id));
     del.forEach(k=>localStorage.removeItem(k));
   }catch(e){}
   location.reload();
 }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-401F7D",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>

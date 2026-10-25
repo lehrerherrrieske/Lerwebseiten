@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="de">
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261023-16CB9D · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261023-16CB9D" data-lh-j="2026">
 <head>
 <meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261023-16CB9D">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klasse 11GK · LB1 · Prozessoren – die Kernaufgaben erklärt</title>
 <style>
+/* lh:MR-20261023-16CB9D */
 /* ============================================================
    Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
    Pro Seite NUR --color-accent ändern. Alles andere bleibt.
@@ -549,6 +554,7 @@ table.tbl.codes td:first-child{white-space:nowrap;}
 
 /* Lehrermodus: Lösungswege sofort sichtbar */
 body.teacher .solbtn[hidden]{display:inline-block !important;}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
 <body>
@@ -568,8 +574,8 @@ body.teacher .solbtn[hidden]{display:inline-block !important;}
 
   <header class="pagehead">
     <div class="eyebrow">Klasse 11GK · LB1</div>
-    <h1>Prozessoren – die Kernaufgaben erklärt</h1>
-    <div class="goal">🎯 Die Lernenden erklären und berechnen, warum mehr GHz nicht automatisch einen besseren Prozessor ergeben, indem sie Befehle in Opcode und Operanden zerlegen, Takt, IPC und Energiebedarf an Rechenbeispielen untersuchen und den Weg der Daten im Von-Neumann-Rechner verfolgen.</div>
+    <h1>Prozessoren – die Kernaufgaben erklärt⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​​‌​​‌‌​‌‌​​‌​​​​‌‌​‌​​​​‌​​​‌‌‌​​‌​‌​​​‌​​⁠</h1>
+    <div class="goal">🎯 Die Lernenden erklären und berechnen, warum mehr GHz nicht automatisch einen besseren Prozessor ergeben, indem sie Befehle in Opcode und Operanden zerlegen, Takt, IPC und Energiebedarf an Rechenbeispielen untersuchen und den Weg der Daten im Von-Neumann-Rechner verfolgen.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​​‌‌​​‌​‌‌​‌​​‌‌​​​‌​​‌‌​‌‌​​‌​​​​‌‌​‌​​​​‌​​​‌‌‌​​‌​‌​​​‌​​⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -1878,6 +1884,8 @@ body.teacher .solbtn[hidden]{display:inline-block !important;}
 
 
 
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261023-16CB9D" title="Kennnummer MR-20261023-16CB9D">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 </div>
 <script>
 /* ============================================================
@@ -1893,9 +1901,12 @@ function showPhase(n){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
 /* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
-function getRevealed(p){ try{return parseInt(localStorage.getItem('subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
-function setRevealed(p,n){ try{localStorage.setItem('subreveal_ph'+p,String(n));}catch(e){} }
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
 function revealSub(phase,n){
   const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
   const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
@@ -2046,13 +2057,13 @@ function lockPredict(id){
   const box=document.getElementById(id); if(!box) return;
   const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
   const txt=(ta.value||'').trim(); if(!txt) return;
-  try{ localStorage.setItem('predict_'+id, txt); }catch(e){}
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
   out.textContent='Deine Vermutung: '+txt; out.hidden=false;
   ta.disabled=true; ta.hidden=true;
   const b=box.querySelector('button'); if(b) b.hidden=true;
 }
 function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
-  let t=null; try{ t=localStorage.getItem('predict_'+b.id); }catch(e){}
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
   if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
 
 /* ---------- Akkordeon ---------- */
@@ -2108,13 +2119,13 @@ function teachActivate(){
   if((pw.value||'')!==(bar.dataset.pw||'')){
     pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
   }
-  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
   teachSetUI(true);
 }
-function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
 function initTeachbar(){
   if(!document.getElementById('teachbar')) return;
-  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
   teachSetUI(on);
 }
 
@@ -2123,7 +2134,7 @@ function initTeachbar(){
    Button „Hilfe anfordern" startet einen Timer;
    Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
    einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
-function hilfeKey(id){ return 'hilfe_'+id; }
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
 function hilfeFormat(min){
   const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
   return mm+':'+String(ss).padStart(2,'0');
@@ -2184,7 +2195,7 @@ function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b));
    Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
    hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
 const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
-function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
 function hsMarkup(id,tips,muster){
   return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
 }
@@ -2199,13 +2210,13 @@ function buildHS(box){
       '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
       '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
       '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
-  let t0=null; try{ t0=localStorage.getItem('hs_'+box.id); }catch(e){}
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
   if(t0) box._t0=parseInt(t0,10);
   hsTick(box);
 }
 function hsRequest(btn){
   const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
-  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('hs_'+box.id,String(box._t0)); }catch(e){} }
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
   const open=panel.hidden; panel.hidden=!open;
   btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
   hsTick(box);
@@ -2448,7 +2459,7 @@ function fmt(x,dec){ const v=+(+x).toFixed(dec==null?2:dec); return String(v).re
 /* ---------- Rechenaufgaben: Prüfen mit gezielter Rückmeldung ---------- */
 const calcSpecs={"calc-k1": {"type": "hex", "field": "k1-in", "answer": "2081B3"}, "calc-k2a": {"type": "num", "fields": [["k2a-a", 5, 0.05], ["k2a-b", 7.5, 0.08]]}, "calc-k2b": {"type": "num", "fields": [["k2b-t", 0.125, 0.002]], "alt": [["k2b-t", 125, "Das wären Millisekunden – gefragt sind Sekunden."], ["k2b-t", 8, "Das ist die Rate in 10⁹ Befehlen pro Sekunde – gefragt ist die Zeit."]]}, "calc-k2c": {"type": "num", "fields": [["k2c-a", 8, 0.05]], "alt": [["k2c-a", 4, "Das ist nur der Anteil der Spannung – der Takt kommt noch dazu."], ["k2c-a", 2, "Das wäre nur der Takt – die Spannung geht quadratisch ein."]]}, "calc-k3a": {"type": "num", "fields": [["k3a-t", 5, 0.05]], "alt": [["k3a-t", 0.2, "Du hast <span class=\"frac\"><span class=\"fn\"><i>P</i></span><span class=\"fd\"><i>E</i></span></span> gerechnet – die Rechnung geht andersherum."], ["k3a-t", 18000, "Das sind Sekunden – gefragt sind Stunden."]]}, "calc-k3b": {"type": "num", "fields": [["k3b-t", 36, 0.5]], "alt": [["k3b-t", 0.6, "Das sind Stunden – gefragt sind Minuten."]]}, "calc-k3c": {"type": "num", "fields": [["k3c-p", 64, 0.5]], "alt": [["k3c-p", 0.64, "Das ist der Faktor – gefragt sind Prozent."], ["k3c-p", 36, "Das ist die Einsparung – gefragt ist, auf wie viel Prozent <i>P</i> sinkt."], ["k3c-p", 80, "Die <em>Spannung</em> sinkt auf 80 % – aber <i>P</i> sinkt stärker, weil <i>U</i> im Quadrat eingeht."]]}, "calc-k3d": {"type": "num", "fields": [["k3d-p", 32, 0.5]], "alt": [["k3d-p", 0.32, "Das ist der Faktor – gefragt sind Prozent."], ["k3d-p", 68, "Das ist die Einsparung – gefragt ist, wie viel Prozent <i>P</i> noch beträgt."]]}, "calc-k4a": {"type": "num", "fields": [["k4a-t", 10.9, 0.15]], "alt": [["k4a-t", 10, "Das ist nur der Anteil der Fehlgriffe – auch die Treffer kosten Zeit."], ["k4a-t", 0.9, "Das ist nur der Anteil der Treffer – die Fehlgriffe kommen noch dazu."]]}, "calc-k4b": {"type": "num", "fields": [["k4b-a", 65536, 0.5, [65.536]], ["k4b-b", 10, 0.01], ["k4b-c", 8, 0.01]], "alt": [["k4b-a", 32, "Das wäre 16 · 2 – mit jeder zusätzlichen Leitung <em>verdoppelt</em> sich aber die Zahl der Adressen."], ["k4b-a", 256, "Das sind 2<sup>8</sup> – gefragt sind 16 Leitungen."], ["k4b-b", 1024, "Das ist die Zahl der Zellen – gefragt ist die Hochzahl in 2<sup><i>n</i></sup> = 1024."], ["k4b-b", 512, "Das ist die Hälfte von 1024 – gesucht ist die Hochzahl in 2<sup><i>n</i></sup> = 1024."], ["k4b-c", 64, "Das sind Bit – gefragt sind Byte (1&nbsp;Byte = 8&nbsp;Bit)."], ["k4b-c", 512, "Du hast mit 8 multipliziert – 1&nbsp;Byte besteht aus 8&nbsp;Bit, also wird geteilt."]]}};
 const memSolved={};
-function calcSolved(id){ return !!memSolved[id] || lsGet('calc_solved_'+id)==='1'; }
+function calcSolved(id){ return !!memSolved[id] || lsGet(LH_NS+'calc_solved_'+id)==='1'; }
 function calcCheck(id){
   const box=document.getElementById(id), spec=calcSpecs[id], fb=box.querySelector('.grp-fb');
   let good=0, total=0, notes=[], empty=true;
@@ -2471,7 +2482,7 @@ function calcCheck(id){
   }
   if(empty){ fb.textContent='Trage zuerst dein Ergebnis ein.'; fb.className='fb grp-fb err'; return; }
   if(good===total){
-    box.classList.add('solved'); memSolved[id]=true; lsSet('calc_solved_'+id,'1');
+    box.classList.add('solved'); memSolved[id]=true; lsSet(LH_NS+'calc_solved_'+id,'1');
     fb.textContent='✅ Richtig! Vergleiche deinen Weg mit dem Lösungsweg.'; fb.className='fb grp-fb ok';
     const sb=box.querySelector('.solbtn'); if(sb) sb.hidden=false; showSol(id+'-sol');
   } else {
@@ -2484,7 +2495,7 @@ function calcCheck(id){
 /* ---------- Gesperrte Bereiche: frei nach eigener Leistung ----------
    calc-…: Aufgabe gelöst ODER Musterlösung in der Hilfestellung frei (10 Min.) ODER Lehrermodus
    poe-… : Vermutung/Antwort festgehalten ODER Lehrermodus */
-function hsMusterFrei(hsId){ const t=parseInt(lsGet('hs_'+hsId)||'0',10); return !!t && (Date.now()-t)>=10*60000; }
+function hsMusterFrei(hsId){ const t=parseInt(lsGet(LH_NS+'hs_'+hsId)||'0',10); return !!t && (Date.now()-t)>=10*60000; }
 function gateOpen(name){
   return true;   /* Werkzeuge und Vergleiche sind für alle frei */
   if(hsTeach()) return true;
@@ -2686,6 +2697,58 @@ function initExtra(){
 }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initExtra); } else { initExtra(); }
 
+</script>
+<script>
+var __LH={i:"MR-20261023-16CB9D",j:2026};
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
 </script>
 </body>
 </html>
