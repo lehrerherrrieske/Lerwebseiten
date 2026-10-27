@@ -461,6 +461,26 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
 .extlink{display:flex;gap:12px;align-items:center;border:2px solid var(--info-b);background:var(--info-bg);border-radius:var(--radius);padding:12px 16px;margin:14px 0;}
 @media print{ .sim-ctrl,.sim-top,.fz-btns,.fz-pool{display:none !important;} }
 
+/* ── Übersetzen ── */
+.nt{unicode-bidi:isolate;direction:ltr;white-space:nowrap;}
+.formula,.eq,.fz-eq,.frac{direction:ltr;unicode-bidi:isolate;}
+.lang-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--info-bg);border:1.5px solid var(--info-b);
+  border-radius:var(--radius);padding:10px 16px;margin-bottom:16px;}
+.lang-label{font-weight:700;color:var(--text);}
+.lang-more{font-size:var(--fs-sm);color:var(--text-2);}
+.lang-more select{font-family:var(--font);font-size:var(--fs-sm);padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);}
+.lang-hint{flex-basis:100%;font-size:var(--fs-sm);color:var(--text-3);margin:0;}
+.lang-bar .grp-fb{flex-basis:100%;margin-top:0;}
+.lang-bar .grp-fb:empty{display:none;}
+.glossar{flex-basis:100%;}
+.glossar summary{cursor:pointer;font-weight:700;color:var(--accent-hover);}
+.glossar-tbl td[lang="fa"],.glossar-tbl th[lang="fa"]{text-align:right;font-size:var(--fs-lg);}
+.tt-note{display:none;font-size:var(--fs-sm);color:var(--text-3);}
+html.translated-ltr .tt-note,html.translated-rtl .tt-note{display:inline;}
+html.translated-ltr .tt:hover::after,html.translated-ltr .tt:focus::after,
+html.translated-rtl .tt:hover::after,html.translated-rtl .tt:focus::after{display:none;}
+@media print{ .lang-bar{display:none !important;} }
+
 </style>
 </head>
 <body>
@@ -484,6 +504,48 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
     <div class="goal">🎯 Die Lernenden berechnen Kräfte und Hebelarme an ein- und zweiseitigen Hebeln, indem sie das Hebelgesetz am Experiment erkunden und nach der gesuchten Größe umstellen.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌‌​​‌​‌‌​‌​​‌‌‌​​​​‌​​​​‌‌​​‌‌​‌​‌​‌​​​‌​​​‌​​​​‌​​​‌‌​‌‌​⁠</div>
   </header>
 
+  <div class="lang-bar" translate="no">
+    <span class="lang-label">🌐 Übersetzen · <span lang="fa" dir="rtl">ترجمه</span></span>
+    <button class="btn btn-primary btn-sm" onclick="uebersetze('fa')"><span lang="fa" dir="rtl">فارسی</span> · Persisch</button>
+    <label class="lang-more">weitere Sprache:
+      <select id="lang-sel" onchange="if(this.value){uebersetze(this.value);this.value='';}">
+        <option value="">– wählen –</option>
+        <option value="en">English</option>
+        <option value="ar">العربية · Arabisch</option>
+        <option value="uk">Українська · Ukrainisch</option>
+        <option value="ru">Русский · Russisch</option>
+        <option value="tr">Türkçe · Türkisch</option>
+        <option value="pl">Polski · Polnisch</option>
+        <option value="ro">Română · Rumänisch</option>
+        <option value="vi">Tiếng Việt · Vietnamesisch</option>
+      </select>
+    </label>
+    <p class="lang-hint">Beim Klick öffnet sich die Seite im Google Übersetzer. Dafür wird der Seiteninhalt an Google übermittelt. Formeln, Einheiten und Zahlen bleiben unverändert.</p>
+    <div class="fb grp-fb" id="lang-msg" aria-live="polite"></div>
+    <details class="glossar">
+      <summary>📖 Wörterbuch · <span lang="fa" dir="rtl">واژه‌نامه</span> – Deutsch / <span lang="fa" dir="rtl">فارسی</span></summary>
+      <p class="caption">Lerne die deutschen Fachwörter – im Unterricht und in Tests brauchst du sie.</p>
+      <table class="tbl glossar-tbl">
+        <thead><tr><th>Deutsch</th><th lang="fa" dir="rtl">فارسی</th></tr></thead>
+        <tbody>
+          <tr><td>der Hebel</td><td lang="fa" dir="rtl">اهرم</td></tr>
+          <tr><td>der Drehpunkt</td><td lang="fa" dir="rtl">تکیه‌گاه (نقطهٔ چرخش)</td></tr>
+          <tr><td>der Hebelarm <span class="nt"><i>l</i></span></td><td lang="fa" dir="rtl">بازوی اهرم</td></tr>
+          <tr><td>die Kraft <span class="nt"><i>F</i></span></td><td lang="fa" dir="rtl">نیرو</td></tr>
+          <tr><td>die Gewichtskraft</td><td lang="fa" dir="rtl">نیروی وزن</td></tr>
+          <tr><td>die Masse <span class="nt"><i>m</i></span></td><td lang="fa" dir="rtl">جرم</td></tr>
+          <tr><td>der Angriffspunkt</td><td lang="fa" dir="rtl">نقطهٔ اثر نیرو</td></tr>
+          <tr><td>das Gleichgewicht</td><td lang="fa" dir="rtl">تعادل</td></tr>
+          <tr><td>der einseitige Hebel</td><td lang="fa" dir="rtl">اهرم یک‌طرفه (تکیه‌گاه در انتها)</td></tr>
+          <tr><td>der zweiseitige Hebel</td><td lang="fa" dir="rtl">اهرم دوطرفه (تکیه‌گاه بین دو نیرو)</td></tr>
+          <tr><td>das Hebelgesetz</td><td lang="fa" dir="rtl">قانون اهرم</td></tr>
+          <tr><td>der Kraftmesser</td><td lang="fa" dir="rtl">نیروسنج</td></tr>
+          <tr><td>die Formel umstellen</td><td lang="fa" dir="rtl">فرمول را بر حسب کمیت مجهول نوشتن</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </div>
+
   <nav class="phase-nav" id="phase-nav">
   <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Die Wippe</button>
   <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Hebelarten</button>
@@ -496,7 +558,7 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
 <section class="phase on" id="ph0">
   <div class="card">
     <h2>Die Wippe</h2>
-    <p>Lina wiegt 32&nbsp;kg, ihr Papa 80&nbsp;kg. Beide setzen sich auf eine Wippe. Der Papa ist zweieinhalbmal so schwer wie Lina. Hat Lina überhaupt eine Chance, ihren Papa hochzuheben?</p>
+    <p>Lina wiegt <span class="nt" translate="no">32&nbsp;kg</span>, ihr Papa <span class="nt" translate="no">80&nbsp;kg</span>. Beide setzen sich auf eine Wippe. Der Papa ist zweieinhalbmal so schwer wie Lina. Hat Lina überhaupt eine Chance, ihren Papa hochzuheben?</p>
     <figure class="fig">
       <svg viewBox="0 0 560 230" role="img" aria-label="Wippe: links sitzt Lina weit außen, rechts der Papa. In der Mitte ist der Drehpunkt.">
         <rect x="0" y="210" width="560" height="20" fill="#E5DFD6"/>
@@ -548,27 +610,27 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       </div>
 
       <p>Bevor wir rechnen, frischen wir auf, was du schon kannst: Auf der Wippe drücken die beiden mit ihrer <span class="tt" tabindex="0" data-tip="Kraft, mit der ein Körper auf seine Unterlage drückt oder an seiner Aufhängung zieht.">Gewichtskraft</span> nach unten.</p>
-      <div class="formula"><i>F</i><sub>G</sub> = <i>m</i> · <i>g</i> &nbsp;&nbsp; mit &nbsp; <i>g</i> = 10&nbsp;N/kg</div>
+      <div class="formula" translate="no"><span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no"><i>m</i></span> · <span class="nt" translate="no"><i>g</i></span> &nbsp;&nbsp; mit &nbsp; <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">10&nbsp;N/kg</span></div>
       <div class="ex">
-        <p><strong>Aufgabe 1:</strong> Berechne die Gewichtskräfte von Lina (32&nbsp;kg) und Papa (80&nbsp;kg).</p>
-        <p><i>F</i><sub>Lina</sub> = <input class="inp" id="a0-lina" inputmode="decimal" aria-label="Gewichtskraft Lina in Newton"> <span class="unit">N</span>
-          &nbsp; <i>F</i><sub>Papa</sub> = <input class="inp" id="a0-papa" inputmode="decimal" aria-label="Gewichtskraft Papa in Newton"> <span class="unit">N</span>
+        <p><strong>Aufgabe 1:</strong> Berechne die Gewichtskräfte von Lina (<span class="nt" translate="no">32&nbsp;kg</span>) und Papa (<span class="nt" translate="no">80&nbsp;kg</span>).</p>
+        <p><span class="nt" translate="no"><i>F</i></span><sub>Lina</sub> = <input class="inp" id="a0-lina" inputmode="decimal" aria-label="Gewichtskraft Lina in Newton"> <span class="unit">N</span>
+          &nbsp; <span class="nt" translate="no"><i>F</i></span><sub>Papa</sub> = <input class="inp" id="a0-papa" inputmode="decimal" aria-label="Gewichtskraft Papa in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a0-lina', 320, 1], ['a0-papa', 800, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a0')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-a0"><i>F</i><sub>Lina</sub> = 32&nbsp;kg · 10&nbsp;N/kg = <u>320&nbsp;N</u> &nbsp;·&nbsp; <i>F</i><sub>Papa</sub> = 80&nbsp;kg · 10&nbsp;N/kg = <u>800&nbsp;N</u></div>
+        <div class="sol" id="sol-a0"><span class="nt" translate="no"><i>F</i></span><sub>Lina</sub> = <span class="nt" translate="no">32&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">320&nbsp;N</span></u> &nbsp;·&nbsp; <span class="nt" translate="no"><i>F</i></span><sub>Papa</sub> = <span class="nt" translate="no">80&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">800&nbsp;N</span></u></div>
         <div class="hs" id="hs-a0">
           <div data-tipp>Du kennst die Masse. Welche Formel macht aus einer Masse eine Kraft?</div>
-          <div data-tipp>Die Gewichtskraft: <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i> mit <i>g</i> = 10&nbsp;N/kg.</div>
-          <div data-tipp>Für Lina: <i>F</i><sub>G</sub> = 32&nbsp;kg · 10&nbsp;N/kg. Rechne genauso für den Papa.</div>
+          <div data-tipp>Die Gewichtskraft: <span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no"><i>m</i></span> · <span class="nt" translate="no"><i>g</i></span> mit <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">10&nbsp;N/kg</span>.</div>
+          <div data-tipp>Für Lina: <span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no">32&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span>. Rechne genauso für den Papa.</div>
           <div data-muster>
-            <p>geg.: <i>m</i><sub>Lina</sub> = 32&nbsp;kg, <i>m</i><sub>Papa</sub> = 80&nbsp;kg, <i>g</i> = 10&nbsp;N/kg · ges.: <i>F</i><sub>Lina</sub>, <i>F</i><sub>Papa</sub></p>
-            <p><i>F</i><sub>G</sub> = <i>m</i> · <i>g</i><br><i>F</i><sub>Lina</sub> = 32&nbsp;kg · 10&nbsp;N/kg = <u>320&nbsp;N</u><br><i>F</i><sub>Papa</sub> = 80&nbsp;kg · 10&nbsp;N/kg = <u>800&nbsp;N</u></p>
-            <p>Lina drückt mit 320&nbsp;N, ihr Papa mit 800&nbsp;N auf die Wippe.</p>
+            <p>geg.: <span class="nt" translate="no"><i>m</i></span><sub>Lina</sub> = <span class="nt" translate="no">32&nbsp;kg</span>, <span class="nt" translate="no"><i>m</i></span><sub>Papa</sub> = <span class="nt" translate="no">80&nbsp;kg</span>, <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">10&nbsp;N/kg</span> · ges.: <span class="nt" translate="no"><i>F</i></span><sub>Lina</sub>, <span class="nt" translate="no"><i>F</i></span><sub>Papa</sub></p>
+            <p><span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no"><i>m</i></span> · <span class="nt" translate="no"><i>g</i></span><br><span class="nt" translate="no"><i>F</i></span><sub>Lina</sub> = <span class="nt" translate="no">32&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">320&nbsp;N</span></u><br><span class="nt" translate="no"><i>F</i></span><sub>Papa</sub> = <span class="nt" translate="no">80&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">800&nbsp;N</span></u></p>
+            <p>Lina drückt mit <span class="nt" translate="no">320&nbsp;N</span>, ihr Papa mit <span class="nt" translate="no">800&nbsp;N</span> auf die Wippe.</p>
           </div>
         </div>
       </div>
-      <p class="connector-text">800&nbsp;N gegen 320&nbsp;N – und trotzdem kann Lina gewinnen. Die Wippe ist ein Beispiel für eine geniale Erfindung: den Hebel. Schauen wir uns an, wie er aufgebaut ist.</p>
+      <p class="connector-text"><span class="nt" translate="no">800&nbsp;N</span> gegen <span class="nt" translate="no">320&nbsp;N</span> – und trotzdem kann Lina gewinnen. Die Wippe ist ein Beispiel für eine geniale Erfindung: den Hebel. Schauen wir uns an, wie er aufgebaut ist.</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Was ist eigentlich ein Hebel? →</button></div>
     </div>
   </div>
@@ -590,18 +652,18 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
     <div class="subphase on" id="ph1-sub-1">
       <h3>Was ist ein Hebel?</h3>
       <p>Ein <span class="tt" tabindex="0" data-tip="Starrer Körper, der sich um eine feste Achse drehen kann.">Hebel</span> ist ein starrer Körper, zum Beispiel eine Stange oder ein Brett. Er kann sich um eine feste Achse drehen. Diese Stelle heißt <span class="tt" tabindex="0" data-tip="Stelle, um die sich der Hebel dreht (auch: Drehachse).">Drehpunkt</span>.</p>
-      <p>Am Hebel greifen Kräfte an. Die Stelle, an der eine Kraft wirkt, heißt <span class="tt" tabindex="0" data-tip="Punkt, an dem die Kraft auf den Körper wirkt.">Angriffspunkt</span>. Der Abstand vom Drehpunkt zum Angriffspunkt heißt <span class="tt" tabindex="0" data-tip="Abstand vom Drehpunkt bis zum Angriffspunkt der Kraft. Formelzeichen l, Einheit m oder cm.">Hebelarm</span> <i>l</i>.</p>
+      <p>Am Hebel greifen Kräfte an. Die Stelle, an der eine Kraft wirkt, heißt <span class="tt" tabindex="0" data-tip="Punkt, an dem die Kraft auf den Körper wirkt.">Angriffspunkt</span>. Der Abstand vom Drehpunkt zum Angriffspunkt heißt <span class="tt" tabindex="0" data-tip="Abstand vom Drehpunkt bis zum Angriffspunkt der Kraft. Formelzeichen l, Einheit m oder cm.">Hebelarm</span> <span class="nt" translate="no"><i>l</i></span>.</p>
       <div class="callout">💡 <span>Wir betrachten heute nur Kräfte, die <strong>senkrecht</strong> zum Hebel wirken – so wie die Gewichtskraft bei einem waagerechten Hebel.</span></div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Der Hebel</div>
         <p><strong>Hebel:</strong> starrer Körper, der um eine feste Achse (den Drehpunkt) drehbar ist.</p>
-        <p><strong>Hebelarm <i>l</i>:</strong> Abstand vom Drehpunkt zum Angriffspunkt der Kraft.</p>
+        <p><strong>Hebelarm <span class="nt" translate="no"><i>l</i></span>:</strong> Abstand vom Drehpunkt zum Angriffspunkt der Kraft.</p>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Wo sitzt der Drehpunkt? Es gibt zwei Möglichkeiten ↓</button></div>
     </div>
 
     <div class="subphase" id="ph1-sub-2">
-      <div class="callout">✋ <span><strong>So zeichnen wir die Kräfte:</strong> <i>F</i><sub>1</sub> ist die Kraft, die du auf den Hebel ausübst (zum Beispiel mit der Hand). <i>F</i><sub>2</sub> ist die Kraft, die der Hebel am anderen Ende auf einen Körper ausübt (zum Beispiel auf den Stein oder die Last).</span></div>
+      <div class="callout">✋ <span><strong>So zeichnen wir die Kräfte:</strong> <span class="nt" translate="no"><i>F</i><sub>1</sub></span> ist die Kraft, die du auf den Hebel ausübst (zum Beispiel mit der Hand). <span class="nt" translate="no"><i>F</i><sub>2</sub></span> ist die Kraft, die der Hebel am anderen Ende auf einen Körper ausübt (zum Beispiel auf den Stein oder die Last).</span></div>
       <h3>Der zweiseitige Hebel</h3>
       <p>Beim <span class="tt" tabindex="0" data-tip="Die Kräfte greifen auf verschiedenen Seiten des Drehpunkts an.">zweiseitigen Hebel</span> liegt der Drehpunkt <strong>zwischen</strong> den Angriffspunkten. Die Kräfte greifen auf <strong>verschiedenen Seiten</strong> an und zeigen in <strong>entgegengesetzte Richtungen</strong>.</p>
       <figure class="fig">
@@ -769,18 +831,18 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <div class="sim-ctrl">
         <div class="sim-grp dp">
           <h4>⚫ Drehpunkt</h4>
-          <div class="sim-row"><label for="s-xp">Position</label><input type="range" id="s-xp" min="0" max="100" step="5" value="50" oninput="simRead()"><output id="o-xp"></output></div>
+          <div class="sim-row"><label for="s-xp">Position</label><input type="range" id="s-xp" min="0" max="100" step="5" value="50" oninput="simRead()"><output translate="no" id="o-xp"></output></div>
         </div>
         <div class="sim-grp k1">
-          <h4>🔴 Körper 1 (Kraft <i>F</i><sub>1</sub>)</h4>
-          <div class="sim-row"><label for="s-x1">Position</label><input type="range" id="s-x1" min="0" max="100" step="5" value="30" oninput="simRead()"><output id="o-x1"></output></div>
-          <div class="sim-row"><label for="s-m1">Masse</label><input type="range" id="s-m1" min="50" max="1000" step="50" value="200" oninput="simRead()"><output id="o-m1"></output></div>
+          <h4>🔴 Körper 1 (Kraft <span class="nt" translate="no"><i>F</i><sub>1</sub></span>)</h4>
+          <div class="sim-row"><label for="s-x1">Position</label><input type="range" id="s-x1" min="0" max="100" step="5" value="30" oninput="simRead()"><output translate="no" id="o-x1"></output></div>
+          <div class="sim-row"><label for="s-m1">Masse</label><input type="range" id="s-m1" min="50" max="1000" step="50" value="200" oninput="simRead()"><output translate="no" id="o-m1"></output></div>
         </div>
         <div class="sim-grp k2">
-          <h4 id="k2-title">🔵 Körper 2 (Kraft <i>F</i><sub>2</sub>)</h4>
-          <div class="sim-row"><label for="s-x2">Position</label><input type="range" id="s-x2" min="0" max="100" step="5" value="70" oninput="simRead()"><output id="o-x2"></output></div>
-          <div class="sim-row" id="row-m2"><label for="s-m2">Masse</label><input type="range" id="s-m2" min="50" max="1000" step="50" value="100" oninput="simRead()"><output id="o-m2"></output></div>
-          <div class="sim-row" id="row-f2" hidden><label for="s-f2">Zugkraft</label><input type="range" id="s-f2" min="0.5" max="20" step="0.5" value="3" oninput="simRead()"><output id="o-f2"></output></div>
+          <h4 id="k2-title">🔵 Körper 2 (Kraft <span class="nt" translate="no"><i>F</i><sub>2</sub></span>)</h4>
+          <div class="sim-row"><label for="s-x2">Position</label><input type="range" id="s-x2" min="0" max="100" step="5" value="70" oninput="simRead()"><output translate="no" id="o-x2"></output></div>
+          <div class="sim-row" id="row-m2"><label for="s-m2">Masse</label><input type="range" id="s-m2" min="50" max="1000" step="50" value="100" oninput="simRead()"><output translate="no" id="o-m2"></output></div>
+          <div class="sim-row" id="row-f2" hidden><label for="s-f2">Zugkraft</label><input type="range" id="s-f2" min="0.5" max="20" step="0.5" value="3" oninput="simRead()"><output translate="no" id="o-f2"></output></div>
         </div>
       </div>
       <div class="sim-opts">
@@ -788,36 +850,36 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
         <label><input type="checkbox" id="c-arms" checked onchange="simDraw()"> Hebelarme zeigen</label>
       </div>
       <div class="sim-read">
-        <div><strong>Seite von Körper 1</strong><br><i>F</i><sub>1</sub> = <span id="r-f1"></span><br><i>l</i><sub>1</sub> = <span id="r-l1"></span><span class="prod" id="r-p1"></span></div>
-        <div><strong>Seite von Körper 2</strong><br><i>F</i><sub>2</sub> = <span id="r-f2"></span><br><i>l</i><sub>2</sub> = <span id="r-l2"></span><span class="prod" id="r-p2"></span></div>
+        <div><strong>Seite von Körper 1</strong><br><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span translate="no" id="r-f1"></span><br><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span translate="no" id="r-l1"></span><span class="prod" id="r-p1"></span></div>
+        <div><strong>Seite von Körper 2</strong><br><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span translate="no" id="r-f2"></span><br><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span translate="no" id="r-l2"></span><span class="prod" id="r-p2"></span></div>
       </div>
       <div class="torque" aria-hidden="true">
         <div class="torque-row"><span>⟲ dreht linksherum</span><div class="torque-bar"><span id="tb-l" style="background:#6B4A7A"></span></div></div>
         <div class="torque-row"><span>⟳ dreht rechtsherum</span><div class="torque-bar"><span id="tb-r" style="background:#8C5E22"></span></div></div>
       </div>
-      <p class="caption">Im Labor zeigen die Pfeile die Kräfte, die <em>auf</em> den Hebel wirken – deshalb zeigt der Pfeil am Massestück immer nach unten. Simulation: Der Balken ist masselos gedacht, Reibung im Drehpunkt wird vernachlässigt, <i>g</i> = 10&nbsp;N/kg. Am echten Hebelmodell im Unterricht kannst du alles nachmessen – der echte Balken hat allerdings selbst eine Masse.</p>
+      <p class="caption">Im Labor zeigen die Pfeile die Kräfte, die <em>auf</em> den Hebel wirken – deshalb zeigt der Pfeil am Massestück immer nach unten. Simulation: Der Balken ist masselos gedacht, Reibung im Drehpunkt wird vernachlässigt, <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">10&nbsp;N/kg</span>. Am echten Hebelmodell im Unterricht kannst du alles nachmessen – der echte Balken hat allerdings selbst eine Masse.</p>
     </div>
 
     <div class="subphase on" id="ph2-sub-1">
       <h3>Ausprobieren</h3>
       <p>Spiel zuerst frei mit den Reglern: Was passiert, wenn du eine Masse weiter nach außen schiebst? Was passiert, wenn du den Drehpunkt verschiebst? Die Balken unter dem Hebel zeigen dir, welche Seite stärker dreht.</p>
       <div class="ex">
-        <p><strong>Forschungsauftrag A:</strong> Modus <em>zweiseitig</em>, Drehpunkt bei 50&nbsp;cm. Links hängen 200&nbsp;g in 20&nbsp;cm Abstand vom Drehpunkt. Rechts hängen 100&nbsp;g. In welchem Abstand <i>l</i><sub>2</sub> vom Drehpunkt muss die rechte Masse hängen?</p>
-        <p><i>l</i><sub>2</sub> = <input class="inp" id="aA" inputmode="decimal" aria-label="Abstand l2 in cm"> <span class="unit">cm</span>
+        <p><strong>Forschungsauftrag A:</strong> Modus <em>zweiseitig</em>, Drehpunkt bei <span class="nt" translate="no">50&nbsp;cm</span>. Links hängen <span class="nt" translate="no">200&nbsp;g</span> in <span class="nt" translate="no">20&nbsp;cm</span> Abstand vom Drehpunkt. Rechts hängen <span class="nt" translate="no">100&nbsp;g</span>. In welchem Abstand <span class="nt" translate="no"><i>l</i><sub>2</sub></span> vom Drehpunkt muss die rechte Masse hängen?</p>
+        <p><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <input class="inp" id="aA" inputmode="decimal" aria-label="Abstand l2 in cm"> <span class="unit">cm</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['aA', 40, 0.1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-aA')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-aA">Körper 1 bei 30&nbsp;cm (<i>l</i><sub>1</sub> = 20&nbsp;cm), Körper 2 bei 90&nbsp;cm: <i>l</i><sub>2</sub> = <u>40&nbsp;cm</u>. Die halbe Masse braucht den doppelten Abstand.</div>
+        <div class="sol" id="sol-aA">Körper 1 bei <span class="nt" translate="no">30&nbsp;cm</span> (<span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">20&nbsp;cm</span>), Körper 2 bei <span class="nt" translate="no">90&nbsp;cm</span>: <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <u><span class="nt" translate="no">40&nbsp;cm</span></u>. Die halbe Masse braucht den doppelten Abstand.</div>
         <div class="hs" id="hs-aA">
-          <div data-tipp>Stell die Werte im Labor ein: Drehpunkt 50&nbsp;cm, Körper 1 bei 30&nbsp;cm mit 200&nbsp;g, Körper 2 mit 100&nbsp;g.</div>
+          <div data-tipp>Stell die Werte im Labor ein: Drehpunkt <span class="nt" translate="no">50&nbsp;cm</span>, Körper 1 bei <span class="nt" translate="no">30&nbsp;cm</span> mit <span class="nt" translate="no">200&nbsp;g</span>, Körper 2 mit <span class="nt" translate="no">100&nbsp;g</span>.</div>
           <div data-tipp>Schieb Körper 2 jetzt so lange nach rechts, bis „Gleichgewicht“ erscheint. Lies den Hebelarm ab.</div>
           <div data-tipp>Rechts hängt nur halb so viel Masse wie links. Wie weit muss sie dann draußen hängen?</div>
-          <div data-muster><p>Gleichgewicht bei Position 90&nbsp;cm, also <i>l</i><sub>2</sub> = 90&nbsp;cm − 50&nbsp;cm = <u>40&nbsp;cm</u>.</p><p>Die halbe Masse muss im doppelten Abstand hängen.</p></div>
+          <div data-muster><p>Gleichgewicht bei Position <span class="nt" translate="no">90&nbsp;cm</span>, also <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">90&nbsp;cm</span> − <span class="nt" translate="no">50&nbsp;cm</span> = <u><span class="nt" translate="no">40&nbsp;cm</span></u>.</p><p>Die halbe Masse muss im doppelten Abstand hängen.</p></div>
         </div>
       </div>
       <div class="poe-box" id="poe-regel">
         <div class="poe-label">🔎 Lies und sag voraus</div>
-        <p>Welche Rechenregel könnte hinter dem Gleichgewicht stecken? Schreib deine Vermutung mit <i>F</i><sub>1</sub>, <i>l</i><sub>1</sub>, <i>F</i><sub>2</sub> und <i>l</i><sub>2</sub> auf.</p>
+        <p>Welche Rechenregel könnte hinter dem Gleichgewicht stecken? Schreib deine Vermutung mit <span class="nt" translate="no"><i>F</i><sub>1</sub></span>, <span class="nt" translate="no"><i>l</i><sub>1</sub></span>, <span class="nt" translate="no"><i>F</i><sub>2</sub></span> und <span class="nt" translate="no"><i>l</i><sub>2</sub></span> auf.</p>
         <textarea id="poe-regel-in" rows="2" placeholder="Ich vermute: Gleichgewicht herrscht, wenn …"></textarea>
         <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-regel')">Vermutung festhalten</button>
         <div class="poe-locked" id="poe-regel-out" hidden></div>
@@ -827,61 +889,61 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
 
     <div class="subphase" id="ph2-sub-2">
       <h3>Messreihe aufnehmen</h3>
-      <p>Stelle im Labor mindestens <strong>drei verschiedene Gleichgewichte</strong> her. Klicke jedes Mal auf „Gleichgewicht übernehmen“. Berechne dann in der Tabelle die Produkte <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> und <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub>.</p>
+      <p>Stelle im Labor mindestens <strong>drei verschiedene Gleichgewichte</strong> her. Klicke jedes Mal auf „Gleichgewicht übernehmen“. Berechne dann in der Tabelle die Produkte <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> und <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span>.</p>
       <div class="ex">
         <p><strong>Aufgabe 4:</strong> Messreihe</p>
         <button class="btn btn-primary btn-sm" onclick="mtAdd()">📸 Gleichgewicht übernehmen</button>
         <button class="btn btn-ghost btn-sm" onclick="mtClear()">🗑️ Tabelle leeren</button>
         <div class="fb grp-fb" id="mt-msg"></div>
         <table class="tbl mtab" id="mtab">
-          <thead><tr><th>Nr.</th><th><i>F</i><sub>1</sub> in N</th><th><i>l</i><sub>1</sub> in cm</th><th><i>F</i><sub>2</sub> in N</th><th><i>l</i><sub>2</sub> in cm</th><th><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> in N·cm</th><th><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub> in N·cm</th></tr></thead>
+          <thead><tr><th>Nr.</th><th><span class="nt" translate="no"><i>F</i><sub>1</sub></span> in N</th><th><span class="nt" translate="no"><i>l</i><sub>1</sub></span> in cm</th><th><span class="nt" translate="no"><i>F</i><sub>2</sub></span> in N</th><th><span class="nt" translate="no"><i>l</i><sub>2</sub></span> in cm</th><th><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> in N·cm</th><th><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span> in N·cm</th></tr></thead>
           <tbody><tr class="mt-empty"><td colspan="7">Noch keine Messwerte – stelle zuerst ein Gleichgewicht her.</td></tr></tbody>
         </table>
         <button class="btn btn-primary btn-sm" onclick="mtCheck()">✓ Produkte prüfen</button>
         <div class="fb grp-fb" id="mt-fb"></div>
         <div class="hs" id="hs-mt">
           <div data-tipp>Ein einfaches Gleichgewicht: gleiche Massen im gleichen Abstand. Danach Masse verdoppeln und Abstand halbieren.</div>
-          <div data-tipp>Rechne Kraft mal Hebelarm, z.&nbsp;B. 2&nbsp;N · 20&nbsp;cm = 40&nbsp;N·cm. 100&nbsp;g entsprechen 1&nbsp;N.</div>
+          <div data-tipp>Rechne Kraft mal Hebelarm, z.&nbsp;B. <span class="nt" translate="no">2&nbsp;N</span> · <span class="nt" translate="no">20&nbsp;cm</span> = <span class="nt" translate="no">40&nbsp;N·cm</span>. <span class="nt" translate="no">100&nbsp;g</span> entsprechen <span class="nt" translate="no">1&nbsp;N</span>.</div>
           <div data-tipp>Vergleiche in jeder Zeile die beiden letzten Spalten. Was fällt dir auf?</div>
           <div data-muster><p>Beispiel-Messreihe:</p>
-            <table class="tbl"><tr><th><i>F</i><sub>1</sub></th><th><i>l</i><sub>1</sub></th><th><i>F</i><sub>2</sub></th><th><i>l</i><sub>2</sub></th><th><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></th><th><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></th></tr>
-              <tr><td>2&nbsp;N</td><td>20&nbsp;cm</td><td>1&nbsp;N</td><td>40&nbsp;cm</td><td>40&nbsp;N·cm</td><td>40&nbsp;N·cm</td></tr>
-              <tr><td>3&nbsp;N</td><td>25&nbsp;cm</td><td>1&nbsp;N</td><td>75&nbsp;cm</td><td>75&nbsp;N·cm</td><td>75&nbsp;N·cm</td></tr>
-              <tr><td>4&nbsp;N</td><td>15&nbsp;cm</td><td>3&nbsp;N</td><td>20&nbsp;cm</td><td>60&nbsp;N·cm</td><td>60&nbsp;N·cm</td></tr></table>
+            <table class="tbl"><tr><th><span class="nt" translate="no"><i>F</i><sub>1</sub></span></th><th><span class="nt" translate="no"><i>l</i><sub>1</sub></span></th><th><span class="nt" translate="no"><i>F</i><sub>2</sub></span></th><th><span class="nt" translate="no"><i>l</i><sub>2</sub></span></th><th><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></th><th><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></th></tr>
+              <tr><td><span class="nt" translate="no">2&nbsp;N</span></td><td><span class="nt" translate="no">20&nbsp;cm</span></td><td><span class="nt" translate="no">1&nbsp;N</span></td><td><span class="nt" translate="no">40&nbsp;cm</span></td><td><span class="nt" translate="no">40&nbsp;N·cm</span></td><td><span class="nt" translate="no">40&nbsp;N·cm</span></td></tr>
+              <tr><td><span class="nt" translate="no">3&nbsp;N</span></td><td><span class="nt" translate="no">25&nbsp;cm</span></td><td><span class="nt" translate="no">1&nbsp;N</span></td><td><span class="nt" translate="no">75&nbsp;cm</span></td><td><span class="nt" translate="no">75&nbsp;N·cm</span></td><td><span class="nt" translate="no">75&nbsp;N·cm</span></td></tr>
+              <tr><td><span class="nt" translate="no">4&nbsp;N</span></td><td><span class="nt" translate="no">15&nbsp;cm</span></td><td><span class="nt" translate="no">3&nbsp;N</span></td><td><span class="nt" translate="no">20&nbsp;cm</span></td><td><span class="nt" translate="no">60&nbsp;N·cm</span></td><td><span class="nt" translate="no">60&nbsp;N·cm</span></td></tr></table>
             <p>In jeder Zeile sind beide Produkte gleich groß.</p></div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Forschungsauftrag B – Drehpunkt verschieben:</strong> Modus <em>zweiseitig</em>. Hänge 300&nbsp;g ganz links (Position 0&nbsp;cm) und 100&nbsp;g ganz rechts (Position 100&nbsp;cm). Wo muss der Drehpunkt liegen?</p>
+        <p><strong>Forschungsauftrag B – Drehpunkt verschieben:</strong> Modus <em>zweiseitig</em>. Hänge <span class="nt" translate="no">300&nbsp;g</span> ganz links (Position <span class="nt" translate="no">0&nbsp;cm</span>) und <span class="nt" translate="no">100&nbsp;g</span> ganz rechts (Position <span class="nt" translate="no">100&nbsp;cm</span>). Wo muss der Drehpunkt liegen?</p>
         <p>Drehpunkt bei <input class="inp" id="aB" inputmode="decimal" aria-label="Position des Drehpunkts in cm"> <span class="unit">cm</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['aB', 25, 0.1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-aB')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-aB">Drehpunkt bei <u>25&nbsp;cm</u>: <i>l</i><sub>1</sub> = 25&nbsp;cm, <i>l</i><sub>2</sub> = 75&nbsp;cm. 3&nbsp;N · 25&nbsp;cm = 75&nbsp;N·cm = 1&nbsp;N · 75&nbsp;cm.</div>
+        <div class="sol" id="sol-aB">Drehpunkt bei <u><span class="nt" translate="no">25&nbsp;cm</span></u>: <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">25&nbsp;cm</span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">75&nbsp;cm</span>. <span class="nt" translate="no">3&nbsp;N</span> · <span class="nt" translate="no">25&nbsp;cm</span> = <span class="nt" translate="no">75&nbsp;N·cm</span> = <span class="nt" translate="no">1&nbsp;N</span> · <span class="nt" translate="no">75&nbsp;cm</span>.</div>
         <div class="hs" id="hs-aB">
           <div data-tipp>Der Drehpunkt muss näher an die schwere oder an die leichte Masse?</div>
           <div data-tipp>Links hängt dreimal so viel Masse. Dann muss der rechte Hebelarm dreimal so lang sein wie der linke.</div>
-          <div data-tipp>Beide Hebelarme zusammen sind 100&nbsp;cm lang. Teile 100&nbsp;cm in vier gleiche Teile: einer links, drei rechts.</div>
-          <div data-muster><p><i>l</i><sub>1</sub> = 25&nbsp;cm und <i>l</i><sub>2</sub> = 75&nbsp;cm, also Drehpunkt bei <u>25&nbsp;cm</u>.</p><p>Probe: 3&nbsp;N · 25&nbsp;cm = 75&nbsp;N·cm und 1&nbsp;N · 75&nbsp;cm = 75&nbsp;N·cm ✓</p></div>
+          <div data-tipp>Beide Hebelarme zusammen sind <span class="nt" translate="no">100&nbsp;cm</span> lang. Teile <span class="nt" translate="no">100&nbsp;cm</span> in vier gleiche Teile: einer links, drei rechts.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">25&nbsp;cm</span> und <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">75&nbsp;cm</span>, also Drehpunkt bei <u><span class="nt" translate="no">25&nbsp;cm</span></u>.</p><p>Probe: <span class="nt" translate="no">3&nbsp;N</span> · <span class="nt" translate="no">25&nbsp;cm</span> = <span class="nt" translate="no">75&nbsp;N·cm</span> und <span class="nt" translate="no">1&nbsp;N</span> · <span class="nt" translate="no">75&nbsp;cm</span> = <span class="nt" translate="no">75&nbsp;N·cm</span> ✓</p></div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Forschungsauftrag C – einseitiger Hebel:</strong> Wechsle in den Modus <em>einseitig</em>. Drehpunkt bei 0&nbsp;cm, 500&nbsp;g bei 20&nbsp;cm. Der Kraftmesser zieht bei 50&nbsp;cm nach oben. Welche Kraft muss er anzeigen?</p>
-        <p><i>F</i><sub>2</sub> = <input class="inp" id="aC" inputmode="decimal" aria-label="Kraft F2 in Newton"> <span class="unit">N</span>
+        <p><strong>Forschungsauftrag C – einseitiger Hebel:</strong> Wechsle in den Modus <em>einseitig</em>. Drehpunkt bei <span class="nt" translate="no">0&nbsp;cm</span>, <span class="nt" translate="no">500&nbsp;g</span> bei <span class="nt" translate="no">20&nbsp;cm</span>. Der Kraftmesser zieht bei <span class="nt" translate="no">50&nbsp;cm</span> nach oben. Welche Kraft muss er anzeigen?</p>
+        <p><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <input class="inp" id="aC" inputmode="decimal" aria-label="Kraft F2 in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['aC', 2, 0.01]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-aC')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-aC">5&nbsp;N · 20&nbsp;cm = 100&nbsp;N·cm, also <i>F</i><sub>2</sub> · 50&nbsp;cm = 100&nbsp;N·cm → <i>F</i><sub>2</sub> = <u>2&nbsp;N</u>.</div>
+        <div class="sol" id="sol-aC"><span class="nt" translate="no">5&nbsp;N</span> · <span class="nt" translate="no">20&nbsp;cm</span> = <span class="nt" translate="no">100&nbsp;N·cm</span>, also <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no">50&nbsp;cm</span> = <span class="nt" translate="no">100&nbsp;N·cm</span> → <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <u><span class="nt" translate="no">2&nbsp;N</span></u>.</div>
         <div class="hs" id="hs-aC">
-          <div data-tipp>500&nbsp;g – wie groß ist die Gewichtskraft in Newton?</div>
-          <div data-tipp>500&nbsp;g entsprechen 5&nbsp;N. Die Hand am Kraftmesser ist 50&nbsp;cm weit weg, die Last nur 20&nbsp;cm.</div>
-          <div data-tipp>Stell im Labor den Kraftmesser auf 50&nbsp;cm und verändere die Zugkraft, bis Gleichgewicht herrscht.</div>
-          <div data-muster><p><i>F</i><sub>1</sub> = 5&nbsp;N, <i>l</i><sub>1</sub> = 20&nbsp;cm, <i>l</i><sub>2</sub> = 50&nbsp;cm.</p><p>5&nbsp;N · 20&nbsp;cm = 100&nbsp;N·cm. Damit auch rechts 100&nbsp;N·cm herauskommen: <i>F</i><sub>2</sub> = <u>2&nbsp;N</u>.</p><p>Der Kraftmesser zeigt 2&nbsp;N an – weniger als die Hälfte der Gewichtskraft.</p></div>
+          <div data-tipp><span class="nt" translate="no">500&nbsp;g</span> – wie groß ist die Gewichtskraft in Newton?</div>
+          <div data-tipp><span class="nt" translate="no">500&nbsp;g</span> entsprechen <span class="nt" translate="no">5&nbsp;N</span>. Die Hand am Kraftmesser ist <span class="nt" translate="no">50&nbsp;cm</span> weit weg, die Last nur <span class="nt" translate="no">20&nbsp;cm</span>.</div>
+          <div data-tipp>Stell im Labor den Kraftmesser auf <span class="nt" translate="no">50&nbsp;cm</span> und verändere die Zugkraft, bis Gleichgewicht herrscht.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no">5&nbsp;N</span>, <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">20&nbsp;cm</span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">50&nbsp;cm</span>.</p><p><span class="nt" translate="no">5&nbsp;N</span> · <span class="nt" translate="no">20&nbsp;cm</span> = <span class="nt" translate="no">100&nbsp;N·cm</span>. Damit auch rechts <span class="nt" translate="no">100&nbsp;N·cm</span> herauskommen: <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <u><span class="nt" translate="no">2&nbsp;N</span></u>.</p><p>Der Kraftmesser zeigt <span class="nt" translate="no">2&nbsp;N</span> an – weniger als die Hälfte der Gewichtskraft.</p></div>
         </div>
       </div>
-      <div class="callout">💪 <span><strong>Für Profis:</strong> Schieb im Auftrag C den Kraftmesser auf 10&nbsp;cm – also näher an den Drehpunkt als die Last. Welche Kraft brauchst du jetzt? Was bedeutet das für deinen Arm, wenn du eine Tasche trägst?</span></div>
+      <div class="callout">💪 <span><strong>Für Profis:</strong> Schieb im Auftrag C den Kraftmesser auf <span class="nt" translate="no">10&nbsp;cm</span> – also näher an den Drehpunkt als die Last. Welche Kraft brauchst du jetzt? Was bedeutet das für deinen Arm, wenn du eine Tasche trägst?</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Lag deine Vermutung richtig? ↓</button></div>
     </div>
 
@@ -890,31 +952,31 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <div class="quiz-item">
         <div class="quiz-q">Welche Regel gilt in allen Gleichgewichten deiner Messreihe?</div>
         <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><i>F</i><sub>1</sub> + <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> + <i>l</i><sub>2</sub></button>
-          <button class="quiz-btn" onclick="quizCheck('q2', this, 'c')"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></button>
-          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><i>F</i><sub>1</sub> = <i>F</i><sub>2</sub> und <i>l</i><sub>1</sub> = <i>l</i><sub>2</sub></button>
-          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><i>F</i><sub>1</sub> · <i>l</i><sub>2</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>1</sub></button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> + <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> + <span class="nt" translate="no"><i>l</i><sub>2</sub></span></button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'c')"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> und <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>l</i><sub>2</sub></span></button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></button>
         </div>
         <div class="quiz-fb" id="qfb-q2"></div>
       </div>
       <p>Vergleiche mit deiner Vermutung von vorhin. Jetzt darfst du dir die Produkte auch im Labor anzeigen lassen:</p>
       <p><button class="btn btn-ghost btn-sm" onclick="simProd(true)">🔢 Produkte im Labor einblenden</button></p>
-      <div class="formula"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
+      <div class="formula" translate="no"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
       <p>Das gilt für den einseitigen <strong>und</strong> den zweiseitigen Hebel. Eine kleine Kraft mit langem Hebelarm kann also einer großen Kraft mit kurzem Hebelarm die Waage halten.</p>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Das Hebelgesetz</div>
-        <p>Ein Hebel ist im Gleichgewicht, wenn gilt: <strong><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></strong></p>
+        <p>Ein Hebel ist im Gleichgewicht, wenn gilt: <strong><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></strong></p>
         <p>„Kraft mal Hebelarm ist auf beiden Seiten gleich.“ Das gilt für einseitige und zweiseitige Hebel.</p>
         <table>
           <tr><th>Zeichen</th><th>Bedeutung</th><th>Einheit</th></tr>
-          <tr><td><i>F</i><sub>1</sub>, <i>F</i><sub>2</sub></td><td>Kräfte am Hebel</td><td>Newton (N)</td></tr>
-          <tr><td><i>l</i><sub>1</sub>, <i>l</i><sub>2</sub></td><td>Hebelarme (Abstand Drehpunkt – Angriffspunkt)</td><td>Meter (m) oder Zentimeter (cm)</td></tr>
+          <tr><td><span class="nt" translate="no"><i>F</i><sub>1</sub></span>, <span class="nt" translate="no"><i>F</i><sub>2</sub></span></td><td>Kräfte am Hebel</td><td>Newton (N)</td></tr>
+          <tr><td><span class="nt" translate="no"><i>l</i><sub>1</sub></span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span></td><td>Hebelarme (Abstand Drehpunkt – Angriffspunkt)</td><td>Meter (m) oder Zentimeter (cm)</td></tr>
         </table>
         <p>Je länger der Hebelarm, desto kleiner die nötige Kraft.</p>
       </div>
-      <div class="callout callout-success">🛝 <span><strong>Zurück zur Wippe:</strong> Lina (320&nbsp;N) sitzt 2,0&nbsp;m vom Drehpunkt entfernt: 320&nbsp;N · 2,0&nbsp;m = 640&nbsp;N·m. Der Papa (800&nbsp;N) muss also 0,8&nbsp;m vom Drehpunkt entfernt sitzen, denn 800&nbsp;N · 0,8&nbsp;m = 640&nbsp;N·m. Wie man auf die 0,8&nbsp;m kommt, lernst du gleich.</span></div>
+      <div class="callout callout-success">🛝 <span><strong>Zurück zur Wippe:</strong> Lina (<span class="nt" translate="no">320&nbsp;N</span>) sitzt <span class="nt" translate="no">2,0&nbsp;m</span> vom Drehpunkt entfernt: <span class="nt" translate="no">320&nbsp;N</span> · <span class="nt" translate="no">2,0&nbsp;m</span> = <span class="nt" translate="no">640&nbsp;N·m</span>. Der Papa (<span class="nt" translate="no">800&nbsp;N</span>) muss also <span class="nt" translate="no">0,8&nbsp;m</span> vom Drehpunkt entfernt sitzen, denn <span class="nt" translate="no">800&nbsp;N</span> · <span class="nt" translate="no">0,8&nbsp;m</span> = <span class="nt" translate="no">640&nbsp;N·m</span>. Wie man auf die <span class="nt" translate="no">0,8&nbsp;m</span> kommt, lernst du gleich.</span></div>
       <div class="lehrer-only" hidden>
-        <div class="callout callout-info">🧑‍🏫 <span>Hinweis: Am Hebelmodell im Unterricht die Messreihe real nachstellen (Schlitzgewichte à 50&nbsp;g, Kraftmesser für den einseitigen Hebel). Der Balken sollte im Schwerpunkt gelagert sein, damit seine Eigenmasse nicht stört.</span></div>
+        <div class="callout callout-info">🧑‍🏫 <span>Hinweis: Am Hebelmodell im Unterricht die Messreihe real nachstellen (Schlitzgewichte à <span class="nt" translate="no">50&nbsp;g</span>, Kraftmesser für den einseitigen Hebel). Der Balken sollte im Schwerpunkt gelagert sein, damit seine Eigenmasse nicht stört.</span></div>
       </div>
       <p class="connector-text">Im Labor hast du die passende Stelle durch Schieben gefunden. In einer Aufgabe kannst du nicht schieben – da musst du rechnen. Dafür musst du die Formel umstellen können.</p>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Wie stellt man die Formel um? →</button></div>
@@ -937,7 +999,7 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
 
     <div class="subphase on" id="ph3-sub-1">
       <h3>Das Waage-Prinzip</h3>
-      <p>Eine Gleichung ist wie eine Balkenwaage im Gleichgewicht. Wenn du auf <strong>beiden Seiten dasselbe</strong> machst, bleibt sie im Gleichgewicht. Ein Beispiel: Gesucht ist <i>F</i><sub>1</sub>.</p>
+      <p>Eine Gleichung ist wie eine Balkenwaage im Gleichgewicht. Wenn du auf <strong>beiden Seiten dasselbe</strong> machst, bleibt sie im Gleichgewicht. Ein Beispiel: Gesucht ist <span class="nt" translate="no"><i>F</i><sub>1</sub></span>.</p>
       <div class="step-nav">
         <button class="step-btn active" onclick="showStep('um',1,this)">1 · Ausgangsformel</button>
         <button class="step-btn" onclick="showStep('um',2,this)">2 · Was stört?</button>
@@ -945,46 +1007,46 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
         <button class="step-btn" onclick="showStep('um',4,this)">4 · Kürzen</button>
       </div>
       <div class="step-content on" id="um-step-1">
-        <div class="eq"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-        <p>Wir wollen <i>F</i><sub>1</sub> allein auf der linken Seite haben.</p>
+        <div class="eq" translate="no"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+        <p>Wir wollen <span class="nt" translate="no"><i>F</i><sub>1</sub></span> allein auf der linken Seite haben.</p>
       </div>
       <div class="step-content" id="um-step-2">
-        <div class="eq"><i>F</i><sub>1</sub> <span class="mark-op">· <i>l</i><sub>1</sub></span> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-        <p><i>F</i><sub>1</sub> wird noch <strong>mal</strong> <i>l</i><sub>1</sub> genommen. Das Gegenteil von „mal“ ist „geteilt durch“. Also teilen wir durch <i>l</i><sub>1</sub>.</p>
+        <div class="eq" translate="no"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> <span class="mark-op">· <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+        <p><span class="nt" translate="no"><i>F</i><sub>1</sub></span> wird noch <strong>mal</strong> <span class="nt" translate="no"><i>l</i><sub>1</sub></span> genommen. Das Gegenteil von „mal“ ist „geteilt durch“. Also teilen wir durch <span class="nt" translate="no"><i>l</i><sub>1</sub></span>.</p>
       </div>
       <div class="step-content" id="um-step-3">
-        <div class="eq"><span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span></div>
-        <p>Wichtig: <strong>Beide</strong> Seiten werden durch <i>l</i><sub>1</sub> geteilt – sonst kippt die Waage.</p>
+        <div class="eq" translate="no"><span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span></div>
+        <p>Wichtig: <strong>Beide</strong> Seiten werden durch <span class="nt" translate="no"><i>l</i><sub>1</sub></span> geteilt – sonst kippt die Waage.</p>
       </div>
       <div class="step-content" id="um-step-4">
-        <div class="eq"><i>F</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span></div>
-        <p>Links kürzt sich <i>l</i><sub>1</sub> weg, denn <i>l</i><sub>1</sub> geteilt durch <i>l</i><sub>1</sub> ist 1. Fertig: <i>F</i><sub>1</sub> steht allein!</p>
+        <div class="eq" translate="no"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span></div>
+        <p>Links kürzt sich <span class="nt" translate="no"><i>l</i><sub>1</sub></span> weg, denn <span class="nt" translate="no"><i>l</i><sub>1</sub></span> geteilt durch <span class="nt" translate="no"><i>l</i><sub>1</sub></span> ist 1. Fertig: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> steht allein!</p>
       </div>
       <div class="callout">💡 <span><strong>Merktrick:</strong> Die gesuchte Größe steht allein. Ihr <strong>Partner</strong> von derselben Seite wandert in den <strong>Nenner</strong>. Das Paar von der anderen Seite bleibt im <strong>Zähler</strong>.</span></div>
 
       <div class="ex">
-        <p><strong>Aufgabe 5:</strong> Bringe die Schritte in die richtige Reihenfolge. Gesucht ist <i>l</i><sub>2</sub>. Ziehe die Karten oder benutze die Pfeile.</p>
+        <p><strong>Aufgabe 5:</strong> Bringe die Schritte in die richtige Reihenfolge. Gesucht ist <span class="nt" translate="no"><i>l</i><sub>2</sub></span>. Ziehe die Karten oder benutze die Pfeile.</p>
         <div class="baustein" data-type="sort" id="sort-umstellen">
           <div class="sort-list">
-            <div class="sort-item" data-v="3"><span>Beide Seiten durch <i>F</i><sub>2</sub> teilen: <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></span>
+            <div class="sort-item" data-v="3"><span>Beide Seiten durch <span class="nt" translate="no"><i>F</i><sub>2</sub></span> teilen: <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></span>
               <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-            <div class="sort-item" data-v="1"><span>Hebelgesetz aufschreiben: <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span>
+            <div class="sort-item" data-v="1"><span>Hebelgesetz aufschreiben: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span>
               <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-            <div class="sort-item" data-v="5"><span>Seiten tauschen, damit die gesuchte Größe links steht: <i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></span>
+            <div class="sort-item" data-v="5"><span>Seiten tauschen, damit die gesuchte Größe links steht: <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></span>
               <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-            <div class="sort-item" data-v="2"><span>Erkennen: <i>l</i><sub>2</sub> wird mal <i>F</i><sub>2</sub> genommen – <i>F</i><sub>2</sub> stört.</span>
+            <div class="sort-item" data-v="2"><span>Erkennen: <span class="nt" translate="no"><i>l</i><sub>2</sub></span> wird mal <span class="nt" translate="no"><i>F</i><sub>2</sub></span> genommen – <span class="nt" translate="no"><i>F</i><sub>2</sub></span> stört.</span>
               <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
-            <div class="sort-item" data-v="4"><span>Rechts kürzen: <i>F</i><sub>2</sub> geteilt durch <i>F</i><sub>2</sub> ergibt 1.</span>
+            <div class="sort-item" data-v="4"><span>Rechts kürzen: <span class="nt" translate="no"><i>F</i><sub>2</sub></span> geteilt durch <span class="nt" translate="no"><i>F</i><sub>2</sub></span> ergibt 1.</span>
               <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
           </div>
           <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
           <div class="fb grp-fb"></div>
         </div>
         <div class="hs" id="hs-sort">
-          <div data-tipp>Mach es wie im Beispiel mit <i>F</i><sub>1</sub> oben – nur mit anderen Buchstaben.</div>
+          <div data-tipp>Mach es wie im Beispiel mit <span class="nt" translate="no"><i>F</i><sub>1</sub></span> oben – nur mit anderen Buchstaben.</div>
           <div data-tipp>Zuerst kommt immer die Ausgangsformel, ganz am Ende steht die gesuchte Größe allein.</div>
           <div data-tipp>Reihenfolge: aufschreiben → erkennen, was stört → beide Seiten teilen → kürzen → …</div>
-          <div data-muster><p>1. Hebelgesetz aufschreiben · 2. Erkennen, dass <i>F</i><sub>2</sub> stört · 3. Beide Seiten durch <i>F</i><sub>2</sub> teilen · 4. Kürzen · 5. Seiten tauschen: <i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></p></div>
+          <div data-muster><p>1. Hebelgesetz aufschreiben · 2. Erkennen, dass <span class="nt" translate="no"><i>F</i><sub>2</sub></span> stört · 3. Beide Seiten durch <span class="nt" translate="no"><i>F</i><sub>2</sub></span> teilen · 4. Kürzen · 5. Seiten tauschen: <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></p></div>
         </div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Jetzt baust du die Formeln selbst ↓</button></div>
@@ -995,70 +1057,70 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <p>Ziehe die passenden Größen in die Kästchen – oder tippe erst eine Größe und dann ein Kästchen an. Achtung: Eine Karte bleibt jedes Mal übrig!</p>
 
       <div class="ex">
-        <p><strong>Aufgabe 6a:</strong> Gesucht ist <i>F</i><sub>1</sub>.</p>
+        <p><strong>Aufgabe 6a:</strong> Gesucht ist <span class="nt" translate="no"><i>F</i><sub>1</sub></span>.</p>
         <div class="baustein fz" data-type="fz" id="fz-F1" data-ziel="F1" data-zaehler="F2,l2" data-nenner="l1">
-          <div class="fz-start">Ausgangsformel: <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-          <div class="fz-pool"><span class="fz-tile" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span></div>
-          <div class="fz-eq"><span><i>F</i><sub>1</sub></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
+          <div class="fz-start">Ausgangsformel: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+          <div class="fz-pool"><span class="fz-tile" translate="no" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span></div>
+          <div class="fz-eq"><span><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
           <div class="fz-btns"><button class="btn btn-primary btn-sm" onclick="fzCheck(this)">✓ Prüfen</button> <button class="btn btn-ghost btn-sm" onclick="fzReset(this)">↺ Zurücksetzen</button></div>
           <div class="fz-fb" aria-live="polite"></div>
         </div>
         <div class="hs" id="hs-fz-F1">
           <div data-tipp>Diese Formel kennst du schon aus dem Waage-Prinzip.</div>
-          <div data-tipp><i>F</i><sub>1</sub> stand links zusammen mit <i>l</i><sub>1</sub>. Der Partner wandert in den Nenner.</div>
-          <div data-tipp>Nenner: <i>l</i><sub>1</sub>. Zähler: das Paar von der rechten Seite.</div>
-          <div data-muster><p><i>F</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span> – die Karte <i>F</i><sub>1</sub> bleibt übrig.</p></div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i><sub>1</sub></span> stand links zusammen mit <span class="nt" translate="no"><i>l</i><sub>1</sub></span>. Der Partner wandert in den Nenner.</div>
+          <div data-tipp>Nenner: <span class="nt" translate="no"><i>l</i><sub>1</sub></span>. Zähler: das Paar von der rechten Seite.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span> – die Karte <span class="nt" translate="no"><i>F</i><sub>1</sub></span> bleibt übrig.</p></div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Aufgabe 6b:</strong> Gesucht ist <i>l</i><sub>2</sub>.</p>
+        <p><strong>Aufgabe 6b:</strong> Gesucht ist <span class="nt" translate="no"><i>l</i><sub>2</sub></span>.</p>
         <div class="baustein fz" data-type="fz" id="fz-l2" data-ziel="l2" data-zaehler="F1,l1" data-nenner="F2">
-          <div class="fz-start">Ausgangsformel: <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-          <div class="fz-pool"><span class="fz-tile" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span></div>
-          <div class="fz-eq"><span><i>l</i><sub>2</sub></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
+          <div class="fz-start">Ausgangsformel: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+          <div class="fz-pool"><span class="fz-tile" translate="no" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span></div>
+          <div class="fz-eq"><span><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
           <div class="fz-btns"><button class="btn btn-primary btn-sm" onclick="fzCheck(this)">✓ Prüfen</button> <button class="btn btn-ghost btn-sm" onclick="fzReset(this)">↺ Zurücksetzen</button></div>
           <div class="fz-fb" aria-live="polite"></div>
         </div>
         <div class="hs" id="hs-fz-l2">
-          <div data-tipp>Auf welcher Seite der Ausgangsformel steht <i>l</i><sub>2</sub>? Wer ist sein Partner?</div>
-          <div data-tipp><i>l</i><sub>2</sub> steht rechts mit <i>F</i><sub>2</sub>. <i>F</i><sub>2</sub> wandert in den Nenner.</div>
+          <div data-tipp>Auf welcher Seite der Ausgangsformel steht <span class="nt" translate="no"><i>l</i><sub>2</sub></span>? Wer ist sein Partner?</div>
+          <div data-tipp><span class="nt" translate="no"><i>l</i><sub>2</sub></span> steht rechts mit <span class="nt" translate="no"><i>F</i><sub>2</sub></span>. <span class="nt" translate="no"><i>F</i><sub>2</sub></span> wandert in den Nenner.</div>
           <div data-tipp>Im Zähler steht das Paar von der linken Seite.</div>
-          <div data-muster><p><i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span> – die Karte <i>l</i><sub>2</sub> bleibt übrig.</p></div>
+          <div data-muster><p><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span> – die Karte <span class="nt" translate="no"><i>l</i><sub>2</sub></span> bleibt übrig.</p></div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Aufgabe 6c:</strong> Gesucht ist <i>F</i><sub>2</sub>.</p>
+        <p><strong>Aufgabe 6c:</strong> Gesucht ist <span class="nt" translate="no"><i>F</i><sub>2</sub></span>.</p>
         <div class="baustein fz" data-type="fz" id="fz-F2" data-ziel="F2" data-zaehler="F1,l1" data-nenner="l2">
-          <div class="fz-start">Ausgangsformel: <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-          <div class="fz-pool"><span class="fz-tile" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span></div>
-          <div class="fz-eq"><span><i>F</i><sub>2</sub></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
+          <div class="fz-start">Ausgangsformel: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+          <div class="fz-pool"><span class="fz-tile" translate="no" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span></div>
+          <div class="fz-eq"><span><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
           <div class="fz-btns"><button class="btn btn-primary btn-sm" onclick="fzCheck(this)">✓ Prüfen</button> <button class="btn btn-ghost btn-sm" onclick="fzReset(this)">↺ Zurücksetzen</button></div>
           <div class="fz-fb" aria-live="polite"></div>
         </div>
         <div class="hs" id="hs-fz-F2">
-          <div data-tipp>Wo steht <i>F</i><sub>2</sub> in der Ausgangsformel, und mit wem wird es malgenommen?</div>
-          <div data-tipp>Teile beide Seiten durch <i>l</i><sub>2</sub>.</div>
-          <div data-tipp>Nenner: <i>l</i><sub>2</sub>. Zähler: <i>F</i><sub>1</sub> und <i>l</i><sub>1</sub>.</div>
-          <div data-muster><p><i>F</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span> – die Karte <i>F</i><sub>2</sub> bleibt übrig.</p></div>
+          <div data-tipp>Wo steht <span class="nt" translate="no"><i>F</i><sub>2</sub></span> in der Ausgangsformel, und mit wem wird es malgenommen?</div>
+          <div data-tipp>Teile beide Seiten durch <span class="nt" translate="no"><i>l</i><sub>2</sub></span>.</div>
+          <div data-tipp>Nenner: <span class="nt" translate="no"><i>l</i><sub>2</sub></span>. Zähler: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> und <span class="nt" translate="no"><i>l</i><sub>1</sub></span>.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span> – die Karte <span class="nt" translate="no"><i>F</i><sub>2</sub></span> bleibt übrig.</p></div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Aufgabe 6d:</strong> Gesucht ist <i>l</i><sub>1</sub>.</p>
+        <p><strong>Aufgabe 6d:</strong> Gesucht ist <span class="nt" translate="no"><i>l</i><sub>1</sub></span>.</p>
         <div class="baustein fz" data-type="fz" id="fz-l1" data-ziel="l1" data-zaehler="F2,l2" data-nenner="F1">
-          <div class="fz-start">Ausgangsformel: <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></div>
-          <div class="fz-pool"><span class="fz-tile" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span></div>
-          <div class="fz-eq"><span><i>l</i><sub>1</sub></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
+          <div class="fz-start">Ausgangsformel: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></div>
+          <div class="fz-pool"><span class="fz-tile" translate="no" data-v="F1" tabindex="0" onclick="fzSelect(this)" aria-label="F 1"><span><i>F</i><sub>1</sub></span></span><span class="fz-tile" translate="no" data-v="l2" tabindex="0" onclick="fzSelect(this)" aria-label="l 2"><span><i>l</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="F2" tabindex="0" onclick="fzSelect(this)" aria-label="F 2"><span><i>F</i><sub>2</sub></span></span><span class="fz-tile" translate="no" data-v="l1" tabindex="0" onclick="fzSelect(this)" aria-label="l 1"><span><i>l</i><sub>1</sub></span></span></div>
+          <div class="fz-eq"><span><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span>=</span><span class="frac"><span class="fn"><span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span>·<span class="fz-slot" data-k="z" tabindex="0" onclick="fzPlace(this)">?</span></span><span class="fd"><span class="fz-slot" data-k="n" tabindex="0" onclick="fzPlace(this)">?</span></span></span></div>
           <div class="fz-btns"><button class="btn btn-primary btn-sm" onclick="fzCheck(this)">✓ Prüfen</button> <button class="btn btn-ghost btn-sm" onclick="fzReset(this)">↺ Zurücksetzen</button></div>
           <div class="fz-fb" aria-live="polite"></div>
         </div>
         <div class="hs" id="hs-fz-l1">
-          <div data-tipp>Jetzt ohne Vorlage: Wer ist der Partner von <i>l</i><sub>1</sub>?</div>
-          <div data-tipp><i>l</i><sub>1</sub> wird mit <i>F</i><sub>1</sub> malgenommen. Teile beide Seiten durch <i>F</i><sub>1</sub>.</div>
-          <div data-tipp>Nenner: <i>F</i><sub>1</sub>. Zähler: <i>F</i><sub>2</sub> und <i>l</i><sub>2</sub>.</div>
-          <div data-muster><p><i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span> – die Karte <i>l</i><sub>1</sub> bleibt übrig.</p></div>
+          <div data-tipp>Jetzt ohne Vorlage: Wer ist der Partner von <span class="nt" translate="no"><i>l</i><sub>1</sub></span>?</div>
+          <div data-tipp><span class="nt" translate="no"><i>l</i><sub>1</sub></span> wird mit <span class="nt" translate="no"><i>F</i><sub>1</sub></span> malgenommen. Teile beide Seiten durch <span class="nt" translate="no"><i>F</i><sub>1</sub></span>.</div>
+          <div data-tipp>Nenner: <span class="nt" translate="no"><i>F</i><sub>1</sub></span>. Zähler: <span class="nt" translate="no"><i>F</i><sub>2</sub></span> und <span class="nt" translate="no"><i>l</i><sub>2</sub></span>.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span> – die Karte <span class="nt" translate="no"><i>l</i><sub>1</sub></span> bleibt übrig.</p></div>
         </div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Alle vier Formeln auf einen Blick ↓</button></div>
@@ -1075,10 +1137,10 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
             <span class="m-chip" data-id="F1" onclick="matchSelect(this)">F₁</span>
             <span class="m-chip" data-id="l2" onclick="matchSelect(this)">l₂</span>
           </div>
-          <div class="m-zone" data-correct="F1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span></span></div>
-          <div class="m-zone" data-correct="l2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></span></div>
-          <div class="m-zone" data-correct="l1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span></span></div>
-          <div class="m-zone" data-correct="F2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span></span></div>
+          <div class="m-zone" data-correct="F1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span></span></div>
+          <div class="m-zone" data-correct="l2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></span></div>
+          <div class="m-zone" data-correct="l1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span></span></div>
+          <div class="m-zone" data-correct="F2" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">= <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span></span></div>
           <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
           <div class="fb grp-fb"></div>
@@ -1086,25 +1148,25 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
         <div class="hs" id="hs-match">
           <div data-tipp>Die gesuchte Größe kommt rechts gar nicht mehr vor.</div>
           <div data-tipp>Schau, welche der vier Größen in der Formel fehlt – das ist die gesuchte.</div>
-          <div data-tipp>In der ersten Formel kommen <i>F</i><sub>2</sub>, <i>l</i><sub>2</sub> und <i>l</i><sub>1</sub> vor. Es fehlt <i>F</i><sub>1</sub>.</div>
-          <div data-muster><p>1 → <i>F</i><sub>1</sub> · 2 → <i>l</i><sub>2</sub> · 3 → <i>l</i><sub>1</sub> · 4 → <i>F</i><sub>2</sub></p></div>
+          <div data-tipp>In der ersten Formel kommen <span class="nt" translate="no"><i>F</i><sub>2</sub></span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span> und <span class="nt" translate="no"><i>l</i><sub>1</sub></span> vor. Es fehlt <span class="nt" translate="no"><i>F</i><sub>1</sub></span>.</div>
+          <div data-muster><p>1 → <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · 2 → <span class="nt" translate="no"><i>l</i><sub>2</sub></span> · 3 → <span class="nt" translate="no"><i>l</i><sub>1</sub></span> · 4 → <span class="nt" translate="no"><i>F</i><sub>2</sub></span></p></div>
         </div>
       </div>
       <div class="quiz-item">
-        <div class="quiz-q">Tom stellt nach <i>l</i><sub>1</sub> um und schreibt: <i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span>. Was hat er falsch gemacht?</div>
+        <div class="quiz-q">Tom stellt nach <span class="nt" translate="no"><i>l</i><sub>1</sub></span> um und schreibt: <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span>. Was hat er falsch gemacht?</div>
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="quizCheck('q3', this, 'w')">Nichts, die Formel stimmt.</button>
-          <button class="quiz-btn" onclick="quizCheck('q3', this, 'c')">Er hat <i>F</i><sub>1</sub> und <i>F</i><sub>2</sub> vertauscht – richtig wäre <i>F</i><sub>2</sub> im Zähler und <i>F</i><sub>1</sub> im Nenner.</button>
-          <button class="quiz-btn" onclick="quizCheck('q3', this, 'w')">Er hätte <i>l</i><sub>2</sub> in den Nenner schreiben müssen.</button>
+          <button class="quiz-btn" onclick="quizCheck('q3', this, 'c')">Er hat <span class="nt" translate="no"><i>F</i><sub>1</sub></span> und <span class="nt" translate="no"><i>F</i><sub>2</sub></span> vertauscht – richtig wäre <span class="nt" translate="no"><i>F</i><sub>2</sub></span> im Zähler und <span class="nt" translate="no"><i>F</i><sub>1</sub></span> im Nenner.</button>
+          <button class="quiz-btn" onclick="quizCheck('q3', this, 'w')">Er hätte <span class="nt" translate="no"><i>l</i><sub>2</sub></span> in den Nenner schreiben müssen.</button>
         </div>
         <div class="quiz-fb" id="qfb-q3"></div>
       </div>
       <div class="hefter-box">
         <div class="hefter-label">📓 Heftereintrag — Hebelgesetz umstellen</div>
-        <p><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub> &nbsp;→&nbsp; Auf beiden Seiten dasselbe tun (Waage-Prinzip)!</p>
+        <p><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span> &nbsp;→&nbsp; Auf beiden Seiten dasselbe tun (Waage-Prinzip)!</p>
         <table>
-          <tr><td><i>F</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span></td><td><i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span></td></tr>
-          <tr><td><i>F</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span></td><td><i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></td></tr>
+          <tr><td><span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span></td><td><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span></td></tr>
+          <tr><td><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span></td><td><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></td></tr>
         </table>
         <p>Merke: Der Partner der gesuchten Größe kommt in den Nenner.</p>
       </div>
@@ -1131,39 +1193,39 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
     <div class="subphase on" id="ph4-sub-1">
       <h3>Zweiseitige Hebel</h3>
       <div class="ex">
-        <p><strong>Übung 1 – Wippe:</strong> Emma (<i>F</i><sub>1</sub> = 300&nbsp;N) sitzt 2,0&nbsp;m vom Drehpunkt entfernt. Ihr Vater sitzt auf der anderen Seite 0,75&nbsp;m vom Drehpunkt entfernt. Die Wippe ist im Gleichgewicht. Wie groß ist die Gewichtskraft des Vaters?</p>
-        <p><i>F</i><sub>2</sub> = <input class="inp" id="u1" inputmode="decimal" aria-label="F2 in Newton"> <span class="unit">N</span>
+        <p><strong>Übung 1 – Wippe:</strong> Emma (<span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no">300&nbsp;N</span>) sitzt <span class="nt" translate="no">2,0&nbsp;m</span> vom Drehpunkt entfernt. Ihr Vater sitzt auf der anderen Seite <span class="nt" translate="no">0,75&nbsp;m</span> vom Drehpunkt entfernt. Die Wippe ist im Gleichgewicht. Wie groß ist die Gewichtskraft des Vaters?</p>
+        <p><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <input class="inp" id="u1" inputmode="decimal" aria-label="F2 in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u1', 800, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u1')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u1"><i>F</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span> = <span class="frac"><span class="fn">300&nbsp;N · 2,0&nbsp;m</span><span class="fd">0,75&nbsp;m</span></span> = <u>800&nbsp;N</u></div>
+        <div class="sol" id="sol-u1"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">300&nbsp;N</span> · <span class="nt" translate="no">2,0&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">0,75&nbsp;m</span></span></span> = <u><span class="nt" translate="no">800&nbsp;N</span></u></div>
         <div class="hs" id="hs-u1">
           <div data-tipp>Gesucht ist eine Kraft. Welche der vier Formeln brauchst du?</div>
-          <div data-tipp><i>F</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span></div>
-          <div data-tipp>Setze ein: <i>F</i><sub>2</sub> = <span class="frac"><span class="fn">300&nbsp;N · 2,0&nbsp;m</span><span class="fd">0,75&nbsp;m</span></span>. Die Einheit m kürzt sich weg.</div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span></div>
+          <div data-tipp>Setze ein: <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">300&nbsp;N</span> · <span class="nt" translate="no">2,0&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">0,75&nbsp;m</span></span></span>. Die Einheit m kürzt sich weg.</div>
           <div data-muster>
-            <p>geg.: <i>F</i><sub>1</sub> = 300&nbsp;N, <i>l</i><sub>1</sub> = 2,0&nbsp;m, <i>l</i><sub>2</sub> = 0,75&nbsp;m · ges.: <i>F</i><sub>2</sub></p>
-            <p><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub> &nbsp;→&nbsp; <i>F</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>l</i><sub>2</sub></span></span> = <span class="frac"><span class="fn">300&nbsp;N · 2,0&nbsp;m</span><span class="fd">0,75&nbsp;m</span></span> = <span class="frac"><span class="fn">600&nbsp;N·m</span><span class="fd">0,75&nbsp;m</span></span><br><u><i>F</i><sub>2</sub> = 800&nbsp;N</u></p>
-            <p>Der Vater hat eine Gewichtskraft von 800&nbsp;N.</p>
+            <p>geg.: <span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no">300&nbsp;N</span>, <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">2,0&nbsp;m</span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">0,75&nbsp;m</span> · ges.: <span class="nt" translate="no"><i>F</i><sub>2</sub></span></p>
+            <p><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span> &nbsp;→&nbsp; <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>2</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">300&nbsp;N</span> · <span class="nt" translate="no">2,0&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">0,75&nbsp;m</span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">600&nbsp;N·m</span></span><span class="fd"><span class="nt" translate="no">0,75&nbsp;m</span></span></span><br><u><span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="nt" translate="no">800&nbsp;N</span></u></p>
+            <p>Der Vater hat eine Gewichtskraft von <span class="nt" translate="no">800&nbsp;N</span>.</p>
           </div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Übung 2 – Brechstange:</strong> Mit einer Brechstange will Paul einen Stein anheben. Der Stein drückt mit <i>F</i><sub>2</sub> = 1200&nbsp;N auf die Stange, sein Hebelarm ist <i>l</i><sub>2</sub> = 0,1&nbsp;m. Paul kann mit <i>F</i><sub>1</sub> = 150&nbsp;N drücken. Wie lang muss sein Hebelarm <i>l</i><sub>1</sub> mindestens sein?</p>
-        <p><i>l</i><sub>1</sub> = <input class="inp" id="u2" inputmode="decimal" aria-label="l1 in Meter"> <span class="unit">m</span>
+        <p><strong>Übung 2 – Brechstange:</strong> Mit einer Brechstange will Paul einen Stein anheben. Der Stein drückt mit <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="nt" translate="no">1200&nbsp;N</span> auf die Stange, sein Hebelarm ist <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">0,1&nbsp;m</span>. Paul kann mit <span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no">150&nbsp;N</span> drücken. Wie lang muss sein Hebelarm <span class="nt" translate="no"><i>l</i><sub>1</sub></span> mindestens sein?</p>
+        <p><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <input class="inp" id="u2" inputmode="decimal" aria-label="l1 in Meter"> <span class="unit">m</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u2', 0.8, 0.005]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u2')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u2"><i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span> = <span class="frac"><span class="fn">1200&nbsp;N · 0,1&nbsp;m</span><span class="fd">150&nbsp;N</span></span> = <u>0,8&nbsp;m</u></div>
+        <div class="sol" id="sol-u2"><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">1200&nbsp;N</span> · <span class="nt" translate="no">0,1&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">150&nbsp;N</span></span></span> = <u><span class="nt" translate="no">0,8&nbsp;m</span></u></div>
         <div class="hs" id="hs-u2">
           <div data-tipp>Jetzt ist ein Hebelarm gesucht – welche Formel passt?</div>
-          <div data-tipp><i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span></div>
-          <div data-tipp><i>l</i><sub>1</sub> = <span class="frac"><span class="fn">1200&nbsp;N · 0,1&nbsp;m</span><span class="fd">150&nbsp;N</span></span>. Diesmal kürzt sich die Einheit N.</div>
+          <div data-tipp><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span></div>
+          <div data-tipp><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">1200&nbsp;N</span> · <span class="nt" translate="no">0,1&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">150&nbsp;N</span></span></span>. Diesmal kürzt sich die Einheit N.</div>
           <div data-muster>
-            <p>geg.: <i>F</i><sub>2</sub> = 1200&nbsp;N, <i>l</i><sub>2</sub> = 0,1&nbsp;m, <i>F</i><sub>1</sub> = 150&nbsp;N · ges.: <i>l</i><sub>1</sub></p>
-            <p><i>l</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span> = <span class="frac"><span class="fn">1200&nbsp;N · 0,1&nbsp;m</span><span class="fd">150&nbsp;N</span></span> = <span class="frac"><span class="fn">120&nbsp;N·m</span><span class="fd">150&nbsp;N</span></span><br><u><i>l</i><sub>1</sub> = 0,8&nbsp;m</u></p>
-            <p>Pauls Hebelarm muss mindestens 0,8&nbsp;m (80&nbsp;cm) lang sein.</p>
+            <p>geg.: <span class="nt" translate="no"><i>F</i><sub>2</sub></span> = <span class="nt" translate="no">1200&nbsp;N</span>, <span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no">0,1&nbsp;m</span>, <span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="nt" translate="no">150&nbsp;N</span> · ges.: <span class="nt" translate="no"><i>l</i><sub>1</sub></span></p>
+            <p><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">1200&nbsp;N</span> · <span class="nt" translate="no">0,1&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">150&nbsp;N</span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">120&nbsp;N·m</span></span><span class="fd"><span class="nt" translate="no">150&nbsp;N</span></span></span><br><u><span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no">0,8&nbsp;m</span></u></p>
+            <p>Pauls Hebelarm muss mindestens <span class="nt" translate="no">0,8&nbsp;m</span> (<span class="nt" translate="no">80&nbsp;cm</span>) lang sein.</p>
           </div>
         </div>
       </div>
@@ -1182,41 +1244,41 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
     <div class="subphase" id="ph4-sub-2">
       <h3>Einseitige Hebel</h3>
       <div class="ex">
-        <p><strong>Übung 3 – Schubkarre:</strong> In einer Schubkarre liegen 60&nbsp;kg Sand. Der Schwerpunkt der Ladung ist 0,4&nbsp;m von der Radachse (Drehpunkt) entfernt. Die Griffe sind 1,2&nbsp;m von der Radachse entfernt.<br>a) Berechne die Gewichtskraft des Sands.<br>b) Mit welcher Kraft musst du die Griffe hochheben?</p>
-        <p>a) <i>F</i><sub>Last</sub> = <input class="inp" id="u3a" inputmode="decimal" aria-label="Gewichtskraft in Newton"> <span class="unit">N</span>
-          &nbsp; b) <i>F</i><sub>Hand</sub> = <input class="inp" id="u3b" inputmode="decimal" aria-label="Handkraft in Newton"> <span class="unit">N</span>
+        <p><strong>Übung 3 – Schubkarre:</strong> In einer Schubkarre liegen <span class="nt" translate="no">60&nbsp;kg</span> Sand. Der Schwerpunkt der Ladung ist <span class="nt" translate="no">0,4&nbsp;m</span> von der Radachse (Drehpunkt) entfernt. Die Griffe sind <span class="nt" translate="no">1,2&nbsp;m</span> von der Radachse entfernt.<br>a) Berechne die Gewichtskraft des Sands.<br>b) Mit welcher Kraft musst du die Griffe hochheben?</p>
+        <p>a) <span class="nt" translate="no"><i>F</i></span><sub>Last</sub> = <input class="inp" id="u3a" inputmode="decimal" aria-label="Gewichtskraft in Newton"> <span class="unit">N</span>
+          &nbsp; b) <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> = <input class="inp" id="u3b" inputmode="decimal" aria-label="Handkraft in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u3a', 600, 1], ['u3b', 200, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u3')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u3">a) <i>F</i><sub>G</sub> = 60&nbsp;kg · 10&nbsp;N/kg = <u>600&nbsp;N</u> · b) <i>F</i><sub>Hand</sub> = <span class="frac"><span class="fn">600&nbsp;N · 0,4&nbsp;m</span><span class="fd">1,2&nbsp;m</span></span> = <u>200&nbsp;N</u></div>
+        <div class="sol" id="sol-u3">a) <span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no">60&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">600&nbsp;N</span></u> · b) <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">600&nbsp;N</span> · <span class="nt" translate="no">0,4&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span> = <u><span class="nt" translate="no">200&nbsp;N</span></u></div>
         <div class="hs" id="hs-u3">
           <div data-tipp>Erst die Masse in eine Kraft umrechnen, dann das Hebelgesetz anwenden.</div>
-          <div data-tipp>a) <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i>. b) Die Last hat den kurzen Hebelarm (0,4&nbsp;m), die Hände den langen (1,2&nbsp;m).</div>
-          <div data-tipp>b) <i>F</i><sub>Hand</sub> · 1,2&nbsp;m = 600&nbsp;N · 0,4&nbsp;m. Stelle nach <i>F</i><sub>Hand</sub> um.</div>
+          <div data-tipp>a) <span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no"><i>m</i></span> · <span class="nt" translate="no"><i>g</i></span>. b) Die Last hat den kurzen Hebelarm (<span class="nt" translate="no">0,4&nbsp;m</span>), die Hände den langen (<span class="nt" translate="no">1,2&nbsp;m</span>).</div>
+          <div data-tipp>b) <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> · <span class="nt" translate="no">1,2&nbsp;m</span> = <span class="nt" translate="no">600&nbsp;N</span> · <span class="nt" translate="no">0,4&nbsp;m</span>. Stelle nach <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> um.</div>
           <div data-muster>
-            <p>geg.: <i>m</i> = 60&nbsp;kg, <i>g</i> = 10&nbsp;N/kg, <i>l</i><sub>Last</sub> = 0,4&nbsp;m, <i>l</i><sub>Hand</sub> = 1,2&nbsp;m · ges.: <i>F</i><sub>Last</sub>, <i>F</i><sub>Hand</sub></p>
-            <p>a) <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i> = 60&nbsp;kg · 10&nbsp;N/kg = <u>600&nbsp;N</u></p>
-            <p>b) <i>F</i><sub>Hand</sub> · <i>l</i><sub>Hand</sub> = <i>F</i><sub>Last</sub> · <i>l</i><sub>Last</sub> &nbsp;→&nbsp; <i>F</i><sub>Hand</sub> = <span class="frac"><span class="fn"><i>F</i><sub>Last</sub> · <i>l</i><sub>Last</sub></span><span class="fd"><i>l</i><sub>Hand</sub></span></span> = <span class="frac"><span class="fn">600&nbsp;N · 0,4&nbsp;m</span><span class="fd">1,2&nbsp;m</span></span> = <u>200&nbsp;N</u></p>
-            <p>Du musst die Griffe mit 200&nbsp;N anheben – nur einem Drittel der Gewichtskraft des Sands.</p>
+            <p>geg.: <span class="nt" translate="no"><i>m</i></span> = <span class="nt" translate="no">60&nbsp;kg</span>, <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">10&nbsp;N/kg</span>, <span class="nt" translate="no"><i>l</i></span><sub>Last</sub> = <span class="nt" translate="no">0,4&nbsp;m</span>, <span class="nt" translate="no"><i>l</i></span><sub>Hand</sub> = <span class="nt" translate="no">1,2&nbsp;m</span> · ges.: <span class="nt" translate="no"><i>F</i></span><sub>Last</sub>, <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub></p>
+            <p>a) <span class="nt" translate="no"><i>F</i><sub>G</sub></span> = <span class="nt" translate="no"><i>m</i></span> · <span class="nt" translate="no"><i>g</i></span> = <span class="nt" translate="no">60&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">600&nbsp;N</span></u></p>
+            <p>b) <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Hand</sub> = <span class="nt" translate="no"><i>F</i></span><sub>Last</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Last</sub> &nbsp;→&nbsp; <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i></span><sub>Last</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Last</sub></span><span class="fd"><span class="nt" translate="no"><i>l</i></span><sub>Hand</sub></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">600&nbsp;N</span> · <span class="nt" translate="no">0,4&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span> = <u><span class="nt" translate="no">200&nbsp;N</span></u></p>
+            <p>Du musst die Griffe mit <span class="nt" translate="no">200&nbsp;N</span> anheben – nur einem Drittel der Gewichtskraft des Sands.</p>
           </div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>Übung 4 – Nussknacker:</strong> Die Nuss liegt 3&nbsp;cm vom Gelenk entfernt. Deine Hand drückt 15&nbsp;cm vom Gelenk entfernt mit 40&nbsp;N. Mit welcher Kraft wird die Nuss zusammengedrückt?</p>
-        <p><i>F</i><sub>Nuss</sub> = <input class="inp" id="u4" inputmode="decimal" aria-label="Kraft auf die Nuss in Newton"> <span class="unit">N</span>
+        <p><strong>Übung 4 – Nussknacker:</strong> Die Nuss liegt <span class="nt" translate="no">3&nbsp;cm</span> vom Gelenk entfernt. Deine Hand drückt <span class="nt" translate="no">15&nbsp;cm</span> vom Gelenk entfernt mit <span class="nt" translate="no">40&nbsp;N</span>. Mit welcher Kraft wird die Nuss zusammengedrückt?</p>
+        <p><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <input class="inp" id="u4" inputmode="decimal" aria-label="Kraft auf die Nuss in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u4', 200, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u4')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u4"><i>F</i><sub>Nuss</sub> = <span class="frac"><span class="fn">40&nbsp;N · 15&nbsp;cm</span><span class="fd">3&nbsp;cm</span></span> = <u>200&nbsp;N</u></div>
+        <div class="sol" id="sol-u4"><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">40&nbsp;N</span> · <span class="nt" translate="no">15&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">3&nbsp;cm</span></span></span> = <u><span class="nt" translate="no">200&nbsp;N</span></u></div>
         <div class="hs" id="hs-u4">
           <div data-tipp>Die Hand hat den langen Hebelarm, die Nuss den kurzen. Wer muss die größere Kraft haben?</div>
-          <div data-tipp><i>F</i><sub>Nuss</sub> = <span class="frac"><span class="fn"><i>F</i><sub>Hand</sub> · <i>l</i><sub>Hand</sub></span><span class="fd"><i>l</i><sub>Nuss</sub></span></span>. Beide Längen sind in cm – das passt.</div>
-          <div data-tipp><i>F</i><sub>Nuss</sub> = <span class="frac"><span class="fn">40&nbsp;N · 15&nbsp;cm</span><span class="fd">3&nbsp;cm</span></span></div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Hand</sub></span><span class="fd"><span class="nt" translate="no"><i>l</i></span><sub>Nuss</sub></span></span>. Beide Längen sind in cm – das passt.</div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">40&nbsp;N</span> · <span class="nt" translate="no">15&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">3&nbsp;cm</span></span></span></div>
           <div data-muster>
-            <p>geg.: <i>F</i><sub>Hand</sub> = 40&nbsp;N, <i>l</i><sub>Hand</sub> = 15&nbsp;cm, <i>l</i><sub>Nuss</sub> = 3&nbsp;cm · ges.: <i>F</i><sub>Nuss</sub></p>
-            <p><i>F</i><sub>Nuss</sub> = <span class="frac"><span class="fn"><i>F</i><sub>Hand</sub> · <i>l</i><sub>Hand</sub></span><span class="fd"><i>l</i><sub>Nuss</sub></span></span> = <span class="frac"><span class="fn">40&nbsp;N · 15&nbsp;cm</span><span class="fd">3&nbsp;cm</span></span> = <span class="frac"><span class="fn">600&nbsp;N·cm</span><span class="fd">3&nbsp;cm</span></span><br><u><i>F</i><sub>Nuss</sub> = 200&nbsp;N</u></p>
-            <p>Die Nuss wird mit 200&nbsp;N zusammengedrückt – fünfmal so stark, wie du drückst.</p>
+            <p>geg.: <span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> = <span class="nt" translate="no">40&nbsp;N</span>, <span class="nt" translate="no"><i>l</i></span><sub>Hand</sub> = <span class="nt" translate="no">15&nbsp;cm</span>, <span class="nt" translate="no"><i>l</i></span><sub>Nuss</sub> = <span class="nt" translate="no">3&nbsp;cm</span> · ges.: <span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub></p>
+            <p><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i></span><sub>Hand</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Hand</sub></span><span class="fd"><span class="nt" translate="no"><i>l</i></span><sub>Nuss</sub></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">40&nbsp;N</span> · <span class="nt" translate="no">15&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">3&nbsp;cm</span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">600&nbsp;N·cm</span></span><span class="fd"><span class="nt" translate="no">3&nbsp;cm</span></span></span><br><u><span class="nt" translate="no"><i>F</i></span><sub>Nuss</sub> = <span class="nt" translate="no">200&nbsp;N</span></u></p>
+            <p>Die Nuss wird mit <span class="nt" translate="no">200&nbsp;N</span> zusammengedrückt – fünfmal so stark, wie du drückst.</p>
           </div>
         </div>
       </div>
@@ -1226,41 +1288,41 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
     <div class="subphase" id="ph4-sub-3">
       <h3>★ Für Profis</h3>
       <div class="ex">
-        <p><strong>★ Übung 5 – Dein Unterarm:</strong> Dein Unterarm ist ein einseitiger Hebel mit dem Ellenbogen als Drehpunkt. Du hältst eine 5-kg-Hantel 32&nbsp;cm vom Ellenbogen entfernt. Dein Bizeps-Muskel greift nur 4&nbsp;cm vom Ellenbogen entfernt an.<br>a) Wie groß ist die Gewichtskraft der Hantel?<br>b) Mit welcher Kraft muss der Muskel ziehen? (Die Masse des Arms vernachlässigen wir.)</p>
-        <p>a) <i>F</i><sub>Hantel</sub> = <input class="inp" id="u5a" inputmode="decimal" aria-label="Gewichtskraft der Hantel in Newton"> <span class="unit">N</span>
-          &nbsp; b) <i>F</i><sub>Muskel</sub> = <input class="inp" id="u5b" inputmode="decimal" aria-label="Muskelkraft in Newton"> <span class="unit">N</span>
+        <p><strong>★ Übung 5 – Dein Unterarm:</strong> Dein Unterarm ist ein einseitiger Hebel mit dem Ellenbogen als Drehpunkt. Du hältst eine 5-kg-Hantel <span class="nt" translate="no">32&nbsp;cm</span> vom Ellenbogen entfernt. Dein Bizeps-Muskel greift nur <span class="nt" translate="no">4&nbsp;cm</span> vom Ellenbogen entfernt an.<br>a) Wie groß ist die Gewichtskraft der Hantel?<br>b) Mit welcher Kraft muss der Muskel ziehen? (Die Masse des Arms vernachlässigen wir.)</p>
+        <p>a) <span class="nt" translate="no"><i>F</i></span><sub>Hantel</sub> = <input class="inp" id="u5a" inputmode="decimal" aria-label="Gewichtskraft der Hantel in Newton"> <span class="unit">N</span>
+          &nbsp; b) <span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub> = <input class="inp" id="u5b" inputmode="decimal" aria-label="Muskelkraft in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u5a', 50, 0.5], ['u5b', 400, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u5')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u5">a) 5&nbsp;kg · 10&nbsp;N/kg = <u>50&nbsp;N</u> · b) <i>F</i><sub>Muskel</sub> = <span class="frac"><span class="fn">50&nbsp;N · 32&nbsp;cm</span><span class="fd">4&nbsp;cm</span></span> = <u>400&nbsp;N</u></div>
+        <div class="sol" id="sol-u5">a) <span class="nt" translate="no">5&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">50&nbsp;N</span></u> · b) <span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">50&nbsp;N</span> · <span class="nt" translate="no">32&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">4&nbsp;cm</span></span></span> = <u><span class="nt" translate="no">400&nbsp;N</span></u></div>
         <div class="hs" id="hs-u5">
           <div data-tipp>Hier ist es umgekehrt wie beim Nussknacker: Der Muskel hat den <em>kurzen</em> Hebelarm.</div>
-          <div data-tipp><i>F</i><sub>Muskel</sub> · <i>l</i><sub>Muskel</sub> = <i>F</i><sub>Hantel</sub> · <i>l</i><sub>Hantel</sub></div>
-          <div data-tipp><i>F</i><sub>Muskel</sub> = <span class="frac"><span class="fn">50&nbsp;N · 32&nbsp;cm</span><span class="fd">4&nbsp;cm</span></span></div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Muskel</sub> = <span class="nt" translate="no"><i>F</i></span><sub>Hantel</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Hantel</sub></div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">50&nbsp;N</span> · <span class="nt" translate="no">32&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">4&nbsp;cm</span></span></span></div>
           <div data-muster>
-            <p>geg.: <i>m</i> = 5&nbsp;kg, <i>l</i><sub>Hantel</sub> = 32&nbsp;cm, <i>l</i><sub>Muskel</sub> = 4&nbsp;cm · ges.: <i>F</i><sub>Hantel</sub>, <i>F</i><sub>Muskel</sub></p>
-            <p>a) <i>F</i><sub>Hantel</sub> = 5&nbsp;kg · 10&nbsp;N/kg = <u>50&nbsp;N</u></p>
-            <p>b) <i>F</i><sub>Muskel</sub> = <span class="frac"><span class="fn"><i>F</i><sub>Hantel</sub> · <i>l</i><sub>Hantel</sub></span><span class="fd"><i>l</i><sub>Muskel</sub></span></span> = <span class="frac"><span class="fn">50&nbsp;N · 32&nbsp;cm</span><span class="fd">4&nbsp;cm</span></span> = <u>400&nbsp;N</u></p>
-            <p>Der Bizeps muss mit 400&nbsp;N ziehen – achtmal so viel wie die Hantel wiegt. Ein Hebel spart also nicht immer Kraft! Dafür bewegt sich die Hand bei einer kleinen Muskelbewegung weit und schnell.</p>
+            <p>geg.: <span class="nt" translate="no"><i>m</i></span> = <span class="nt" translate="no">5&nbsp;kg</span>, <span class="nt" translate="no"><i>l</i></span><sub>Hantel</sub> = <span class="nt" translate="no">32&nbsp;cm</span>, <span class="nt" translate="no"><i>l</i></span><sub>Muskel</sub> = <span class="nt" translate="no">4&nbsp;cm</span> · ges.: <span class="nt" translate="no"><i>F</i></span><sub>Hantel</sub>, <span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub></p>
+            <p>a) <span class="nt" translate="no"><i>F</i></span><sub>Hantel</sub> = <span class="nt" translate="no">5&nbsp;kg</span> · <span class="nt" translate="no">10&nbsp;N/kg</span> = <u><span class="nt" translate="no">50&nbsp;N</span></u></p>
+            <p>b) <span class="nt" translate="no"><i>F</i></span><sub>Muskel</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i></span><sub>Hantel</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Hantel</sub></span><span class="fd"><span class="nt" translate="no"><i>l</i></span><sub>Muskel</sub></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">50&nbsp;N</span> · <span class="nt" translate="no">32&nbsp;cm</span></span><span class="fd"><span class="nt" translate="no">4&nbsp;cm</span></span></span> = <u><span class="nt" translate="no">400&nbsp;N</span></u></p>
+            <p>Der Bizeps muss mit <span class="nt" translate="no">400&nbsp;N</span> ziehen – achtmal so viel wie die Hantel wiegt. Ein Hebel spart also nicht immer Kraft! Dafür bewegt sich die Hand bei einer kleinen Muskelbewegung weit und schnell.</p>
           </div>
         </div>
       </div>
 
       <div class="ex">
-        <p><strong>★ Übung 6 – Drei auf der Wippe:</strong> Links sitzt Tim (350&nbsp;N) 1,6&nbsp;m vom Drehpunkt entfernt. Rechts sitzt Ben (300&nbsp;N) 1,0&nbsp;m vom Drehpunkt entfernt. Wo muss Mia (200&nbsp;N) rechts sitzen, damit die Wippe im Gleichgewicht ist?</p>
-        <p><i>l</i><sub>Mia</sub> = <input class="inp" id="u6" inputmode="decimal" aria-label="Abstand Mia in Meter"> <span class="unit">m</span>
+        <p><strong>★ Übung 6 – Drei auf der Wippe:</strong> Links sitzt Tim (<span class="nt" translate="no">350&nbsp;N</span>) <span class="nt" translate="no">1,6&nbsp;m</span> vom Drehpunkt entfernt. Rechts sitzt Ben (<span class="nt" translate="no">300&nbsp;N</span>) <span class="nt" translate="no">1,0&nbsp;m</span> vom Drehpunkt entfernt. Wo muss Mia (<span class="nt" translate="no">200&nbsp;N</span>) rechts sitzen, damit die Wippe im Gleichgewicht ist?</p>
+        <p><span class="nt" translate="no"><i>l</i></span><sub>Mia</sub> = <input class="inp" id="u6" inputmode="decimal" aria-label="Abstand Mia in Meter"> <span class="unit">m</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['u6', 1.3, 0.01]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-u6')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-u6">Links: 350&nbsp;N · 1,6&nbsp;m = 560&nbsp;N·m. Ben schafft 300&nbsp;N · 1,0&nbsp;m = 300&nbsp;N·m. Für Mia bleiben 260&nbsp;N·m: <i>l</i><sub>Mia</sub> = <span class="frac"><span class="fn">260&nbsp;N·m</span><span class="fd">200&nbsp;N</span></span> = <u>1,3&nbsp;m</u></div>
+        <div class="sol" id="sol-u6">Links: <span class="nt" translate="no">350&nbsp;N</span> · <span class="nt" translate="no">1,6&nbsp;m</span> = <span class="nt" translate="no">560&nbsp;N·m</span>. Ben schafft <span class="nt" translate="no">300&nbsp;N</span> · <span class="nt" translate="no">1,0&nbsp;m</span> = <span class="nt" translate="no">300&nbsp;N·m</span>. Für Mia bleiben <span class="nt" translate="no">260&nbsp;N·m</span>: <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">260&nbsp;N·m</span></span><span class="fd"><span class="nt" translate="no">200&nbsp;N</span></span></span> = <u><span class="nt" translate="no">1,3&nbsp;m</span></u></div>
         <div class="hs" id="hs-u6">
           <div data-tipp>Rechts sitzen zwei Kinder. Ihre Drehwirkungen addieren sich.</div>
           <div data-tipp>Berechne zuerst „Kraft mal Hebelarm“ für Tim und für Ben. Wie viel fehlt rechts noch?</div>
-          <div data-tipp>Tim: 560&nbsp;N·m, Ben: 300&nbsp;N·m. Mia muss die fehlenden 260&nbsp;N·m schaffen: 200&nbsp;N · <i>l</i><sub>Mia</sub> = 260&nbsp;N·m.</div>
+          <div data-tipp>Tim: <span class="nt" translate="no">560&nbsp;N·m</span>, Ben: <span class="nt" translate="no">300&nbsp;N·m</span>. Mia muss die fehlenden <span class="nt" translate="no">260&nbsp;N·m</span> schaffen: <span class="nt" translate="no">200&nbsp;N</span> · <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub> = <span class="nt" translate="no">260&nbsp;N·m</span>.</div>
           <div data-muster>
-            <p>Gleichgewicht: <i>F</i><sub>Tim</sub> · <i>l</i><sub>Tim</sub> = <i>F</i><sub>Ben</sub> · <i>l</i><sub>Ben</sub> + <i>F</i><sub>Mia</sub> · <i>l</i><sub>Mia</sub></p>
-            <p>350&nbsp;N · 1,6&nbsp;m = 300&nbsp;N · 1,0&nbsp;m + 200&nbsp;N · <i>l</i><sub>Mia</sub><br>560&nbsp;N·m = 300&nbsp;N·m + 200&nbsp;N · <i>l</i><sub>Mia</sub><br>260&nbsp;N·m = 200&nbsp;N · <i>l</i><sub>Mia</sub><br><i>l</i><sub>Mia</sub> = <span class="frac"><span class="fn">260&nbsp;N·m</span><span class="fd">200&nbsp;N</span></span> = <u>1,3&nbsp;m</u></p>
-            <p>Mia muss 1,3&nbsp;m vom Drehpunkt entfernt sitzen.</p>
+            <p>Gleichgewicht: <span class="nt" translate="no"><i>F</i></span><sub>Tim</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Tim</sub> = <span class="nt" translate="no"><i>F</i></span><sub>Ben</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Ben</sub> + <span class="nt" translate="no"><i>F</i></span><sub>Mia</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub></p>
+            <p><span class="nt" translate="no">350&nbsp;N</span> · <span class="nt" translate="no">1,6&nbsp;m</span> = <span class="nt" translate="no">300&nbsp;N</span> · <span class="nt" translate="no">1,0&nbsp;m</span> + <span class="nt" translate="no">200&nbsp;N</span> · <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub><br><span class="nt" translate="no">560&nbsp;N·m</span> = <span class="nt" translate="no">300&nbsp;N·m</span> + <span class="nt" translate="no">200&nbsp;N</span> · <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub><br><span class="nt" translate="no">260&nbsp;N·m</span> = <span class="nt" translate="no">200&nbsp;N</span> · <span class="nt" translate="no"><i>l</i></span><sub>Mia</sub><br><span class="nt" translate="no"><i>l</i></span><sub>Mia</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">260&nbsp;N·m</span></span><span class="fd"><span class="nt" translate="no">200&nbsp;N</span></span></span> = <u><span class="nt" translate="no">1,3&nbsp;m</span></u></p>
+            <p>Mia muss <span class="nt" translate="no">1,3&nbsp;m</span> vom Drehpunkt entfernt sitzen.</p>
           </div>
         </div>
       </div>
@@ -1305,19 +1367,19 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <div class="ex">
         <p><strong>Exit 2</strong></p>
         <div class="quiz-item">
-          <div class="quiz-q">Welche Formel ist richtig nach <i>l</i><sub>2</sub> umgestellt?</div>
+          <div class="quiz-q">Welche Formel ist richtig nach <span class="nt" translate="no"><i>l</i><sub>2</sub></span> umgestellt?</div>
           <div class="quiz-opts">
-            <button class="quiz-btn" onclick="quizCheck('x2', this, 'w')"><i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>1</sub></span></span></button>
-            <button class="quiz-btn" onclick="quizCheck('x2', this, 'c')"><i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></button>
-            <button class="quiz-btn" onclick="quizCheck('x2', this, 'w')"><i>l</i><sub>2</sub> = <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> · <i>F</i><sub>2</sub></button>
+            <button class="quiz-btn" onclick="quizCheck('x2', this, 'w')"><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>1</sub></span></span></span></button>
+            <button class="quiz-btn" onclick="quizCheck('x2', this, 'c')"><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></button>
+            <button class="quiz-btn" onclick="quizCheck('x2', this, 'w')"><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> · <span class="nt" translate="no"><i>F</i><sub>2</sub></span></button>
           </div>
           <div class="quiz-fb" id="qfb-x2"></div>
         </div>
         <div class="hs" id="hs-x2">
           <div data-tipp>Denk an den Merktrick mit dem Partner.</div>
-          <div data-tipp><i>l</i><sub>2</sub> steht in der Ausgangsformel zusammen mit <i>F</i><sub>2</sub>.</div>
-          <div data-tipp><i>F</i><sub>2</sub> wandert in den Nenner, <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> bleibt im Zähler.</div>
-          <div data-muster><p><i>l</i><sub>2</sub> = <span class="frac"><span class="fn"><i>F</i><sub>1</sub> · <i>l</i><sub>1</sub></span><span class="fd"><i>F</i><sub>2</sub></span></span></p></div>
+          <div data-tipp><span class="nt" translate="no"><i>l</i><sub>2</sub></span> steht in der Ausgangsformel zusammen mit <span class="nt" translate="no"><i>F</i><sub>2</sub></span>.</div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i><sub>2</sub></span> wandert in den Nenner, <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> bleibt im Zähler.</div>
+          <div data-muster><p><span class="nt" translate="no"><i>l</i><sub>2</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span></span><span class="fd"><span class="nt" translate="no"><i>F</i><sub>2</sub></span></span></span></p></div>
         </div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Letzte Aufgabe ↓</button></div>
@@ -1325,20 +1387,20 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
 
     <div class="subphase" id="ph5-sub-2">
       <div class="ex">
-        <p><strong>Exit 3:</strong> Jonas will mit einer 1,5&nbsp;m langen Brechstange eine Kiste anheben. Die Kiste drückt mit 900&nbsp;N auf das eine Ende. Der Drehpunkt (ein Stein) liegt 0,3&nbsp;m von der Kiste entfernt. Mit welcher Kraft muss Jonas am anderen Ende drücken?</p>
-        <p><i>F</i><sub>Jonas</sub> = <input class="inp" id="x3" inputmode="decimal" aria-label="Kraft von Jonas in Newton"> <span class="unit">N</span>
+        <p><strong>Exit 3:</strong> Jonas will mit einer <span class="nt" translate="no">1,5&nbsp;m</span> langen Brechstange eine Kiste anheben. Die Kiste drückt mit <span class="nt" translate="no">900&nbsp;N</span> auf das eine Ende. Der Drehpunkt (ein Stein) liegt <span class="nt" translate="no">0,3&nbsp;m</span> von der Kiste entfernt. Mit welcher Kraft muss Jonas am anderen Ende drücken?</p>
+        <p><span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub> = <input class="inp" id="x3" inputmode="decimal" aria-label="Kraft von Jonas in Newton"> <span class="unit">N</span>
           <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['x3', 225, 1]])">✓ Prüfen</button>
           <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x3')">Lösungsweg zeigen</button></p>
         <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-x3"><i>l</i><sub>Jonas</sub> = 1,5&nbsp;m − 0,3&nbsp;m = 1,2&nbsp;m · <i>F</i><sub>Jonas</sub> = <span class="frac"><span class="fn">900&nbsp;N · 0,3&nbsp;m</span><span class="fd">1,2&nbsp;m</span></span> = <u>225&nbsp;N</u></div>
+        <div class="sol" id="sol-x3"><span class="nt" translate="no"><i>l</i></span><sub>Jonas</sub> = <span class="nt" translate="no">1,5&nbsp;m</span> − <span class="nt" translate="no">0,3&nbsp;m</span> = <span class="nt" translate="no">1,2&nbsp;m</span> · <span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">900&nbsp;N</span> · <span class="nt" translate="no">0,3&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span> = <u><span class="nt" translate="no">225&nbsp;N</span></u></div>
         <div class="hs" id="hs-x3">
-          <div data-tipp>Vorsicht: 1,5&nbsp;m ist die ganze Stange – nicht der Hebelarm von Jonas!</div>
-          <div data-tipp>Jonas' Hebelarm reicht vom Drehpunkt bis zu seiner Hand: 1,5&nbsp;m − 0,3&nbsp;m.</div>
-          <div data-tipp><i>F</i><sub>Jonas</sub> = <span class="frac"><span class="fn">900&nbsp;N · 0,3&nbsp;m</span><span class="fd">1,2&nbsp;m</span></span></div>
+          <div data-tipp>Vorsicht: <span class="nt" translate="no">1,5&nbsp;m</span> ist die ganze Stange – nicht der Hebelarm von Jonas!</div>
+          <div data-tipp>Jonas' Hebelarm reicht vom Drehpunkt bis zu seiner Hand: <span class="nt" translate="no">1,5&nbsp;m</span> − <span class="nt" translate="no">0,3&nbsp;m</span>.</div>
+          <div data-tipp><span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no">900&nbsp;N</span> · <span class="nt" translate="no">0,3&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span></div>
           <div data-muster>
-            <p>geg.: <i>F</i><sub>Kiste</sub> = 900&nbsp;N, <i>l</i><sub>Kiste</sub> = 0,3&nbsp;m, <i>l</i><sub>Jonas</sub> = 1,5&nbsp;m − 0,3&nbsp;m = 1,2&nbsp;m · ges.: <i>F</i><sub>Jonas</sub></p>
-            <p><i>F</i><sub>Jonas</sub> = <span class="frac"><span class="fn"><i>F</i><sub>Kiste</sub> · <i>l</i><sub>Kiste</sub></span><span class="fd"><i>l</i><sub>Jonas</sub></span></span> = <span class="frac"><span class="fn">900&nbsp;N · 0,3&nbsp;m</span><span class="fd">1,2&nbsp;m</span></span> = <span class="frac"><span class="fn">270&nbsp;N·m</span><span class="fd">1,2&nbsp;m</span></span><br><u><i>F</i><sub>Jonas</sub> = 225&nbsp;N</u></p>
-            <p>Jonas muss mit 225&nbsp;N drücken.</p>
+            <p>geg.: <span class="nt" translate="no"><i>F</i></span><sub>Kiste</sub> = <span class="nt" translate="no">900&nbsp;N</span>, <span class="nt" translate="no"><i>l</i></span><sub>Kiste</sub> = <span class="nt" translate="no">0,3&nbsp;m</span>, <span class="nt" translate="no"><i>l</i></span><sub>Jonas</sub> = <span class="nt" translate="no">1,5&nbsp;m</span> − <span class="nt" translate="no">0,3&nbsp;m</span> = <span class="nt" translate="no">1,2&nbsp;m</span> · ges.: <span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub></p>
+            <p><span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i></span><sub>Kiste</sub> · <span class="nt" translate="no"><i>l</i></span><sub>Kiste</sub></span><span class="fd"><span class="nt" translate="no"><i>l</i></span><sub>Jonas</sub></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">900&nbsp;N</span> · <span class="nt" translate="no">0,3&nbsp;m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span> = <span class="frac"><span class="fn"><span class="nt" translate="no">270&nbsp;N·m</span></span><span class="fd"><span class="nt" translate="no">1,2&nbsp;m</span></span></span><br><u><span class="nt" translate="no"><i>F</i></span><sub>Jonas</sub> = <span class="nt" translate="no">225&nbsp;N</span></u></p>
+            <p>Jonas muss mit <span class="nt" translate="no">225&nbsp;N</span> drücken.</p>
           </div>
         </div>
       </div>
@@ -1353,7 +1415,7 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Was ist ein Hebel?</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Ein starrer Körper, der sich um einen Drehpunkt drehen kann. Der Abstand vom Drehpunkt zum Angriffspunkt einer Kraft heißt Hebelarm <i>l</i>.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Ein starrer Körper, der sich um einen Drehpunkt drehen kann. Der Abstand vom Drehpunkt zum Angriffspunkt einer Kraft heißt Hebelarm <span class="nt" translate="no"><i>l</i></span>.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
@@ -1363,12 +1425,12 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Das Hebelgesetz</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Gleichgewicht herrscht, wenn <i>F</i><sub>1</sub> · <i>l</i><sub>1</sub> = <i>F</i><sub>2</sub> · <i>l</i><sub>2</sub>. Ein langer Hebelarm braucht eine kleine Kraft.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Gleichgewicht herrscht, wenn <span class="nt" translate="no"><i>F</i><sub>1</sub></span> · <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = <span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span>. Ein langer Hebelarm braucht eine kleine Kraft.</div></div>
       </div>
       <div class="acc-item">
         <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
           <span>Formel umstellen</span><span class="acc-icon">▼</span></button>
-        <div class="acc-body"><div class="acc-body-inner">Auf beiden Seiten dasselbe tun. Der Partner der gesuchten Größe kommt in den Nenner, z.&nbsp;B. <i>F</i><sub>1</sub> = <span class="frac"><span class="fn"><i>F</i><sub>2</sub> · <i>l</i><sub>2</sub></span><span class="fd"><i>l</i><sub>1</sub></span></span>.</div></div>
+        <div class="acc-body"><div class="acc-body-inner">Auf beiden Seiten dasselbe tun. Der Partner der gesuchten Größe kommt in den Nenner, z.&nbsp;B. <span class="nt" translate="no"><i>F</i><sub>1</sub></span> = <span class="frac"><span class="fn"><span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span></span><span class="fd"><span class="nt" translate="no"><i>l</i><sub>1</sub></span></span></span>.</div></div>
       </div>
     </div>
     <div class="callout callout-success">🎉 <span>Du kannst jetzt Hebel im Alltag erkennen und mit dem Hebelgesetz fehlende Kräfte und Hebelarme berechnen.</span></div>
@@ -1378,7 +1440,7 @@ figure.fig svg{width:100%;max-width:560px;height:auto;background:#FFFFFF;border:
   </div>
 
 
-  <footer class="lh-foot" id="lh-foot" data-k="MR-20261027-8C5DB6" title="Kennnummer MR-20261027-8C5DB6">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
+  <footer translate="no" class="lh-foot" id="lh-foot" data-k="MR-20261027-8C5DB6" title="Kennnummer MR-20261027-8C5DB6">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
 
 </div>
 <script>
@@ -1873,16 +1935,16 @@ quizFeedback['q1'] = {
 quizFeedback['q2'] = {
   ok:'✅ <strong>Richtig!</strong> Kraft mal Hebelarm ist auf beiden Seiten gleich – das ist das Hebelgesetz.',
   ng:'❌ <strong>Nicht ganz.</strong> Rechne in deiner Messreihe nach: Nur bei „Kraft mal eigener Hebelarm“ kommt auf beiden Seiten dasselbe heraus.',
-  hint:'Schau in deine Tabelle: Bei 2&nbsp;N und 20&nbsp;cm gegen 1&nbsp;N und 40&nbsp;cm – welche Rechnung ergibt auf beiden Seiten dieselbe Zahl?'
+  hint:'Schau in deine Tabelle: Bei <span class="nt" translate="no">2&nbsp;N</span> und <span class="nt" translate="no">20&nbsp;cm</span> gegen <span class="nt" translate="no">1&nbsp;N</span> und <span class="nt" translate="no">40&nbsp;cm</span> – welche Rechnung ergibt auf beiden Seiten dieselbe Zahl?'
 };
 quizFeedback['q3'] = {
-  ok:'✅ <strong>Richtig!</strong> <i>l</i><sub>1</sub> steht mit <i>F</i><sub>1</sub> zusammen, also gehört <i>F</i><sub>1</sub> in den Nenner: <i>l</i><sub>1</sub> = '+frac('<i>F</i><sub>2</sub> · <i>l</i><sub>2</sub>','<i>F</i><sub>1</sub>')+'.',
+  ok:'✅ <strong>Richtig!</strong> <span class="nt" translate="no"><i>l</i><sub>1</sub></span> steht mit <span class="nt" translate="no"><i>F</i><sub>1</sub></span> zusammen, also gehört <span class="nt" translate="no"><i>F</i><sub>1</sub></span> in den Nenner: <span class="nt" translate="no"><i>l</i><sub>1</sub></span> = '+frac('<span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span>','<span class="nt" translate="no"><i>F</i><sub>1</sub></span>')+'.',
   ng:'❌ <strong>Nicht ganz.</strong> In Toms Formel stehen die Kräfte an der falschen Stelle.',
-  hint:'Wer ist der Partner von <i>l</i><sub>1</sub> in der Ausgangsformel – und wohin muss der Partner wandern?'
+  hint:'Wer ist der Partner von <span class="nt" translate="no"><i>l</i><sub>1</sub></span> in der Ausgangsformel – und wohin muss der Partner wandern?'
 };
 quizFeedback['q4'] = {
   ok:'✅ <strong>Richtig!</strong> Längerer Hebelarm bedeutet kleinere Kraft: doppelter Hebelarm, halbe Kraft.',
-  ng:'❌ <strong>Nicht ganz.</strong> <i>F</i><sub>1</sub> = '+frac('<i>F</i><sub>2</sub> · <i>l</i><sub>2</sub>','<i>l</i><sub>1</sub>')+' – wird <i>l</i><sub>1</sub> im Nenner größer, wird <i>F</i><sub>1</sub> kleiner.',
+  ng:'❌ <strong>Nicht ganz.</strong> <span class="nt" translate="no"><i>F</i><sub>1</sub></span> = '+frac('<span class="nt" translate="no"><i>F</i><sub>2</sub></span> · <span class="nt" translate="no"><i>l</i><sub>2</sub></span>','<span class="nt" translate="no"><i>l</i><sub>1</sub></span>')+' – wird <span class="nt" translate="no"><i>l</i><sub>1</sub></span> im Nenner größer, wird <span class="nt" translate="no"><i>F</i><sub>1</sub></span> kleiner.',
   hint:'Denk an die Wippe: Wer weiter außen sitzt, braucht …?'
 };
 quizFeedback['x1'] = {
@@ -1891,9 +1953,9 @@ quizFeedback['x1'] = {
   hint:'Wo liegt das Gelenk im Vergleich zu deiner Hand und zur Schneide?'
 };
 quizFeedback['x2'] = {
-  ok:'✅ <strong>Richtig!</strong> Der Partner <i>F</i><sub>2</sub> steht im Nenner.',
-  ng:'❌ <strong>Nicht ganz.</strong> <i>l</i><sub>2</sub> wird mit <i>F</i><sub>2</sub> malgenommen, also muss durch <i>F</i><sub>2</sub> geteilt werden.',
-  hint:'Mit welcher Größe steht <i>l</i><sub>2</sub> in der Ausgangsformel zusammen?'
+  ok:'✅ <strong>Richtig!</strong> Der Partner <span class="nt" translate="no"><i>F</i><sub>2</sub></span> steht im Nenner.',
+  ng:'❌ <strong>Nicht ganz.</strong> <span class="nt" translate="no"><i>l</i><sub>2</sub></span> wird mit <span class="nt" translate="no"><i>F</i><sub>2</sub></span> malgenommen, also muss durch <span class="nt" translate="no"><i>F</i><sub>2</sub></span> geteilt werden.',
+  hint:'Mit welcher Größe steht <span class="nt" translate="no"><i>l</i><sub>2</sub></span> in der Ausgangsformel zusammen?'
 };
 
 /* ---------- Schritt-Navigation ---------- */
@@ -2067,7 +2129,7 @@ function mtRender(){
   const tb=document.querySelector('#mtab tbody');
   if(!MT.length){ tb.innerHTML='<tr class="mt-empty"><td colspan="7">Noch keine Messwerte – stelle zuerst ein Gleichgewicht her.</td></tr>'; return; }
   const old={}; tb.querySelectorAll('input').forEach(i=>old[i.id]=i.value);
-  tb.innerHTML=MT.map((r,i)=>'<tr><td>'+(i+1)+'</td><td class="num">'+deZahl(r.F1)+'</td><td class="num">'+r.l1+'</td><td class="num">'+deZahl(r.F2)+'</td><td class="num">'+r.l2+'</td>'+
+  tb.innerHTML=MT.map((r,i)=>'<tr><td>'+(i+1)+'</td><td class="num" translate="no">'+deZahl(r.F1)+'</td><td class="num" translate="no">'+r.l1+'</td><td class="num" translate="no">'+deZahl(r.F2)+'</td><td class="num" translate="no">'+r.l2+'</td>'+
     '<td><input class="inp" id="mt-p1-'+i+'" inputmode="decimal" aria-label="F1 mal l1, Zeile '+(i+1)+'"></td>'+
     '<td><input class="inp" id="mt-p2-'+i+'" inputmode="decimal" aria-label="F2 mal l2, Zeile '+(i+1)+'"></td></tr>').join('');
   Object.keys(old).forEach(k=>{ const e=document.getElementById(k); if(e) e.value=old[k]; });
@@ -2120,6 +2182,23 @@ document.addEventListener('keydown',e=>{
   const t=e.target.closest('.fz-tile,.fz-slot,.mw,.dtw-word,.dtw-gap,.m-chip,.m-zone');
   if(t && t.getAttribute('tabindex')!==null){ e.preventDefault(); t.click(); }
 });
+
+
+/* ---------- Übersetzen (Google Übersetzer, erst nach Klick) ---------- */
+function uebersetze(tl){
+  const msg=document.getElementById('lang-msg'), h=location.hostname||'';
+  if(/translate\.goog$/.test(h)){ msg.textContent='Die Seite ist bereits übersetzt. Die Sprache kannst du in der Google-Leiste oben wechseln.'; msg.className='fb grp-fb ok'; return; }
+  if(!/^https?:$/.test(location.protocol)){
+    msg.textContent='Diese Datei ist nur lokal geöffnet. Der Google Übersetzer braucht die Seite im Internet (z. B. im Lernportal). Alternative: In Chrome oder Edge mit Rechtsklick → „Übersetzen“ wählen.';
+    msg.className='fb grp-fb err'; return; }
+  const url='https://translate.google.com/translate?sl=de&tl='+encodeURIComponent(tl)+'&u='+encodeURIComponent(location.href);
+  const w=window.open(url,'_blank','noopener'); if(!w) location.href=url;
+}
+/* Begriffserklärungen der Tooltips als Text anhängen – sichtbar nur in der übersetzten Ansicht */
+function initTTNotes(){ document.querySelectorAll('.tt[data-tip]').forEach(t=>{
+  if(t.nextElementSibling&&t.nextElementSibling.classList.contains('tt-note')) return;
+  t.insertAdjacentHTML('afterend','<span class="tt-note"> ('+esc(t.dataset.tip)+')</span>'); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initTTNotes); } else { initTTNotes(); }
 
 function initHebel(){
   document.querySelectorAll('.baustein[data-type="fz"]').forEach(s=>chipDrag(s,'.fz-tile','.fz-slot',fzPlace));
