@@ -475,6 +475,25 @@ body:not(.teach-on) .lehrer-kapitel-only{display:none;}
 @media (max-width:480px){.bb-row{gap:3px;flex-wrap:nowrap;}.bb-bit{width:34px;height:46px;}.bb-pv{letter-spacing:-.04em;}}
 @media print{.bb-bit{border:1px solid #000;}}
 
+/* Einsatzakte */
+.akte{position:relative;background:#f6ecd2;border:1.5px solid #c9b48a;border-radius:4px;padding:18px 20px 14px;margin:6px 0 18px;
+  box-shadow:3px 4px 0 #d9c9a3, 0 6px 16px rgba(80,60,20,.18);color:#2b2418;overflow:hidden;
+  background-image:repeating-linear-gradient(0deg,transparent 0,transparent 29px,rgba(120,90,40,.08) 30px);}
+.akte-stempel{position:absolute;top:18px;right:-6px;transform:rotate(12deg);border:3px solid #b3261e;color:#b3261e;
+  font-family:var(--mono);font-weight:700;font-size:var(--fs-lg);letter-spacing:.12em;padding:2px 12px;border-radius:4px;opacity:.82;
+  background:rgba(246,236,210,.6);}
+.akte-kopf{font-family:var(--mono);font-size:var(--fs-sm);border-bottom:2px dashed #b9a274;padding-bottom:8px;margin-bottom:6px;padding-right:150px;}
+.akte-h{font-family:var(--mono);font-size:var(--fs-base);color:#7a3b12;margin:12px 0 2px;letter-spacing:.03em;}
+.akte p,.akte li{line-height:1.6;}
+.akte-liste{padding-left:1.4em;margin:4px 0;}
+.akte-sign{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;padding-top:10px;border-top:2px dashed #b9a274;}
+.akte-sign label{font-family:var(--mono);font-weight:700;color:#7a3b12;}
+.akte-sign input{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid #b9a274;border-radius:6px;background:#fffaf0;padding:4px 8px;width:18ch;}
+.akte-ok{flex-basis:100%;font-family:var(--mono);font-weight:700;color:#1C7168;}
+.akte-ok .akte-stamp2{display:inline-block;border:2.5px solid #1C7168;padding:0 8px;border-radius:4px;transform:rotate(-3deg);margin-right:8px;letter-spacing:.08em;}
+.akte-fuss{font-family:var(--mono);font-size:var(--fs-sm);color:#6b5a3a;margin:10px 0 0;font-style:italic;}
+@media (max-width:560px){.akte{padding:14px 14px 12px;}.akte-kopf{padding-right:0;padding-top:34px;}.akte-stempel{top:8px;right:8px;transform:rotate(6deg);font-size:var(--fs-base);}}
+@media print{.akte{box-shadow:none;background-image:none;}}
 /* Decoder-Banner (immer sichtbar) */
 .decoder-banner{position:sticky;top:0;z-index:40;background:#16201f;color:#8fe3c3;border:2px solid #1C7168;
   border-radius:var(--radius);padding:6px 10px 8px;margin:0 0 14px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
@@ -603,15 +622,46 @@ ul.rules{padding-left:1.2em;list-style:disc;}
 
 <section class="phase on" id="ph0">
   <div class="card">
-    <h2>Der Funkspruch</h2>
+    <h2>Die Einsatzakte</h2>
+    <div class="akte" role="region" aria-label="Einsatzakte Operation Byte">
+      <div class="akte-stempel" aria-hidden="true">STRENG GEHEIM</div>
+      <div class="akte-kopf">
+        <div>EINSATZAKTE Nr. 0100.0001</div>
+        <div>Codename: <strong>OPERATION BYTE</strong></div>
+        <div>Freigabe: nur Informatik-Abteilung, Klasse 7</div>
+      </div>
+      <h3 class="akte-h">📁 Die Lage</h3>
+      <p>Gestern, 16:42 Uhr. Die Schule ist fast leer, als im Informatikraum der Alarm losgeht. Als der Hausmeister ankommt, ist das Fenster gekippt – und der silberne <strong>USB-Stick mit den Aufgaben der nächsten Informatik-Arbeit</strong> ist verschwunden. Auf dem Lehrertisch liegt nur ein kleiner schwarzer Zettel. Darauf: acht Ziffern, nichts als Nullen und Einsen.</p>
+      <h3 class="akte-h">🕶️ Die Verdächtigen</h3>
+      <p>Alles deutet auf die Bande <strong>„Schwarzes Bit“</strong>. Sie ist bekannt dafür, dass sie <em>niemals</em> in Klartext schreibt. Ihre Mitglieder funken nur in Zahlen und Bitfolgen – ein Mensch, der den Code nicht kennt, sieht nur Zahlensalat.</p>
+      <h3 class="akte-h">📡 Die Spur</h3>
+      <p>Gestern Abend um 21:04 Uhr hat unsere Antenne auf Kanal 7 einen Funkspruch der Bande abgefangen (siehe unten). Wir sind sicher: Darin steht, <strong>wo und wann</strong> der USB-Stick weitergegeben werden soll. Gelingt die Übergabe, sind die Aufgaben für immer weg – und die ganze Arbeit muss neu geschrieben werden.</p>
+      <h3 class="akte-h">🎯 Dein Auftrag</h3>
+      <ol class="akte-liste">
+        <li>Finde heraus, wie Computer mit Nullen und Einsen Buchstaben speichern – lerne den <strong>Code der Gegenseite</strong>.</li>
+        <li>Knacke den Funkspruch Stufe für Stufe: <strong>Wo und wann</strong> findet die Übergabe statt?</li>
+        <li>Dreh den Spieß um und schicke selbst eine <strong>Geheimnachricht</strong>.</li>
+      </ol>
+      <h3 class="akte-h">🧰 Deine Ausrüstung</h3>
+      <p>Den <strong>Decoder</strong> ganz oben am Bildschirm, ein <strong>Bit-Labor</strong> zum Ausprobieren und – wenn du dich bewährst – ab Kapitel 4 einen <strong>Umrechner</strong>. Und das Wichtigste: deinen Kopf. Kein Rechner der Welt nimmt dir das Denken ab.</p>
+      <div class="akte-sign">
+        <label for="akte-name">Dein Agenten-Codename:</label>
+        <input type="text" id="akte-name" maxlength="20" autocomplete="off" placeholder="z. B. Agentin Pixel">
+        <button type="button" class="btn btn-primary btn-sm" id="akte-btn" onclick="akteAnnehmen()">🕵️ Auftrag annehmen</button>
+        <div class="akte-ok" id="akte-ok" hidden></div>
+      </div>
+      <p class="akte-fuss">Diese Akte zerstört sich nicht selbst. Aber die Zeit läuft – die Übergabe ist schon heute.</p>
+    </div>
+
+    <h3>📡 Der abgefangene Funkspruch</h3>
     <div class="funk" role="img" aria-label="Abgefangener Funkspruch aus Zahlen und Bitfolgen">
-      <div class="funk-head">+++ ABGEFANGEN · KANAL 7 · 21:04 UHR +++</div>
+      <div class="funk-head">+++ ABGEFANGEN · KANAL 7 · GESTERN 21:04 UHR · ABSENDER: SCHWARZES BIT +++</div>
       <div>84 82 69 70 70 80 85 78 75 84</div>
       <div>0100.1101 0100.0101 0100.1110 0101.0011 0100.0001</div>
       <div>0011.0001 0011.0011 0010.0000 0101.0101 0110.1000 0111.0010</div>
       <div class="funk-head">+++ ENDE DER ÜBERTRAGUNG +++</div>
     </div>
-    <p>Agentin, Agent – willkommen in der Informatik-Abteilung! Unsere Antenne hat diesen Funkspruch der Gegenseite aufgefangen. Er besteht nur aus Zahlen und Nullen und Einsen. Irgendwo darin steckt, <strong>wo und wann</strong> sich die Gegenagenten treffen. Du kennst bereits Binärzahlen und ihre Stellenwerte 128, 64, 32 … 1. Heute lernst du, wie man damit Buchstaben schreibt – und knackst den Code. Ganz oben siehst du ab jetzt immer deinen <strong>Decoder</strong>; den brauchst du ab Kapitel 2.</p>
+    <p>Für dich sieht das aus wie Zahlensalat. Du kennst aber schon Binärzahlen und ihre Stellenwerte 128, 64, 32 … 1 – das ist dein Vorteil. Heute lernst du, wie man damit Buchstaben schreibt, und knackst den Code der Bande. Den <strong>Decoder</strong> ganz oben brauchst du ab Kapitel 2.</p>
 
     <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
       <span class="substep-label">Teile:</span>
@@ -876,7 +926,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
           <div data-muster><p>0011.0001 = 32 + 16 + 1 = 49 → „1“</p><p>0011.0011 = 32 + 16 + 2 + 1 = 51 → „3“</p><p>0010.0000 = 32 → Leerzeichen</p><p>0101.0101 = 64 + 16 + 4 + 1 = 85 → U</p><p>0110.1000 = 64 + 32 + 8 = 104 → h</p><p>0111.0010 = 64 + 32 + 16 + 2 = 114 → r</p><p>Die Uhrzeit ist <u>13 Uhr</u>.</p></div>
         </div>
       </div>
-      <div class="callout callout-success" id="mission-ok" hidden>🏆 <span><strong>Code geknackt!</strong> Der vollständige Funkspruch lautet: <strong>TREFFPUNKT MENSA 13 Uhr</strong>. Die Abteilung schickt ein Team los.</span></div>
+      <div class="callout callout-success" id="mission-ok" hidden>🏆 <span><strong>Code geknackt!</strong> Der vollständige Funkspruch lautet: <strong>TREFFPUNKT MENSA 13 Uhr</strong>. Ein Team ist schon unterwegs in die Mensa: Die Übergabe wird verhindert, der USB-Stick ist gerettet! <span class="agent-dank"></span></span></div>
       <div class="quiz-item">
         <div class="quiz-q">In Stufe 3 steht „h“ für 104, das große „H“ dagegen für 72. Warum gibt es zwei verschiedene Nummern?</div>
         <div class="quiz-opts">
@@ -1057,7 +1107,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
         <div class="hefter-label">📓 Heftereintrag — Merksatz</div>
         <p>Computer speichern Text als Zahlen. Der ASCII-Code legt für jedes Zeichen eine Nummer fest; gespeichert wird sie als Binärzahl in einem Byte (8 Bit). Wer die Tabelle kennt, kann die Nachricht lesen – ASCII ist eine Codierung, keine Verschlüsselung.</p>
       </div>
-      <div class="callout callout-success">🎖️ <span><strong>Mission abgeschlossen!</strong> Schneller fertig als die anderen? In Kapitel 6 warten Top-Secret-Aufträge für Profi-Agenten.</span></div>
+      <div class="callout callout-success">🎖️ <span><strong>Mission abgeschlossen<span class="agent-name-k"></span>!</strong> Die Informatik-Arbeit bleibt geheim, die Bande „Schwarzes Bit“ ist aufgeflogen. Schneller fertig als die anderen? In Kapitel 6 warten Top-Secret-Aufträge für Profi-Agenten.</span></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Weiter zu Kapitel 6: ★ Top Secret →</button></div>
     </div>
   </div>
@@ -1154,7 +1204,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
         </div>
       </div>
       <div class="callout">🏛️ <span>Dieses Prinzip mit einem geheimen Verschiebe-Schlüssel nutzte schon Julius Caesar vor über 2000 Jahren. Es heißt deshalb <strong>Caesar-Verschlüsselung</strong>.</span></div>
-      <div class="callout callout-success">🕵️ <span><strong>Top Secret erledigt!</strong> Du bist offiziell Profi-Agentin bzw. Profi-Agent der Informatik-Abteilung.</span></div>
+      <div class="callout callout-success">🕵️ <span><strong>Top Secret erledigt!</strong> Du bist offiziell Profi-Agentin bzw. Profi-Agent der Informatik-Abteilung<span class="agent-name-k"></span>.</span></div>
     </div>
   </div>
 </section>
@@ -1801,7 +1851,7 @@ function teachLernappReset(){
   if(!confirm('Den gesamten Fortschritt dieser Lernseite in diesem Browser löschen? (Erledigt-Häkchen, aufgedeckte Teile, Vermutungen, Hilfe-Timer)')) return;
   try{
     const del=[];
-    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf(GATE_NS)===0) del.push(k); }
+    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && (k.indexOf(GATE_NS)===0 || (LH_NS && k.indexOf(LH_NS)===0))) del.push(k); }
     document.querySelectorAll('.poe-box').forEach(b=>del.push(LH_NS+'predict_'+b.id));
     document.querySelectorAll('.hs[id]').forEach(b=>del.push(LH_NS+'hs_'+b.id));
     del.forEach(k=>localStorage.removeItem(k));
@@ -2089,6 +2139,27 @@ function calcBin(){
   dbCalcUpdate();
   dbTab(DB_TABS.indexOf(t)>=0?t:'gross');
 })();
+
+/* Einsatzakte: Codename */
+function akteName(){ let n=''; try{ n=localStorage.getItem(LH_NS+'agent_name')||''; }catch(e){} return n; }
+function akteShow(){
+  const n=akteName(), ok=document.getElementById('akte-ok'), inp=document.getElementById('akte-name'), btn=document.getElementById('akte-btn');
+  let acc=null; try{ acc=localStorage.getItem(LH_NS+'akte_ok'); }catch(e){}
+  if(acc==='1' && ok){
+    ok.hidden=false; ok.textContent='';
+    const st=document.createElement('span'); st.className='akte-stamp2'; st.textContent='ANGENOMMEN'; ok.appendChild(st);
+    ok.appendChild(document.createTextNode(n?('Willkommen im Team, '+n+'! Viel Erfolg bei der Mission.'):'Willkommen im Team! Viel Erfolg bei der Mission.'));
+    if(inp){ inp.value=n; inp.disabled=true; } if(btn) btn.hidden=true;
+  }
+  document.querySelectorAll('.agent-name-k').forEach(e=>{ e.textContent=n?(', '+n):''; });
+  document.querySelectorAll('.agent-dank').forEach(e=>{ e.textContent=n?('Starke Arbeit, '+n+'!'):''; });
+}
+function akteAnnehmen(){
+  const inp=document.getElementById('akte-name'); const n=(inp&&inp.value||'').replace(/\s+/g,' ').trim().slice(0,20);
+  try{ localStorage.setItem(LH_NS+'agent_name',n); localStorage.setItem(LH_NS+'akte_ok','1'); }catch(e){}
+  akteShow();
+}
+akteShow();
 </script>
 </body>
 </html>
