@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 11GK · LB1 · Mikroskopieren und Plasmolyse bei Zwiebelzellen</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#4E7A3A;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+</style>
+<style>
+.tblwrap{overflow-x:auto;}
+table.seltab{border-collapse:collapse;width:100%;margin:8px 0;}
+table.seltab th,table.seltab td{border:1.5px solid var(--border);padding:6px 8px;text-align:left;vertical-align:middle;}
+table.seltab th{background:var(--accent-soft, #eef3f1);}
+select.sel{font-family:var(--font);font-size:var(--fs-base);padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);max-width:100%;}
+select.sel.ok{border-color:#16a34a;background:#ecfdf5;} select.sel.err{border-color:#dc2626;background:#fef2f2;}
+figure.fig{margin:12px 0;text-align:center;} figure.fig img{border-radius:8px;border:1px solid var(--border);background:#fff;}
+figure.fig figcaption{font-size:var(--fs-sm);color:var(--text-3);margin-top:4px;}
+.figrow{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-start;}
+.figrow figure{flex:1 1 220px;max-width:420px;}
+table.info{border-collapse:collapse;width:100%;margin:8px 0;} table.info th,table.info td{border:1.5px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+table.info th{background:var(--surface-2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Biologie11GK">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 11GK · LB1</div>
+    <h1>Mikroskopieren und Plasmolyse bei Zwiebelzellen</h1>
+    <div class="goal">🎯 Die Lernenden erklären Plasmolyse und Deplasmolyse, indem sie ein Abzugspräparat der roten Küchenzwiebel sachgerecht mikroskopieren, die Veränderungen nach Zugabe von Salzlösung beobachten und zeichnerisch festhalten.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Vorher – nachher</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Das Lichtmikroskop</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Mikroskopieren</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Phase 3</span>Präparate</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Phase 4</span>Plasmolyse</button>
+  <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Sicherung</span>Exit-Ticket</button>
+</nav>
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Vorher – nachher: Was ist mit den Zellen passiert?</h2>
+    <p>Beide Fotos zeigen Epidermiszellen der roten Küchenzwiebel – dieselbe Stelle, nur wenige Minuten auseinander. Dazwischen wurde etwas unter das Deckglas gesaugt.</p><div class="figrow"><figure class="fig"><img src="img/plasmo_foto_A.jpg" alt="Rot gefärbte, lang gestreckte Zwiebelzellen, die die Zellwände vollständig ausfüllen" style="max-width:420px;width:100%"><figcaption>vorher</figcaption></figure><figure class="fig"><img src="img/plasmo_foto_C.jpg" alt="Dieselben Zellen: Der rote Inhalt hat sich zusammengezogen, an den Zellecken sind helle Lücken entstanden" style="max-width:420px;width:100%"><figcaption>nachher</figcaption></figure></div><p class="caption" style="text-align:center">Quelle: Folie „08_Plasmolyse_Deplasmolyse“ (GDC-Material); Originalquelle auf der Abbildung nicht angegeben</p>
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Vermuten</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Ablauf</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph0-sub-1">
+
+      <div class="poe-box" id="poe-zwiebel">
+        <div class="poe-label">🤔 Was wurde wohl unter das Deckglas gesaugt – und was ist in den Zellen passiert?</div>
+        <textarea id="poe-zwiebel-in" rows="2" placeholder="Ihre Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-zwiebel')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-zwiebel-out" hidden></div>
+      </div>
+      <p class="connector-text">Ob Ihre Vermutung stimmt, prüfen Sie heute selbst – am Mikroskop. Dafür brauchen Sie drei Dinge: ein sicher bedientes Mikroskop, ein gutes Präparat und einen genauen Blick.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Ablauf ↓</button></div>
+    </div>
+    <div class="subphase" id="ph0-sub-2">
+
+      <ol>
+        <li><strong>Das Lichtmikroskop</strong> – Bauteile und Funktion wiederholen</li>
+        <li><strong>Mikroskopieren</strong> – Schritt für Schritt und Fehlersuche</li>
+        <li><strong>Präparate</strong> – welche Arten gibt es, wie stellt man ein Abzugspräparat her?</li>
+        <li><strong>Plasmolyse</strong> – beobachten, zeichnen, erklären</li>
+      </ol>
+      <div class="quiz-item">
+  <div class="quiz-q">Welches Wissen aus der letzten Phase brauchen Sie, um das „Nachher“-Bild zu erklären?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-start', this, 'w')">Endocytose</button>
+    <button class="quiz-btn" onclick="quizCheck('q-start', this, 'c')">Osmose – Wasser diffundiert durch selektiv permeable Membranen</button>
+    <button class="quiz-btn" onclick="quizCheck('q-start', this, 'w')">aktiver Transport mit ATP</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-start"></div>
+</div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zum Lichtmikroskop →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Das Lichtmikroskop</h2>
+    <p>Das Mikroskop kennen Sie seit Klasse 6. Bevor wir echte Zellen untersuchen, frischen Sie Bau und Funktion auf – nur wer weiß, wozu der Feintrieb da ist, zerbricht kein Deckglas.</p>
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Bauteile</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Funktion</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Vergrößerung</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph1-sub-1">
+
+      <figure class="fig"><img src="img/mikroskop_nummern.png" alt="Lichtmikroskop mit den Nummern 1 bis 13 an den Bauteilen" style="max-width:460px;width:100%"><figcaption>Grundzeichnung: © Ernst Klett Verlag GmbH, Stuttgart 2012; Nummerierung ergänzt</figcaption></figure>
+      <div class="ex">
+        <p><strong>Aufgabe 1:</strong> Benennen Sie die Bauteile 1–13.</p>
+        <div class="baustein" data-type="selecttab" id="sel-mik">
+  <div class="tblwrap"><table class="seltab">
+    <tr><th>Nr.</th><th>Bauteil</th></tr>
+    <tr><td>1</td><td><select class="sel" data-sol="Okular" aria-label="Bauteil für Zeile 1"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>2</td><td><select class="sel" data-sol="Tubus" aria-label="Bauteil für Zeile 2"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>3</td><td><select class="sel" data-sol="Objektivrevolver" aria-label="Bauteil für Zeile 3"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>4</td><td><select class="sel" data-sol="Objektiv" aria-label="Bauteil für Zeile 4"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>5</td><td><select class="sel" data-sol="Objekttisch" aria-label="Bauteil für Zeile 5"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>6</td><td><select class="sel" data-sol="Objektträger mit Präparat" aria-label="Bauteil für Zeile 6"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>7</td><td><select class="sel" data-sol="Kondensor mit Blende" aria-label="Bauteil für Zeile 7"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>8</td><td><select class="sel" data-sol="Lichtquelle" aria-label="Bauteil für Zeile 8"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>9</td><td><select class="sel" data-sol="Stativ" aria-label="Bauteil für Zeile 9"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>10</td><td><select class="sel" data-sol="Grobtrieb" aria-label="Bauteil für Zeile 10"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>11</td><td><select class="sel" data-sol="Feintrieb" aria-label="Bauteil für Zeile 11"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>12</td><td><select class="sel" data-sol="Beleuchtungsregler" aria-label="Bauteil für Zeile 12"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+    <tr><td>13</td><td><select class="sel" data-sol="Fuß" aria-label="Bauteil für Zeile 13"><option value="">– wählen –</option><option>Beleuchtungsregler</option><option>Feintrieb</option><option>Fuß</option><option>Grobtrieb</option><option>Kondensor mit Blende</option><option>Lichtquelle</option><option>Objektiv</option><option>Objektivrevolver</option><option>Objekttisch</option><option>Objektträger mit Präparat</option><option>Okular</option><option>Stativ</option><option>Tubus</option></select></td></tr>
+  </table></div>
+  <button class="btn btn-primary btn-sm" onclick="selCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-bau">
+  <div data-tipp>Arbeiten Sie von oben nach unten: Wo schaut man hinein?</div>
+  <div data-tipp>Oben: Okular und Tubus; unten am Kopf: Objektivrevolver mit Objektiven; darunter Tisch, Kondensor, Lampe.</div>
+  <div data-tipp>Am großen Drehknopf: außen Grobtrieb, innen Feintrieb. Ganz unten: Fuß und Beleuchtungsregler.</div>
+  <div data-muster><p>1 Okular · 2 Tubus · 3 Objektivrevolver · 4 Objektiv · 5 Objekttisch · 6 Objektträger mit Präparat · 7 Kondensor mit Blende · 8 Lichtquelle · 9 Stativ · 10 Grobtrieb · 11 Feintrieb · 12 Beleuchtungsregler · 13 Fuß</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Funktion ↓</button></div>
+    </div>
+    <div class="subphase" id="ph1-sub-2">
+
+      <div class="ex">
+        <p><strong>Aufgabe 2:</strong> Ordnen Sie die Funktionen zu.</p>
+        <div class="baustein" data-type="match" id="match-funktion">
+  <div class="m-pool">
+    <span class="m-chip" data-id="m2" onclick="matchSelect(this)">Objektivrevolver</span>
+    <span class="m-chip" data-id="m3" onclick="matchSelect(this)">Kondensor mit Blende</span>
+    <span class="m-chip" data-id="m5" onclick="matchSelect(this)">Feintrieb</span>
+    <span class="m-chip" data-id="m0" onclick="matchSelect(this)">Okular</span>
+    <span class="m-chip" data-id="m4" onclick="matchSelect(this)">Grobtrieb</span>
+    <span class="m-chip" data-id="m1" onclick="matchSelect(this)">Objektiv</span>
+  </div>
+  <div class="m-zone" data-correct="m0" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Linse am Auge; vergrößert das Zwischenbild nochmals wie eine Lupe (meist 10×)</span></div>
+  <div class="m-zone" data-correct="m1" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Linsensystem nahe am Objekt; erzeugt ein vergrößertes, umgekehrtes Zwischenbild (4×, 10×, 40×)</span></div>
+  <div class="m-zone" data-correct="m2" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">drehbare Halterung; Wechsel zwischen den Objektiven (muss einrasten)</span></div>
+  <div class="m-zone" data-correct="m3" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">bündelt das Licht auf das Objekt; Blende regelt Helligkeit und Kontrast</span></div>
+  <div class="m-zone" data-correct="m4" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">grobe Scharfstellung (großer Abstand) – nur bei kleiner Vergrößerung</span></div>
+  <div class="m-zone" data-correct="m5" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">feine Scharfstellung; Durchfokussieren verschiedener Ebenen</span></div>
+  <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-fkt">
+  <div data-tipp>Welche Teile enthalten Linsen, welche bewegen etwas?</div>
+  <div data-tipp>Okular und Objektiv vergrößern; Revolver wechselt; Kondensor/Blende steuern das Licht.</div>
+  <div data-tipp>Grob- und Feintrieb unterscheiden sich in der Größe der Bewegung und im Einsatzbereich.</div>
+  <div data-muster><p>Okular – Lupe am Auge · Objektiv – Zwischenbild · Objektivrevolver – Wechsel der Objektive · Kondensor mit Blende – Licht bündeln, Helligkeit/Kontrast · Grobtrieb – grobe Scharfstellung · Feintrieb – feine Scharfstellung.</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Vergrößerung ↓</button></div>
+    </div>
+    <div class="subphase" id="ph1-sub-3">
+
+      <div class="formula" style="text-align:center"><strong>Gesamtvergrößerung = Vergrößerung des Okulars × Vergrößerung des Objektivs</strong></div>
+      <div class="ex">
+        <p><strong>Aufgabe 3:</strong> Das Okular vergrößert 10-fach. Berechnen Sie die Gesamtvergrößerung für die drei Objektive.</p>
+        <p>Objektiv 4×: <input class="inp" id="v4" inputmode="numeric" aria-label="Gesamtvergrößerung mit 4er Objektiv"> × &nbsp;
+           Objektiv 10×: <input class="inp" id="v10" inputmode="numeric" aria-label="Gesamtvergrößerung mit 10er Objektiv"> × &nbsp;
+           Objektiv 40×: <input class="inp" id="v40" inputmode="numeric" aria-label="Gesamtvergrößerung mit 40er Objektiv"> ×
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['v4', 40, 0], ['v10', 100, 0], ['v40', 400, 0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-v')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-v">10 × 4 = 40 · 10 × 10 = 100 · 10 × 40 = 400</div>
+        <div class="hs" id="hs-mk-vergr">
+  <div data-tipp>Die beiden Einzelvergrößerungen werden nicht addiert.</div>
+  <div data-tipp>Multiplizieren Sie Okular- und Objektivvergrößerung.</div>
+  <div data-tipp>10 × 4 = ? – und entsprechend für 10 und 40.</div>
+  <div data-muster><p>40-fach, 100-fach und 400-fach.</p></div>
+</div>
+      </div>
+      <figure class="fig"><img src="img/Vergroesserung_Strahlengaenge_c.jpg" alt="Strahlengang im Lichtmikroskop von der Lichtquelle über Objektiv und Okular zum Auge" style="max-width:220px;width:100%"><figcaption>Quelle: © Ernst Klett Verlag GmbH, Stuttgart 2012</figcaption></figure>
+      <div class="quiz-item">
+  <div class="quiz-q">Sie schieben den Objektträger nach <strong>links</strong>. In welche Richtung wandert das Bild im Okular?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-bild', this, 'w')">nach links</button>
+    <button class="quiz-btn" onclick="quizCheck('q-bild', this, 'c')">nach rechts</button>
+    <button class="quiz-btn" onclick="quizCheck('q-bild', this, 'w')">gar nicht</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-bild"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Lichtmikroskop</div>
+  <p><strong>Optisches System:</strong> Okular, Tubus, Objektive (im Objektivrevolver). <strong>Mechanisches System:</strong> Stativ, Fuß, Objekttisch, Grob- und Feintrieb. <strong>Beleuchtung:</strong> Lichtquelle, Kondensor mit Blende, Beleuchtungsregler. <strong>Gesamtvergrößerung</strong> = Okular × Objektiv (z. B. 10 × 40 = 400×).</p>
+</div>
+      <p class="connector-text">Bauteile kennen ist das eine – aber in welcher Reihenfolge benutzt man sie, damit am Ende ein scharfes Bild entsteht?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zum Mikroskopieren →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Mikroskopieren – Schritt für Schritt</h2>
+    <p>Profis mikroskopieren immer in derselben Reihenfolge: vom Groben zum Feinen, von der kleinen zur großen Vergrößerung.</p>
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Reihenfolge</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Fehlersuche</button>
+      <button class="substep-all" onclick="revealSub(2,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph2-sub-1">
+
+      <div class="ex">
+        <p><strong>Aufgabe 4:</strong> Bringen Sie die Arbeitsschritte in die richtige Reihenfolge.</p>
+        <div class="baustein" data-type="sort" id="sort-schritte">
+  <div class="sort-list">
+    <div class="sort-item" data-v="9"><span>Beobachten und zeichnen (mit einem Auge ins Mikroskop, mit dem anderen auf das Blatt).</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="4"><span>Von der Seite schauend Objekttisch und Objektiv mit dem Grobtrieb nah aneinander bringen.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="2"><span>Beleuchtung einschalten; kleinstes Objektiv (4×) einrasten lassen.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="5"><span>Durch das Okular schauen und den Abstand mit dem Grobtrieb langsam vergrößern, bis das Bild scharf ist.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="8"><span>Ggf. 40×-Objektiv einrasten lassen; ausschließlich Feintrieb benutzen, Blende nachregeln.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="1"><span>Mikroskop mit beiden Händen (Stativ und Fuß) tragen und standsicher aufstellen, Kabel sichern.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="10"><span>Aufräumen: kleinstes Objektiv einstellen, Präparat entnehmen, Licht aus, Objektträger reinigen, Staubschutz auf.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="7"><span>Nächstes Objektiv (10×) einrasten lassen; nur noch mit dem Feintrieb nachstellen.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="3"><span>Präparat (mit Deckglas, Deckglas trocken) mittig auf den Objekttisch legen und mit den Klemmen fixieren.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="6"><span>Helligkeit und Kontrast mit Blende/Beleuchtungsregler einstellen; geeignete Stelle in die Bildmitte schieben.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-sort">
+  <div data-tipp>Was muss passieren, bevor man überhaupt hineinschauen kann?</div>
+  <div data-tipp>Erst aufstellen und Licht, dann Präparat, dann scharf stellen – zuletzt aufräumen.</div>
+  <div data-tipp>Beim Scharfstellen: erst von der Seite annähern, dann beim Hineinschauen den Abstand vergrößern; danach Objektivwechsel nur noch mit dem Feintrieb.</div>
+  <div data-muster><ol><li>Mikroskop mit beiden Händen (Stativ und Fuß) tragen und standsicher aufstellen, Kabel sichern.</li><li>Beleuchtung einschalten; kleinstes Objektiv (4×) einrasten lassen.</li><li>Präparat (mit Deckglas, Deckglas trocken) mittig auf den Objekttisch legen und mit den Klemmen fixieren.</li><li>Von der Seite schauend Objekttisch und Objektiv mit dem Grobtrieb nah aneinander bringen.</li><li>Durch das Okular schauen und den Abstand mit dem Grobtrieb langsam vergrößern, bis das Bild scharf ist.</li><li>Helligkeit und Kontrast mit Blende/Beleuchtungsregler einstellen; geeignete Stelle in die Bildmitte schieben.</li><li>Nächstes Objektiv (10×) einrasten lassen; nur noch mit dem Feintrieb nachstellen.</li><li>Ggf. 40×-Objektiv einrasten lassen; ausschließlich Feintrieb benutzen, Blende nachregeln.</li><li>Beobachten und zeichnen (mit einem Auge ins Mikroskop, mit dem anderen auf das Blatt).</li><li>Aufräumen: kleinstes Objektiv einstellen, Präparat entnehmen, Licht aus, Objektträger reinigen, Staubschutz auf.</li></ol></div>
+</div>
+      </div>
+      <div class="callout callout-warn">⚠️ <span>Beim Annähern von Objektiv und Präparat immer <strong>von der Seite</strong> schauen und bei 40× <strong>nur den Feintrieb</strong> benutzen – sonst zerbricht das Deckglas oder das Objektiv wird beschädigt.</span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Fehlersuche ↓</button></div>
+    </div>
+    <div class="subphase" id="ph2-sub-2">
+
+      <div class="ex">
+        <p><strong>Aufgabe 5:</strong> „Ich sehe nichts!“ – Ordnen Sie jeder Beobachtung die passende Abhilfe zu.</p>
+        <div class="baustein" data-type="match" id="match-fehler">
+  <div class="m-pool">
+    <span class="m-chip" data-id="m1" onclick="matchSelect(this)">Bild nur halb hell</span>
+    <span class="m-chip" data-id="m0" onclick="matchSelect(this)">Sehfeld bleibt dunkel</span>
+    <span class="m-chip" data-id="m3" onclick="matchSelect(this)">Deckglas schwimmt</span>
+    <span class="m-chip" data-id="m5" onclick="matchSelect(this)">Bild überstrahlt, kontrastarm</span>
+    <span class="m-chip" data-id="m2" onclick="matchSelect(this)">Punkte drehen sich mit dem Okular</span>
+    <span class="m-chip" data-id="m4" onclick="matchSelect(this)">nur dunkle Fläche, keine Zellen</span>
+  </div>
+  <div class="m-zone" data-correct="m0" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Licht einschalten, Blende öffnen</span></div>
+  <div class="m-zone" data-correct="m1" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Objektivrevolver drehen, bis er einrastet</span></div>
+  <div class="m-zone" data-correct="m2" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Okular mit Linsenpapier reinigen</span></div>
+  <div class="m-zone" data-correct="m3" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">überschüssige Flüssigkeit mit Filterpapier absaugen</span></div>
+  <div class="m-zone" data-correct="m4" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">dünneres Objekt – nur eine Zellschicht</span></div>
+  <div class="m-zone" data-correct="m5" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Blende schließen bzw. Licht herunterregeln</span></div>
+  <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-fehler">
+  <div data-tipp>Überlegen Sie bei jedem Problem: Licht, Linse oder Präparat?</div>
+  <div data-tipp>Licht: dunkel/überstrahlt. Mechanik: Revolver. Optik: Schmutz. Präparat: zu dick, zu nass.</div>
+  <div data-tipp>Schmutz, der sich beim Drehen des Okulars mitdreht, sitzt im Okular.</div>
+  <div data-muster><p>dunkel – Licht/Blende · halb hell – Revolver einrasten · Punkte drehen mit – Okular reinigen · Deckglas schwimmt – absaugen · dunkle Fläche – dünneres Objekt · überstrahlt – Blende schließen.</p></div>
+</div>
+      </div>
+      <figure class="fig"><img src="img/Mikroskopie_Tiefenschaerfe.jpg" alt="Drei Schärfeebenen durch eine Zelle: Zellkern erscheint rund, unsichtbar oder linsenförmig" style="max-width:420px;width:100%"><figcaption>Quelle: © Ernst Klett Verlag GmbH, Stuttgart 2012</figcaption></figure>
+      <div class="quiz-item">
+  <div class="quiz-q">Ein Mitschüler zeichnet einen linsenförmigen Zellkern, Sie einen runden – in derselben Zelle. Wer hat Recht?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-tiefe', this, 'w')">Nur der runde Kern ist richtig.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-tiefe', this, 'c')">Beide können richtig sein: Je nach Schärfeebene sieht man den Kern von oben oder von der Seite.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-tiefe', this, 'w')">Keiner – Zellkerne sind im Lichtmikroskop unsichtbar.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-tiefe"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Mikroskopieren</div>
+  <p>Immer mit dem <strong>kleinsten Objektiv</strong> beginnen (großes Sehfeld, große Schärfentiefe, großer Abstand). Annähern <strong>von der Seite</strong>, scharf stellen durch <strong>Vergrößern</strong> des Abstands. Bei starker Vergrößerung nur <strong>Feintrieb</strong>. Mit dem Feintrieb durch verschiedene Ebenen fokussieren.</p>
+</div>
+      <p class="connector-text">Das beste Mikroskop nützt nichts, wenn das Präparat zu dick ist. Welche Präparate gibt es – und wie stellt man eins her?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zu den Präparaten →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Mikroskopische Präparate</h2>
+    <p>Licht muss durch das Objekt hindurch – das Präparat muss also <strong>dünn und durchsichtig</strong> sein, im Idealfall nur eine Zellschicht. Je nach Objekt gibt es dafür verschiedene Techniken.</p>
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Arten</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Abzugspräparat</button>
+      <button class="substep-all" onclick="revealSub(3,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph3-sub-1">
+
+      <table class="info">
+        <tr><th></th><th>Frischpräparat</th><th>Dauerpräparat</th></tr>
+        <tr><td><strong>Material</strong></td><td>lebend/frisch, in Wasser</td><td>fixiert, meist gefärbt, in Kunstharz eingebettet</td></tr>
+        <tr><td><strong>Haltbarkeit</strong></td><td>Minuten bis Stunden</td><td>Jahre</td></tr>
+        <tr><td><strong>Vorteil</strong></td><td>Lebensvorgänge sichtbar (Plasmaströmung, Plasmolyse)</td><td>haltbar, kontrastreich, sehr dünne Schnitte</td></tr>
+      </table>
+      <div class="ex">
+        <p><strong>Aufgabe 6:</strong> Ordnen Sie die Präparatarten zu.</p>
+        <div class="baustein" data-type="match" id="match-praep">
+  <div class="m-pool">
+    <span class="m-chip" data-id="m2" onclick="matchSelect(this)">Schabepräparat</span>
+    <span class="m-chip" data-id="m0" onclick="matchSelect(this)">Totalpräparat</span>
+    <span class="m-chip" data-id="m1" onclick="matchSelect(this)">Abzugspräparat</span>
+    <span class="m-chip" data-id="m5" onclick="matchSelect(this)">Schnittpräparat</span>
+    <span class="m-chip" data-id="m4" onclick="matchSelect(this)">Ausstrichpräparat</span>
+    <span class="m-chip" data-id="m3" onclick="matchSelect(this)">Quetschpräparat</span>
+  </div>
+  <div class="m-zone" data-correct="m0" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">ganzes, sehr kleines Objekt in einem Wassertropfen (z. B. Wasserpest-Blatt)</span></div>
+  <div class="m-zone" data-correct="m1" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">eine Zellschicht (Epidermis) wird mit der Pinzette abgezogen</span></div>
+  <div class="m-zone" data-correct="m2" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Material wird von der Oberfläche abgeschabt (z. B. Kartoffel)</span></div>
+  <div class="m-zone" data-correct="m3" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">weiches Gewebe wird unter dem Deckglas zerdrückt</span></div>
+  <div class="m-zone" data-correct="m4" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Flüssigkeit wird dünn verstrichen (z. B. Blut, Mundschleimhaut)</span></div>
+  <div class="m-zone" data-correct="m5" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">mit der Rasierklinge: Quer-, Längs- oder Flächenschnitt</span></div>
+  <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-praep">
+  <div data-tipp>Die Namen verraten oft schon die Technik.</div>
+  <div data-tipp>Abziehen, abschaben, quetschen, ausstreichen, schneiden – oder gar nichts tun.</div>
+  <div data-tipp>„Total“ heißt: Das ganze Objekt kommt unverändert unter das Deckglas.</div>
+  <div data-muster><p>Total – ganzes kleines Objekt · Abzug – Epidermis abziehen · Schabe – abschaben · Quetsch – zerdrücken · Ausstrich – verstreichen · Schnitt – Rasierklinge.</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Abzugspräparat ↓</button></div>
+    </div>
+    <div class="subphase" id="ph3-sub-2">
+
+      <div class="figrow">
+        <figure class="fig"><img src="img/Mikroskopie_Praeparatherstellung_a.jpg" alt="Zwiebel wird halbiert und eine Schuppe herausgelöst" style="max-width:200px;width:100%"><figcaption>A</figcaption></figure>
+        <figure class="fig"><img src="img/Mikroskopie_Praeparatherstellung_b.jpg" alt="Epidermis wird eingeritzt, mit der Pinzette abgezogen und in einen Wassertropfen gelegt" style="max-width:200px;width:100%"><figcaption>B</figcaption></figure>
+        <figure class="fig"><img src="img/Mikroskopie_Praeparatherstellung_c.jpg" alt="Deckglas wird schräg angesetzt und abgesenkt" style="max-width:200px;width:100%"><figcaption>C</figcaption></figure>
+        <figure class="fig"><img src="img/Mikroskopie_Praeparatanfaerbung_a.jpg" alt="Lösung wird an den Rand des Deckglases getropft" style="max-width:200px;width:100%"><figcaption>D</figcaption></figure>
+        <figure class="fig"><img src="img/Mikroskopie_Praeparatanfaerbung_b.jpg" alt="Filterpapier saugt die Lösung auf der Gegenseite durch" style="max-width:200px;width:100%"><figcaption>E</figcaption></figure>
+      </div>
+      <p class="caption" style="text-align:center">Abbildungen A–E: © Ernst Klett Verlag GmbH, Stuttgart 2012</p>
+      <div class="ex">
+        <p><strong>Aufgabe 7:</strong> Bringen Sie die Schritte zur Herstellung eines Abzugspräparats (mit Durchsaugen einer Lösung) in die richtige Reihenfolge.</p>
+        <div class="baustein" data-type="sort" id="sort-abzug">
+  <div class="sort-list">
+    <div class="sort-item" data-v="4"><span>Häutchen faltenfrei in den Wassertropfen legen</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="1"><span>Zwiebel teilen, eine fleischige Schuppe herauslösen (A)</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="6"><span>Lösung an einen Rand des Deckglases tropfen (D)</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="5"><span>Deckglas schräg ansetzen und langsam absenken – ohne Luftblasen (C)</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="2"><span>Einen Wassertropfen auf den Objektträger geben</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="7"><span>Auf der Gegenseite mit Filterpapier durchsaugen (E)</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="3"><span>Epidermis mit der Rasierklinge einritzen und mit der Pinzette abziehen (B)</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-abzug">
+  <div data-tipp>Was muss auf dem Objektträger sein, bevor das Häutchen kommt?</div>
+  <div data-tipp>Erst Material gewinnen, dann Wasser, Häutchen, Deckglas – zuletzt durchsaugen.</div>
+  <div data-tipp>Durchsaugen ist der letzte Schritt: Die Lösung kommt an den einen Rand, das Filterpapier an den anderen.</div>
+  <div data-muster><p>Schuppe herauslösen → Wassertropfen → einritzen/abziehen → in den Tropfen legen → Deckglas → Lösung an den Rand → durchsaugen.</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">Warum ist für die Plasmolyse ein <strong>Frischpräparat</strong> nötig?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-frisch', this, 'w')">Weil Dauerpräparate zu dick sind.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-frisch', this, 'c')">Weil nur lebende Zellen mit intakten, selektiv permeablen Membranen osmotisch reagieren.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-frisch', this, 'w')">Weil Dauerpräparate nicht gefärbt sind.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-frisch"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Präparate</div>
+  <p><strong>Frischpräparat:</strong> lebendes Material in Wasser, kurz haltbar, Lebensvorgänge beobachtbar. <strong>Dauerpräparat:</strong> fixiert, gefärbt, eingebettet, lange haltbar. Herstellungsarten: Total-, Abzugs-, Schabe-, Quetsch-, Zupf-, Ausstrich- und Schnittpräparat. Lösungen werden mit der <strong>Durchsaugmethode</strong> unter das Deckglas gebracht.</p>
+</div>
+      <p class="connector-text">Jetzt haben Sie alles zusammen: Mikroskop, Technik, Präparat. Zeit für das Experiment!</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zur Plasmolyse →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Plasmolyse und Deplasmolyse bei Zellen der roten Küchenzwiebel</h2>
+    <p><strong>Leitfrage:</strong> Reife Kirschen platzen nach einem Regen. Was passiert dabei in den Zellen – und können wir den Vorgang unter dem Mikroskop sichtbar machen?</p>
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Durchführung</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Beobachten</button>
+      <button class="substep-chip locked" onclick="revealSub(4,3)">3 · Erklären</button>
+      <button class="substep-all" onclick="revealSub(4,3)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph4-sub-1">
+
+      <ol>
+        <li>Abzugspräparat der <strong>rot gefärbten Außenseite</strong> einer Zwiebelschuppe in einem Wassertropfen herstellen.</li>
+        <li>Bei 40× eine Stelle mit unbeschädigten, gut gefärbten Zellen suchen, dann 100× (ggf. 400×) einstellen.</li>
+        <li>Zellen in Wasser beobachten.</li>
+        <li><strong>Plasmolyse:</strong> 10%ige NaCl-Lösung mit der Durchsaugmethode unter das Deckglas bringen, 2–5 Minuten beobachten.</li>
+        <li>2–3 plasmolysierte Zellen zellgenau zeichnen und beschriften.</li>
+        <li><strong>Deplasmolyse:</strong> Wasser durchsaugen und erneut beobachten.</li>
+      </ol>
+      <div class="callout callout-warn">⚠️ <span>Rasierklinge vom Körper weg führen und mit Schutz ablegen. Glasbruch sofort melden. Salzlösung nicht in die Augen bringen.</span></div>
+      
+      <div class="ex" id="sim-box">
+        <p><strong>Modellversuch am Bildschirm:</strong> Verändern Sie die Konzentration der Außenlösung und beobachten Sie die Zelle. <em>(vereinfachtes Modell, nicht maßstabsgetreu)</em></p>
+        <svg id="sim-svg" viewBox="0 0 420 200" width="100%" style="max-width:520px;display:block;margin:0 auto" role="img" aria-label="Modell einer Pflanzenzelle mit Zellwand, Protoplast und Vakuole">
+          <rect x="0" y="0" width="420" height="200" fill="#EAF4FB"/>
+          <rect id="sim-wall" x="40" y="30" width="340" height="140" rx="6" fill="#FFFFFF" stroke="#5B6B3A" stroke-width="8"/>
+          <rect id="sim-proto" x="46" y="36" width="328" height="128" rx="10" fill="#F6E7C8" stroke="#B08A3C" stroke-width="2"/>
+          <rect id="sim-vac" x="56" y="44" width="308" height="112" rx="10" fill="#C2185B"/>
+          <circle id="sim-kern" cx="80" cy="60" r="11" fill="#EDE7F6" stroke="#6B4A7A" stroke-width="2"/>
+          <text x="210" y="192" text-anchor="middle" font-size="12" fill="#333" id="sim-lbl"></text>
+        </svg>
+        <p style="text-align:center">
+          <label for="sim-range">Außenlösung:</label>
+          <input type="range" id="sim-range" min="0" max="100" value="10" style="width:60%" oninput="simUpdate()" aria-describedby="sim-status">
+        </p>
+        <p style="text-align:center"><span class="caption">reines Wasser</span> · · · <span class="caption">isotonisch</span> · · · <span class="caption">10 % NaCl</span></p>
+        <div class="callout" id="sim-status"><span>–</span></div>
+        <p style="text-align:center"><button class="btn btn-ghost btn-sm" onclick="simSet(10)">↺ Reset (Wasser)</button>
+          <button class="btn btn-ghost btn-sm" onclick="simAnimate()">▶ Plasmolyse abspielen</button>
+          <button class="btn btn-ghost btn-sm" onclick="simStop()">⏸ Pause</button></p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Beobachten ↓</button></div>
+    </div>
+    <div class="subphase" id="ph4-sub-2">
+
+      <div class="figrow">
+        <figure class="fig"><img src="img/F08_s7.jpg" alt="Fotos A bis C: Zwiebelzellen in Wasser, mit beginnender und mit fortgeschrittener Plasmolyse" style="max-width:230px;width:100%"><figcaption>A turgeszent · B beginnende · C fortgeschrittene Plasmolyse</figcaption></figure>
+        <figure class="fig"><img src="img/plasmo_zeichnung_C.png" alt="Schematische Zeichnung plasmolysierter Zellen mit Zellwand, Protoplast, Vakuole und Zellkern" style="max-width:460px;width:100%"><figcaption>Schema zu C</figcaption></figure>
+      </div>
+      <p class="caption" style="text-align:center">Quelle: Folie „08_Plasmolyse_Deplasmolyse“ (GDC-Material); Originalquelle auf der Abbildung nicht angegeben</p>
+      <div class="ex">
+        <p><strong>Aufgabe 8:</strong> Markieren Sie alle Strukturen, die Sie in einer plasmolysierten Zelle <strong>beschriften</strong> sollten.</p>
+        <div class="baustein" data-type="mark" id="mark-beschr">
+  <p class="mark-text"><span class="mw" data-correct="1" onclick="markToggle(this)">Zellwand</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Protoplast</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Vakuole mit Zellsaft</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Zellkern</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Raum mit Plasmolytikum</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Chloroplast</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Ribosom</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Zellmembran allein (als eigene Linie)</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Mitochondrium</span></p>
+  <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-beschr">
+  <div data-tipp>Beschriften Sie nur, was Sie im Lichtmikroskop wirklich sehen.</div>
+  <div data-tipp>Zwiebelschuppen wachsen im Dunkeln – Chloroplasten? Ribosomen und Mitochondrien sind bei 100× nicht zu erkennen.</div>
+  <div data-tipp>Die Zellmembran ist lichtmikroskopisch nicht als eigene Linie zu sehen – sie ist Teil des Protoplasten.</div>
+  <div data-muster><p>Beschriften: Zellwand, Protoplast, Vakuole mit Zellsaft, Zellkern, Raum mit Plasmolytikum. Nicht: Chloroplast (fehlt in Zwiebelschuppen), Ribosom, Mitochondrium (zu klein), Zellmembran als eigene Linie.</p></div>
+</div>
+      </div>
+      <div class="ex">
+        <p><strong>Aufgabe 9 ★:</strong> Diese Musterzeichnung stammt aus einem Arbeitsheft für Klasse 7. Was muss in Ihrer Zeichnung (GK 11) anders sein? Markieren Sie die zutreffenden Kritikpunkte.</p>
+        <figure class="fig"><img src="img/linder_M3_muster.png" alt="Musterzeichnung einer Wasserpest-Blattzelle aus einem Arbeitsheft Klasse 7" style="max-width:300px;width:100%"><figcaption>Quelle: Linder Biologie 7 – Arbeitsheft Sachsen, S. 6 (M3), © 2012 Schroedel</figcaption></figure>
+        <div class="baustein" data-type="mark" id="mark-muster">
+  <p class="mark-text"><span class="mw" data-correct="1" onclick="markToggle(this)">nur eine Zelle gezeichnet</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Zellwand ausgemalt</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Zellmembran einzeln beschriftet</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Angaben oben statt links unten</span> <span class="mw" data-correct="1" onclick="markToggle(this)">Vergrößerung als „10 x 40“ statt 400×</span> <span class="mw" data-correct="0" onclick="markToggle(this)">mit Bleistift gezeichnet</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Beschriftung rechts neben der Zeichnung</span></p>
+  <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-muster">
+  <div data-tipp>Vergleichen Sie mit den vier Kriterien: Wissenschaftlichkeit, Linienführung, Angaben, Form.</div>
+  <div data-tipp>Wie viele Zellen verlangt der Oberstufen-Standard? Darf man ausmalen?</div>
+  <div data-tipp>Bleistift und Beschriftung rechts sind korrekt – das sind keine Kritikpunkte.</div>
+  <div data-muster><p>Kritik: nur 1 Zelle (2–3 gefordert), Zellwand ausgemalt, Zellmembran einzeln beschriftet, Angaben oben statt links unten, Vergrößerung „10 x 40“ statt 400×. Korrekt: Bleistift, Beschriftung rechts.</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,3)">Erklären ↓</button></div>
+    </div>
+    <div class="subphase" id="ph4-sub-3">
+
+      <figure class="fig"><img src="img/Osmose_Plasmolyse_Deplasmolyse.jpg" alt="Modell: Plasmolyse durch Salz außen und Deplasmolyse durch Wasser außen" style="max-width:560px;width:100%"><figcaption>Quelle: © Ernst Klett Verlag GmbH, Stuttgart 2012</figcaption></figure>
+      <div class="ex">
+        <p><strong>Aufgabe 10:</strong> Vervollständigen Sie die Erklärung.</p>
+        <div class="baustein" data-type="dtw" id="dtw-plasmo">
+  <div class="dtw-pool">
+    <span class="dtw-word" data-w="isotonisch" onclick="dtwSelect(this)">isotonisch</span>
+    <span class="dtw-word" data-w="frei durchlässig" onclick="dtwSelect(this)">frei durchlässig</span>
+    <span class="dtw-word" data-w="Plasmolyse" onclick="dtwSelect(this)">Plasmolyse</span>
+    <span class="dtw-word" data-w="selektiv permeabel" onclick="dtwSelect(this)">selektiv permeabel</span>
+    <span class="dtw-word" data-w="Osmose" onclick="dtwSelect(this)">Osmose</span>
+    <span class="dtw-word" data-w="Endocytose" onclick="dtwSelect(this)">Endocytose</span>
+    <span class="dtw-word" data-w="hypotonisch" onclick="dtwSelect(this)">hypotonisch</span>
+    <span class="dtw-word" data-w="Diffusion von Salz" onclick="dtwSelect(this)">Diffusion von Salz</span>
+    <span class="dtw-word" data-w="Deplasmolyse" onclick="dtwSelect(this)">Deplasmolyse</span>
+    <span class="dtw-word" data-w="hypertonisch" onclick="dtwSelect(this)">hypertonisch</span>
+  </div>
+  <p class="dtw-text">Die Zellwand ist für Wasser und gelöste Teilchen <span class="dtw-gap" data-answer="frei durchlässig" onclick="dtwPlace(this)">______</span>, die Membranen des Protoplasten sind dagegen <span class="dtw-gap" data-answer="selektiv permeabel" onclick="dtwPlace(this)">______</span>. Die Salzlösung ist gegenüber dem Zellsaft <span class="dtw-gap" data-answer="hypertonisch" onclick="dtwPlace(this)">______</span>. Deshalb verlässt Wasser die Vakuole durch <span class="dtw-gap" data-answer="Osmose" onclick="dtwPlace(this)">______</span>. Die Vakuole schrumpft und der Protoplast löst sich von der Zellwand – das nennt man <span class="dtw-gap" data-answer="Plasmolyse" onclick="dtwPlace(this)">______</span>. Saugt man anschließend Wasser durch, ist die Außenlösung <span class="dtw-gap" data-answer="hypotonisch" onclick="dtwPlace(this)">______</span>: Wasser strömt zurück, der Turgor steigt – <span class="dtw-gap" data-answer="Deplasmolyse" onclick="dtwPlace(this)">______</span>.</p>
+  <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mk-plasmo">
+  <div data-tipp>Welche Hülle hält die Salzionen zurück – die Wand oder die Membran?</div>
+  <div data-tipp>Hypertonisch = außen mehr gelöste Teilchen; hypotonisch = außen weniger.</div>
+  <div data-tipp>Wasser bewegt sich, nicht das Salz: Der Vorgang heißt Osmose.</div>
+  <div data-muster><p>frei durchlässig – selektiv permeabel – hypertonisch – Osmose – Plasmolyse – hypotonisch – Deplasmolyse.</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">Zurück zur Leitfrage: Warum platzen reife Kirschen bei Regen?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-kirsche', this, 'w')">Regen ist hypertonisch – die Zellen verlieren Wasser und reißen.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-kirsche', this, 'c')">Regen ist gegenüber dem zuckerreichen Zellsaft hypotonisch – Wasser strömt osmotisch ein, der Turgor steigt, die Haut reißt.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-kirsche', this, 'w')">Zucker strömt aus der Kirsche heraus und hinterlässt Löcher.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-kirsche"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Plasmolyse und Deplasmolyse</div>
+  <p><strong>Plasmolyse:</strong> Ablösung des Protoplasten von der Zellwand durch osmotischen Wasserverlust in <span class="tt" tabindex="0" data-tip="Die Lösung enthält mehr gelöste Teilchen als der Zellsaft.">hypertonisch</span>er Lösung (Plasmolytikum). <strong>Deplasmolyse:</strong> Wiederanlegen des Protoplasten nach Wasseraufnahme in <span class="tt" tabindex="0" data-tip="Die Lösung enthält weniger gelöste Teilchen als der Zellsaft.">hypotonisch</span>er Lösung; der <span class="tt" tabindex="0" data-tip="Innendruck des Zellsafts auf die Zellwand">Turgor</span> steigt. <strong>Voraussetzung:</strong> Zellwand frei durchlässig, Plasmalemma und Tonoplast selektiv permeabel. Der Vorgang ist reversibel.</p>
+</div>
+      <p class="connector-text">Schaffen Sie das Exit-Ticket ohne nachzuschauen?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Weiter zum Exit-Ticket →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph5">
+  <div class="card">
+    <h2>Exit-Ticket</h2>
+    <p>Drei Fragen, eine Zeichnung im Kopf: Prüfen Sie, ob Sie fit für das mikroskopische Praktikum sind.</p>
+    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(5,1)">1 · Fragen</button>
+      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · Karteikarten</button>
+      <button class="substep-all" onclick="revealSub(5,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph5-sub-1">
+
+      <div class="ex">
+        <p><strong>Exit 1:</strong></p>
+        <div class="quiz-item">
+  <div class="quiz-q">Sie haben bei 100× ein scharfes Bild und wechseln auf das 40er-Objektiv. Was tun Sie?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-ex1', this, 'w')">Mit dem Grobtrieb neu scharf stellen.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex1', this, 'c')">Nur mit dem Feintrieb nachstellen.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex1', this, 'w')">Den Objekttisch ganz nach oben drehen.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-ex1"></div>
+</div>
+        <div class="hs" id="hs-mk-ex1">
+  <div data-tipp>Wie groß ist der Arbeitsabstand bei 40×?</div>
+  <div data-tipp>Sehr klein – wenige Zehntelmillimeter.</div>
+  <div data-tipp>Darum nur kleine Bewegungen.</div>
+  <div data-muster><p>Nur mit dem Feintrieb nachstellen.</p></div>
+</div>
+      </div>
+      <div class="ex">
+        <p><strong>Exit 2:</strong></p>
+        <div class="quiz-item">
+  <div class="quiz-q">Welche Präparatart stellen Sie im Praktikum von der Epidermis einer roten Paprika her?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-ex2', this, 'w')">Quetschpräparat</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex2', this, 'c')">Abzugspräparat</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex2', this, 'w')">Ausstrichpräparat</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-ex2"></div>
+</div>
+        <div class="hs" id="hs-mk-ex2">
+  <div data-tipp>Welche Gewebeschicht soll untersucht werden?</div>
+  <div data-tipp>Die Epidermis ist nur eine Zellschicht.</div>
+  <div data-tipp>Eine Zellschicht gewinnt man durch Abziehen.</div>
+  <div data-muster><p>Abzugspräparat.</p></div>
+</div>
+      </div>
+      <div class="ex">
+        <p><strong>Exit 3:</strong></p>
+        <div class="quiz-item">
+  <div class="quiz-q">Eine Zwiebelzelle liegt in einer 1%igen Zuckerlösung und zeigt keine Plasmolyse. Was folgt daraus?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-ex3', this, 'c')">Die Lösung ist hypo- oder isotonisch zum Zellsaft.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex3', this, 'w')">Die Zelle ist tot.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ex3', this, 'w')">Zucker ist durch die Membran in die Zelle diffundiert.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-ex3"></div>
+</div>
+        <div class="hs" id="hs-mk-ex3">
+  <div data-tipp>Was braucht es, damit Wasser die Vakuole verlässt?</div>
+  <div data-tipp>Außen muss die Konzentration gelöster Teilchen höher sein als im Zellsaft.</div>
+  <div data-tipp>Keine Plasmolyse → außen nicht höher konzentriert.</div>
+  <div data-muster><p>Die Lösung ist hypo- oder isotonisch zum Zellsaft.</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Karteikarten ↓</button></div>
+    </div>
+    <div class="subphase" id="ph5-sub-2">
+
+      <div class="baustein" data-type="flashcards" id="fc-mikro" data-cards='[[&quot;Gesamtvergrößerung&quot;, &quot;Okular × Objektiv, z. B. 10 × 40 = 400×&quot;], [&quot;Feintrieb&quot;, &quot;feine Scharfstellung, bei 40× ausschließlich&quot;], [&quot;Kondensor mit Blende&quot;, &quot;bündelt Licht; Blende regelt Helligkeit und Kontrast&quot;], [&quot;Abzugspräparat&quot;, &quot;eine Zellschicht (Epidermis) wird abgezogen&quot;], [&quot;Durchsaugmethode&quot;, &quot;Lösung an einen Deckglasrand, gegenüber mit Filterpapier absaugen&quot;], [&quot;Plasmolyse&quot;, &quot;Ablösung des Protoplasten von der Zellwand in hypertonischer Lösung&quot;], [&quot;Deplasmolyse&quot;, &quot;Wiederanlegen des Protoplasten in hypotonischer Lösung&quot;], [&quot;Zeichenregeln&quot;, &quot;Bleistift, 2–3 Zellen, nicht ausmalen, Beschriftung rechts, Angaben links unten&quot;]]'>
+  <div class="fc-card" onclick="fcFlip(this)"><span class="fc-face">Gesamtvergrößerung</span></div>
+  <div class="fc-controls">
+    <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
+    <span class="caption fc-count">1 / 8</span>
+    <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)">weiter →</button>
+  </div>
+</div>
+    </div>
+  </div>
+</section>
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Lichtmikroskop</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Optisches, mechanisches System und Beleuchtung; Gesamtvergrößerung = Okular × Objektiv; immer mit dem kleinsten Objektiv beginnen.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Präparate</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Frisch- vs. Dauerpräparat; Abzugs-, Schnitt-, Quetsch-, Total-, Ausstrich-, Schabepräparat; Durchsaugmethode.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Plasmolyse</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Hypertonische Außenlösung → osmotischer Wasserverlust → Protoplast löst sich von der Zellwand. Reversibel: Deplasmolyse in hypotonischer Lösung.</div></div></div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Sie können ein Abzugspräparat herstellen, sachgerecht mikroskopieren und Plasmolyse beobachten, zeichnen und erklären.</span></div>
+    <p class="connector-text">Im mikroskopischen Praktikum geht es weiter: Paprika-Epidermis, Leitbündel mit Doppelfärbung und ein ganzer Sprossquerschnitt – vom Zell- über das Gewebe- bis zum Organniveau. Bringen Sie weißes Papier und harte Bleistifte mit!</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+  <p class="caption" style="text-align:center">SCR</p>
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('mk_subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('mk_subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('mk_predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('mk_predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'mk_hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('mk_hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('mk_hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+</script>
+<script>
+function selCheck(btn){
+  const box=btn.closest('.baustein'); let ok=0, n=0;
+  box.querySelectorAll('select.sel').forEach(s=>{ n++; const good=(s.value===s.dataset.sol);
+    s.classList.toggle('ok',good); s.classList.toggle('err',!good && s.value!==''); if(good) ok++; });
+  const fb=box.querySelector('.grp-fb'); fb.textContent=ok+' von '+n+' richtig.'+(ok===n?' Stark!':' Rote Felder noch einmal prüfen.');
+  fb.className='fb grp-fb '+(ok===n?'ok':'err');
+}
+</script>
+<script>
+const SIM_ISO = 30; let simTimer = null;
+function simUpdate(){
+  const v = parseInt(document.getElementById('sim-range').value, 10);
+  let f = 1; // relative Größe des Protoplasten
+  if (v > SIM_ISO) f = Math.max(0.42, SIM_ISO / v * 1.0 + 0.0);
+  const W = 328 * f, H = 128 * Math.min(1, f + 0.12), x = 46 + (328 - W) / 2, y = 36 + (128 - H) / 2;
+  const p = document.getElementById('sim-proto'); p.setAttribute('x', x); p.setAttribute('y', y); p.setAttribute('width', W); p.setAttribute('height', H);
+  p.setAttribute('rx', v > SIM_ISO ? 10 + 30 * (1 - f) : 10);
+  const vac = document.getElementById('sim-vac'); vac.setAttribute('x', x + 10); vac.setAttribute('y', y + 8); vac.setAttribute('width', Math.max(10, W - 20)); vac.setAttribute('height', Math.max(10, H - 16));
+  vac.setAttribute('rx', v > SIM_ISO ? 10 + 30 * (1 - f) : 10);
+  const light = Math.round(55 - 30 * (1 - f)); vac.setAttribute('fill', 'hsl(330,70%,' + light + '%)');
+  const k = document.getElementById('sim-kern'); k.setAttribute('cx', x + 22); k.setAttribute('cy', y + 22);
+  let txt;
+  if (v < SIM_ISO - 3) txt = '💧 <strong>hypotonisch</strong> (weniger gelöste Teilchen als im Zellsaft): Wasser strömt netto ein, der Protoplast wird gegen die Zellwand gedrückt – hoher <strong>Turgor</strong>. Die Zellwand verhindert das Platzen.';
+  else if (v <= SIM_ISO + 3) txt = '⚖️ <strong>isotonisch</strong>: Wasserein- und -ausstrom sind gleich groß. Kurz darüber beginnt die <strong>Grenzplasmolyse</strong> – der Protoplast löst sich gerade an den Ecken.';
+  else txt = '🧂 <strong>hypertonisch</strong>: Wasser verlässt die Vakuole osmotisch, sie schrumpft und wird dunkler; der Protoplast löst sich von der Zellwand – <strong>Plasmolyse</strong>. Zwischen Wand und Protoplast: Außenlösung.';
+  document.getElementById('sim-status').innerHTML = '<span>' + txt + '</span>';
+  document.getElementById('sim-lbl').textContent = v > SIM_ISO + 3 ? 'Zellwand bleibt stehen – Protoplast schrumpft' : 'Protoplast liegt der Zellwand an';
+}
+function simSet(v){ simStop(); document.getElementById('sim-range').value = v; simUpdate(); }
+function simAnimate(){ simStop(); const r = document.getElementById('sim-range'); simTimer = setInterval(() => { let v = parseInt(r.value, 10) + 1; if (v > 100) { simStop(); return; } r.value = v; simUpdate(); }, 60); }
+function simStop(){ if (simTimer) { clearInterval(simTimer); simTimer = null; } }
+document.addEventListener('DOMContentLoaded', simUpdate);
+</script>
+<script>
+quizFeedback["q-start"] = {"ok": "✅ <strong>Richtig!</strong> Es geht um Wasserbewegung entlang eines Konzentrationsgefälles.", "ng": "❌ <strong>Nicht ganz.</strong> Hier werden keine Vesikel gebildet und es wird keine Energie gebraucht.", "hint": "Was wurde vermutlich unter das Deckglas gegeben – und welches Teilchen bewegt sich dann?"};
+quizFeedback["q-bild"] = {"ok": "✅ <strong>Richtig!</strong> Das Objektiv erzeugt ein umgekehrtes Zwischenbild – oben/unten und links/rechts sind vertauscht.", "ng": "❌ <strong>Nicht ganz.</strong> Das mikroskopische Bild steht auf dem Kopf und ist seitenverkehrt.", "hint": "Schauen Sie im Strahlengang, ob das Zwischenbild gleich oder umgekehrt zum Objekt liegt."};
+quizFeedback["q-tiefe"] = {"ok": "✅ <strong>Richtig!</strong> Das Mikroskop bildet nur eine dünne Ebene scharf ab. Mit dem Feintrieb „durchfokussieren“ zeigt den räumlichen Bau.", "ng": "❌ <strong>Nicht ganz.</strong> Zellen sind dreidimensional; die Schärfentiefe ist gering.", "hint": "Schauen Sie auf die Abbildung zur Schärfentiefe."};
+quizFeedback["q-frisch"] = {"ok": "✅ <strong>Richtig!</strong> In fixierten (toten) Zellen sind die Membranen nicht mehr selektiv permeabel – Plasmolyse findet nicht statt.", "ng": "❌ <strong>Nicht ganz.</strong> Dicke und Färbung sind nicht entscheidend.", "hint": "Plasmolyse ist ein Lebensvorgang. Was ist bei einem fixierten Präparat „kaputt“?"};
+quizFeedback["q-kirsche"] = {"ok": "✅ <strong>Richtig!</strong> Genau die Umkehrung der Plasmolyse: Wasser strömt ein, die nur begrenzt dehnbare Fruchthaut gibt nach.", "ng": "❌ <strong>Nicht ganz.</strong> Regenwasser enthält kaum gelöste Teilchen – es ist hypotonisch. Zucker kann die Membranen nicht passieren.", "hint": "Wo ist die Konzentration gelöster Teilchen höher – im Regen oder im Kirschsaft?"};
+quizFeedback["q-ex1"] = {"ok": "✅ <strong>Richtig!</strong> Gute Mikroskope sind „parfokal“: Das Bild bleibt fast scharf, nur der Feintrieb ist nötig.", "ng": "❌ <strong>Nicht ganz.</strong> Mit dem Grobtrieb kann das Objektiv das Deckglas zerdrücken.", "hint": "Denken Sie an den Abstand zwischen 40er-Objektiv und Deckglas."};
+quizFeedback["q-ex2"] = {"ok": "✅ <strong>Richtig!</strong> Wie bei der Zwiebel wird die Epidermis als einzelne Zellschicht abgezogen.", "ng": "❌ <strong>Nicht ganz.</strong> Quetschen oder Ausstreichen würde die Zellschicht zerstören.", "hint": "Paprikahaut und Zwiebelhäutchen haben etwas gemeinsam."};
+quizFeedback["q-ex3"] = {"ok": "✅ <strong>Richtig!</strong> Plasmolyse tritt erst ein, wenn die Außenlösung hypertonisch ist.", "ng": "❌ <strong>Nicht ganz.</strong> Ohne weitere Hinweise ist die einfachste Erklärung: Die Lösung ist nicht konzentriert genug.", "hint": "Ab wann löst sich der Protoplast von der Wand?"};
+</script>
+</body>
+</html>

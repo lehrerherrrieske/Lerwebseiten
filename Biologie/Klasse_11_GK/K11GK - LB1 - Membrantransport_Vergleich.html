@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 11GK · LB1 · Transport durch Biomembranen im Vergleich</title>
+<style>
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#1C7168;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+</style>
+<style>
+.tblwrap{overflow-x:auto;}
+table.seltab{border-collapse:collapse;width:100%;margin:8px 0;}
+table.seltab th,table.seltab td{border:1.5px solid var(--border);padding:6px 8px;text-align:left;vertical-align:middle;}
+table.seltab th{background:var(--accent-soft, #eef3f1);}
+select.sel{font-family:var(--font);font-size:var(--fs-base);padding:4px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);max-width:100%;}
+select.sel.ok{border-color:#16a34a;background:#ecfdf5;} select.sel.err{border-color:#dc2626;background:#fef2f2;}
+figure.fig{margin:12px 0;text-align:center;} figure.fig img{border-radius:8px;border:1px solid var(--border);background:#fff;}
+figure.fig figcaption{font-size:var(--fs-sm);color:var(--text-3);margin-top:4px;}
+.figrow{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-start;}
+.figrow figure{flex:1 1 220px;max-width:420px;}
+table.info{border-collapse:collapse;width:100%;margin:8px 0;} table.info th,table.info td{border:1.5px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+table.info th{background:var(--surface-2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="Biologie11GK">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 11GK · LB1</div>
+    <h1>Transport durch Biomembranen im Vergleich</h1>
+    <div class="goal">🎯 Die Lernenden vergleichen passive und aktive Transportvorgänge, indem sie Beispiele nach Konzentrationsgefälle, Energiebedarf und beteiligtem Membranprotein begründet zuordnen.</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Was kommt durch?</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Passiver Transport</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Aktiver &amp; gekoppelter Transport</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Phase 3</span>Vergleich</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Sicherung</span>Osmose &amp; Exit-Ticket</button>
+</nav>
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Was kommt durch die Membran?</h2>
+    <p>Vor den Ferien haben Sie die Transportvorgänge selbstständig erarbeitet. Heute bringen wir Ordnung hinein. Die Zellmembran ist eine <span class="tt" tabindex="0" data-tip="Zwei Lagen Phospholipide; innen wasserabweisend (hydrophob), außen wasserfreundlich (hydrophil).">Lipiddoppelschicht</span> – innen „ölig“, außen wasserfreundlich. Trotzdem gelangen ständig Wasser, Zucker und Ionen hinein und hinaus. Wie geht das?</p>
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Vermuten</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Prüfen</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph0-sub-1">
+
+      <div class="poe-box" id="poe-durch">
+        <div class="poe-label">🤔 Welche Teilchen schaffen es wohl ganz ohne Hilfe durch die Lipiddoppelschicht – und warum?</div>
+        <textarea id="poe-durch-in" rows="2" placeholder="Ihre Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-durch')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-durch-out" hidden></div>
+      </div>
+      <p class="connector-text">Prüfen Sie Ihre Vermutung im nächsten Teil – markieren Sie die „Membran-Durchschlüpfer“.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Prüfen ↓</button></div>
+    </div>
+    <div class="subphase" id="ph0-sub-2">
+
+      <div class="ex">
+        <p><strong>Aufgabe 1:</strong> Markieren Sie alle Teilchen, die <strong>frei</strong> (ohne Transportprotein) durch die Lipiddoppelschicht diffundieren können.</p>
+        <div class="baustein" data-type="mark" id="mark-frei">
+  <p class="mark-text"><span class="mw" data-correct="1" onclick="markToggle(this)">O<sub>2</sub></span> <span class="mw" data-correct="0" onclick="markToggle(this)">Glucose</span> <span class="mw" data-correct="1" onclick="markToggle(this)">CO<sub>2</sub></span> <span class="mw" data-correct="0" onclick="markToggle(this)">Na<sup>+</sup></span> <span class="mw" data-correct="1" onclick="markToggle(this)">Ethanol</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Aminosäure</span> <span class="mw" data-correct="1" onclick="markToggle(this)">N<sub>2</sub></span> <span class="mw" data-correct="0" onclick="markToggle(this)">K<sup>+</sup></span> <span class="mw" data-correct="1" onclick="markToggle(this)">Steroidhormon (lipophil)</span> <span class="mw" data-correct="0" onclick="markToggle(this)">Cl<sup>–</sup></span></p>
+  <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-frei">
+  <div data-tipp>Überlegen Sie, wie es im Inneren der Membran aussieht – ölig oder wässrig?</div>
+  <div data-tipp>Kleine, ungeladene und fettlösliche (lipophile) Teilchen kommen durch; Ionen und große polare Moleküle nicht.</div>
+  <div data-tipp>Ionen tragen eine Ladung und eine Hydrathülle → sie bleiben im hydrophoben Inneren stecken. Glucose und Aminosäuren sind zu groß und polar.</div>
+  <div data-muster><p>Frei durch: O<sub>2</sub>, CO<sub>2</sub>, N<sub>2</sub>, Ethanol, Steroidhormon. Nicht frei: Glucose, Aminosäure, Na<sup>+</sup>, K<sup>+</sup>, Cl<sup>–</sup> – sie brauchen Kanal- oder Carrierproteine.</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">Warum kann ein Na<sup>+</sup>-Ion trotz seiner geringen Größe die Lipiddoppelschicht kaum passieren?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-ion', this, 'w')">Es ist zu schwer.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ion', this, 'c')">Es ist geladen und von einer Hydrathülle umgeben – das hydrophobe Membraninnere stößt es ab.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-ion', this, 'w')">Die Membran hat für Na<sup>+</sup> keine Löcher, weil sie zu dicht gepackt ist.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-ion"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Selektive Permeabilität</div>
+  <p><strong>Biomembranen sind selektiv permeabel:</strong> Kleine, unpolare bzw. lipophile Teilchen (O<sub>2</sub>, CO<sub>2</sub>) diffundieren frei durch die Lipiddoppelschicht. Ionen und große polare Moleküle (Glucose, Aminosäuren) benötigen <strong>Transportproteine</strong>.</p>
+</div>
+      <p class="connector-text">Wenn die Membran so wählerisch ist – wie kommen Glucose und Ionen dann in die Zelle? Und muss die Zelle dafür bezahlen?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zum passiven Transport →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Passiver Transport – mit dem Gefälle</h2>
+    <p>„Passiv“ heißt: Die Teilchen bewegen sich durch ihre eigene Wärmebewegung – <strong>entlang ihres <span class="tt" tabindex="0" data-tip="Unterschied der Teilchenkonzentration zwischen zwei Bereichen; Teilchen diffundieren netto vom Ort hoher zum Ort niedriger Konzentration.">Konzentrationsgefälle</span>s</strong>. Die Zelle muss keine Energie aufwenden.</p>
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Formen</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Zuordnen</button>
+      <button class="substep-all" onclick="revealSub(1,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph1-sub-1">
+
+      <figure class="fig"><img src="img/Biomembran_Transportmechanismen_a.jpg" alt="Schema der Transportmechanismen an der Biomembran: einfache Diffusion, kanal- und carriervermittelte Diffusion, aktiver Transport" style="max-width:520px;width:100%"><figcaption>Quelle: © Ernst Klett Verlag GmbH, Stuttgart 2012</figcaption></figure>
+      <table class="info">
+        <tr><th>Form</th><th>Wie?</th><th>Beispiel</th></tr>
+        <tr><td><strong>einfache Diffusion</strong></td><td>direkt durch die Lipiddoppelschicht</td><td>O<sub>2</sub>, CO<sub>2</sub>, lipophile Stoffe</td></tr>
+        <tr><td><strong>Osmose</strong></td><td>Diffusion von <strong>Wasser</strong> durch eine selektiv permeable Membran (auch durch <span class="tt" tabindex="0" data-tip="Kanalproteine speziell für Wasser">Aquaporine</span>)</td><td>Wasseraufnahme der Wurzelhaarzelle</td></tr>
+        <tr><td><strong>erleichterte Diffusion über Kanalproteine</strong></td><td>tunnelförmiges Protein, innen mit polaren Aminosäuren ausgekleidet, für bestimmte Ionen</td><td>K<sup>+</sup>-Kanal der Nervenzelle</td></tr>
+        <tr><td><strong>erleichterte Diffusion über <span class="tt" tabindex="0" data-tip="Trägerproteine: binden den Stoff spezifisch und ändern ihre Raumstruktur (Konformation)">Carrierproteine</span></strong></td><td>Stoff bindet spezifisch, Carrier ändert seine Form und gibt ihn auf der anderen Seite ab</td><td>Glucose-Carrier der roten Blutzelle</td></tr>
+      </table>
+      <div class="quiz-item">
+  <div class="quiz-q">Bei der Diffusion bewegen sich die Teilchen …</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-netto', this, 'w')">… ausschließlich vom Ort hoher zum Ort niedriger Konzentration.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-netto', this, 'c')">… in alle Richtungen; nur der <strong>Nettostrom</strong> geht vom Ort hoher zum Ort niedriger Konzentration.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-netto', this, 'w')">… nur, solange die Zelle Energie bereitstellt.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-netto"></div>
+</div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Zuordnen ↓</button></div>
+    </div>
+    <div class="subphase" id="ph1-sub-2">
+
+      <div class="ex">
+        <p><strong>Aufgabe 2:</strong> Ordnen Sie die Begriffe den Beschreibungen zu.</p>
+        <div class="baustein" data-type="match" id="match-passiv">
+  <div class="m-pool">
+    <span class="m-chip" data-id="m2" onclick="matchSelect(this)">Kanalprotein</span>
+    <span class="m-chip" data-id="m3" onclick="matchSelect(this)">Carrierprotein</span>
+    <span class="m-chip" data-id="m4" onclick="matchSelect(this)">Aquaporin</span>
+    <span class="m-chip" data-id="m0" onclick="matchSelect(this)">einfache Diffusion</span>
+    <span class="m-chip" data-id="m1" onclick="matchSelect(this)">Osmose</span>
+  </div>
+  <div class="m-zone" data-correct="m0" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Gase und lipophile Teilchen wandern direkt durch die Lipiddoppelschicht.</span></div>
+  <div class="m-zone" data-correct="m1" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Wasser diffundiert durch eine selektiv permeable Membran zur konzentrierteren Lösung.</span></div>
+  <div class="m-zone" data-correct="m2" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Tunnel mit polarer Auskleidung, lässt bestimmte Ionen passieren.</span></div>
+  <div class="m-zone" data-correct="m3" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">bindet einen Stoff spezifisch und ändert dabei seine Raumstruktur.</span></div>
+  <div class="m-zone" data-correct="m4" onclick="matchPlace(this)">
+    <span class="m-drop">?</span><span class="m-def">Kanalprotein, das nur Wassermoleküle schnell durchlässt.</span></div>
+  <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-pass">
+  <div data-tipp>Achten Sie darauf, ob ein Protein beteiligt ist oder nicht.</div>
+  <div data-tipp>Kanal = Tunnel (keine Formänderung), Carrier = bindet und ändert seine Form.</div>
+  <div data-tipp>Zwei Beschreibungen nennen Wasser: Die eine beschreibt den Vorgang, die andere ein Protein.</div>
+  <div data-muster><p>einfache Diffusion – Gase/lipophile Teilchen · Osmose – Wasser zur konzentrierteren Lösung · Kanalprotein – Tunnel für Ionen · Carrierprotein – bindet, Formänderung · Aquaporin – Wasserkanal.</p></div>
+</div>
+      </div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Passiver Transport</div>
+  <p><strong>Passiver Transport:</strong> Stofftransport <strong>entlang</strong> des Konzentrationsgefälles ohne Energieaufwand. Formen: einfache Diffusion, Osmose, erleichterte Diffusion über Kanal- oder Carrierproteine (spezifischer passiver Transport).</p>
+</div>
+      <p class="connector-text">Und wenn eine Zelle Stoffe <em>gegen</em> das Gefälle sammeln muss – etwa Protonen für die ATP-Bildung oder Nährstoffe aus dem Darm?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zum aktiven Transport →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Aktiver und gekoppelter Transport</h2>
+    <p>Wasser fließt von allein bergab – bergauf braucht man eine Pumpe. Genauso ist es an der Membran: Transport <strong>gegen</strong> das Konzentrationsgefälle kostet Energie.</p>
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Aktiv</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · AB-Abbildung</button>
+      <button class="substep-all" onclick="revealSub(2,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph2-sub-1">
+
+      <table class="info">
+        <tr><th>primär aktiver Transport</th><th>sekundär aktiver Transport</th></tr>
+        <tr><td>Der Carrier spaltet selbst <strong>ATP</strong> (ATP → ADP + P<sub>i</sub>) und pumpt damit einen Stoff gegen sein Gefälle („Pumpe“). Beispiele: Na<sup>+</sup>/K<sup>+</sup>-Pumpe, H<sup>+</sup>-Pumpe.</td>
+            <td>Ein zuvor aktiv aufgebauter Gradient (z. B. H<sup>+</sup> oder Na<sup>+</sup>) treibt den Transport an: Ein Ion strömt mit seinem Gefälle zurück und „nimmt“ einen anderen Stoff gegen dessen Gefälle mit.</td></tr>
+      </table>
+      <div class="figrow">
+        <figure class="fig"><img src="img/Gekoppelter_Transport.jpg" alt="Symport und Antiport: zwei Stoffe werden gemeinsam bzw. gegenläufig transportiert" style="max-width:300px;width:100%"><figcaption>Quelle: © Ernst Klett Verlag GmbH, Stuttgart 2012</figcaption></figure>
+        <div>
+          <p><strong>Uniport:</strong> ein Stoff, eine Richtung</p>
+          <p><strong>Symport:</strong> zwei Stoffe gleichzeitig in <strong>dieselbe</strong> Richtung</p>
+          <p><strong>Antiport:</strong> zwei Stoffe in <strong>entgegengesetzte</strong> Richtungen</p>
+          <div class="callout callout-warn">⚠️ <span>Uni-, Sym- und Antiport sagen nur etwas über <strong>Anzahl und Richtung</strong> aus – nicht, ob der Transport passiv oder aktiv ist!</span></div>
+        </div>
+      </div>
+      <div class="ex">
+        <p><strong>Aufgabe 3:</strong> Vervollständigen Sie den Text.</p>
+        <div class="baustein" data-type="dtw" id="dtw-aktiv">
+  <div class="dtw-pool">
+    <span class="dtw-word" data-w="primär" onclick="dtwSelect(this)">primär</span>
+    <span class="dtw-word" data-w="Antiport" onclick="dtwSelect(this)">Antiport</span>
+    <span class="dtw-word" data-w="entlang" onclick="dtwSelect(this)">entlang</span>
+    <span class="dtw-word" data-w="gegen" onclick="dtwSelect(this)">gegen</span>
+    <span class="dtw-word" data-w="Uniport" onclick="dtwSelect(this)">Uniport</span>
+    <span class="dtw-word" data-w="Symport" onclick="dtwSelect(this)">Symport</span>
+    <span class="dtw-word" data-w="Glucose" onclick="dtwSelect(this)">Glucose</span>
+    <span class="dtw-word" data-w="ATP" onclick="dtwSelect(this)">ATP</span>
+    <span class="dtw-word" data-w="Gradient" onclick="dtwSelect(this)">Gradient</span>
+  </div>
+  <p class="dtw-text">Beim aktiven Transport werden Stoffe <span class="dtw-gap" data-answer="gegen" onclick="dtwPlace(this)">______</span> ihr Konzentrationsgefälle befördert. Beim <span class="dtw-gap" data-answer="primär" onclick="dtwPlace(this)">______</span> aktiven Transport spaltet der Carrier selbst <span class="dtw-gap" data-answer="ATP" onclick="dtwPlace(this)">______</span>. Beim sekundär aktiven Transport liefert ein bestehender <span class="dtw-gap" data-answer="Gradient" onclick="dtwPlace(this)">______</span> die Energie. Werden zwei Stoffe gleichzeitig in dieselbe Richtung transportiert, spricht man von <span class="dtw-gap" data-answer="Symport" onclick="dtwPlace(this)">______</span>, bei entgegengesetzten Richtungen von <span class="dtw-gap" data-answer="Antiport" onclick="dtwPlace(this)">______</span>.</p>
+  <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+  <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-aktiv">
+  <div data-tipp>Unterscheiden Sie: Woher kommt die Energie?</div>
+  <div data-tipp>Primär = direkt ATP; sekundär = indirekt über einen Gradienten.</div>
+  <div data-tipp>Drei Wörter bleiben übrig: „entlang“, „Glucose“, „Uniport“.</div>
+  <div data-muster><p>gegen – primär – ATP – Gradient – Symport – Antiport.</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">AB-Abbildung ↓</button></div>
+    </div>
+    <div class="subphase" id="ph2-sub-2">
+
+      <figure class="fig"><img src="img/ab_abb1.png" alt="Modellhafte Darstellung von sieben Transportvorgängen an einer Biomembran mit leeren Kästchen" style="max-width:760px;width:100%"><figcaption>Abb. 1 aus dem AB „Transportvorgänge an Biomembranen“ (Lehrbuchabbildung, vgl. Bu. S. 60–62)</figcaption></figure>
+      <div class="ex">
+        <p><strong>Aufgabe 4:</strong> Ordnen Sie den sieben Kästchen (von links nach rechts) Beschreibung und Beispiel aus dem AB zu.</p>
+        <div class="baustein" data-type="selecttab" id="sel-abb1">
+  <div class="tblwrap"><table class="seltab">
+    <tr><th>Kästchen</th><th>Beschreibung (Nr.)</th><th>Beispiel</th></tr>
+    <tr><td>1 – einfache Diffusion</td><td><select class="sel" data-sol="7" aria-label="Beschreibung (Nr.) für Zeile 1"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="D" aria-label="Beispiel für Zeile 1"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>2 – über Kanal</td><td><select class="sel" data-sol="1" aria-label="Beschreibung (Nr.) für Zeile 2"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="C" aria-label="Beispiel für Zeile 2"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>3 – über Carrier</td><td><select class="sel" data-sol="6" aria-label="Beschreibung (Nr.) für Zeile 3"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="E" aria-label="Beispiel für Zeile 3"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>4 – Cotransport, gleiche Richtung</td><td><select class="sel" data-sol="2" aria-label="Beschreibung (Nr.) für Zeile 4"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="A" aria-label="Beispiel für Zeile 4"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>5 – Cotransport, entgegengesetzt</td><td><select class="sel" data-sol="4" aria-label="Beschreibung (Nr.) für Zeile 5"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="G" aria-label="Beispiel für Zeile 5"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>6 – primär aktiv</td><td><select class="sel" data-sol="5" aria-label="Beschreibung (Nr.) für Zeile 6"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="B" aria-label="Beispiel für Zeile 6"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+    <tr><td>7 – sekundär aktiv</td><td><select class="sel" data-sol="3" aria-label="Beschreibung (Nr.) für Zeile 7"><option value="">– wählen –</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></td><td><select class="sel" data-sol="F" aria-label="Beispiel für Zeile 7"><option value="">– wählen –</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></td></tr>
+  </table></div>
+  <button class="btn btn-primary btn-sm" onclick="selCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-abb1">
+  <div data-tipp>Beginnen Sie mit den eindeutigen Fällen: Wo ist gar kein Protein beteiligt?</div>
+  <div data-tipp>Zählen Sie die Bindungsstellen: zwei Stoffe auf derselben Seite → Symport; auf verschiedenen Seiten → Antiport. ATP-Bindungsstelle → aktiv.</div>
+  <div data-tipp>Beschreibung 5 (Substrat + ATP auf einer Seite) = primär aktiv; Beschreibung 3 (Substrat + ATP innen, weiteres Substrat außen) = sekundär aktiv.</div>
+  <div data-muster><p>7D · 1C · 6E · 2A · 4G · 5B · 3F</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">★ Halobakterien pumpen mit Bakteriorhodopsin H<sup>+</sup>-Ionen gegen ihr Gefälle nach außen – angetrieben durch <strong>Licht</strong> statt ATP. Welche Transportform liegt vor?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-halo', this, 'w')">passiver Uniport</button>
+    <button class="quiz-btn" onclick="quizCheck('q-halo', this, 'c')">primär aktiver Transport (Uniport)</button>
+    <button class="quiz-btn" onclick="quizCheck('q-halo', this, 'w')">sekundär aktiver Symport</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-halo"></div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Aktiver Transport</div>
+  <p><strong>Aktiver Transport:</strong> Transport <strong>gegen</strong> das Konzentrationsgefälle unter Energieaufwand. <strong>Primär aktiv:</strong> direkte ATP-Spaltung am Carrier (Pumpe). <strong>Sekundär aktiv:</strong> Kopplung an einen bestehenden Ionengradienten. <strong>Uniport</strong> – ein Stoff; <strong>Symport</strong> – zwei Stoffe gleiche Richtung; <strong>Antiport</strong> – zwei Stoffe entgegengesetzt.</p>
+</div>
+      <p class="connector-text">Jetzt kennen Sie alle Formen. Aber können Sie sie auch an Beispielen sicher unterscheiden?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zum Vergleich →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Transportvorgänge im Vergleich</h2>
+    <p>Vergleichen heißt: dieselben Kriterien an alle Formen anlegen. Unsere Kriterien: <strong>Gefälle – Energie – Membranprotein – Spezifität</strong>.</p>
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Tabelle</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Beispiele</button>
+      <button class="substep-all" onclick="revealSub(3,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph3-sub-1">
+
+      <div class="ex">
+        <p><strong>Aufgabe 5:</strong> Füllen Sie die Vergleichstabelle (wie AB 1, Biologie heute S. 10).</p>
+        <div class="baustein" data-type="selecttab" id="sel-vergl">
+  <div class="tblwrap"><table class="seltab">
+    <tr><th>Kriterium</th><th>einfache Diffusion</th><th>Diffusion durch Kanal</th><th>Carrier-vermittelte Diffusion</th><th>aktiver Transport</th></tr>
+    <tr><td>Richtung zum Gefälle</td><td><select class="sel" data-sol="mit" aria-label="einfache Diffusion für Zeile 1"><option value="">– wählen –</option><option>mit</option><option>gegen</option></select></td><td><select class="sel" data-sol="mit" aria-label="Diffusion durch Kanal für Zeile 1"><option value="">– wählen –</option><option>mit</option><option>gegen</option></select></td><td><select class="sel" data-sol="mit" aria-label="Carrier-vermittelte Diffusion für Zeile 1"><option value="">– wählen –</option><option>mit</option><option>gegen</option></select></td><td><select class="sel" data-sol="gegen" aria-label="aktiver Transport für Zeile 1"><option value="">– wählen –</option><option>mit</option><option>gegen</option></select></td></tr>
+    <tr><td>Energie (ATP)</td><td><select class="sel" data-sol="nein" aria-label="einfache Diffusion für Zeile 2"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="nein" aria-label="Diffusion durch Kanal für Zeile 2"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="nein" aria-label="Carrier-vermittelte Diffusion für Zeile 2"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="ja" aria-label="aktiver Transport für Zeile 2"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td></tr>
+    <tr><td>Membranprotein</td><td><select class="sel" data-sol="keins" aria-label="einfache Diffusion für Zeile 3"><option value="">– wählen –</option><option>keins</option><option>Kanal</option><option>Carrier</option></select></td><td><select class="sel" data-sol="Kanal" aria-label="Diffusion durch Kanal für Zeile 3"><option value="">– wählen –</option><option>keins</option><option>Kanal</option><option>Carrier</option></select></td><td><select class="sel" data-sol="Carrier" aria-label="Carrier-vermittelte Diffusion für Zeile 3"><option value="">– wählen –</option><option>keins</option><option>Kanal</option><option>Carrier</option></select></td><td><select class="sel" data-sol="Carrier" aria-label="aktiver Transport für Zeile 3"><option value="">– wählen –</option><option>keins</option><option>Kanal</option><option>Carrier</option></select></td></tr>
+    <tr><td>spezifisch?</td><td><select class="sel" data-sol="nein" aria-label="einfache Diffusion für Zeile 4"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="ja" aria-label="Diffusion durch Kanal für Zeile 4"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="ja" aria-label="Carrier-vermittelte Diffusion für Zeile 4"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td><td><select class="sel" data-sol="ja" aria-label="aktiver Transport für Zeile 4"><option value="">– wählen –</option><option>nein</option><option>ja</option></select></td></tr>
+  </table></div>
+  <button class="btn btn-primary btn-sm" onclick="selCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-vergl">
+  <div data-tipp>Nur eine der vier Formen läuft „bergauf“.</div>
+  <div data-tipp>Energie braucht nur, was gegen das Gefälle läuft. Proteine sorgen für Spezifität.</div>
+  <div data-tipp>Einfache Diffusion: kein Protein, unspezifisch. Kanal und Carrier: spezifisch. Aktiver Transport: Carrier/Pumpe.</div>
+  <div data-muster><p>mit/mit/mit/gegen · nein/nein/nein/ja · keins/Kanal/Carrier/Carrier · nein/ja/ja/ja</p></div>
+</div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Beispiele ↓</button></div>
+    </div>
+    <div class="subphase" id="ph3-sub-2">
+
+      <div class="ex">
+        <p><strong>Aufgabe 6:</strong> Passiv oder aktiv? Uni-, Sym- oder Antiport?</p>
+        <div class="baustein" data-type="selecttab" id="sel-bsp">
+  <div class="tblwrap"><table class="seltab">
+    <tr><th>Beispiel</th><th>passiv / aktiv</th><th>Port</th></tr>
+    <tr><td>Glucose gelangt über einen Carrier in Erythrocyten (mit dem Gefälle).</td><td><select class="sel" data-sol="passiv" aria-label="passiv / aktiv für Zeile 1"><option value="">– wählen –</option><option>passiv</option><option>aktiv</option></select></td><td><select class="sel" data-sol="Uniport" aria-label="Port für Zeile 1"><option value="">– wählen –</option><option>Uniport</option><option>Symport</option><option>Antiport</option></select></td></tr>
+    <tr><td>Cl<sup>–</sup> hinein, HCO<sub>3</sub><sup>–</sup> hinaus (jeweils mit dem Gefälle).</td><td><select class="sel" data-sol="passiv" aria-label="passiv / aktiv für Zeile 2"><option value="">– wählen –</option><option>passiv</option><option>aktiv</option></select></td><td><select class="sel" data-sol="Antiport" aria-label="Port für Zeile 2"><option value="">– wählen –</option><option>Uniport</option><option>Symport</option><option>Antiport</option></select></td></tr>
+    <tr><td>Eine Pumpe befördert H<sup>+</sup> unter ATP-Spaltung aus der Zelle.</td><td><select class="sel" data-sol="aktiv" aria-label="passiv / aktiv für Zeile 3"><option value="">– wählen –</option><option>passiv</option><option>aktiv</option></select></td><td><select class="sel" data-sol="Uniport" aria-label="Port für Zeile 3"><option value="">– wählen –</option><option>Uniport</option><option>Symport</option><option>Antiport</option></select></td></tr>
+    <tr><td>Die Na<sup>+</sup>/K<sup>+</sup>-Pumpe: 3 Na<sup>+</sup> hinaus, 2 K<sup>+</sup> hinein, ATP-Spaltung.</td><td><select class="sel" data-sol="aktiv" aria-label="passiv / aktiv für Zeile 4"><option value="">– wählen –</option><option>passiv</option><option>aktiv</option></select></td><td><select class="sel" data-sol="Antiport" aria-label="Port für Zeile 4"><option value="">– wählen –</option><option>Uniport</option><option>Symport</option><option>Antiport</option></select></td></tr>
+    <tr><td>H<sup>+</sup> strömen zurück und nehmen Lactose gegen deren Gefälle mit.</td><td><select class="sel" data-sol="aktiv" aria-label="passiv / aktiv für Zeile 5"><option value="">– wählen –</option><option>passiv</option><option>aktiv</option></select></td><td><select class="sel" data-sol="Symport" aria-label="Port für Zeile 5"><option value="">– wählen –</option><option>Uniport</option><option>Symport</option><option>Antiport</option></select></td></tr>
+  </table></div>
+  <button class="btn btn-primary btn-sm" onclick="selCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-bsp">
+  <div data-tipp>Prüfen Sie zuerst: Steht da „ATP“ oder „gegen das Gefälle“?</div>
+  <div data-tipp>Dann zählen Sie die Stoffe und schauen auf ihre Richtungen.</div>
+  <div data-tipp>Die Lactose-Aufnahme ist sekundär aktiv – trotzdem „aktiv“; die Na<sup>+</sup>/K<sup>+</sup>-Pumpe bewegt zwei Ionensorten gegenläufig.</div>
+  <div data-muster><p>passiv/Uniport · passiv/Antiport · aktiv/Uniport · aktiv/Antiport · aktiv/Symport</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">Darmepithelzellen nehmen Glucose zusammen mit Na<sup>+</sup> auf – auch dann, wenn in der Zelle schon mehr Glucose ist als im Darm. Wie ist das möglich?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-glc', this, 'w')">Glucose diffundiert einfach durch die Lipiddoppelschicht.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-glc', this, 'c')">Na<sup>+</sup> strömt mit seinem Gefälle ein und „zieht“ Glucose mit – ein sekundär aktiver Symport.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-glc', this, 'w')">Der Glucose-Carrier spaltet selbst ATP.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-glc"></div>
+</div>
+      <div class="callout">💡 <span>Im AB vor den Ferien steht bei Beispiel A, dass Glucose und Na<sup>+</sup> „gemeinsam mit dem Gefälle“ diffundieren – dann wäre es passiver Cotransport. In der echten Darmzelle treibt das Na<sup>+</sup>-Gefälle die Glucose aber auch <strong>gegen</strong> ihr Gefälle: sekundär aktiv.</span></div>
+      <p class="connector-text">Bleibt noch das wichtigste Teilchen der Zelle: Wasser. Was passiert, wenn außen mehr gelöst ist als innen?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zur Osmose →</button></div>
+    </div>
+  </div>
+</section>
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Osmose im Alltag & Exit-Ticket</h2>
+    <p>Erinnern Sie sich an die Wiederholungsaufgaben: welkende Zimmerpflanze, platzende Kirschen, gepökeltes Fleisch. Alle drei sind <strong>Osmose</strong>.</p>
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Kirschen</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(4,2)">Alle Teile anzeigen</button>
+    </div>
+    <div class="subphase on" id="ph4-sub-1">
+
+      <div class="ex">
+        <p><strong>Aufgabe 7:</strong> Bringen Sie die Erklärung „Reife Kirschen platzen bei Regen“ in die richtige Reihenfolge.</p>
+        <div class="baustein" data-type="sort" id="sort-kirsche">
+  <div class="sort-list">
+    <div class="sort-item" data-v="3"><span>Wasser diffundiert osmotisch durch die selektiv permeablen Membranen in die Zellen.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="4"><span>Zucker kann die Membranen nicht passieren – ein Ausgleich gelingt nur über Wasser.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="2"><span>Regenwasser auf der Haut enthält kaum gelöste Teilchen (hypotonisch).</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="5"><span>Volumen und Turgor der Zellen steigen.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="6"><span>Die nur begrenzt dehnbare Fruchthaut reißt.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+    <div class="sort-item" data-v="1"><span>Der Zellsaft reifer Kirschen enthält sehr viel Zucker.</span>
+      <span class="sort-btns"><button onclick="sortMove(this,-1)" aria-label="nach oben">▲</button><button onclick="sortMove(this,1)" aria-label="nach unten">▼</button></span></div>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="sortCheck(this)">✓ Prüfen</button>
+  <div class="fb grp-fb"></div>
+</div>
+        <div class="hs" id="hs-mt-kirsche">
+  <div data-tipp>Starten Sie mit dem, was „vorher“ schon so ist.</div>
+  <div data-tipp>Erst die Konzentrationen, dann die Wasserbewegung, zuletzt die Folge.</div>
+  <div data-tipp>Der Turgor-Anstieg kommt direkt vor dem Platzen.</div>
+  <div data-muster><p>Zucker im Zellsaft → Regen hypotonisch → Wasser strömt osmotisch ein → Zucker bleibt drin → Turgor steigt → Haut reißt.</p></div>
+</div>
+      </div>
+      <div class="quiz-item">
+  <div class="quiz-q">Warum schützt starkes Einsalzen Fleisch vor dem Verderben?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-salz', this, 'w')">Salz tötet Bakterien chemisch wie ein Gift.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-salz', this, 'c')">Die hypertonische Salzlösung entzieht den Bakterien osmotisch Wasser – ihr Stoffwechsel kommt zum Erliegen.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-salz', this, 'w')">Salz verschließt die Poren des Fleisches.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-salz"></div>
+</div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Exit-Ticket ↓</button></div>
+    </div>
+    <div class="subphase" id="ph4-sub-2">
+
+      <div class="ex">
+        <p><strong>Exit-Ticket 1:</strong></p>
+        <div class="quiz-item">
+  <div class="quiz-q">Welche Aussage über den passiven Transport ist richtig?</div>
+  <div class="quiz-opts">
+    <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'w')">Er läuft immer ohne Membranproteine ab.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'c')">Er erfolgt entlang des Konzentrationsgefälles ohne Energieaufwand – mit oder ohne Transportprotein.</button>
+    <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'w')">Er kann Stoffe in der Zelle anreichern.</button>
+  </div>
+  <div class="quiz-fb" id="qfb-q-exit1"></div>
+</div>
+        <div class="hs" id="hs-mt-exit1">
+  <div data-tipp>Was haben alle passiven Vorgänge gemeinsam?</div>
+  <div data-tipp>Gemeinsam: Richtung (mit dem Gefälle) und keine Energie.</div>
+  <div data-tipp>Die Proteinfrage unterscheidet nur einfache und erleichterte Diffusion.</div>
+  <div data-muster><p>Richtig: „entlang des Konzentrationsgefälles ohne Energieaufwand – mit oder ohne Transportprotein“.</p></div>
+</div>
+      </div>
+      <div class="ex">
+        <p><strong>Exit-Ticket 2:</strong> Formulieren Sie in einem Satz den Unterschied zwischen primär und sekundär aktivem Transport.</p>
+        <textarea rows="2" style="width:100%" aria-label="Antwort Exit-Ticket 2" placeholder="Ihre Antwort …"></textarea>
+        <div class="hs" id="hs-mt-exit2">
+  <div data-tipp>Beide gehen „bergauf“ – der Unterschied liegt in der Energiequelle.</div>
+  <div data-tipp>Primär: Energie direkt am Carrier. Sekundär: Energie aus einem schon vorhandenen Gefälle.</div>
+  <div data-tipp>Beispiel primär: Na<sup>+</sup>/K<sup>+</sup>-Pumpe. Beispiel sekundär: H<sup>+</sup>/Lactose-Symport.</div>
+  <div data-muster><p>Beim primär aktiven Transport spaltet das Transportprotein selbst ATP, beim sekundär aktiven Transport wird die Energie eines bestehenden Ionengradienten genutzt, der zuvor primär aktiv aufgebaut wurde.</p></div>
+</div>
+      </div>
+      <div class="baustein" data-type="flashcards" id="fc-transport" data-cards='[[&quot;Einfache Diffusion&quot;, &quot;Gase und lipophile Teilchen direkt durch die Lipiddoppelschicht, mit dem Gefälle&quot;], [&quot;Osmose&quot;, &quot;Diffusion von Wasser durch eine selektiv permeable Membran&quot;], [&quot;Kanalprotein&quot;, &quot;Tunnel für bestimmte Ionen, passiv&quot;], [&quot;Carrierprotein&quot;, &quot;bindet spezifisch, Konformationsänderung, passiv oder aktiv&quot;], [&quot;Primär aktiv&quot;, &quot;Carrier spaltet ATP (Pumpe)&quot;], [&quot;Sekundär aktiv&quot;, &quot;Energie aus einem bestehenden Gradienten&quot;], [&quot;Symport / Antiport&quot;, &quot;zwei Stoffe gleiche / entgegengesetzte Richtung&quot;]]'>
+  <div class="fc-card" onclick="fcFlip(this)"><span class="fc-face">Einfache Diffusion</span></div>
+  <div class="fc-controls">
+    <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)">← zurück</button>
+    <span class="caption fc-count">1 / 7</span>
+    <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)">weiter →</button>
+  </div>
+</div>
+      <div class="hefter-box">
+  <div class="hefter-label">📓 Heftereintrag — Osmose</div>
+  <p><strong>Osmose:</strong> Diffusion von Wasser durch eine selektiv permeable Membran in Richtung der höher konzentrierten (hypertonischen) Lösung. Pflanzenzelle in hypertonischer Lösung → Wasserabgabe, ggf. <strong>Plasmolyse</strong>; in hypotonischer Lösung → Wasseraufnahme, Turgor steigt.</p>
+</div>
+    </div>
+  </div>
+</section>
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Selektive Permeabilität</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Nur kleine, unpolare bzw. lipophile Teilchen passieren die Lipiddoppelschicht frei; alles andere braucht Transportproteine.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Passiver Transport</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Mit dem Konzentrationsgefälle, ohne Energie: einfache Diffusion, Osmose, erleichterte Diffusion (Kanal, Carrier).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Aktiver Transport</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Gegen das Gefälle, mit Energie: primär (ATP am Carrier) oder sekundär (Ionengradient). Uni-, Sym-, Antiport beschreiben Anzahl und Richtung der Stoffe.</div></div></div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Sie können jetzt Transportvorgänge nach Gefälle, Energie und Membranprotein vergleichen und Beispiele begründet zuordnen.</span></div>
+    <p class="connector-text">Gleich wird es praktisch: Sie legen Zellen der roten Küchenzwiebel in Salzlösung und sehen die Osmose unter dem Mikroskop – weiter geht es auf der Lernseite „Mikroskopie &amp; Plasmolyse“.</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+  <p class="caption" style="text-align:center">SCR</p>
+
+</div>
+<script>
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem('mt_subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem('mt_subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem('mt_predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem('mt_predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem('teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem('teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem('teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return 'mt_hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem('teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem('mt_hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem('mt_hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+</script>
+<script>
+function selCheck(btn){
+  const box=btn.closest('.baustein'); let ok=0, n=0;
+  box.querySelectorAll('select.sel').forEach(s=>{ n++; const good=(s.value===s.dataset.sol);
+    s.classList.toggle('ok',good); s.classList.toggle('err',!good && s.value!==''); if(good) ok++; });
+  const fb=box.querySelector('.grp-fb'); fb.textContent=ok+' von '+n+' richtig.'+(ok===n?' Stark!':' Rote Felder noch einmal prüfen.');
+  fb.className='fb grp-fb '+(ok===n?'ok':'err');
+}
+</script>
+<script>
+quizFeedback["q-ion"] = {"ok": "✅ <strong>Richtig!</strong> Ladung und Hydrathülle machen Ionen „wasserliebend“ – im öligen Membraninneren ist für sie kein Platz.", "ng": "❌ <strong>Nicht ganz.</strong> Nicht Masse oder fehlende Löcher sind entscheidend, sondern die Ladung (Polarität).", "hint": "Denken Sie an „Gleiches löst sich in Gleichem“."};
+quizFeedback["q-netto"] = {"ok": "✅ <strong>Richtig!</strong> Die Teilchen bewegen sich zufällig. Weil auf der konzentrierten Seite mehr Teilchen sind, wandern unterm Strich mehr in Richtung der verdünnten Seite.", "ng": "❌ <strong>Nicht ganz.</strong> Einzelne Teilchen „wissen“ nichts vom Gefälle – auch in Gegenrichtung wandern Teilchen.", "hint": "Stellen Sie sich einzelne Teilchen vor: Haben sie eine Lieblingsrichtung?"};
+quizFeedback["q-halo"] = {"ok": "✅ <strong>Richtig!</strong> Gegen das Gefälle → aktiv; die Energie (Licht) wird direkt am Transportprotein genutzt → primär; nur ein Stoff → Uniport.", "ng": "❌ <strong>Nicht ganz.</strong> „Gegen das Gefälle“ schließt passiv aus, und es wird kein zweiter Stoff mitgenommen.", "hint": "Fragen Sie sich: Mit oder gegen das Gefälle? Woher kommt die Energie? Wie viele Stoffe?"};
+quizFeedback["q-glc"] = {"ok": "✅ <strong>Richtig!</strong> Das Na<sup>+</sup>-Gefälle (aufgebaut von der Na<sup>+</sup>/K<sup>+</sup>-Pumpe) liefert die Energie.", "ng": "❌ <strong>Nicht ganz.</strong> Glucose ist zu groß und polar für einfache Diffusion; der Symporter selbst spaltet kein ATP.", "hint": "Welche der beiden Teilchensorten hat ein Gefälle in die Zelle hinein?"};
+quizFeedback["q-salz"] = {"ok": "✅ <strong>Richtig!</strong> Osmotischer Wasserentzug („Plasmolyse“ der Bakterien) verhindert Wachstum und Vermehrung.", "ng": "❌ <strong>Nicht ganz.</strong> Es ist kein Gift-Effekt – entscheidend ist der Konzentrationsunterschied.", "hint": "Wo ist die Konzentration gelöster Teilchen höher – im Bakterium oder außen?"};
+quizFeedback["q-exit1"] = {"ok": "✅ <strong>Richtig!</strong> Kanal- und Carrierproteine können am passiven Transport beteiligt sein – Energie wird nie verbraucht.", "ng": "❌ <strong>Nicht ganz.</strong> Erleichterte Diffusion ist passiv <em>und</em> braucht Proteine; anreichern kann nur der aktive Transport.", "hint": "Denken Sie an die erleichterte Diffusion."};
+</script>
+</body>
+</html>
