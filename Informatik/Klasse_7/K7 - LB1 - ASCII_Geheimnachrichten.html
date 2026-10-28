@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261027-181BD3 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261027-181BD3" data-lh-j="2026">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261027-181BD3">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 7 · LB1 · Operation Byte – Geheimnachrichten mit ASCII</title>
+<style>
+/* lh:MR-20261027-181BD3 */
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#1C7168;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+/* ---------- Urheber-Fußzeile ---------- */
+.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn);border-radius:var(--radius);background:var(--warn-bg);color:var(--text);font-size:var(--fs-base);}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light);text-align:center;font-size:var(--fs-sm);color:var(--text-3);}
+
+@media print{
+  .lh-foot{display:block !important;}
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+/* ============================================================
+   OPTIONALER Freischalt-Modus — nur zusammen mit freischalten.js
+   ============================================================ */
+[hidden]{display:none !important;}
+.req-done{position:relative;}
+.req-done::before{content:"✓ erledigt";position:absolute;top:-11px;right:12px;background:var(--ok);color:#FFFFFF;font-size:var(--fs-sm);font-weight:700;padding:1px 10px;border-radius:var(--radius-full);z-index:2;line-height:1.5;}
+.hefter-box.req-done::before{content:"✓ übernommen";}
+.gate-status{margin:16px 0 6px;padding:10px 14px;border-radius:var(--radius);font-weight:600;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;text-align:center;}
+.gate-status.open{background:var(--warn-bg);border:1.5px dashed var(--warn-b);color:var(--warn);}
+.gate-status.ok{background:var(--ok-bg);border:1.5px solid var(--ok-b);color:#166534;}
+.gate-status.teach{background:var(--surface-2);border:1.5px dashed var(--border);color:var(--text-2);font-weight:400;}
+.subphase-next .gate-locked{opacity:.45;filter:grayscale(.7);cursor:not-allowed;}
+.pnav.pnav-locked{opacity:.45;}
+.pnav.pnav-locked .pnum::after{content:" 🔒";}
+.gate-flash{animation:gateFlash .7s ease 3;}
+@keyframes gateFlash{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 0 5px var(--warn-b);}}
+#gate-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2B2B2B;color:#FFFFFF;padding:12px 18px;border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:50;max-width:min(560px,92vw);text-align:center;}
+.fc-progress{margin-top:4px;}
+.selfwrite{width:100%;font-family:var(--mono);font-size:var(--fs-base);padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);margin:6px 0;}
+
+/* Lehrkraft-Werkzeuge in der Lehrermodus-Leiste */
+.teachbar-tool{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:var(--surface);color:#33475B;
+  border:1.5px solid #33475B;border-radius:var(--radius-full);padding:5px 14px;cursor:pointer;}
+.teachbar-tool:hover{background:var(--surface-2);}
+.teachbar-danger{color:var(--err);border-color:var(--err-b);}
+.teachbar-danger:hover{background:var(--err-bg);}
+
+/* Kapitel nur im Lehrermodus: <section class="phase" id="phN" data-gate="lehrer"> mit .lockcard davor */
+.lockcard{display:none;background:var(--surface);border:2px dashed var(--border);border-radius:var(--radius);padding:28px 22px;margin-bottom:16px;text-align:center;}
+.lockcard p{max-width:560px;margin:8px auto 14px;}
+.lock-ico{font-size:var(--fs-h1);}
+body:not(.teach-on) .phase[data-gate="lehrer"] > .card{display:none;}
+body:not(.teach-on) .phase[data-gate="lehrer"] > .lockcard{display:block;}
+body:not(.teach-on) .pnav.pnav-lehrer{opacity:.45;filter:grayscale(1);}
+body:not(.teach-on) .pnav.pnav-lehrer .pnum::after{content:" 🔒";}
+body:not(.teach-on) .lehrer-kapitel-only{display:none;}
+
+@media print{
+  .gate-status,.gate-intro,#gate-toast{display:none !important;}
+  .req-done::before{display:none;}
+  body:not(.teach-on) .phase[data-gate="lehrer"]{display:none !important;}
+}
+
+/* ---- Seite: Operation Byte ---- */
+.funk{background:#16201f;color:#8fe3c3;font-family:var(--mono);border-radius:var(--radius);padding:12px 16px;margin:12px 0;
+  border:2px solid #1C7168;box-shadow:inset 0 0 18px rgba(0,0,0,.45);line-height:1.7;word-break:break-word;}
+.funk-head{color:#e9c46a;font-weight:700;letter-spacing:.06em;}
+.funk-sm{display:inline-block;padding:8px 14px;}
+.ex-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;}
+.ex-row .fb{flex-basis:100%;}
+.inp-wide{min-width:12ch;width:16ch;}
+.inp-byte{width:13ch;letter-spacing:.04em;}
+.byte-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.byte-grid label{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.byte-grid .inp{width:9ch;text-align:center;}
+.byte-grid .inp-byte{width:13ch;}
+.big{font-family:var(--mono);font-weight:700;font-size:var(--fs-lg);}
+.pipe{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;}
+.pipe-box{display:flex;flex-direction:column;align-items:center;background:var(--accent-light);border:2px solid var(--accent-muted);
+  border-radius:var(--radius);padding:8px 14px;min-width:90px;}
+.pipe-cap{font-size:var(--fs-sm);color:var(--accent-hover);font-weight:700;}
+.pipe-val{font-family:var(--mono);font-weight:700;font-size:var(--fs-lg);}
+.pipe-arrow{font-family:var(--mono);color:var(--accent-hover);font-weight:700;}
+.ascii-wrap{overflow-x:auto;margin:8px 0;}
+.ascii-tab{border-collapse:collapse;font-family:var(--mono);min-width:560px;}
+.ascii-tab th,.ascii-tab td{border:1px solid var(--border);padding:4px 6px;text-align:center;}
+.ascii-tab th{background:var(--accent-light);color:var(--accent-hover);text-align:left;}
+.ascii-tab tr:nth-child(odd) td{font-weight:700;background:var(--surface-2);}
+.stw,.cmp-tab{border-collapse:collapse;font-family:var(--mono);margin:6px 0;}
+.stw td,.cmp-tab td,.cmp-tab th{border:1px solid var(--border);padding:3px 8px;text-align:center;}
+.stw tr:first-child td{background:var(--accent-light);font-weight:700;}
+.cmp-tab th{background:var(--accent-light);}
+.hl{font-weight:400;}
+.hl0,.hl1{background:#fde68a;color:#7c2d12;padding:0 2px;border-radius:3px;text-decoration:underline;}
+/* Bit-Labor */
+.bitbox{margin:10px 0;}
+.bb-row{display:flex;gap:6px;flex-wrap:wrap;}
+.bb-col{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bb-pv{font-family:var(--mono);font-size:var(--fs-sm);color:var(--accent-hover);font-weight:700;}
+.bb-bit{width:44px;height:52px;font-family:var(--mono);font-size:var(--fs-lg);font-weight:700;border-radius:8px;
+  border:2px solid var(--border);background:var(--surface-2);color:var(--text,#333);cursor:pointer;transition:all .15s;}
+.bb-bit[aria-pressed="true"]{background:var(--accent);border-color:var(--accent-hover);color:#fff;box-shadow:0 0 10px var(--accent-muted);}
+.bb-bit:focus-visible{outline:3px solid var(--accent-muted);outline-offset:2px;}
+.bb-out{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;}
+.bb-out div{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:6px 12px;}
+.bb-out b{font-family:var(--mono);font-size:var(--fs-lg);}
+.bb-goals{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;}
+.bb-goal{border:2px dashed var(--border);border-radius:var(--radius-full);padding:3px 12px;font-weight:700;}
+.bb-goal.cur{border-color:var(--accent);border-style:solid;}
+.bb-goal.done{border-style:solid;border-color:var(--ok);background:var(--ok-bg);}
+.encoder{margin-top:10px;}
+.enc-out table{border-collapse:collapse;font-family:var(--mono);margin-top:8px;}
+.enc-out td,.enc-out th{border:1px solid var(--border);padding:3px 10px;text-align:center;}
+@media (max-width:480px){.bb-row{gap:3px;flex-wrap:nowrap;}.bb-bit{width:34px;height:46px;}.bb-pv{letter-spacing:-.04em;}}
+@media print{.bb-bit{border:1px solid #000;}}
+
+/* Decoder-Banner (immer sichtbar) */
+.decoder-banner{position:sticky;top:0;z-index:40;background:#16201f;color:#8fe3c3;border:2px solid #1C7168;
+  border-radius:var(--radius);padding:6px 10px 8px;margin:0 0 14px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.db-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);
+  font-weight:700;color:#e9c46a;font-size:var(--fs-sm);letter-spacing:.04em;}
+.db-toggle{background:transparent;border:1px solid #2f6f66;color:#8fe3c3;border-radius:var(--radius-full);
+  font-family:var(--mono);font-size:var(--fs-sm);padding:1px 10px;cursor:pointer;white-space:nowrap;}
+.db-toggle:focus-visible{outline:2px solid #e9c46a;outline-offset:2px;}
+.db-body{overflow-x:auto;}
+.db-grid{display:grid;grid-template-columns:repeat(13,minmax(34px,1fr));gap:3px;margin-top:5px;min-width:470px;}
+.db-cell{display:flex;flex-direction:column;align-items:center;background:#1f2d2b;border:1px solid #2f4f4a;border-radius:6px;
+  padding:1px 0;font-family:var(--mono);line-height:1.25;}
+.db-cell b{color:#ffffff;font-size:var(--fs-base);}
+.db-cell span{color:#8fe3c3;font-size:var(--fs-sm);}
+.db-extra{font-family:var(--mono);font-size:var(--fs-sm);margin-top:5px;color:#cfeee2;}
+.db-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.db-tab{background:#1f2d2b;border:1px solid #2f6f66;color:#cfeee2;border-radius:var(--radius-full);font-family:var(--mono);
+  font-size:var(--fs-sm);font-weight:700;padding:2px 11px;cursor:pointer;white-space:nowrap;}
+.db-tab:hover{border-color:#8fe3c3;}
+.db-tab.active{background:#8fe3c3;border-color:#8fe3c3;color:#16201f;}
+.db-tab.active::before{content:"✓ ";}
+.db-tab:focus-visible{outline:2px solid #e9c46a;outline-offset:2px;}
+.db-panel[hidden]{display:none;}
+@media (max-width:560px){.db-tl{display:none;}.db-grid{grid-template-columns:repeat(10,1fr);min-width:0;gap:2px;}.db-cell b{font-size:var(--fs-sm);}.db-tab{padding:2px 14px;}}
+.db-tab-calc{border-color:#e9c46a;color:#e9c46a;}
+.db-tab-calc.active{background:#e9c46a;border-color:#e9c46a;color:#16201f;}
+.calc{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.calc-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-family:var(--mono);}
+.calc-row label{min-width:9ch;color:#e9c46a;font-weight:700;font-size:var(--fs-sm);}
+.calc-in{width:6ch;background:#0e1514;border:1.5px solid #2f6f66;border-radius:6px;color:#ffffff;font-family:var(--mono);
+  font-size:var(--fs-base);padding:3px 8px;}
+.calc-in-bin{width:11ch;}
+.calc-in:focus{outline:2px solid #e9c46a;outline-offset:1px;}
+.calc-in.bad{border-color:#f28b82;}
+.calc-eq{color:#8fe3c3;font-weight:700;}
+.calc-out{min-width:4ch;color:#ffffff;font-weight:700;font-size:var(--fs-lg);}
+.calc-chr{color:#8fe3c3;font-size:var(--fs-sm);}
+.calc-chr.bad{color:#f28b82;}
+@media (max-width:560px){.calc-row{gap:5px;}.calc-chr{flex-basis:100%;padding-left:9.5ch;}}
+.db-cell.db-dig{background:#22352f;border-color:#3f6b5f;}
+.decoder-banner.collapsed .db-body{display:none;}
+.stw-dot{border:none !important;background:transparent !important;font-weight:700;padding:3px 1px !important;}
+.bb-dot{align-self:flex-end;font-family:var(--mono);font-weight:700;font-size:var(--fs-lg);color:var(--accent-hover);padding:0 2px 10px;}
+ul.rules{padding-left:1.2em;list-style:disc;}
+.subphase,.ex,.quiz-item,.hefter-box,.baustein,.poe-box,.card{scroll-margin-top:210px;}
+@media (max-width:480px){.bb-dot{padding:0 0 8px;}}
+@media print{.decoder-banner{position:static;}.decoder-banner .db-toggle{display:none;}.decoder-banner.collapsed .db-body{display:block;}.db-tabs{display:none;}.db-panel[hidden]{display:block !important;}#dbp-rechner{display:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="OperationByte">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <button class="teachbar-tool" id="teach-unlock-btn" onclick="teachAllesFreischalten()" hidden>🔓 Alles freischalten</button>
+    <button class="teachbar-tool teachbar-danger" id="teach-reset-btn" onclick="teachLernappReset()" hidden>↺ Lernapp zurücksetzen</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 7 · LB1</div>
+    <h1>Operation Byte – Geheimnachrichten mit ASCII⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌‌​​‌​‌‌​‌​​‌‌​​​‌​​‌‌‌​​​​​‌‌​​​‌​‌​​​​‌​​‌​​​‌​​​​‌‌​​‌‌⁠</h1>
+    <div class="goal">🎯 Die Lernenden entschlüsseln und verschlüsseln Nachrichten, indem sie Zeichen mithilfe der ASCII-Tabelle in Dezimal- und 8-Bit-Binärzahlen umwandeln.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌‌​​‌​‌‌​‌​​‌‌​​​‌​​‌‌‌​​​​​‌‌​​​‌​‌​​​​‌​​‌​​​‌​​​​‌‌​​‌‌⁠</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Kapitel 1</span>Der Funkspruch</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Kapitel 2</span>So funktioniert ASCII</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Kapitel 3</span>Die Mission</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Kapitel 4</span>Gegenspionage</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Kapitel 5</span>Abschlussbericht</button>
+  <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">Kapitel 6</span>★ Top Secret</button>
+  </nav>
+  <div class="callout callout-info gate-intro">🧭 <span>So funktioniert die Seite: Ein Teil bzw. Kapitel wird erst freigeschaltet, wenn du im aktuellen Teil <strong>alle Aufgaben und Quizfragen bearbeitet</strong> und <strong>jeden Heftereintrag übernommen</strong> hast (📋-Button). Was noch fehlt, steht jeweils unten über dem Weiter-Button.</span></div>
+  
+
+<aside class="decoder-banner" id="decoder-banner" aria-label="Decoder: Ausschnitt aus der ASCII-Tabelle">
+    <div class="db-head"><span>📖 Decoder (ASCII)</span><button type="button" class="db-toggle" id="db-toggle" onclick="dbToggle()" aria-expanded="true">▲ einklappen</button></div>
+    <div class="db-body" id="db-body">
+      <div class="db-tabs" role="tablist" aria-label="Zeichengruppe wählen">
+        <button type="button" class="db-tab active" role="tab" id="dbt-gross" aria-selected="true" aria-controls="dbp-gross" onclick="dbTab('gross')">ABC<span class="db-tl"> Großbuchstaben</span></button>
+        <button type="button" class="db-tab" role="tab" id="dbt-klein" aria-selected="false" aria-controls="dbp-klein" onclick="dbTab('klein')">abc<span class="db-tl"> Kleinbuchstaben</span></button>
+        <button type="button" class="db-tab" role="tab" id="dbt-sonder" aria-selected="false" aria-controls="dbp-sonder" onclick="dbTab('sonder')">0–9 ?!<span class="db-tl"> Ziffern &amp; Sonderzeichen</span></button>
+        <button type="button" class="db-tab db-tab-calc" role="tab" id="dbt-rechner" aria-selected="false" aria-controls="dbp-rechner" onclick="dbTab('rechner')" hidden>🧮<span class="db-tl"> Rechner</span></button>
+      </div>
+      <div class="db-panel" role="tabpanel" id="dbp-gross" aria-labelledby="dbt-gross">
+        <div class="db-grid"><div class="db-cell"><b>A</b><span>65</span></div><div class="db-cell"><b>B</b><span>66</span></div><div class="db-cell"><b>C</b><span>67</span></div><div class="db-cell"><b>D</b><span>68</span></div><div class="db-cell"><b>E</b><span>69</span></div><div class="db-cell"><b>F</b><span>70</span></div><div class="db-cell"><b>G</b><span>71</span></div><div class="db-cell"><b>H</b><span>72</span></div><div class="db-cell"><b>I</b><span>73</span></div><div class="db-cell"><b>J</b><span>74</span></div><div class="db-cell"><b>K</b><span>75</span></div><div class="db-cell"><b>L</b><span>76</span></div><div class="db-cell"><b>M</b><span>77</span></div><div class="db-cell"><b>N</b><span>78</span></div><div class="db-cell"><b>O</b><span>79</span></div><div class="db-cell"><b>P</b><span>80</span></div><div class="db-cell"><b>Q</b><span>81</span></div><div class="db-cell"><b>R</b><span>82</span></div><div class="db-cell"><b>S</b><span>83</span></div><div class="db-cell"><b>T</b><span>84</span></div><div class="db-cell"><b>U</b><span>85</span></div><div class="db-cell"><b>V</b><span>86</span></div><div class="db-cell"><b>W</b><span>87</span></div><div class="db-cell"><b>X</b><span>88</span></div><div class="db-cell"><b>Y</b><span>89</span></div><div class="db-cell"><b>Z</b><span>90</span></div></div>
+        <div class="db-extra">Großbuchstaben A … Z = 65 … 90 · Kleinbuchstabe = Großbuchstabe + 32</div>
+      </div>
+      <div class="db-panel" role="tabpanel" id="dbp-klein" aria-labelledby="dbt-klein" hidden>
+        <div class="db-grid"><div class="db-cell"><b>a</b><span>97</span></div><div class="db-cell"><b>b</b><span>98</span></div><div class="db-cell"><b>c</b><span>99</span></div><div class="db-cell"><b>d</b><span>100</span></div><div class="db-cell"><b>e</b><span>101</span></div><div class="db-cell"><b>f</b><span>102</span></div><div class="db-cell"><b>g</b><span>103</span></div><div class="db-cell"><b>h</b><span>104</span></div><div class="db-cell"><b>i</b><span>105</span></div><div class="db-cell"><b>j</b><span>106</span></div><div class="db-cell"><b>k</b><span>107</span></div><div class="db-cell"><b>l</b><span>108</span></div><div class="db-cell"><b>m</b><span>109</span></div><div class="db-cell"><b>n</b><span>110</span></div><div class="db-cell"><b>o</b><span>111</span></div><div class="db-cell"><b>p</b><span>112</span></div><div class="db-cell"><b>q</b><span>113</span></div><div class="db-cell"><b>r</b><span>114</span></div><div class="db-cell"><b>s</b><span>115</span></div><div class="db-cell"><b>t</b><span>116</span></div><div class="db-cell"><b>u</b><span>117</span></div><div class="db-cell"><b>v</b><span>118</span></div><div class="db-cell"><b>w</b><span>119</span></div><div class="db-cell"><b>x</b><span>120</span></div><div class="db-cell"><b>y</b><span>121</span></div><div class="db-cell"><b>z</b><span>122</span></div></div>
+        <div class="db-extra">Kleinbuchstaben a … z = 97 … 122 · Großbuchstabe = Kleinbuchstabe − 32</div>
+      </div>
+      <div class="db-panel" role="tabpanel" id="dbp-sonder" aria-labelledby="dbt-sonder" hidden>
+        <div class="db-grid"><div class="db-cell db-dig"><b>0</b><span>48</span></div><div class="db-cell db-dig"><b>1</b><span>49</span></div><div class="db-cell db-dig"><b>2</b><span>50</span></div><div class="db-cell db-dig"><b>3</b><span>51</span></div><div class="db-cell db-dig"><b>4</b><span>52</span></div><div class="db-cell db-dig"><b>5</b><span>53</span></div><div class="db-cell db-dig"><b>6</b><span>54</span></div><div class="db-cell db-dig"><b>7</b><span>55</span></div><div class="db-cell db-dig"><b>8</b><span>56</span></div><div class="db-cell db-dig"><b>9</b><span>57</span></div><div class="db-cell" title="Leerzeichen"><b>␣</b><span>32</span></div><div class="db-cell"><b>!</b><span>33</span></div><div class="db-cell"><b>&quot;</b><span>34</span></div><div class="db-cell"><b>#</b><span>35</span></div><div class="db-cell"><b>$</b><span>36</span></div><div class="db-cell"><b>%</b><span>37</span></div><div class="db-cell"><b>&amp;</b><span>38</span></div><div class="db-cell"><b>&#x27;</b><span>39</span></div><div class="db-cell"><b>(</b><span>40</span></div><div class="db-cell"><b>)</b><span>41</span></div><div class="db-cell"><b>*</b><span>42</span></div><div class="db-cell"><b>+</b><span>43</span></div><div class="db-cell"><b>,</b><span>44</span></div><div class="db-cell"><b>-</b><span>45</span></div><div class="db-cell"><b>.</b><span>46</span></div><div class="db-cell"><b>/</b><span>47</span></div><div class="db-cell"><b>:</b><span>58</span></div><div class="db-cell"><b>;</b><span>59</span></div><div class="db-cell"><b>&lt;</b><span>60</span></div><div class="db-cell"><b>=</b><span>61</span></div><div class="db-cell"><b>&gt;</b><span>62</span></div><div class="db-cell"><b>?</b><span>63</span></div><div class="db-cell"><b>@</b><span>64</span></div><div class="db-cell"><b>[</b><span>91</span></div><div class="db-cell"><b>\</b><span>92</span></div><div class="db-cell"><b>]</b><span>93</span></div><div class="db-cell"><b>^</b><span>94</span></div><div class="db-cell"><b>_</b><span>95</span></div><div class="db-cell"><b>`</b><span>96</span></div><div class="db-cell"><b>{</b><span>123</span></div><div class="db-cell"><b>|</b><span>124</span></div><div class="db-cell"><b>}</b><span>125</span></div><div class="db-cell"><b>~</b><span>126</span></div></div>
+        <div class="db-extra">Ziffern „0“ … „9“ = 48 … 57 · ␣ = Leerzeichen (32)</div>
+      </div>
+      <div class="db-panel" role="tabpanel" id="dbp-rechner" aria-labelledby="dbt-rechner" hidden>
+        <div class="calc">
+          <div class="calc-row">
+            <label for="calc-dez">Dez → Bin</label>
+            <input type="text" id="calc-dez" class="calc-in" inputmode="numeric" maxlength="3" placeholder="65" autocomplete="off" oninput="calcDez()">
+            <span class="calc-eq">=</span>
+            <output id="calc-dez-out" class="calc-out">––––.––––</output>
+            <span class="calc-chr" id="calc-dez-chr"></span>
+          </div>
+          <div class="calc-row">
+            <label for="calc-bin">Bin → Dez</label>
+            <input type="text" id="calc-bin" class="calc-in calc-in-bin" inputmode="numeric" maxlength="10" placeholder="0100.0001" autocomplete="off" oninput="calcBin()">
+            <span class="calc-eq">=</span>
+            <output id="calc-bin-out" class="calc-out">–</output>
+            <span class="calc-chr" id="calc-bin-chr"></span>
+          </div>
+        </div>
+        <div class="db-extra">Ganze Zahlen von 0 bis 255 bzw. höchstens 8 Bit · Der Rechner hilft beim Kontrollieren – den Rechenweg brauchst du trotzdem.</div>
+      </div>
+    </div>
+  </aside>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Der Funkspruch</h2>
+    <div class="funk" role="img" aria-label="Abgefangener Funkspruch aus Zahlen und Bitfolgen">
+      <div class="funk-head">+++ ABGEFANGEN · KANAL 7 · 21:04 UHR +++</div>
+      <div>84 82 69 70 70 80 85 78 75 84</div>
+      <div>0100.1101 0100.0101 0100.1110 0101.0011 0100.0001</div>
+      <div>0011.0001 0011.0011 0010.0000 0101.0101 0110.1000 0111.0010</div>
+      <div class="funk-head">+++ ENDE DER ÜBERTRAGUNG +++</div>
+    </div>
+    <p>Agentin, Agent – willkommen in der Informatik-Abteilung! Unsere Antenne hat diesen Funkspruch der Gegenseite aufgefangen. Er besteht nur aus Zahlen und Nullen und Einsen. Irgendwo darin steckt, <strong>wo und wann</strong> sich die Gegenagenten treffen. Du kennst bereits Binärzahlen und ihre Stellenwerte 128, 64, 32 … 1. Heute lernst du, wie man damit Buchstaben schreibt – und knackst den Code. Ganz oben siehst du ab jetzt immer deinen <strong>Decoder</strong>; den brauchst du ab Kapitel 2.</p>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Deine Vermutung</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Aufwärmen</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <p>Ein Computer kennt nur zwei Zustände: Strom an (1) und Strom aus (0). Trotzdem schreibst du jeden Tag Nachrichten mit Buchstaben.</p>
+      <div class="poe-box" id="poe-hallo">
+        <div class="poe-label">🤔 Wie könnte ein Computer das Wort „HALLO“ nur mit 0 und 1 speichern?</div>
+        <textarea id="poe-hallo-in" rows="2" placeholder="Deine Vermutung …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-hallo')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-hallo-out" hidden></div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Welche Aussage über Buchstaben im Computer stimmt?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'w')">Der Computer versteht Buchstaben direkt, so wie wir.</button>
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'w')">Im Speicher liegen winzige Bilder der Buchstaben.</button>
+          <button class="quiz-btn" onclick="quizCheck('e1', this, 'c')">Jeder Buchstabe bekommt eine Nummer, und diese Nummer wird als Binärzahl gespeichert.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-e1"></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Bevor wir den Decoder benutzen: Sitzen deine Binärzahlen noch? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <div class="ex">
+        <p><strong>Aufwärmen:</strong> Wandle die Binärzahl in eine Dezimalzahl um.</p>
+        <div class="ex-row">
+          <span class="math">0100.0001<sub>2</sub></span> = <input class="inp" id="e-a1" inputmode="numeric" aria-label="Dezimalzahl"> <sub>10</sub>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['e-a1', 65, 0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-e-a1')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-e-a1">Die Einsen stehen bei den Stellenwerten 64 und 1: 64 + 1 = <strong>65</strong>.</div>
+        <div class="hs" id="hs-e-a1">
+          <div data-tipp>Jede Stelle einer 8-Bit-Zahl hat einen eigenen Stellenwert. Welche Stellen sind hier „an“?</div>
+          <div data-tipp>Schreibe die Stellenwerte 128 – 64 – 32 – 16 . 8 – 4 – 2 – 1 über die Ziffern und addiere nur die Werte, unter denen eine 1 steht.</div>
+          <div data-tipp>Die Einsen stehen an der zweiten Stelle von links und ganz rechts.</div>
+          <div data-muster>
+            <table class="stw"><tr><td>128</td><td>64</td><td>32</td><td>16</td><td class="stw-dot">.</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>0</td><td class="stw-dot">.</td><td>0</td><td>0</td><td>0</td><td>1</td></tr></table>
+            <p>64 + 1 = <u>65</u>. Also ist 0100.0001<sub>2</sub> = 65<sub>10</sub>.</p>
+          </div>
+        </div>
+      </div>
+      <p class="connector-text">Merk dir dein Ergebnis gut – diese Zahl ist der Schlüssel zum ganzen Code. Warum ausgerechnet sie? Schau mal in den Decoder oben …</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zu Kapitel 2: So funktioniert ASCII →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>So funktioniert ASCII</h2>
+    <p>Stell dir vor, du schickst deinem Freund eine Zahl, und er soll daraus einen Buchstaben machen. Das klappt nur, wenn ihr <strong>beide dieselbe Liste</strong> benutzt. Genau so eine Liste ist der ASCII-Code.</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Die Tabelle</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Bit-Labor</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Byte für Byte</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <h3>Ein Zeichen – eine Nummer</h3>
+      <p>Der <span class="tt" data-tip="American Standard Code for Information Interchange, festgelegt 1963 in den USA">ASCII-Code</span> ist eine festgelegte Tabelle. Darin hat jedes Zeichen seine feste Nummer: Großbuchstaben, Kleinbuchstaben, Ziffern, Satzzeichen und sogar das Leerzeichen. Der Computer speichert nicht den Buchstaben, sondern <strong>nur die Nummer</strong> – und die als Binärzahl.</p>
+
+      <div class="pipe" aria-label="Weg vom Zeichen H zum Byte 0100.1000">
+        <div class="pipe-box"><span class="pipe-cap">Zeichen</span><span class="pipe-val">H</span></div>
+        <div class="pipe-arrow">→ Tabelle →</div>
+        <div class="pipe-box"><span class="pipe-cap">Dezimal</span><span class="pipe-val">72</span></div>
+        <div class="pipe-arrow">→ umrechnen →</div>
+        <div class="pipe-box"><span class="pipe-cap">Binär (1 Byte)</span><span class="pipe-val">0100.1000</span></div>
+      </div>
+      <p>Beim Lesen läuft es genau rückwärts: Bitfolge → Dezimalzahl → im Decoder nachschlagen → Zeichen. Damit man sich bei acht Stellen nicht verzählt, setzen wir nach je vier Bits einen Punkt: <span class="math">0100.1000</span>.</p>
+
+      <h3>📖 Dein Decoder</h3>
+      <p>Die ASCII-Tabelle siehst du die ganze Zeit im Decoder-Banner oben. Mit den Reitern schaltest du zwischen <strong>Großbuchstaben</strong>, <strong>Kleinbuchstaben</strong> und <strong>Ziffern &amp; Sonderzeichen</strong> um. Diese Regeln helfen dir, dich schnell zurechtzufinden:</p>
+      <ul class="rules">
+        <li><strong>Kleinbuchstaben:</strong> a = 97, b = 98 … z = 122 (immer genau 32 mehr als der Großbuchstabe)</li>
+        <li><strong>Ziffern als Zeichen:</strong> „0“ = 48, „1“ = 49 … „9“ = 57</li>
+        <li><strong>Leerzeichen</strong> = 32 · <strong>!</strong> = 33 · <strong>?</strong> = 63</li>
+      </ul>
+      <div class="callout callout-info">💡 <span>Der ursprüngliche ASCII-Code nutzt 7 Bit und hat damit 128 Zeichen (Nummer 0 bis 127). Gespeichert wird aber jedes Zeichen in einem ganzen <strong>Byte</strong> = 8 Bit; die erste Stelle ist dann einfach 0. Buchstaben wie ä, ö, ü und ß gibt es im ASCII-Code nicht – er wurde in den USA für das englische Alphabet erfunden.</span></div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Der ASCII-Code</div>
+        <p><strong>ASCII-Code:</strong> festgelegte Tabelle, die jedem Zeichen (Buchstabe, Ziffer, Satzzeichen, Leerzeichen) eine Nummer zuordnet.</p>
+        <p><strong>Speichern:</strong> Zeichen → Nummer (Tabelle) → Binärzahl mit 8 Bit (1 Byte). Beispiel: H → 72 → 0100.1000</p>
+        <p><strong>Lesen:</strong> Bitfolge → Dezimalzahl → Tabelle → Zeichen.</p>
+        <p>Sender und Empfänger müssen <strong>dieselbe Tabelle</strong> benutzen. Großbuchstabe + 32 = Kleinbuchstabe (A = 65, a = 97).</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Genug gelesen – jetzt drückst du selbst die Bits! ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <h3>🔬 Das Bit-Labor</h3>
+      <p>Jeder Schalter ist ein Bit. Klicke ihn an, um ihn zwischen 0 und 1 umzuschalten. Unten siehst du sofort, welche Dezimalzahl und welches ASCII-Zeichen gerade gespeichert sind.</p>
+      <div class="ex" data-req="bb:labor">
+        <p><strong>Laborauftrag:</strong> Stelle nacheinander die drei Zeichen <strong>H</strong>, <strong>i</strong> und <strong>!</strong> ein. Hast du ein Ziel erreicht, bekommt es einen Haken.</p>
+        <div class="bitbox" id="bb-labor" data-goals="72,105,33"></div>
+        <div class="hs" id="hs-labor">
+          <div data-tipp>Suche zuerst die Nummer des Zeichens: im Decoder oben oder in den Regeln aus Teil 1.</div>
+          <div data-tipp>Zerlege die Nummer in Stellenwerte: Fange beim größten Wert an, der noch hineinpasst (64? 32? 16? …) und schalte dieses Bit an.</div>
+          <div data-tipp>H = 72 = 64 + 8 · i ist ein Kleinbuchstabe: I = 73, also i = 73 + 32 = 105 · ! = 33 = 32 + 1</div>
+          <div data-muster>
+            <p>H = 72 = 64 + 8 → <span class="math">0100.1000</span></p>
+            <p>i = 105 = 64 + 32 + 8 + 1 → <span class="math">0110.1001</span></p>
+            <p>! = 33 = 32 + 1 → <span class="math">0010.0001</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="callout">🧪 <span>Probier ruhig auch aus, was passiert, wenn du das Bit mit dem Wert 128 einschaltest. Ab Nummer 128 hört der ASCII-Code auf!</span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Du kannst Zeichen bauen. Erkennst du sie auch wieder? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <div class="ex">
+        <p><strong>Aufgabe:</strong> Ordne jedem Zeichen das passende Byte zu. Klicke erst ein Zeichen an und dann das Byte – oder ziehe es hinüber.</p>
+        <div class="baustein" data-type="match" id="match-bytes">
+          <div class="m-pool">
+            <span class="m-chip" data-id="A" onclick="matchSelect(this)">A</span>
+            <span class="m-chip" data-id="a" onclick="matchSelect(this)">a</span>
+            <span class="m-chip" data-id="sp" onclick="matchSelect(this)">Leerzeichen</span>
+            <span class="m-chip" data-id="1" onclick="matchSelect(this)">Ziffer „1“</span>
+            <span class="m-chip" data-id="Z" onclick="matchSelect(this)">Z</span>
+          </div>
+          <div class="m-zone" data-correct="sp" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def math">0010.0000</span></div>
+          <div class="m-zone" data-correct="Z" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def math">0101.1010</span></div>
+          <div class="m-zone" data-correct="a" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def math">0110.0001</span></div>
+          <div class="m-zone" data-correct="1" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def math">0011.0001</span></div>
+          <div class="m-zone" data-correct="A" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def math">0100.0001</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-match">
+          <div data-tipp>Rechne jedes Byte in eine Dezimalzahl um und vergleiche mit dem Decoder.</div>
+          <div data-tipp>Stellenwerte 128 – 64 – 32 – 16 . 8 – 4 – 2 – 1. Großbuchstaben liegen zwischen 65 und 90, Kleinbuchstaben zwischen 97 und 122, Ziffern zwischen 48 und 57.</div>
+          <div data-tipp>0010.0000 = 32 · 0101.1010 = 64 + 16 + 8 + 2 = 90 · 0110.0001 = 64 + 32 + 1 = 97</div>
+          <div data-muster>
+            <p>0010.0000 = 32 → Leerzeichen</p>
+            <p>0101.1010 = 90 → Z</p>
+            <p>0110.0001 = 97 → a</p>
+            <p>0011.0001 = 32 + 16 + 1 = 49 → Ziffer „1“</p>
+            <p>0100.0001 = 65 → A</p>
+          </div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Wie viel Speicherplatz braucht ein Zeichen in einer ASCII-Textdatei?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q1', this, 'w')">1 Bit</button>
+          <button class="quiz-btn" onclick="quizCheck('q1', this, 'c')">1 Byte</button>
+          <button class="quiz-btn" onclick="quizCheck('q1', this, 'w')">26 Bit, eins für jeden Buchstaben</button>
+          <button class="quiz-btn" onclick="quizCheck('q1', this, 'w')">1 Kilobyte</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q1"></div>
+      </div>
+      <p class="connector-text">Damit hast du alles, was ein Codeknacker braucht: den Decoder und die Stellenwerte. Zeit, den Funkspruch zu knacken!</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Weiter zu Kapitel 3: Die Mission →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Die Mission</h2>
+    <p>Knacke den Funkspruch Stufe für Stufe. Jede Stufe ist ein bisschen schwieriger als die vorige. Dein Decoder hängt die ganze Zeit oben am Bildschirm.</p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Stufe 1</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Stufe 2</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Stufe 3</button>
+      <button class="substep-all" onclick="revealSub(2,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <div class="ex" data-req="txt:m-s1">
+        <p><span class="badge">🔓 Stufe 1</span> <strong>Der erste Funkspruch</strong> – zum Glück noch in Dezimalzahlen. Entschlüssle ihn.</p>
+        <div class="funk funk-sm">84 82 69 70 70 80 85 78 75 84</div>
+        <div class="ex-row">
+          Klartext: <input class="inp inp-wide" id="m-s1" autocomplete="off" aria-label="Klartext Stufe 1">
+          <button class="btn btn-primary btn-sm" onclick="checkText(this,'m-s1',['TREFFPUNKT'],false,'s1')">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-m-s1')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-m-s1">84 = T · 82 = R · 69 = E · 70 = F · 70 = F · 80 = P · 85 = U · 78 = N · 75 = K · 84 = T → <strong>TREFFPUNKT</strong></div>
+        <div class="hs" id="hs-m-s1">
+          <div data-tipp>Jede Zahl steht für genau einen Buchstaben. Schau im Decoder nach.</div>
+          <div data-tipp>Alle Zahlen liegen zwischen 65 und 90 – es sind also nur Großbuchstaben.</div>
+          <div data-tipp>84 = T, 82 = R, 69 = E … Das Wort hat 10 Buchstaben, zwei davon sind doppelt (F und T).</div>
+          <div data-muster><p>84 → T, 82 → R, 69 → E, 70 → F, 70 → F, 80 → P, 85 → U, 78 → N, 75 → K, 84 → T</p><p>Die Gegenagenten planen einen <u>TREFFPUNKT</u>.</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Ein Treffpunkt – aber wo? Die Gegenseite funkt jetzt binär … ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <div class="ex">
+        <p><span class="badge">🔓 Stufe 2</span> <strong>Der Ort.</strong> Die Gegenagenten sind vorsichtiger geworden. a) Wandle jedes Byte in eine Dezimalzahl um.</p>
+        <div class="ex-row">
+          <div class="byte-grid">
+            <label><span class="math">0100.1101</span><input class="inp" id="m-b1" inputmode="numeric"></label>
+            <label><span class="math">0100.0101</span><input class="inp" id="m-b2" inputmode="numeric"></label>
+            <label><span class="math">0100.1110</span><input class="inp" id="m-b3" inputmode="numeric"></label>
+            <label><span class="math">0101.0011</span><input class="inp" id="m-b4" inputmode="numeric"></label>
+            <label><span class="math">0100.0001</span><input class="inp" id="m-b5" inputmode="numeric"></label>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['m-b1',77,0],['m-b2',69,0],['m-b3',78,0],['m-b4',83,0],['m-b5',65,0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-m-s2a')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-m-s2a">0100.1101 = 64 + 8 + 4 + 1 = 77 · 0100.0101 = 64 + 4 + 1 = 69 · 0100.1110 = 64 + 8 + 4 + 2 = 78 · 0101.0011 = 64 + 16 + 2 + 1 = 83 · 0100.0001 = 64 + 1 = 65</div>
+        <div class="hs" id="hs-m-s2a">
+          <div data-tipp>Bei allen Bytes ist das zweite Bit von links an. Welchen Stellenwert hat es?</div>
+          <div data-tipp>Schreibe 128 – 64 – 32 – 16 . 8 – 4 – 2 – 1 über jedes Byte und addiere die Werte unter den Einsen.</div>
+          <div data-tipp>Erstes Byte: 64 + 8 + 4 + 1. Alle Ergebnisse liegen zwischen 65 und 90.</div>
+          <div data-muster><p>0100.1101 = 64 + 8 + 4 + 1 = 77</p><p>0100.0101 = 64 + 4 + 1 = 69</p><p>0100.1110 = 64 + 8 + 4 + 2 = 78</p><p>0101.0011 = 64 + 16 + 2 + 1 = 83</p><p>0100.0001 = 64 + 1 = 65</p></div>
+        </div>
+      </div>
+      <div class="ex" data-req="txt:m-s2">
+        <p>b) Entschlüssle nun mit dem Decoder den Ort.</p>
+        <div class="ex-row">
+          Klartext: <input class="inp inp-wide" id="m-s2" autocomplete="off" aria-label="Klartext Stufe 2">
+          <button class="btn btn-primary btn-sm" onclick="checkText(this,'m-s2',['MENSA'],false,'s2')">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-m-s2')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-m-s2">77 = M · 69 = E · 78 = N · 83 = S · 65 = A → <strong>MENSA</strong></div>
+        <div class="hs" id="hs-m-s2">
+          <div data-tipp>Du hast die Zahlen schon in a) ausgerechnet – jetzt nur noch nachschlagen.</div>
+          <div data-tipp>Großbuchstaben: A = 65, dann einfach weiterzählen.</div>
+          <div data-tipp>77 = M, 69 = E … Es ist ein Ort in vielen Schulen, an dem man Mittag isst.</div>
+          <div data-muster><p>77 → M, 69 → E, 78 → N, 83 → S, 65 → A</p><p>Der Treffpunkt ist die <u>MENSA</u>.</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Wir kennen den Ort. Fehlt nur noch die Uhrzeit … ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <div class="ex" data-req="txt:m-s3">
+        <p><span class="badge">🔓 Stufe 3</span> <strong>Die Uhrzeit.</strong> Achtung: Hier sind Ziffern, Kleinbuchstaben und ein Leerzeichen versteckt! Entschlüssle die Nachricht.</p>
+        <div class="funk funk-sm">0011.0001 0011.0011 0010.0000 0101.0101 0110.1000 0111.0010</div>
+        <div class="ex-row">
+          Klartext: <input class="inp inp-wide" id="m-s3" autocomplete="off" aria-label="Klartext Stufe 3">
+          <button class="btn btn-primary btn-sm" onclick="checkText(this,'m-s3',['13 Uhr'],true,'s3')">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-m-s3')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-m-s3">0011.0001 = 49 → „1“ · 0011.0011 = 51 → „3“ · 0010.0000 = 32 → Leerzeichen · 0101.0101 = 85 → U · 0110.1000 = 104 → h · 0111.0010 = 114 → r ⇒ <strong>13 Uhr</strong></div>
+        <div class="hs" id="hs-m-s3">
+          <div data-tipp>Rechne erst alle Bytes in Dezimalzahlen um. Schau dann genau, in welchem Bereich jede Zahl liegt.</div>
+          <div data-tipp>48 … 57 sind Ziffern, 32 ist das Leerzeichen, 65 … 90 Großbuchstaben, 97 … 122 Kleinbuchstaben (Großbuchstabe + 32).</div>
+          <div data-tipp>Die ersten beiden Bytes sind 49 und 51, das dritte ist 32. Das fünfte ist 104 = 72 + 32.</div>
+          <div data-muster><p>0011.0001 = 32 + 16 + 1 = 49 → „1“</p><p>0011.0011 = 32 + 16 + 2 + 1 = 51 → „3“</p><p>0010.0000 = 32 → Leerzeichen</p><p>0101.0101 = 64 + 16 + 4 + 1 = 85 → U</p><p>0110.1000 = 64 + 32 + 8 = 104 → h</p><p>0111.0010 = 64 + 32 + 16 + 2 = 114 → r</p><p>Die Uhrzeit ist <u>13 Uhr</u>.</p></div>
+        </div>
+      </div>
+      <div class="callout callout-success" id="mission-ok" hidden>🏆 <span><strong>Code geknackt!</strong> Der vollständige Funkspruch lautet: <strong>TREFFPUNKT MENSA 13 Uhr</strong>. Die Abteilung schickt ein Team los.</span></div>
+      <div class="quiz-item">
+        <div class="quiz-q">In Stufe 3 steht „h“ für 104, das große „H“ dagegen für 72. Warum gibt es zwei verschiedene Nummern?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')">Das ist ein Fehler im Funkspruch.</button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'c')">Groß- und Kleinbuchstaben sind verschiedene Zeichen und haben deshalb eigene Nummern.</button>
+          <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')">Der Computer erkennt am Satzanfang, dass groß geschrieben werden muss.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q2"></div>
+      </div>
+      <p class="connector-text">Die Gegenseite ahnt nichts. Zeit, ihr selbst eine Nachricht unterzujubeln …</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Weiter zu Kapitel 4: Gegenspionage →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Gegenspionage</h2>
+    <p>Jetzt drehst du den Spieß um: Du schreibst selbst Geheimnachrichten – und findest heraus, wie geheim sie wirklich sind.</p>
+    <div class="callout">🧮 <span><strong>Neue Ausrüstung freigeschaltet!</strong> Du kannst jetzt sicher umrechnen – deshalb findest du im Decoder oben ab sofort den Reiter <strong>Rechner</strong> (Dez → Bin und Bin → Dez). Nutze ihn zum Kontrollieren, nachdem du selbst gerechnet hast.</span></div>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Stufe 4</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Deine Nachricht</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · Echt geheim?</button>
+      <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <div class="ex" data-req="bits:code">
+        <p><span class="badge">✉️ Stufe 4</span> <strong>Codiere</strong> das Wort <strong>CODE</strong> als ASCII-Binärcode (je 8 Bit, Schreibweise <span class="math">0100.0001</span>).</p>
+        <div class="ex-row">
+          <div class="byte-grid">
+            <label><span class="big">C</span><input class="inp inp-byte" id="c-1" autocomplete="off" inputmode="decimal" placeholder="0000.0000"></label>
+            <label><span class="big">O</span><input class="inp inp-byte" id="c-2" autocomplete="off" inputmode="decimal" placeholder="0000.0000"></label>
+            <label><span class="big">D</span><input class="inp inp-byte" id="c-3" autocomplete="off" inputmode="decimal" placeholder="0000.0000"></label>
+            <label><span class="big">E</span><input class="inp inp-byte" id="c-4" autocomplete="off" inputmode="decimal" placeholder="0000.0000"></label>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="checkBits(this,[['c-1','0100.0011'],['c-2','0100.1111'],['c-3','0100.0100'],['c-4','0100.0101']])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-code')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-code">C = 67 = 64 + 2 + 1 → 0100.0011 · O = 79 = 64 + 8 + 4 + 2 + 1 → 0100.1111 · D = 68 = 64 + 4 → 0100.0100 · E = 69 = 64 + 4 + 1 → 0100.0101</div>
+        <div class="hs" id="hs-code">
+          <div data-tipp>Jetzt geht es rückwärts: erst die Nummer im Decoder suchen, dann in eine Binärzahl umwandeln.</div>
+          <div data-tipp>C = 67, O = 79, D = 68, E = 69. Zerlege jede Zahl in Stellenwerte (64, 32, 16, 8, 4, 2, 1) und setze dort eine 1.</div>
+          <div data-tipp>67 = 64 + 2 + 1. Achte darauf, dass jedes Byte genau 8 Stellen hat – vorne steht eine 0.</div>
+          <div data-muster>
+            <table class="stw"><tr><td></td><td>128</td><td>64</td><td>32</td><td>16</td><td class="stw-dot">.</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+            <tr><td>C = 67</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="stw-dot">.</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>O = 79</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="stw-dot">.</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>D = 68</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="stw-dot">.</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>E = 69</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="stw-dot">.</td><td>0</td><td>1</td><td>0</td><td>1</td></tr></table>
+          </div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Jetzt bist du dran: Deine eigene Geheimnachricht ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <div class="ex" data-req="task:eigen">
+        <p><strong>Deine eigene Geheimnachricht:</strong> Schreibe eine kurze Nachricht (höchstens 6 Zeichen) auf einen Zettel und codiere sie dort als ASCII-Binärcode. Tausche den Zettel mit deiner Nachbarin oder deinem Nachbarn und entschlüsselt gegenseitig.</p>
+        <p>Erst wenn deine Nachricht auf Papier fertig ist, kannst du sie hier mit dem Kontrollgerät überprüfen.</p>
+        <button class="btn btn-primary btn-sm" id="enc-unlock" onclick="encUnlock()">🔓 Fertig codiert – Kontrollgerät freischalten</button>
+        <div class="encoder" id="encoder" hidden>
+          <label for="enc-in"><strong>Klartext eingeben:</strong></label>
+          <input class="inp inp-wide" id="enc-in" maxlength="12" autocomplete="off" oninput="encRun()">
+          <div id="enc-out" class="enc-out" aria-live="polite"></div>
+        </div>
+        <div class="hs" id="hs-eigen">
+          <div data-tipp>Wähle ein kurzes Wort mit Großbuchstaben, z. B. deinen Spitznamen oder „HALLO“.</div>
+          <div data-tipp>Für jeden Buchstaben: Nummer im Decoder suchen → in Stellenwerte zerlegen → 8 Stellen aufschreiben, nach vier Stellen ein Punkt.</div>
+          <div data-tipp>Kontrolliere am Ende: Hat jedes Byte genau 8 Stellen? Beginnt jeder Großbuchstabe mit 010?</div>
+          <div data-muster><p>Beispiel <strong>HALLO</strong>:</p><p>H = 72 → 0100.1000 · A = 65 → 0100.0001 · L = 76 → 0100.1100 · L = 76 → 0100.1100 · O = 79 → 0100.1111</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">Eine Frage bleibt: Sind unsere Nachrichten eigentlich wirklich geheim? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-3">
+      <h3>Echt geheim?</h3>
+      <p>Die ASCII-Tabelle ist öffentlich – sie steht in jedem Informatikbuch und im Internet. Du hast sie die ganze Zeit oben im Decoder.</p>
+      <div class="quiz-item">
+        <div class="quiz-q">Ist eine Nachricht im ASCII-Code verschlüsselt?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q4', this, 'w')">Ja, denn ohne Computer kann sie niemand lesen.</button>
+          <button class="quiz-btn" onclick="quizCheck('q4', this, 'c')">Nein, ASCII ist nur eine Codierung. Jeder mit der Tabelle kann sie lesen.</button>
+          <button class="quiz-btn" onclick="quizCheck('q4', this, 'w')">Ja, denn Nullen und Einsen sind immer geheim.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q4"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Codierung oder Verschlüsselung?</div>
+        <p><strong>Codierung:</strong> Darstellung mit einer öffentlich bekannten Regel (z. B. ASCII). Jeder kann sie zurückübersetzen.</p>
+        <p><strong>Verschlüsselung:</strong> Nur wer den geheimen <strong>Schlüssel</strong> kennt, kann die Nachricht lesen.</p>
+      </div>
+      <div class="callout">🔐 <span>Messenger-Apps verschlüsseln deine Nachrichten mit riesigen Schlüsseln aus Hunderten von Bits, die kein Mensch und kein normaler Computer erraten kann – so bleibt dein Chat privat. Wie so ein Schlüssel im Kleinen funktioniert, probierst du in Kapitel 6 aus.</span></div>
+      <p class="connector-text">Mission erfüllt! Zeit für deinen Abschlussbericht an die Zentrale.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Weiter zu Kapitel 5: Abschlussbericht →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Abschlussbericht</h2>
+    <p>Die Zentrale will wissen, ob du verstanden hast, wie der Code funktioniert – damit du ihn auch Neulingen erklären kannst.</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Bericht</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(4,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="ex">
+        <p><strong>Aufgabe:</strong> Vervollständige den Bericht. Ziehe die Wörter in die Lücken oder klicke erst das Wort und dann die Lücke an.</p>
+        <div class="baustein" data-type="dtw" id="dtw-bericht">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="Tabelle" onclick="dtwSelect(this)">Tabelle</span>
+            <span class="dtw-word" data-w="Nummer" onclick="dtwSelect(this)">Nummer</span>
+            <span class="dtw-word" data-w="8" onclick="dtwSelect(this)">8</span>
+            <span class="dtw-word" data-w="Byte" onclick="dtwSelect(this)">Byte</span>
+            <span class="dtw-word" data-w="dieselbe" onclick="dtwSelect(this)">dieselbe</span>
+            <span class="dtw-word" data-w="32" onclick="dtwSelect(this)">32</span>
+          </div>
+          <p class="dtw-text">Der ASCII-Code ist eine festgelegte
+            <span class="dtw-gap" data-answer="Tabelle" onclick="dtwPlace(this)">______</span>. Jedes Zeichen bekommt darin eine feste
+            <span class="dtw-gap" data-answer="Nummer" onclick="dtwPlace(this)">______</span>. Diese wird als Binärzahl mit
+            <span class="dtw-gap" data-answer="8" onclick="dtwPlace(this)">______</span> Bit gespeichert, also in einem
+            <span class="dtw-gap" data-answer="Byte" onclick="dtwPlace(this)">______</span>. Damit der Empfänger die Nachricht lesen kann, müssen beide
+            <span class="dtw-gap" data-answer="dieselbe" onclick="dtwPlace(this)">______</span> Tabelle benutzen. Ein Kleinbuchstabe hat immer einen um
+            <span class="dtw-gap" data-answer="32" onclick="dtwPlace(this)">______</span> größeren Code als der Großbuchstabe.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-bericht">
+          <div data-tipp>Denk an den Weg H → 72 → 0100.1000. Was passiert in jedem Schritt?</div>
+          <div data-tipp>Zwei Lücken sind Zahlen: die Anzahl Bit eines Bytes und der Abstand zwischen A und a.</div>
+          <div data-tipp>A = 65, a = 97. Ein Byte hat 8 Bit.</div>
+          <div data-muster><p>Der ASCII-Code ist eine festgelegte <u>Tabelle</u>. Jedes Zeichen bekommt darin eine feste <u>Nummer</u>. Diese wird als Binärzahl mit <u>8</u> Bit gespeichert, also in einem <u>Byte</u>. Damit der Empfänger die Nachricht lesen kann, müssen beide <u>dieselbe</u> Tabelle benutzen. Ein Kleinbuchstabe hat immer einen um <u>32</u> größeren Code als der Großbuchstabe.</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Bericht abgeschickt. Ein letzter Test der Zentrale … ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <h3>🎫 Exit-Ticket</h3>
+      <div class="ex" data-req="txt:x-hi">
+        <p><strong>1.</strong> Kurz vor Feierabend kommt noch ein Funkspruch: <span class="math">0100.1000 0100.1001</span>. Entschlüssle ihn.</p>
+        <div class="ex-row">
+          Klartext: <input class="inp" id="x-hi" autocomplete="off" aria-label="Klartext Exit-Ticket">
+          <button class="btn btn-primary btn-sm" onclick="checkText(this,'x-hi',['HI'],true)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x-hi')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-x-hi">0100.1000 = 64 + 8 = 72 → H · 0100.1001 = 64 + 8 + 1 = 73 → I ⇒ <strong>HI</strong></div>
+        <div class="hs" id="hs-x-hi">
+          <div data-tipp>Zwei Bytes – also zwei Zeichen.</div>
+          <div data-tipp>Stellenwerte addieren, dann im Decoder nachschlagen.</div>
+          <div data-tipp>Das erste Byte kennst du schon aus dem Bit-Labor.</div>
+          <div data-muster><p>0100.1000 = 64 + 8 = 72 → H</p><p>0100.1001 = 64 + 8 + 1 = 73 → I</p><p>Die Nachricht lautet <u>HI</u>.</p></div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. Warum kann man das Wort „Grüße“ mit dem ASCII-Code nicht vollständig speichern?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q5', this, 'w')">Weil das Wort zu lang ist.</button>
+          <button class="quiz-btn" onclick="quizCheck('q5', this, 'c')">Weil ü und ß in der ASCII-Tabelle nicht vorkommen.</button>
+          <button class="quiz-btn" onclick="quizCheck('q5', this, 'w')">Weil Großbuchstaben nur bis 90 gehen.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q5"></div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Merksatz</div>
+        <p>Computer speichern Text als Zahlen. Der ASCII-Code legt für jedes Zeichen eine Nummer fest; gespeichert wird sie als Binärzahl in einem Byte (8 Bit). Wer die Tabelle kennt, kann die Nachricht lesen – ASCII ist eine Codierung, keine Verschlüsselung.</p>
+      </div>
+      <div class="callout callout-success">🎖️ <span><strong>Mission abgeschlossen!</strong> Schneller fertig als die anderen? In Kapitel 6 warten Top-Secret-Aufträge für Profi-Agenten.</span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(5)">Weiter zu Kapitel 6: ★ Top Secret →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph5">
+  <div class="card">
+    <h2>★ Top Secret</h2>
+    <p>Dieses Kapitel ist für alle, die schneller fertig sind: drei Profi-Aufträge, die nur echte Codeknacker lösen.</p>
+
+    <div class="substep-nav" id="ph5-stepper" data-phase="5" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(5,1)">1 · ★ Großbuchstaben-Trick</button>
+      <button class="substep-chip locked" onclick="revealSub(5,2)">2 · ★ Falsche Sieben</button>
+      <button class="substep-chip locked" onclick="revealSub(5,3)">3 · ★ Geheimer Schlüssel</button>
+      <button class="substep-all" onclick="revealSub(5,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph5-sub-1">
+      <h3>★ Der Großbuchstaben-Trick</h3>
+      <p>Vergleiche die Bytes genau:</p>
+      <table class="cmp-tab">
+        <tr><th>Zeichen</th><th>Code</th><th>Byte</th></tr>
+        <tr><td>A</td><td>65</td><td class="math">01<b class="hl0">0</b>0.0001</td></tr>
+        <tr><td>a</td><td>97</td><td class="math">01<b class="hl1">1</b>0.0001</td></tr>
+        <tr><td>M</td><td>77</td><td class="math">01<b class="hl0">0</b>0.1101</td></tr>
+        <tr><td>m</td><td>109</td><td class="math">01<b class="hl1">1</b>0.1101</td></tr>
+      </table>
+      <div class="ex">
+        <p><strong>★ Aufgabe 1:</strong> Groß- und Kleinbuchstaben unterscheiden sich nur in einem einzigen Bit. Welchen Stellenwert hat dieses Bit?</p>
+        <div class="ex-row">
+          Stellenwert: <input class="inp" id="t-bit" inputmode="numeric" aria-label="Stellenwert">
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['t-bit', 32, 0]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-t-bit')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-t-bit">Es ist das dritte Bit von links mit dem Stellenwert <strong>32</strong>. Deshalb gilt: Kleinbuchstabe = Großbuchstabe + 32.</div>
+        <div class="hs" id="hs-t-bit">
+          <div data-tipp>Lege die Bytes von A und a übereinander. An welcher Stelle steht etwas anderes?</div>
+          <div data-tipp>Schreibe die Stellenwerte 128 – 64 – 32 – 16 . 8 – 4 – 2 – 1 über die Bytes.</div>
+          <div data-tipp>Rechne nach: 97 − 65 = ?</div>
+          <div data-muster><p>A = 01<b>0</b>0.0001, a = 01<b>1</b>0.0001. Unterschied: drittes Bit von links.</p><p>Stellenwert <u>32</u> (97 − 65 = 32).</p></div>
+        </div>
+      </div>
+      <div class="ex" data-req="bits:t-g">
+        <p><strong>★ Aufgabe 2:</strong> G hat den Code <span class="math">0100.0111</span>. Gib den Code von <strong>g</strong> an, ohne im Decoder nachzusehen.</p>
+        <div class="ex-row">
+          g = <input class="inp inp-byte" id="t-g" autocomplete="off" inputmode="decimal" placeholder="0000.0000" aria-label="Byte von g">
+          <button class="btn btn-primary btn-sm" onclick="checkBits(this,[['t-g','0110.0111']])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-t-g')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-t-g">Bit mit dem Wert 32 einschalten: 0100.0111 → <strong>0110.0111</strong> (71 + 32 = 103 = g)</div>
+        <div class="hs" id="hs-t-g">
+          <div data-tipp>Nutze das Ergebnis aus Aufgabe 1.</div>
+          <div data-tipp>Schalte genau ein Bit um – das mit dem Stellenwert 32.</div>
+          <div data-tipp>Das dritte Zeichen von links wird aus 0 eine 1.</div>
+          <div data-muster><p>0100.0111 (G = 71) → <u>0110.0111</u> (g = 103)</p></div>
+        </div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,2)">Ein neuer Agent hat einen Fehler gemacht … ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph5-sub-2">
+      <h3>★ Falsche Sieben</h3>
+      <div class="quiz-item">
+        <div class="quiz-q">Ein neuer Agent codiert die Ziffer „7“ als <span class="math">0000.0111</span>. Was sagst du dazu?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q3', this, 'w')">Stimmt, 7 = 4 + 2 + 1.</button>
+          <button class="quiz-btn" onclick="quizCheck('q3', this, 'c')">Falsch: Die Ziffer „7“ ist ein Zeichen mit dem Code 55, also 0011.0111.</button>
+          <button class="quiz-btn" onclick="quizCheck('q3', this, 'w')">Falsch: Ziffern kann man mit ASCII gar nicht speichern.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q3"></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(5,3)">Und jetzt machen wir eine Nachricht wirklich geheim ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph5-sub-3">
+      <h3>★ Der geheime Schlüssel</h3>
+      <div class="ex" data-req="txt:t-caesar">
+        <p><strong>★ Aufgabe 3:</strong> Euer geheimer Schlüssel lautet <strong>+3</strong>: Zu jedem ASCII-Code wird 3 addiert. Verschlüssele das Wort <strong>CODE</strong> und gib die neuen Buchstaben an.</p>
+        <div class="ex-row">
+          Geheimtext: <input class="inp inp-wide" id="t-caesar" autocomplete="off" aria-label="Geheimtext">
+          <button class="btn btn-primary btn-sm" onclick="checkText(this,'t-caesar',['FRGH'],false)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-t-caesar')">Lösungsweg zeigen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="sol" id="sol-t-caesar">C = 67 + 3 = 70 = F · O = 79 + 3 = 82 = R · D = 68 + 3 = 71 = G · E = 69 + 3 = 72 = H → <strong>FRGH</strong></div>
+        <div class="hs" id="hs-t-caesar">
+          <div data-tipp>Suche zuerst die Codes von C, O, D und E – du kennst sie aus Stufe 4.</div>
+          <div data-tipp>Addiere zu jedem Code 3 und schlage das neue Zeichen im Decoder nach.</div>
+          <div data-tipp>C = 67 → 70 = F. Mach bei O, D und E genauso weiter.</div>
+          <div data-muster><p>C: 67 + 3 = 70 → F</p><p>O: 79 + 3 = 82 → R</p><p>D: 68 + 3 = 71 → G</p><p>E: 69 + 3 = 72 → H</p><p>Der Geheimtext lautet <u>FRGH</u>. Nur wer den Schlüssel +3 kennt, rechnet −3 und liest wieder CODE.</p></div>
+        </div>
+      </div>
+      <div class="callout">🏛️ <span>Dieses Prinzip mit einem geheimen Verschiebe-Schlüssel nutzte schon Julius Caesar vor über 2000 Jahren. Es heißt deshalb <strong>Caesar-Verschlüsselung</strong>.</span></div>
+      <div class="callout callout-success">🕵️ <span><strong>Top Secret erledigt!</strong> Du bist offiziell Profi-Agentin bzw. Profi-Agent der Informatik-Abteilung.</span></div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Zeichen werden als Zahlen gespeichert</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Der ASCII-Code ordnet jedem Zeichen eine Nummer zu (A = 65). Gespeichert wird die Nummer als 8-Bit-Binärzahl (0100.0001).</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Entschlüsseln und Codieren</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Entschlüsseln: Byte → Dezimalzahl → Tabelle → Zeichen. Codieren: Zeichen → Tabelle → Dezimalzahl → Byte.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>Codierung ist nicht Verschlüsselung</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Die ASCII-Tabelle ist öffentlich. Geheim wird eine Nachricht erst mit einem Schlüssel, den nur Sender und Empfänger kennen.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt Nachrichten im ASCII-Code entschlüsseln und selbst codieren – wie ein echter Computer.</span></div>
+    <p class="connector-text">Aber Moment: Wie schickt dein Handy dann ein „ü“ oder ein 😎? Mit 128 Zeichen kommt man da nicht weit. Die Lösung heißt <strong>Unicode</strong> – und die schauen wir uns als Nächstes an.</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261027-181BD3" title="Kennnummer MR-20261027-181BD3">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
+
+</div>
+<script>
+var __LH={i:"MR-20261027-181BD3",j:2026};
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+/* ============================================================
+   OPTIONALER Freischalt-Modus Lern-HTML  (nur auf ausdrücklichen Wunsch!)
+   Nächster Teil / nächstes Kapitel erst, wenn im aktuellen Teil
+   alle Aufgaben & Quizfragen bearbeitet und alle Heftereinträge
+   übernommen sind. Lehrermodus hebt alle Sperren auf.
+   Setzt seite.js und bausteine.js voraus und muss NACH ihnen stehen.
+   ============================================================ */
+const GATE_NS='gate_'+(LH_NS||((document.title||location.pathname).replace(/\s+/g,'_')+'_'));
+let gateReady=false; const gateMem={};
+
+/* ---------- Zustand (pro Seite eigener Namensraum in localStorage) ---------- */
+function isDone(k){ if(gateMem[k]) return true; try{ return localStorage.getItem(GATE_NS+k)==='1'; }catch(e){ return false; } }
+function markDone(k){ if(!k) return; gateMem[k]=true; try{ localStorage.setItem(GATE_NS+k,'1'); }catch(e){} refreshGates(); }
+
+/* ---------- Welche Elemente müssen bearbeitet sein? ----------
+   Automatisch: .quiz-item · .baustein · .poe-box · textarea.selfwrite ·
+   .confirm-task · .hefter-box · Rechenaufgaben (.ex mit input.inp). Eigene Werkzeuge: data-req="schluessel"
+   am Element setzen und im eigenen Code markDone('schluessel') aufrufen.
+   Elemente in Hilfestellungen (.hs) und Lösungen (.sol) zählen nie. */
+function gateHkey(box){ if(!box.dataset.hkey){ const sec=box.closest('.phase'); box.dataset.hkey=(sec?sec.id:'x')+'-'+[...(sec||document).querySelectorAll('.hefter-box')].indexOf(box); } return box.dataset.hkey; }
+function reqItems(scope){
+  const out=[];
+  scope.querySelectorAll('.quiz-item,.baustein,.poe-box,textarea.selfwrite,.confirm-task,.hefter-box,[data-req],.ex').forEach(el=>{
+    if(el.closest('.hs')||el.closest('.sol')) return;
+    let key=null, kind='task', host=el;
+    if(el.classList.contains('ex') && !el.dataset.req){ const inp=el.querySelector('input.inp'); if(!inp) return; key='num:'+inp.id; }
+    else if(el.dataset.req){ key=el.dataset.req; host=el.closest('.ex')||el; if(el.dataset.reqKind) kind=el.dataset.reqKind; }
+    else if(el.classList.contains('quiz-item')){ const fb=el.querySelector('.quiz-fb'); key='quiz:'+(fb?fb.id.replace(/^qfb-/,''):''); kind='quiz'; }
+    else if(el.classList.contains('baustein')){ key='bs:'+el.id; host=el.closest('.ex')||el; }
+    else if(el.classList.contains('poe-box')) key='poe:'+el.id;
+    else if(el.matches('textarea.selfwrite')){ key='ta:'+el.id; host=el.closest('.ex')||el; }
+    else if(el.classList.contains('confirm-task')){ key='task:'+el.dataset.key; host=el.closest('.ex')||el; }
+    else if(el.classList.contains('hefter-box')){ key='hefter:'+gateHkey(el); kind='hefter'; }
+    out.push({key:key,el:host,kind:kind});
+  });
+  return out;
+}
+function subDone(sub){ return !sub || reqItems(sub).every(i=>isDone(i.key)); }
+function subOf(p,n){ return document.getElementById('ph'+p+'-sub-'+n); }
+function gateSkip(p){ const s=document.getElementById('ph'+p); return !!(s && (s.dataset.gate==='skip'||s.dataset.gate==='lehrer')); }
+function chapterDone(p){ const sec=document.getElementById('ph'+p); return !sec || [...sec.querySelectorAll('.subphase')].every(subDone); }
+function chapterOpen(p){ if(hsTeach()||p===0) return true; for(let j=0;j<p;j++){ if(gateSkip(j)) continue; if(!chapterDone(j)) return false; } return true; }
+function firstOpenChapter(p){ for(let j=0;j<p;j++){ if(gateSkip(j)) continue; if(!chapterDone(j)) return j; } return -1; }
+function gateName(p){ const b=document.getElementById('pn'+p); if(!b) return 'Kapitel '+(p+1); const k=b.querySelector('.pnum'); const t=b.textContent.replace(k?k.textContent:'','').trim(); return (k?k.textContent.trim()+' · ':'')+t; }
+
+/* ---------- Anzeige ---------- */
+function gateToast(msg){
+  let t=document.getElementById('gate-toast');
+  if(!t){ t=document.createElement('div'); t.id='gate-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.innerHTML=msg; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>{t.hidden=true;},4200);
+}
+function gateFlash(el){ el.classList.remove('gate-flash'); void el.offsetWidth; el.classList.add('gate-flash'); }
+function gateShowOpen(sub){
+  if(!sub) return;
+  const st=sub.querySelector(':scope > .gate-status'); if(st) gateFlash(st);
+  const open=reqItems(sub).filter(i=>!isDone(i.key)); if(!open.length) return;
+  open[0].el.scrollIntoView({behavior:'smooth',block:'center'}); gateFlash(open[0].el);
+}
+function gateText(open){
+  const n={task:0,quiz:0,hefter:0}; open.forEach(i=>n[i.kind]=(n[i.kind]||0)+1);
+  const parts=[];
+  if(n.task) parts.push(n.task+(n.task===1?' Aufgabe':' Aufgaben'));
+  if(n.quiz) parts.push(n.quiz+(n.quiz===1?' Quizfrage':' Quizfragen'));
+  if(n.hefter) parts.push(n.hefter+(n.hefter===1?' Heftereintrag übernehmen':' Heftereinträge übernehmen')+' (📋)');
+  return parts.join(' · ');
+}
+function refreshGates(){
+  const teach=hsTeach();
+  document.querySelectorAll('.phase').forEach(sec=>{
+    sec.querySelectorAll('.subphase').forEach(sub=>{
+      const items=reqItems(sub), open=items.filter(i=>!isDone(i.key));
+      items.forEach(i=>i.el.classList.toggle('req-done',isDone(i.key)));
+      let st=sub.querySelector(':scope > .gate-status');
+      if(!st){ st=document.createElement('div'); st.className='gate-status'; st.setAttribute('role','status');
+        const nx=sub.querySelector(':scope > .subphase-next'); if(nx) sub.insertBefore(st,nx); else sub.appendChild(st); }
+      const last=!sub.querySelector(':scope > .subphase-next');
+      if(!items.length && !teach){ st.hidden=true; } else st.hidden=false;
+      if(teach){ st.className='gate-status teach'; st.innerHTML='🧑‍🏫 Lehrermodus: alle Sperren aufgehoben'+(open.length?' (für Lernende noch offen: '+gateText(open)+')':''); }
+      else if(open.length){ st.className='gate-status open'; st.innerHTML='🔒 <span>Noch offen: '+gateText(open)+'</span> <button class="btn btn-ghost btn-sm" type="button">Zeig mir, was fehlt</button>';
+        st.querySelector('button').onclick=()=>gateShowOpen(sub); }
+      else { st.className='gate-status ok'; st.textContent=last?'✅ Alles bearbeitet – stark!':'✅ Alles bearbeitet – weiter geht’s!'; }
+      const lock=!teach && open.length>0;
+      sub.querySelectorAll(':scope > .subphase-next button').forEach(b=>{ b.classList.toggle('gate-locked',lock); b.setAttribute('aria-disabled',lock?'true':'false'); });
+    });
+  });
+  document.querySelectorAll('.pnav').forEach(pn=>{ const p=parseInt(pn.id.replace('pn',''),10); if(isNaN(p)||gateSkip(p)) return; pn.classList.toggle('pnav-locked',!chapterOpen(p)); });
+}
+
+/* ---------- Aufdeck-Fortschritt im eigenen Namensraum dieser Seite ----------
+   (die Engine nutzt sonst subreveal_ph0 … – diese Schlüssel teilen sich alle
+   Lernseiten unter derselben Adresse, z. B. im Lernportal auf GitHub Pages) */
+getRevealed=function(p){ try{ return parseInt(localStorage.getItem(GATE_NS+'reveal_ph'+p)||'1',10)||1; }catch(e){ return 1; } };
+setRevealed=function(p,n){ try{ localStorage.setItem(GATE_NS+'reveal_ph'+p,String(n)); }catch(e){} };
+
+/* ---------- Teile nur der Reihe nach aufdecken ---------- */
+const _revealSubGate=revealSub;
+revealSub=function(phase,n){
+  if(hsTeach()){ _revealSubGate(phase,n); refreshGates(); return; }
+  let allowed=1; while(allowed<n && subDone(subOf(phase,allowed))) allowed++;
+  if(getRevealed(phase)>allowed) setRevealed(phase,allowed);
+  _revealSubGate(phase,allowed);
+  if(allowed<n && gateReady){ gateToast('🔒 Erst alles in diesem Teil bearbeiten – dann geht es weiter.'); gateShowOpen(subOf(phase,allowed)); }
+  refreshGates();
+};
+/* ---------- Kapitel nur der Reihe nach öffnen ---------- */
+const _showPhaseGate=showPhase;
+showPhase=function(n){
+  if(!chapterOpen(n)){
+    const j=firstOpenChapter(n);
+    gateToast('🔒 <strong>'+gateName(n)+'</strong> ist noch gesperrt. Schließe zuerst <strong>'+gateName(j)+'</strong> vollständig ab.');
+    const cur=document.querySelector('.phase.on');
+    if(cur && cur.id==='ph'+j){ const sub=[...cur.querySelectorAll('.subphase.on')].find(s=>!subDone(s)); if(sub) gateShowOpen(sub); }
+    return;
+  }
+  _showPhaseGate(n); refreshGates();
+};
+/* ---------- Lehrermodus: body.teach-on (auch für data-gate="lehrer") ---------- */
+const _teachSetUIGate=teachSetUI;
+teachSetUI=function(active){ _teachSetUIGate(active); document.body.classList.toggle('teach-on',!!active);
+  ['teach-unlock-btn','teach-reset-btn'].forEach(id=>{ const b=document.getElementById(id); if(b) b.hidden=!active; });
+  refreshGates(); };
+
+/* ---------- Lehrkraft-Werkzeuge in der Lehrermodus-Leiste (nur im Lehrermodus sichtbar) ---------- */
+/* 🔓 Alles freischalten: jedes Pflicht-Element als erledigt eintragen, alle Teile aufdecken, alle Kapitel öffnen */
+function teachAllesFreischalten(){
+  if(!hsTeach()) return;
+  if(!confirm('Alle Aufgaben, Quizfragen und Heftereinträge auf dieser Seite als erledigt eintragen und alle Kapitel freischalten?')) return;
+  document.querySelectorAll('.phase .subphase').forEach(sub=>reqItems(sub).forEach(i=>{
+    gateMem[i.key]=true; try{ localStorage.setItem(GATE_NS+i.key,'1'); }catch(e){} }));
+  document.querySelectorAll('.confirm-task').forEach(b=>{ b.textContent='✓ Als erledigt markiert'; b.disabled=true; });
+  document.querySelectorAll('.substep-nav').forEach(nav=>{ const p=parseInt(nav.dataset.phase,10), n=parseInt(nav.dataset.total,10);
+    setRevealed(p,n); _revealSubGate(p,n); });
+  if(typeof window.gateFreischaltenExtra==='function') window.gateFreischaltenExtra();   /* Haken für seitenspezifische Werkzeuge */
+  refreshGates();
+  gateToast('🔓 Alle Elemente sind als erledigt eingetragen – alle Kapitel sind frei.');
+}
+/* ↺ Lernapp zurücksetzen: nur die Daten DIESER Seite löschen (Namensraum + seiteneigene IDs), dann neu laden */
+function teachLernappReset(){
+  if(!hsTeach()) return;
+  if(!confirm('Den gesamten Fortschritt dieser Lernseite in diesem Browser löschen? (Erledigt-Häkchen, aufgedeckte Teile, Vermutungen, Hilfe-Timer)')) return;
+  try{
+    const del=[];
+    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf(GATE_NS)===0) del.push(k); }
+    document.querySelectorAll('.poe-box').forEach(b=>del.push(LH_NS+'predict_'+b.id));
+    document.querySelectorAll('.hs[id]').forEach(b=>del.push(LH_NS+'hs_'+b.id));
+    del.forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+  location.reload();
+}
+
+/* ---------- „Bearbeitet“-Erkennung (einmal geprüft genügt, Fehler sind erlaubt) ---------- */
+const _quizCheckGate=quizCheck;
+quizCheck=function(id,el,v){ _quizCheckGate(id,el,v); if([...el.parentElement.querySelectorAll('.quiz-btn')].every(b=>b.disabled)) markDone('quiz:'+id); };
+function gateWrapCheck(name,filled,msg){
+  const base=window[name]; if(typeof base!=='function') return;
+  window[name]=function(btn){ base(btn); const s=bs(btn);
+    if(filled(s)) markDone('bs:'+s.id);
+    else if(msg){ const f=s.querySelector('.fb'); if(f){ f.textContent+=' '+msg; f.className='fb grp-fb err'; } } };
+}
+gateWrapCheck('dtwCheck',s=>[...s.querySelectorAll('.dtw-gap')].every(g=>g.dataset.filled),'Fülle zuerst alle Lücken – dann zählt die Aufgabe als bearbeitet.');
+gateWrapCheck('matchCheck',s=>[...s.querySelectorAll('.m-zone')].every(z=>z.dataset.filled),'Ordne zuerst alles zu – dann zählt die Aufgabe als bearbeitet.');
+gateWrapCheck('markCheck',s=>!!s.querySelector('.mw.sel'),'Markiere zuerst mindestens ein Wort – dann zählt die Aufgabe als bearbeitet.');
+gateWrapCheck('sortCheck',s=>true,'');
+gateWrapCheck('cwCheck',s=>[...s.querySelectorAll('.cw-cell input')].some(i=>i.value),'Trage zuerst Buchstaben ein – dann zählt das Rätsel als bearbeitet.');
+gateWrapCheck('cwReveal',s=>true,'');
+const _checkNumGroupGate=checkNumGroup;
+checkNumGroup=function(btn,spec){ const r=_checkNumGroupGate(btn,spec); const ex=btn.closest('.ex'), inp=ex&&ex.querySelector('input.inp');
+  if(inp && spec.every(s=>{ const el=document.getElementById(s[0]); return el && el.value.trim()!==''; })) markDone('num:'+inp.id);
+  else { const fb=btn.parentElement.querySelector('.grp-fb'); if(fb) fb.textContent+=' Fülle zuerst alle Felder aus – dann zählt die Aufgabe als bearbeitet.'; }
+  return r; };
+const _fcFlipGate=fcFlip;
+fcFlip=function(el){ _fcFlipGate(el); const s=bs(el); if(!s._back) return;
+  s._seen=s._seen||new Set(); s._seen.add(s._idx);
+  const n=JSON.parse(s.dataset.cards||'[]').length;
+  let pr=s.querySelector('.fc-progress'); if(!pr){ pr=document.createElement('div'); pr.className='caption fc-progress'; s.appendChild(pr); }
+  pr.textContent=s._seen.size>=n?'✓ Alle '+n+' Karten umgedreht':('Umgedreht: '+s._seen.size+' von '+n+' Karten');
+  if(s._seen.size>=n) markDone('bs:'+s.id); };
+const _memClickGate=memClick;
+memClick=function(card){ _memClickGate(card); const s=bs(card);
+  setTimeout(()=>{ const all=[...s.querySelectorAll('.memcard')]; if(all.length && all.every(c=>c.classList.contains('done'))) markDone('bs:'+s.id); },800); };
+const _wsFinishGate=wsFinish;
+wsFinish=function(s,a,b){ _wsFinishGate(s,a,b); if(s._words && s._found && s._found.length>=s._words.length) markDone('bs:'+s.id); };
+const _lockPredictGate=lockPredict;
+lockPredict=function(id){ _lockPredictGate(id); const out=document.getElementById(id+'-out'); if(out && !out.hidden) markDone('poe:'+id); };
+
+/* Freie Textaufgabe: erst schreiben, dann Musterlösung vergleichen */
+function selbstVergleich(btn,taId,solId){
+  const ta=document.getElementById(taId), fb=btn.closest('.ex') ? btn.closest('.ex').querySelector('.grp-fb') : null;
+  if(!ta || ta.value.trim().length<15){ if(fb){fb.textContent='Schreib zuerst deine eigene Lösung auf – dann darfst du vergleichen.'; fb.className='fb grp-fb err';} return; }
+  if(fb){fb.textContent='Vergleiche deine Lösung Punkt für Punkt mit der Musterlösung.'; fb.className='fb grp-fb ok';}
+  showSol(solId); markDone('ta:'+taId);
+}
+/* Aufgabe ohne automatische Prüfung (z. B. Zeichnen in einem externen Programm) */
+function confirmTask(btn){ markDone('task:'+btn.dataset.key); btn.textContent='✓ Als erledigt markiert'; btn.disabled=true; }
+
+/* Heftereintrag gilt als übernommen, sobald der 📋-Button geklickt wurde */
+document.addEventListener('click',e=>{ const b=e.target.closest('.hefter-btn button'); if(!b) return; const box=b.closest('.hefter-box'); if(box) markDone('hefter:'+gateHkey(box)); },true);
+
+function gateInit(){
+  document.body.classList.toggle('teach-on',hsTeach());
+  document.querySelectorAll('.confirm-task').forEach(b=>{ if(isDone('task:'+b.dataset.key)){ b.textContent='✓ Als erledigt markiert'; b.disabled=true; } });
+  document.querySelectorAll('textarea.selfwrite').forEach(ta=>{ if(isDone('ta:'+ta.id)){ const ex=ta.closest('.ex'); const sol=ex&&ex.querySelector('.sol'); if(sol) sol.style.display='block'; } });
+  document.querySelectorAll('.substep-nav').forEach(nav=>{ const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); });
+  gateReady=true; refreshGates();
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',gateInit); } else { gateInit(); }
+
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
+
+/* ---------- Seite Operation Byte: ASCII-Werkzeuge ---------- */
+quizFeedback['e1']={ok:'✅ <strong>Genau!</strong> Der Computer versteht keine Buchstaben. Er speichert nur Nummern – und die als Nullen und Einsen.',
+  ng:'❌ <strong>Nicht ganz.</strong> Der Computer „versteht“ gar nichts: Er speichert nur Nullen und Einsen. Jeder Buchstabe bekommt eine Nummer, und die wird binär gespeichert.',
+  hint:'Denk daran: Der Speicher kennt nur zwei Zustände. Was lässt sich mit 0 und 1 gut darstellen – Bilder, Bedeutungen oder Zahlen?'};
+quizFeedback['q1']={ok:'✅ <strong>Richtig!</strong> Ein Zeichen = 8 Bit = 1 Byte. Ein Text mit 1000 Zeichen braucht also etwa 1000 Byte = 1 kB.',
+  ng:'❌ <strong>Nicht ganz.</strong> Jedes Zeichen wird als 8-Bit-Zahl gespeichert – das ist genau 1 Byte.',
+  hint:'Wie viele Stellen hatten die Bitfolgen im Bit-Labor? Und wie heißen 8 Bit zusammen?'};
+quizFeedback['q2']={ok:'✅ <strong>Richtig!</strong> Für den Computer sind „H“ und „h“ zwei völlig verschiedene Zeichen mit eigenen Nummern (72 und 104).',
+  ng:'❌ <strong>Nicht ganz.</strong> Der Computer kennt keine Rechtschreibregeln. Groß- und Kleinbuchstaben stehen als eigene Zeichen in der Tabelle.',
+  hint:'Schau in der Tabelle nach: Stehen „H“ und „h“ an derselben Stelle?'};
+quizFeedback['q3']={ok:'✅ <strong>Richtig!</strong> 0000.0111 ist die <em>Zahl</em> 7. Die <em>Ziffer</em> „7“ als Zeichen hat den ASCII-Code 55 = 0011.0111.',
+  ng:'❌ <strong>Nicht ganz.</strong> Achtung: Zahl und Ziffer sind nicht dasselbe! Die Ziffer „7“ ist ein Zeichen wie ein Buchstabe und hat den Code 55 = 0011.0111.',
+  hint:'Ziffern als Zeichen beginnen in der Tabelle nicht bei 0. Bei welcher Nummer steht die Ziffer „0“?'};
+quizFeedback['q4']={ok:'✅ <strong>Richtig!</strong> ASCII ist eine öffentliche Codierung. Für echte Geheimhaltung braucht man einen geheimen Schlüssel.',
+  ng:'❌ <strong>Nicht ganz.</strong> Die ASCII-Tabelle kann jeder nachschlagen – du hast den Funkspruch ja selbst geknackt! Das ist nur eine Codierung.',
+  hint:'Wie hast du selbst den Funkspruch geknackt? Hättest du dafür ein Geheimnis kennen müssen?'};
+quizFeedback['q5']={ok:'✅ <strong>Richtig!</strong> Die ASCII-Tabelle wurde für das englische Alphabet gemacht. Umlaute und ß fehlen.',
+  ng:'❌ <strong>Nicht ganz.</strong> Länge spielt keine Rolle. Das Problem sind die Zeichen ü und ß – sie kommen in der ASCII-Tabelle nicht vor.',
+  hint:'Geh das Wort Buchstabe für Buchstabe durch: Findest du jeden in der Tabelle?'};
+
+function asciiName(n){
+  if(n===32) return '␣ (Leerzeichen)';
+  if(n>32 && n<127) return String.fromCharCode(n);
+  if(n>=128) return '– (nicht im ASCII-Code)';
+  return '– (Steuerzeichen)';
+}
+function initBitboxes(){
+  document.querySelectorAll('.bitbox').forEach(box=>{
+    if(box.dataset.ready) return; box.dataset.ready='1';
+    const pv=[128,64,32,16,8,4,2,1];
+    const goals=(box.dataset.goals||'').split(',').filter(Boolean).map(Number);
+    let html='';
+    if(goals.length){ html+='<div class="bb-goals">'+goals.map((g,i)=>'<span class="bb-goal" data-g="'+g+'">Ziel '+(i+1)+': '+asciiName(g)+'</span>').join('')+'</div>'; }
+    html+='<div class="bb-row">'+pv.map((v,i)=>(i===4?'<span class="bb-dot" aria-hidden="true">.</span>':'')+'<div class="bb-col"><span class="bb-pv">'+v+'</span><button type="button" class="bb-bit" data-v="'+v+'" aria-pressed="false" aria-label="Bit mit Stellenwert '+v+'">0</button></div>').join('')+'</div>';
+    html+='<div class="bb-out" aria-live="polite"><div>Binär: <b class="bb-bin">0000.0000</b></div><div>Dezimal: <b class="bb-dez">0</b></div><div>Zeichen: <b class="bb-chr">–</b></div></div>';
+    html+='<button type="button" class="btn btn-ghost btn-sm bb-reset">↺ Alle Bits auf 0</button><div class="fb grp-fb"></div>';
+    box.innerHTML=html;
+    const key=LH_NS+'bb_'+box.id; let done=[]; try{ done=JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){}
+    const upd=()=>{
+      let n=0, bin=''; box.querySelectorAll('.bb-bit').forEach(b=>{const on=b.getAttribute('aria-pressed')==='true'; b.textContent=on?'1':'0'; bin+=on?'1':'0'; if(on) n+=+b.dataset.v;});
+      box.querySelector('.bb-bin').textContent=fmtByte(bin); box.querySelector('.bb-dez').textContent=n; box.querySelector('.bb-chr').textContent=asciiName(n);
+      if(goals.length){
+        const cur=goals[done.length];
+        if(cur!==undefined && n===cur){ done.push(cur); try{localStorage.setItem(key,JSON.stringify(done));}catch(e){} }
+        box.querySelectorAll('.bb-goal').forEach((g,i)=>{ g.classList.toggle('done',i<done.length); g.classList.toggle('cur',i===done.length); if(i<done.length && g.textContent.indexOf('✓')<0) g.textContent='✓ '+g.textContent; });
+        const fb=box.querySelector('.grp-fb');
+        if(done.length>=goals.length){ if(typeof markDone==='function') markDone('bb:'+box.id.replace(/^bb-/,'')); fb.textContent='🎉 Alle Ziele erreicht – du kannst Zeichen Bit für Bit bauen!'; fb.className='fb grp-fb ok'; }
+        else if(done.length){ fb.textContent=done.length+' von '+goals.length+' Zielen geschafft. Weiter mit Ziel '+(done.length+1)+'!'; fb.className='fb grp-fb ok'; }
+      }
+    };
+    box.querySelectorAll('.bb-bit').forEach(b=>b.addEventListener('click',()=>{ b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true'); upd(); }));
+    box.querySelector('.bb-reset').addEventListener('click',()=>{ box.querySelectorAll('.bb-bit').forEach(b=>b.setAttribute('aria-pressed','false')); upd(); });
+    upd();
+  });
+}
+
+function fmtByte(b){ return b.slice(0,4)+'.'+b.slice(4); }
+function gateDone(btn,ids){ const ex=btn.closest('.ex'); if(!ex||!ex.dataset.req||typeof markDone!=='function') return; if(ids.every(id=>{const e=document.getElementById(id); return e&&e.value.trim()!=='';})) markDone(ex.dataset.req); }
+function normTxt(s){ return (s||'').replace(/\s+/g,' ').trim(); }
+function missionMark(k){
+  if(!k) return; try{ localStorage.setItem(LH_NS+'mission_'+k,'1'); }catch(e){}
+  missionShow();
+}
+function missionShow(){
+  let all=true; ['s1','s2','s3'].forEach(k=>{ let v=null; try{v=localStorage.getItem(LH_NS+'mission_'+k);}catch(e){} if(v!=='1') all=false; });
+  const el=document.getElementById('mission-ok'); if(el) el.hidden=!all;
+}
+function checkText(btn,id,answers,caseSens,mission){
+  const inp=document.getElementById(id); if(!inp) return false;
+  const v=normTxt(inp.value), list=[].concat(answers).map(normTxt);
+  const ok=list.some(a=>caseSens? a===v : a.toUpperCase()===v.toUpperCase());
+  inp.classList.toggle('ok',ok); inp.classList.toggle('err',!ok);
+  const scope=btn.closest('.ex-row')||btn.parentElement; const fb=scope.querySelector('.grp-fb');
+  let msg;
+  if(ok) msg='✅ Entschlüsselt! Gut gemacht, Agent.';
+  else if(!v) msg='Du hast noch nichts eingegeben.';
+  else if(caseSens && list.some(a=>a.toUpperCase()===v.toUpperCase())) msg='Fast! Achte auf Groß- und Kleinschreibung – sie haben verschiedene Codes.';
+  else if(list.some(a=>a.replace(/ /g,'').toUpperCase()===v.replace(/ /g,'').toUpperCase())) msg='Fast! Hast du an das Leerzeichen (32) gedacht?';
+  else msg='Noch nicht richtig. Prüfe jedes Zeichen einzeln mit dem Decoder.';
+  if(fb){ fb.textContent=msg; fb.className='fb grp-fb '+(ok?'ok':'err'); }
+  solBtnShow(btn); gateDone(btn,[id]);
+  if(ok) missionMark(mission);
+  return ok;
+}
+function checkBits(btn,spec){
+  let ok=0;
+  spec.forEach(s=>{ const el=document.getElementById(s[0]); if(!el) return;
+    const v=(el.value||'').replace(/[^01]/g,''); const r=(v===s[1]);
+    el.classList.toggle('ok',r); el.classList.toggle('err',!r); if(r) ok++; });
+  const scope=btn.closest('.ex-row')||btn.parentElement; const fb=scope.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' Bytes richtig.'+(ok<spec.length?' Tipp: Jedes Byte braucht genau 8 Stellen, z. B. 0100.0001.':''); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn); gateDone(btn,spec.map(s=>s[0])); return ok===spec.length;
+}
+function encUnlock(){
+  const e=document.getElementById('encoder'), b=document.getElementById('enc-unlock');
+  if(e) e.hidden=false; if(b) b.hidden=true; if(typeof markDone==='function') markDone('task:eigen'); try{ localStorage.setItem(LH_NS+'enc_open','1'); }catch(x){}
+}
+function encRun(){
+  const t=(document.getElementById('enc-in').value||''), out=document.getElementById('enc-out');
+  if(!t){ out.innerHTML=''; return; }
+  let rows='<table><tr><th>Zeichen</th><th>Code</th><th>Byte</th></tr>';
+  for(const ch of t){
+    const n=ch.codePointAt(0);
+    const zeichen=ch===' '?'␣':ch.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    if(n>127) rows+='<tr><td>'+zeichen+'</td><td colspan="2">⚠️ nicht im ASCII-Code</td></tr>';
+    else rows+='<tr><td>'+zeichen+'</td><td>'+n+'</td><td>'+fmtByte(n.toString(2).padStart(8,'0'))+'</td></tr>';
+  }
+  out.innerHTML=rows+'</table>';
+}
+function initOperationByte(){
+  initBitboxes(); missionShow();
+  let o=null; try{ o=localStorage.getItem(LH_NS+'enc_open'); }catch(e){}
+  if(o==='1') encUnlock();
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initOperationByte); } else { initOperationByte(); }
+
+
+function dbToggle(force){
+  const ban=document.getElementById('decoder-banner'), t=document.getElementById('db-toggle'); if(!ban) return;
+  const col=(typeof force==='boolean')?force:!ban.classList.contains('collapsed');
+  ban.classList.toggle('collapsed',col); t.setAttribute('aria-expanded',String(!col)); t.textContent=col?'▼ Decoder zeigen':'▲ einklappen';
+  try{ localStorage.setItem(LH_NS+'db_collapsed',col?'1':'0'); }catch(e){}
+}
+(function(){ let c=null; try{ c=localStorage.getItem(LH_NS+'db_collapsed'); }catch(e){} if(c==='1') dbToggle(true); })();
+
+
+const DB_TABS=['gross','klein','sonder','rechner'];
+function dbCalcAllowed(){ const t=document.getElementById('dbt-rechner'); return !!t && !t.hidden; }
+function dbTab(name){
+  if(name==='rechner' && !dbCalcAllowed()) name='gross';
+  DB_TABS.forEach(k=>{
+    const t=document.getElementById('dbt-'+k), p=document.getElementById('dbp-'+k); if(!t||!p) return;
+    const on=(k===name); t.classList.toggle('active',on); t.setAttribute('aria-selected',String(on)); t.tabIndex=on?0:-1; p.hidden=!on; });
+  try{ localStorage.setItem(LH_NS+'db_tab',name); }catch(e){}
+}
+function dbActivePhase(){ const s=document.querySelector('.phase.on'); return s?parseInt(s.id.replace('ph',''),10):0; }
+/* Rechner ab Kapitel 4 (ph3) */
+function dbCalcUpdate(){
+  const t=document.getElementById('dbt-rechner'); if(!t) return;
+  const ok=dbActivePhase()>=3; t.hidden=!ok;
+  if(!ok && t.classList.contains('active')) dbTab('gross');
+  if(ok){ let w=null; try{ w=localStorage.getItem(LH_NS+'db_tab'); }catch(e){} if(w==='rechner') dbTab('rechner'); }
+}
+function calcChar(n){ return 'Zeichen: '+asciiName(n); }
+function calcDez(){
+  const inp=document.getElementById('calc-dez'), out=document.getElementById('calc-dez-out'), ch=document.getElementById('calc-dez-chr');
+  const v=inp.value.trim();
+  if(v===''){ inp.classList.remove('bad'); out.textContent='––––.––––'; ch.textContent=''; ch.classList.remove('bad'); return; }
+  if(!/^\d+$/.test(v) || +v>255){ inp.classList.add('bad'); out.textContent='––––.––––'; ch.textContent='Bitte eine ganze Zahl von 0 bis 255'; ch.classList.add('bad'); return; }
+  inp.classList.remove('bad'); ch.classList.remove('bad');
+  out.textContent=fmtByte((+v).toString(2).padStart(8,'0')); ch.textContent=calcChar(+v);
+}
+function calcBin(){
+  const inp=document.getElementById('calc-bin'), out=document.getElementById('calc-bin-out'), ch=document.getElementById('calc-bin-chr');
+  const raw=inp.value.trim(), v=raw.replace(/[.\s]/g,'');
+  if(v===''){ inp.classList.remove('bad'); out.textContent='–'; ch.textContent=''; ch.classList.remove('bad'); return; }
+  if(!/^[01]+$/.test(v) || v.length>8){ inp.classList.add('bad'); out.textContent='–'; ch.textContent=(/^[01]+$/.test(v)?'Höchstens 8 Bit':'Nur 0 und 1 erlaubt'); ch.classList.add('bad'); return; }
+  inp.classList.remove('bad'); ch.classList.remove('bad');
+  const n=parseInt(v,2); out.textContent=String(n); ch.textContent=calcChar(n);
+}
+(function(){
+  const base=showPhase;
+  showPhase=function(n){ base(n); dbCalcUpdate(); };
+  const tabs=document.querySelector('.db-tabs');
+  if(tabs) tabs.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return;
+    const ks=DB_TABS.filter(k=>{ const t=document.getElementById('dbt-'+k); return t && !t.hidden; });
+    const cur=ks.findIndex(k=>document.getElementById('dbt-'+k).classList.contains('active'));
+    const nx=ks[(cur+(e.key==='ArrowRight'?1:ks.length-1))%ks.length]; dbTab(nx); document.getElementById('dbt-'+nx).focus(); e.preventDefault(); });
+  let t=null; try{ t=localStorage.getItem(LH_NS+'db_tab'); }catch(e){}
+  dbCalcUpdate();
+  dbTab(DB_TABS.indexOf(t)>=0?t:'gross');
+})();
+</script>
+</body>
+</html>
