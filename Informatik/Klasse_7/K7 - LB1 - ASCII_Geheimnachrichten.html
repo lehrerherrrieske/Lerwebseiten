@@ -475,6 +475,45 @@ body:not(.teach-on) .lehrer-kapitel-only{display:none;}
 @media (max-width:480px){.bb-row{gap:3px;flex-wrap:nowrap;}.bb-bit{width:34px;height:46px;}.bb-pv{letter-spacing:-.04em;}}
 @media print{.bb-bit{border:1px solid #000;}}
 
+/* Umschlag (verschlossene Einsatzakte) */
+.brief-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:6px 0 10px;}
+.brief-intro{font-style:italic;color:var(--text-2);text-align:center;margin:0;}
+.umschlag{position:relative;width:min(520px,92%);aspect-ratio:1.6/1;margin-top:180px;perspective:900px;}
+.u-tasche,.u-klappe{position:absolute;left:0;right:0;}
+.umschlag::before{content:"";position:absolute;inset:0;background:#c9a96e;border-radius:6px;box-shadow:0 10px 24px rgba(70,50,20,.3);}
+.u-brief{position:absolute;left:6%;right:6%;top:6%;height:84%;background:#f6ecd2;border-radius:4px;padding:8% 7% 0;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);transition:transform .8s cubic-bezier(.3,1.3,.5,1) .55s;z-index:1;}
+.u-brief-kopf{font-family:var(--mono);font-weight:700;color:#7a3b12;font-size:var(--fs-sm);margin-top:6%;}
+.u-brief-zeile{height:8px;border-radius:4px;background:#d9c9a3;margin-bottom:9px;}
+.u-brief-zeile.kurz{width:55%;}
+.u-tasche{bottom:0;top:0;z-index:2;border-radius:6px;background:#dcc08a;
+  clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);}
+.u-klappe{top:0;height:58%;z-index:3;background:#d4b47a;transform-origin:top center;
+  clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .6s ease-in-out,z-index 0s linear .3s;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));}
+.u-siegel{position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-36px 0 0 -31px;border-radius:50%;z-index:4;
+  background:radial-gradient(circle at 35% 35%,#d64a3f,#8f1c15);color:#fbe3c8;font-family:var(--mono);font-weight:700;
+  font-size:var(--fs-base);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 6px rgba(0,0,0,.35);
+  transition:opacity .25s ease,transform .25s ease;}
+.u-adresse{position:absolute;left:7%;bottom:9%;z-index:4;font-family:var(--mono);font-size:var(--fs-sm);color:#3a2c14;line-height:1.5;}
+.u-adresse span{font-weight:700;color:#8f1c15;}
+.u-adresse .u-an{font-weight:400;color:#3a2c14;}
+.u-stempel{position:absolute;right:5%;bottom:13%;z-index:4;transform:rotate(-10deg);border:4px double #b3261e;color:#b3261e;
+  font-family:var(--mono);font-weight:700;font-size:var(--fs-h2);letter-spacing:.1em;padding:2px 14px;border-radius:6px;opacity:.88;
+  mix-blend-mode:multiply;}
+.brief-btn{font-size:var(--fs-lg);padding:10px 22px;animation:brief-puls 2s ease-in-out infinite;}
+@keyframes brief-puls{0%,100%{box-shadow:0 0 0 0 rgba(28,113,104,.45);}50%{box-shadow:0 0 0 10px rgba(28,113,104,0);}}
+.umschlag.offen .u-siegel{opacity:0;transform:scale(.4) rotate(40deg);}
+.umschlag.offen .u-klappe{transform:rotateX(180deg);z-index:0;}
+.umschlag.offen .u-brief{transform:translateY(-58%);}
+.brief-wrap.weg{animation:brief-weg .45s ease forwards;}
+@keyframes brief-weg{to{opacity:0;transform:translateY(-20px) scale(.96);}}
+.akte-inhalt.auf .akte{animation:akte-auf .7s cubic-bezier(.2,.9,.3,1.1);transform-origin:top center;}
+@keyframes akte-auf{from{opacity:0;transform:translateY(-30px) scaleY(.6);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.u-brief,.u-klappe,.u-siegel{transition:none;}.brief-btn{animation:none;}
+  .brief-wrap.weg,.akte-inhalt.auf .akte{animation:none;}}
+@media (max-width:560px){.umschlag{aspect-ratio:1.35/1;margin-top:130px;}.u-stempel{font-size:var(--fs-base);border-width:3px;padding:1px 8px;bottom:30%;right:4%;}.u-siegel{width:44px;height:44px;margin:-34px 0 0 -22px;font-size:var(--fs-sm);}.u-adresse{bottom:7%;}.u-an{display:none;}}
+@media print{.brief-wrap{display:none !important;}.akte-inhalt[hidden]{display:block !important;}}
 /* Einsatzakte */
 .akte{position:relative;background:#f6ecd2;border:1.5px solid #c9b48a;border-radius:4px;padding:18px 20px 14px;margin:6px 0 18px;
   box-shadow:3px 4px 0 #d9c9a3, 0 6px 16px rgba(80,60,20,.18);color:#2b2418;overflow:hidden;
@@ -623,6 +662,19 @@ ul.rules{padding-left:1.2em;list-style:disc;}
 <section class="phase on" id="ph0">
   <div class="card">
     <h2>Die Einsatzakte</h2>
+    <div class="brief-wrap" id="brief-wrap">
+      <p class="brief-intro">📬 Heute Morgen lag dieser Umschlag in deinem Fach. Kein Absender, nur ein Stempel …</p>
+      <div class="umschlag" id="umschlag" aria-hidden="true">
+        <div class="u-brief"><div class="u-brief-zeile"></div><div class="u-brief-zeile"></div><div class="u-brief-zeile kurz"></div><div class="u-brief-kopf">EINSATZAKTE Nr. 0100.0001</div></div>
+        <div class="u-tasche"></div>
+        <div class="u-klappe"></div>
+        <div class="u-siegel">0|1</div>
+        <div class="u-adresse"><span class="u-an">An: Agentin / Agent<br>Informatik-Abteilung<br></span><span>Nur persönlich öffnen!</span></div>
+        <div class="u-stempel">TOP SECRET</div>
+      </div>
+      <button type="button" class="btn btn-primary brief-btn" id="brief-btn" onclick="briefOeffnen()">✉️ Umschlag aufreißen</button>
+    </div>
+    <div class="akte-inhalt" id="akte-inhalt" hidden>
     <div class="akte" role="region" aria-label="Einsatzakte Operation Byte">
       <div class="akte-stempel" aria-hidden="true">STRENG GEHEIM</div>
       <div class="akte-kopf">
@@ -715,6 +767,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Weiter zu Kapitel 2: So funktioniert ASCII →</button></div>
     </div>
   </div>
+    </div><!-- /akte-inhalt -->
 </section>
 
 <section class="phase" id="ph1">
@@ -2160,6 +2213,29 @@ function akteAnnehmen(){
   akteShow();
 }
 akteShow();
+
+/* Umschlag: Einsatzakte erst auspacken */
+function briefZeigen(anim){
+  const w=document.getElementById('brief-wrap'), a=document.getElementById('akte-inhalt'); if(!w||!a) return;
+  w.hidden=true; a.hidden=false;
+  if(anim){ a.classList.add('auf'); }
+  if(typeof refreshGates==='function') refreshGates();
+}
+function briefOeffnen(){
+  const u=document.getElementById('umschlag'), w=document.getElementById('brief-wrap'), b=document.getElementById('brief-btn');
+  try{ localStorage.setItem(LH_NS+'brief_offen','1'); }catch(e){}
+  const still=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(still){ briefZeigen(false); document.getElementById('akte-inhalt').scrollIntoView({block:'start'}); return; }
+  if(b){ b.disabled=true; b.textContent='📨 Wird geöffnet …'; }
+  u.classList.add('offen');
+  setTimeout(()=>{ w.classList.add('weg'); }, 1650);
+  setTimeout(()=>{ briefZeigen(true); const ak=document.querySelector('.akte'); if(ak) ak.scrollIntoView({behavior:'smooth',block:'start'}); }, 2100);
+}
+(function(){
+  let o=null; try{ o=localStorage.getItem(LH_NS+'brief_offen'); }catch(e){}
+  if(o==='1' || (typeof hsTeach==='function' && hsTeach())) briefZeigen(false);
+})();
+(function(){ const base=teachActivate; teachActivate=function(){ base(); if(hsTeach()) briefZeigen(false); }; })();
 </script>
 </body>
 </html>
