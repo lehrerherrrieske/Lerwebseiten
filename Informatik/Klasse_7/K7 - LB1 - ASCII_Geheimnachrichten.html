@@ -917,7 +917,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
           <div data-muster><p>84 → T, 82 → R, 69 → E, 70 → F, 70 → F, 80 → P, 85 → U, 78 → N, 75 → K, 84 → T</p><p>Die Gegenagenten planen einen <u>TREFFPUNKT</u>.</p></div>
         </div>
       </div>
-      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Ein Treffpunkt – aber wo? Die Gegenseite funkt jetzt binär … ↓</button></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Stufe 1 geknackt? Dann weiter – die Gegenseite funkt jetzt binär … ↓</button></div>
     </div>
 
     <div class="subphase" id="ph2-sub-2">
@@ -982,7 +982,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
       </div>
       <div class="callout callout-success" id="mission-ok" hidden>🏆 <span><strong>Code geknackt!</strong> Der vollständige Funkspruch lautet: <strong>TREFFPUNKT MENSA 13 Uhr</strong>. Ein Team ist schon unterwegs in die Mensa: Die Übergabe wird verhindert, der USB-Stick ist gerettet! <span class="agent-dank"></span></span></div>
       <div class="quiz-item">
-        <div class="quiz-q">In Stufe 3 steht „h“ für 104, das große „H“ dagegen für 72. Warum gibt es zwei verschiedene Nummern?</div>
+        <div class="quiz-q">Im ASCII-Code hat das große „H“ die Nummer 72, das kleine „h“ aber die Nummer 104. Warum gibt es zwei verschiedene Nummern?</div>
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="quizCheck('q2', this, 'w')">Das ist ein Fehler im Funkspruch.</button>
           <button class="quiz-btn" onclick="quizCheck('q2', this, 'c')">Groß- und Kleinbuchstaben sind verschiedene Zeichen und haben deshalb eigene Nummern.</button>
@@ -1364,11 +1364,11 @@ function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
   let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
   const fb=btn.parentElement.querySelector('.grp-fb');
   if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
-  solBtnShow(btn);
+  if(ok===spec.length) solBtnShow(btn);   /* Lösungsweg erst nach richtiger Antwort */
   return ok===spec.length;
 }
 function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
-/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach einer richtigen Antwort */
 function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
 
 /* ---------- Vorhersage: erst raten, dann auflösen ---------- */
@@ -2099,18 +2099,19 @@ function checkText(btn,id,answers,caseSens,mission){
   else if(list.some(a=>a.replace(/ /g,'').toUpperCase()===v.replace(/ /g,'').toUpperCase())) msg='Fast! Hast du an das Leerzeichen (32) gedacht?';
   else msg='Noch nicht richtig. Prüfe jedes Zeichen einzeln mit dem Decoder.';
   if(fb){ fb.textContent=msg; fb.className='fb grp-fb '+(ok?'ok':'err'); }
-  solBtnShow(btn); gateDone(btn,[id]);
+  if(ok) solBtnShow(btn); gateDone(btn,[id]);
   if(ok) missionMark(mission);
   return ok;
 }
 function checkBits(btn,spec){
-  let ok=0;
+  let ok=0, form=false;
   spec.forEach(s=>{ const el=document.getElementById(s[0]); if(!el) return;
-    const v=(el.value||'').replace(/[^01]/g,''); const r=(v===s[1]);
+    const raw=(el.value||'').trim(), v=raw.replace(/[.\s]/g,''), soll=String(s[1]).replace(/[^01]/g,''); const r=(/^[01]+$/.test(v) && v===soll);
+    if(!/^[01]{8}$/.test(v)) form=true;
     el.classList.toggle('ok',r); el.classList.toggle('err',!r); if(r) ok++; });
   const scope=btn.closest('.ex-row')||btn.parentElement; const fb=scope.querySelector('.grp-fb');
-  if(fb){ fb.textContent=ok+' von '+spec.length+' Bytes richtig.'+(ok<spec.length?' Tipp: Jedes Byte braucht genau 8 Stellen, z. B. 0100.0001.':''); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
-  solBtnShow(btn); gateDone(btn,spec.map(s=>s[0])); return ok===spec.length;
+  if(fb){ fb.textContent=ok+' von '+spec.length+' Bytes richtig.'+(ok<spec.length?(form?' Tipp: Jedes Byte braucht genau 8 Stellen aus 0 und 1, z. B. 0100.0001.':' Prüfe die rot markierten Bytes noch einmal mit den Stellenwerten.'):''); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  if(ok===spec.length) solBtnShow(btn); gateDone(btn,spec.map(s=>s[0])); return ok===spec.length;
 }
 function encUnlock(){
   const e=document.getElementById('encoder'), b=document.getElementById('enc-unlock');
