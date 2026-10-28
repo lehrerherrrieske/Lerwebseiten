@@ -654,7 +654,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
             <span class="calc-chr" id="calc-bin-chr"></span>
           </div>
         </div>
-        <div class="db-extra">Ganze Zahlen von 0 bis 255 bzw. höchstens 8 Bit · Der Rechner hilft beim Kontrollieren – den Rechenweg brauchst du trotzdem.</div>
+        <div class="db-extra">Ganze Zahlen von 0 bis 255 bzw. höchstens 8 Bit · Der Rechner rechnet nur um – welches Zeichen dahintersteckt, findest du selbst heraus.</div>
       </div>
     </div>
   </aside>
@@ -695,7 +695,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
         <li>Dreh den Spieß um und schicke selbst eine <strong>Geheimnachricht</strong>.</li>
       </ol>
       <h3 class="akte-h">🧰 Deine Ausrüstung</h3>
-      <p>Den <strong>Decoder</strong> ganz oben am Bildschirm, ein <strong>Bit-Labor</strong> zum Ausprobieren und – wenn du dich bewährst – ab Kapitel 4 einen <strong>Umrechner</strong>. Und das Wichtigste: deinen Kopf. Kein Rechner der Welt nimmt dir das Denken ab.</p>
+      <p>Den <strong>Decoder</strong> ganz oben am Bildschirm, ein <strong>Bit-Labor</strong> zum Ausprobieren und – wenn du dich bewährst – ab Kapitel 3 einen <strong>Umrechner</strong>. Und das Wichtigste: deinen Kopf. Kein Rechner der Welt nimmt dir das Denken ab.</p>
       <div class="akte-sign">
         <label for="akte-name">Dein Agenten-Codename:</label>
         <input type="text" id="akte-name" maxlength="20" autocomplete="off" placeholder="z. B. Agentin Pixel">
@@ -889,6 +889,7 @@ ul.rules{padding-left:1.2em;list-style:disc;}
   <div class="card">
     <h2>Die Mission</h2>
     <p>Knacke den Funkspruch Stufe für Stufe. Jede Stufe ist ein bisschen schwieriger als die vorige. Dein Decoder hängt die ganze Zeit oben am Bildschirm.</p>
+    <div class="callout">🧮 <span><strong>Neue Ausrüstung freigeschaltet!</strong> Für die Mission bekommst du Verstärkung: Du findest im Decoder oben ab sofort den Reiter <strong>Rechner</strong> (Dez → Bin und Bin → Dez). Nutze ihn zum Kontrollieren, nachdem du selbst gerechnet hast.</span></div>
 
     <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
       <span class="substep-label">Teile:</span>
@@ -999,7 +1000,6 @@ ul.rules{padding-left:1.2em;list-style:disc;}
   <div class="card">
     <h2>Gegenspionage</h2>
     <p>Jetzt drehst du den Spieß um: Du schreibst selbst Geheimnachrichten – und findest heraus, wie geheim sie wirklich sind.</p>
-    <div class="callout">🧮 <span><strong>Neue Ausrüstung freigeschaltet!</strong> Du kannst jetzt sicher umrechnen – deshalb findest du im Decoder oben ab sofort den Reiter <strong>Rechner</strong> (Dez → Bin und Bin → Dez). Nutze ihn zum Kontrollieren, nachdem du selbst gerechnet hast.</span></div>
 
     <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
       <span class="substep-label">Teile:</span>
@@ -2155,21 +2155,20 @@ function dbTab(name){
   try{ localStorage.setItem(LH_NS+'db_tab',name); }catch(e){}
 }
 function dbActivePhase(){ const s=document.querySelector('.phase.on'); return s?parseInt(s.id.replace('ph',''),10):0; }
-/* Rechner ab Kapitel 4 (ph3) */
+/* Rechner ab Kapitel 3 (ph2) */
 function dbCalcUpdate(){
   const t=document.getElementById('dbt-rechner'); if(!t) return;
-  const ok=dbActivePhase()>=3; t.hidden=!ok;
+  const ok=dbActivePhase()>=2; t.hidden=!ok;
   if(!ok && t.classList.contains('active')) dbTab('gross');
   if(ok){ let w=null; try{ w=localStorage.getItem(LH_NS+'db_tab'); }catch(e){} if(w==='rechner') dbTab('rechner'); }
 }
-function calcChar(n){ return 'Zeichen: '+asciiName(n); }
 function calcDez(){
   const inp=document.getElementById('calc-dez'), out=document.getElementById('calc-dez-out'), ch=document.getElementById('calc-dez-chr');
   const v=inp.value.trim();
   if(v===''){ inp.classList.remove('bad'); out.textContent='––––.––––'; ch.textContent=''; ch.classList.remove('bad'); return; }
   if(!/^\d+$/.test(v) || +v>255){ inp.classList.add('bad'); out.textContent='––––.––––'; ch.textContent='Bitte eine ganze Zahl von 0 bis 255'; ch.classList.add('bad'); return; }
   inp.classList.remove('bad'); ch.classList.remove('bad');
-  out.textContent=fmtByte((+v).toString(2).padStart(8,'0')); ch.textContent=calcChar(+v);
+  out.textContent=fmtByte((+v).toString(2).padStart(8,'0')); ch.textContent='';
 }
 function calcBin(){
   const inp=document.getElementById('calc-bin'), out=document.getElementById('calc-bin-out'), ch=document.getElementById('calc-bin-chr');
@@ -2177,7 +2176,7 @@ function calcBin(){
   if(v===''){ inp.classList.remove('bad'); out.textContent='–'; ch.textContent=''; ch.classList.remove('bad'); return; }
   if(!/^[01]+$/.test(v) || v.length>8){ inp.classList.add('bad'); out.textContent='–'; ch.textContent=(/^[01]+$/.test(v)?'Höchstens 8 Bit':'Nur 0 und 1 erlaubt'); ch.classList.add('bad'); return; }
   inp.classList.remove('bad'); ch.classList.remove('bad');
-  const n=parseInt(v,2); out.textContent=String(n); ch.textContent=calcChar(n);
+  const n=parseInt(v,2); out.textContent=String(n); ch.textContent='';
 }
 (function(){
   const base=showPhase;
