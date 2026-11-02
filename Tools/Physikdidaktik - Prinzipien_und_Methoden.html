@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261102-A410DA · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261102-A410DA" data-lh-j="2026">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261102-A410DA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physikdidaktik – Prinzipien und Methoden · Nachschlagewerk</title>
+<style>
+/* lh:MR-20261102-A410DA */
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+/* ---------- Urheber-Fußzeile ---------- */
+.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn);border-radius:var(--radius);background:var(--warn-bg);color:var(--text);font-size:var(--fs-base);}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light);text-align:center;font-size:var(--fs-sm);color:var(--text-3);}
+
+@media print{
+  .lh-foot{display:block !important;}
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+
+/* ============================================================
+   Nachschlage-Erweiterungen: Suche, Filter, Tipps, Tabellen, Checkliste
+   ============================================================ */
+:root{ --tipp:#B8862B; --tipp-bg:#FBF4E2; --hl:#FCE38A; }
+
+/* ── Volltextsuche (klebt oben) ── */
+.search-bar{background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow-md);}
+.search-label{display:block;font-size:var(--fs-sm);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.search-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.search-inp,.filter-inp{flex:1 1 260px;font-family:var(--font);font-size:var(--fs-base);padding:8px 12px;
+  border:1.5px solid var(--border);border-radius:8px;background:var(--surface-warm,var(--surface));color:var(--text);}
+.search-inp:focus,.filter-inp:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
+.search-opt{font-size:var(--fs-sm);color:var(--text-2);display:flex;gap:6px;align-items:center;cursor:pointer;}
+.search-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;}
+.chip{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;padding:3px 11px;border-radius:var(--radius-full);
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;}
+.chip:hover,.chip.on{border-color:var(--accent);background:var(--accent-light);color:var(--accent-hover);}
+.search-info{font-size:var(--fs-sm);color:var(--text-3);margin-top:6px;min-height:1em;}
+.search-results{list-style:none;max-height:46vh;overflow:auto;margin-top:6px;display:flex;flex-direction:column;gap:6px;}
+.search-results:empty{display:none;}
+.sr{width:100%;text-align:left;font-family:var(--font);font-size:var(--fs-base);background:var(--surface-warm,var(--surface));
+  border:1.5px solid var(--border-light);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--text-2);display:block;}
+.sr:hover,.sr:focus{border-color:var(--accent-muted);background:var(--accent-light);outline:none;}
+.sr-head{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;margin-bottom:2px;}
+.sr-ph{font-size:var(--fs-sm);font-weight:700;color:#fff;background:var(--accent);border-radius:var(--radius-full);padding:0 9px;}
+.sr-sec{font-size:var(--fs-sm);font-weight:700;color:var(--text);}
+.sr-tip{font-size:var(--fs-sm);font-weight:700;color:var(--tipp);}
+mark,.hl{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px;}
+.flash{animation:flash 2.2s ease;}
+@keyframes flash{0%,30%{box-shadow:0 0 0 4px var(--hl);}100%{box-shadow:0 0 0 0 transparent;}}
+
+/* ── Filterfelder in Karten ── */
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px;}
+.filter-row label{font-size:var(--fs-sm);font-weight:700;color:var(--text-2);}
+.filter-empty{font-style:italic;color:var(--text-3);}
+
+/* ── Tabellen ── */
+.tbl-wrap{overflow-x:auto;margin:8px 0 12px;border:1.5px solid var(--border);border-radius:var(--radius);}
+.tbl{width:100%;border-collapse:collapse;background:var(--surface);}
+.tbl th{background:var(--surface-2);text-align:left;font-size:var(--fs-sm);font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--text-2);padding:9px 12px;border-bottom:1.5px solid var(--border);}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border-light);vertical-align:top;color:var(--text-2);font-size:var(--fs-base);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl td:first-child{color:var(--text);}
+.tbl .row-hl td{background:var(--accent-light);}
+
+/* ── Praxistipps ── */
+.callout.ptipp{border-left-color:var(--tipp);background:var(--tipp-bg);}
+.tc-box{border:2px dashed var(--tipp);background:var(--tipp-bg);border-radius:var(--radius);padding:14px 16px;margin:10px 0;min-height:7em;}
+.tc-meta{font-size:var(--fs-sm);font-weight:700;color:var(--tipp);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+.tc-text{font-size:var(--fs-lg);color:var(--text);line-height:1.5;}
+.tc-ctrl{display:flex;flex-wrap:wrap;gap:8px;}
+
+/* ── Raster, Mini-Karten, Leitfragen ── */
+.grid2,.grid3,.grid4{display:grid;gap:10px;margin:10px 0;}
+.grid2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.grid3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.grid4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.mini{background:var(--surface-2);border:1.5px solid var(--border-light);border-radius:var(--radius);padding:10px 14px;color:var(--text-2);}
+.mini strong{color:var(--text);}
+.lead-q{display:flex;flex-direction:column;gap:4px;text-align:left;font-family:var(--font);font-size:var(--fs-base);
+  background:var(--accent-light);border:1.5px solid var(--accent-muted);border-radius:var(--radius);padding:12px 14px;cursor:pointer;color:var(--text);}
+.lead-q span{font-size:var(--fs-sm);color:var(--accent-hover);font-weight:700;}
+.lead-q:hover{border-color:var(--accent);}
+
+/* ── Ablauf (Flow), Kennzahlen, Welten, Mythen, Stufenleiter ── */
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+.flow-step{position:relative;flex:1 1 150px;background:var(--surface);border:1.5px solid var(--accent-muted);border-radius:var(--radius);
+  padding:10px 12px 10px 44px;color:var(--text);font-weight:600;}
+.flow-n{position:absolute;left:10px;top:10px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0 12px;}
+.stat{background:var(--accent-light);border-radius:var(--radius);padding:12px 14px;display:flex;flex-direction:column;gap:2px;}
+.stat-n{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:800;color:var(--accent-hover);}
+.stat-l{color:var(--text-2);}
+.world{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:center;}
+.world-h{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:700;color:var(--accent-hover);}
+.myth{border:1.5px solid var(--err-b);background:var(--err-bg);border-radius:var(--radius);padding:12px 14px;}
+.myth.ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.myth-h{font-weight:700;color:var(--text);margin-bottom:6px;}
+.numlist,.dotlist{margin:8px 0 10px 1.4em;color:var(--text-2);}
+.numlist li,.dotlist li{margin:4px 0;}
+.ladder{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.rung{display:flex;gap:10px;align-items:center;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;background:var(--surface);color:var(--text-2);}
+.rung:nth-child(1){margin-left:0;} .rung:nth-child(2){margin-left:4%;} .rung:nth-child(3){margin-left:8%;} .rung:nth-child(4){margin-left:12%;} .rung:nth-child(5){margin-left:16%;}
+.rung-n{flex:0 0 auto;width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* ── Abbildung ── */
+.fig{margin:12px 0;}
+.svg-model{width:100%;height:auto;display:block;background:var(--surface-warm,var(--surface));border:1.5px solid var(--border-light);border-radius:var(--radius);}
+.svg-model .bx rect{fill:var(--surface);stroke:var(--border);stroke-width:1.5;}
+.svg-model .bx.acc rect{fill:var(--accent-light);stroke:var(--accent);stroke-width:2.5;}
+.svg-model text{fill:var(--text-2);font-family:var(--font);font-size:var(--fs-sm);}
+.svg-model text.nm{fill:var(--text);font-weight:700;}
+.svg-model text.cap{fill:var(--text-3);}
+.svg-model .ar path{stroke:var(--text-3);stroke-width:1.5;fill:none;}
+
+/* ── Checkliste ── */
+.ck-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px;}
+.ck-count{font-weight:700;color:var(--accent-hover);margin-right:auto;}
+.ck-group{margin:10px 0;}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;margin:6px 0;border:1.5px solid var(--border-light);
+  border-radius:8px;background:var(--surface);cursor:pointer;color:var(--text-2);}
+.ck input{margin-top:.35em;width:18px;height:18px;accent-color:var(--accent);flex:0 0 auto;}
+.ck.done{background:var(--ok-bg);border-color:var(--ok-b);color:var(--text-3);}
+
+/* ── Glossar ── */
+.az{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 10px;}
+.az button{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;min-width:32px;padding:3px 8px;border-radius:6px;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;}
+.az button.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.glo{display:flex;flex-direction:column;gap:6px;}
+.g{border:1.5px solid var(--border-light);border-radius:8px;padding:9px 13px;background:var(--surface);}
+.g dt{font-weight:700;color:var(--accent-hover);}
+.g dd{color:var(--text-2);}
+.ref{font-size:var(--fs-sm);color:var(--text-3);white-space:nowrap;margin-left:4px;}
+.src p{font-size:var(--fs-base);}
+
+.to-top{position:fixed;right:20px;bottom:20px;z-index:50;font-family:var(--font);font-size:var(--fs-base);font-weight:700;
+  background:var(--accent);color:#fff;border:none;border-radius:var(--radius-full);padding:10px 18px;cursor:pointer;
+  box-shadow:var(--shadow-md);opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .2s ease,transform .2s ease;}
+.to-top.show{opacity:1;pointer-events:auto;transform:none;}
+.to-top:hover{background:var(--accent-hover);}
+.to-top:focus-visible{outline:3px solid var(--accent-muted);outline-offset:2px;}
+@media print{ .to-top{display:none !important;} }
+@media print{
+  .search-bar,.tipp-carousel,.filter-row,.az,.ck-ctrl{display:none !important;}
+  .acc-body{grid-template-rows:1fr !important;} .acc-body-inner{padding:10px 16px !important;}
+  .tbl tr,.g,.ck{display:revert !important;}
+  .phase{break-before:page;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="pagehead">
+    <div class="eyebrow">Referendariat · Fachdidaktik Physik · Nachschlagewerk</div>
+    <h1>Physikdidaktik – Prinzipien und Methoden⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌​‌‌​‌​‌​​​​​‌​​‌‌​‌​​​​‌‌​​​‌​​‌‌​​​​​‌​​​‌​​​‌​​​​​‌⁠</h1>
+    <div class="goal">🎯 Didaktische Prinzipien und Methoden aus Kircher, Girwidz, Fischer (Hrsg.): <em>Physikdidaktik | Methoden und Inhalte</em>, 4. Aufl. 2020 – zum schnellen Nachschlagen bei der Planung.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​​‌​​​‌​‌‌​‌​‌​​​​​‌​​‌‌​‌​​​​‌‌​​​‌​​‌‌​​​​​‌​​​‌​​​‌​​​​​‌⁠</div>
+  </header>
+
+  <div class="search-bar" id="search-bar" role="search">
+    <label for="gsearch" class="search-label">🔍 Ganze Seite durchsuchen</label>
+    <div class="search-row">
+      <input type="search" id="gsearch" class="search-inp" placeholder="z. B. Klassenführung, Hypothese, Schülerlabor …" autocomplete="off" aria-describedby="gsearch-info">
+      <label class="search-opt"><input type="checkbox" id="gsearch-tipps"> nur Praxistipps</label>
+      <button class="btn btn-ghost btn-sm" id="gsearch-clear" type="button">✕ Leeren</button>
+    </div>
+    <div class="search-chips" aria-label="Häufige Suchbegriffe">
+      <span class="caption">Schnellsuche:</span>
+      <button class="chip" type="button" data-q="kognitive Aktivierung">kognitive Aktivierung</button>
+      <button class="chip" type="button" data-q="Klassenführung">Klassenführung</button>
+      <button class="chip" type="button" data-q="Vermutung">Vermutungen</button>
+      <button class="chip" type="button" data-q="Kontext">Kontext</button>
+      <button class="chip" type="button" data-q="Schülerlabor">Schülerlabor</button>
+      <button class="chip" type="button" data-q="Modell">Modell</button>
+      <button class="chip" type="button" data-q="Feedback">Feedback</button>
+      <button class="chip" type="button" data-q="Quanten">Quantenphysik</button>
+    </div>
+    <div class="search-info" id="gsearch-info" aria-live="polite"></div>
+    <ol class="search-results" id="gsearch-results"></ol>
+  </div>
+
+  <nav class="phase-nav" id="phase-nav" aria-label="Kapitel">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Start</span>Überblick</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Prinzipien</span>Was wirkt</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Methoden</span>Gestaltung</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Experimente</span>Hands-on, minds-on</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Modelle</span>Darstellungen</button>
+  <button class="pnav" id="pn5" onclick="showPhase(5)"><span class="pnum">NOS</span>Natur der NW</button>
+  <button class="pnav" id="pn6" onclick="showPhase(6)"><span class="pnum">Reflexion</span>Kompetenz &amp; Feedback</button>
+  <button class="pnav" id="pn7" onclick="showPhase(7)"><span class="pnum">Inhalte</span>Moderne Physik</button>
+  <button class="pnav" id="pn8" onclick="showPhase(8)"><span class="pnum">Planung</span>Checkliste</button>
+  <button class="pnav" id="pn9" onclick="showPhase(9)"><span class="pnum">A–Z</span>Glossar</button>
+  </nav>
+
+<!-- ============================================================ 0 ÜBERBLICK -->
+<section class="phase on" id="ph0" data-title="Überblick">
+  <div class="card">
+    <h2>Was dieser Band leistet</h2>
+    <p>Der Band ist der zweite Teil eines Doppelbandes. <strong>Wichtig vorab:</strong> „Methoden“ meint hier überwiegend <em>Forschungs</em>methoden der Physikdidaktik (Kap. 1–2). Die klassischen Kapitel zu Unterrichtsmethoden, Lernzielen, <span class="tt" tabindex="0" data-tip="Fachinhalte so vereinfachen, dass sie lernbar werden, ohne sie fachlich zu verfälschen.">Elementarisierung</span>, Medien und Schülervorstellungen stehen im Schwesterband <em>Physikdidaktik | Grundlagen</em>.</p>
+    <p>Didaktische Prinzipien und Methoden stecken hier verteilt: in Befunden zur Unterrichtsqualität, im Kapitel zur Lehrerprofessionalität, in den Kapiteln zu Schülerlaboren und Nature of Science sowie in den Abschnitten „… im Unterricht“ der Inhaltskapitel. Diese Seite bündelt genau diese Stellen.</p>
+    <div class="callout callout-info">ℹ️ <span>So nutzt du die Seite: Oben findest du die <strong>Volltextsuche</strong> über alle Reiter, in Tabellen und im Glossar zusätzlich eigene <strong>Filterfelder</strong>. Jeder Reiter enthält <strong>💡 Praxistipps</strong>; alle Tipps lassen sich unten im Karussell durchblättern.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Die Kapitel und ihr Ertrag</h3>
+    <div class="filter-row"><label for="f-kap">🔎 Tabelle filtern</label><input type="search" class="filter-inp" id="f-kap" data-filter="t-kap" placeholder="z. B. Experiment, Quanten …"></div>
+    <div class="tbl-wrap"><table class="tbl" id="t-kap">
+      <thead><tr><th>Kap.</th><th>Thema (Autor:innen)</th><th>Ertrag für Prinzipien und Methoden</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Empirische Forschung (Fischer, Krabbe)</td><td>Merkmale guten Unterrichts, Modell Lehrkraft–Unterricht–Lernende, Unterrichtsvideografie</td></tr>
+        <tr><td>2</td><td>Qualitative Forschung (Vogt)</td><td>Forschungsmethodik; für die Praxis nur indirekt relevant</td></tr>
+        <tr><td>3</td><td>Aus- und Fortbildung (Fischler)</td><td>Reflexion, Videoanalyse, kollegiale Hospitation, wirksame Fortbildung</td></tr>
+        <tr><td>4</td><td>Kompetenzen von Lehrkräften (Fischer, Kauertz)</td><td>Professionswissen (CK, PCK, PK), Klassenführung, subjektive Theorien, Belastung</td></tr>
+        <tr><td>5</td><td>Schülerlabore (Euler, Schüttler)</td><td>Forschendes Lernen, Gelingenskriterien, Funktionen von Experimenten, Unterrichtsmuster</td></tr>
+        <tr><td>6</td><td>Nature of Science (Kircher, Priemer)</td><td>Kritik der induktiven Methode, Modellbildung, Experiment, NOS explizit unterrichten</td></tr>
+        <tr><td>7</td><td>Quantenphysik (Küblbeck)</td><td>Elementarisierung, tragfähige Vorstellungen, schultaugliche Formalismen</td></tr>
+        <tr><td>8–14</td><td>Teilchenphysik, Astronomie, Chaos, Nano, Biophysik, Klima, Gravitationswellen</td><td>Zugänge zu moderner Physik, Kontexte, Modelle, Analogexperimente</td></tr>
+      </tbody>
+    </table></div>
+    <p class="filter-empty" hidden>Keine passende Zeile.</p>
+  </div>
+
+  <div class="card tipp-carousel" id="tipp-carousel">
+    <h3>💡 Tippsammlung</h3>
+    <p>Alle Praxistipps der Seite zum Durchblättern – praktisch als Impuls vor der nächsten Planung.</p>
+    <div class="tc-box">
+      <div class="tc-meta" id="tc-meta"></div>
+      <div class="tc-text" id="tc-text"></div>
+    </div>
+    <div class="tc-ctrl">
+      <button class="btn btn-ghost btn-sm" type="button" id="tc-prev">◀ Zurück</button>
+      <button class="btn btn-primary btn-sm" type="button" id="tc-rand">🎲 Zufallstipp</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="tc-next">Weiter ▶</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="tc-go">↪ Zum Abschnitt</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Die vier Leitfragen dieser Seite</h3>
+    <div class="grid4">
+      <button class="lead-q" type="button" onclick="showPhase(1)"><strong>Was macht Unterricht wirksam?</strong><span>Prinzipien</span></button>
+      <button class="lead-q" type="button" onclick="showPhase(2)"><strong>Wie unterrichte ich?</strong><span>Methoden</span></button>
+      <button class="lead-q" type="button" onclick="showPhase(3)"><strong>Welche Rolle spielen Experimente und Modelle?</strong><span>Experimente · Modelle · NOS</span></button>
+      <button class="lead-q" type="button" onclick="showPhase(7)"><strong>Was heißt das für moderne Inhalte?</strong><span>Moderne Physik</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 1 PRINZIPIEN -->
+<section class="phase" id="ph1" data-title="Prinzipien">
+  <div class="card">
+    <h2>Was Physikunterricht wirksam macht</h2>
+    <p>Die Merkmale mit belegtem Zusammenhang zum Lernerfolg liegen in der <span class="tt" tabindex="0" data-tip="Die nicht direkt sichtbaren Qualitätsmerkmale: wie Inhalte strukturiert, Lernende kognitiv gefordert und Lernzeit genutzt wird.">Tiefenstruktur</span> des Unterrichts, weniger in der sichtbaren Organisationsform. Der Band nennt Klassenführung, kognitive Aktivierung, Lehrer-Rückmeldung und die langfristige Stabilität des Unterrichtskonzepts (Kap. 1.6).</p>
+    <figure class="fig">
+      <svg viewBox="0 0 760 360" role="img" aria-label="Lehrkraft und Lernvoraussetzungen wirken über den Unterricht auf die Lernergebnisse" class="svg-model">
+        <defs><marker id="m-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--text-3)"/></marker></defs>
+        <g class="bx"><rect x="16" y="40" width="204" height="112" rx="10"/><text x="30" y="66" class="nm">Lehrkraft</text><text x="30" y="88">Ausbildungshintergrund</text><text x="30" y="106">Professionswissen</text><text x="30" y="124">Enthusiasmus</text><text x="30" y="142">Arbeitsbedingungen</text></g>
+        <g class="bx"><rect x="16" y="196" width="204" height="96" rx="10"/><text x="30" y="222" class="nm">Lernvoraussetzungen</text><text x="30" y="244">Familiärer Hintergrund</text><text x="30" y="262">Kognitive Fähigkeiten</text><text x="30" y="280">Allgemeine Motivation</text></g>
+        <g class="bx"><rect x="244" y="40" width="296" height="264" rx="10"/><text x="260" y="64" class="nm">Unterricht</text></g>
+        <g class="bx"><rect x="260" y="76" width="264" height="76" rx="8"/><text x="272" y="100" class="nm">Oberflächenstruktur</text><text x="272" y="120">Interaktions- und Sozialform</text><text x="272" y="138">Einsatz von Experimenten</text></g>
+        <g class="bx acc"><rect x="260" y="164" width="264" height="128" rx="8"/><text x="272" y="188" class="nm">Tiefenstruktur</text><text x="272" y="208">Sachstruktur</text><text x="272" y="226">Kognitive Aktivierung</text><text x="272" y="244">Klassenführung</text><text x="272" y="262">Motivationale Unterstützung</text><text x="272" y="280">Prozessstruktur</text></g>
+        <g class="bx"><rect x="568" y="132" width="176" height="80" rx="10"/><text x="582" y="158" class="nm">Lernergebnisse</text><text x="582" y="180">Fachliche Kompetenz</text><text x="582" y="198">Motivation</text></g>
+        <g class="ar"><path d="M220 96H240" marker-end="url(#m-arr)"/><path d="M220 244H240" marker-end="url(#m-arr)"/><path d="M540 172H564" marker-end="url(#m-arr)"/></g>
+        <text x="20" y="340" class="cap">Nach Abb. 1.4 im Band (Fischer und Krabbe); dort ist jedem Faktor ein Messinstrument zugeordnet.</text>
+      </svg>
+      <figcaption>Analysemodell für Unterrichtsqualität: Die markierte Tiefenstruktur enthält die Merkmale mit berichtetem Lernerfolgs-Zusammenhang.</figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h3>Die Leitprinzipien im Überblick</h3>
+    <div class="filter-row"><label for="f-prinz">🔎 Prinzipien filtern</label><input type="search" class="filter-inp" id="f-prinz" data-filter="t-prinz" placeholder="z. B. Feedback, Kontext, Vorstellungen …"></div>
+    <div class="tbl-wrap"><table class="tbl" id="t-prinz">
+      <thead><tr><th>Prinzip</th><th>Kernaussage im Band</th><th>Konkret im Physikunterricht</th><th>Kap.</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Kognitive Aktivierung</strong></td><td>Angemessene Aktivierung führt zur aktiven Nutzung von Lerngelegenheiten und damit zu verständnisvollem Lernen. Lehrkräfte mit hohem fachdidaktischem Wissen unterrichten kognitiv herausfordernder.</td><td>Vermutungen vor dem Versuch einfordern, Aufgaben mit Denkpotenzial wählen, erklären lassen statt nur bestätigen.</td><td>1.6, 4.2</td></tr>
+        <tr><td><strong>Effektive Klassenführung</strong></td><td>Möglichst viel Unterrichtszeit soll echte Lernzeit sein.</td><td>Regeln, Routinen und Übergänge planen – besonders bei Schülerexperimenten.</td><td>4.2.4</td></tr>
+        <tr><td><strong>Lernförderliches Feedback</strong></td><td>Rückmeldung an Lernende über ihren Lernprozess korreliert mit dem Lernerfolg (Hattie &amp; Timperley).</td><td>Prozessbezogen zurückmelden: Was ist am Lösungsweg tragfähig, was fehlt noch?</td><td>1.6</td></tr>
+        <tr><td><strong>Stimmige Sachstruktur</strong></td><td>Die Struktur, in der Inhalte aufeinander aufbauen, beeinflusst den Lernerfolg; stabile Unterrichtskonzepte wirken.</td><td>Roten Faden einer Einheit sichtbar machen, Begriffe in sinnvoller Reihenfolge einführen.</td><td>1.6, 1.8</td></tr>
+        <tr><td><strong>Schülervorstellungen ernst nehmen</strong></td><td>Wissen über Schülervorstellungen ist Kern des fachdidaktischen Wissens; nicht tragfähige Konzepte gehören in die Planung.</td><td>Vorwissen erheben, typische Fehlvorstellungen gezielt aufgreifen und konfrontieren.</td><td>4.2.2</td></tr>
+        <tr><td><strong>Didaktisches Dreieck</strong></td><td>Planung braucht Wissen über Lehrkraft (Darstellungen, Interventionen), Lernende (Vorstellungen) und Inhalt (kognitives Potenzial der Aufgaben).</td><td>Bei jeder Aufgabe prüfen: Welche Darstellung, welche Vorstellung, welches Denkniveau?</td><td>4.2.2</td></tr>
+        <tr><td><strong>Kontextorientierung</strong></td><td>Kontextbasierter Unterricht erreicht mindestens das fachliche Niveau fachsystematischen Unterrichts, fördert Interesse und Einstellung aber stärker.</td><td>Alltags- und Technikbezüge als Ausgangsproblem nutzen, nicht als Anhängsel am Stundenende.</td><td>5.5.2, 5.5.4</td></tr>
+        <tr><td><strong>Instruktion und Konstruktion ausbalancieren</strong></td><td>Lehrerzentrierter Unterricht erzielt gute Testleistungen, lässt aber das Interesse einbrechen; reine Aktivität sichert das Verständnis nicht.</td><td>Offene Phasen klar strukturieren und mit einer Systematisierung abschließen.</td><td>5.5.4</td></tr>
+        <tr><td><strong>Ehrliche Elementarisierung</strong></td><td>Vereinfachen ja, verfälschen nein: Ein anschaulicher Formalismus ist keine Aussage über die Natur.</td><td>Grenzen von Modellen und Vereinfachungen mit der Klasse benennen.</td><td>7.4, 6.3</td></tr>
+        <tr><td><strong>Methode folgt Ziel und Menschenbild</strong></td><td>Die physikalische Forschungsmethode ist nicht automatisch Unterrichtsmethode. Maßgeblich sind Lernziele, Voraussetzungen der Lernenden, schulische Bedingungen und ein humanes Menschenbild.</td><td>Kein „induktives“ Abarbeiten von Messreihen bis zum Gesetz; Methode aus Ziel und Lerngruppe begründen.</td><td>6.3.2</td></tr>
+        <tr><td><strong>Mündigkeit als Ziel</strong></td><td>Ziel ist nach Roth nicht abfragbares Wissen, sondern „Mündigkeit als Kompetenz für verantwortliche Handlungsfähigkeit“.</td><td>Bewertungs- und Entscheidungsaufgaben zu Energie, Klima, Technikfolgen einbauen.</td><td>4.1, 6.1</td></tr>
+        <tr><td><strong>Evidenz statt Mythen</strong></td><td>Viele Unterrichtsempfehlungen sind nicht empirisch geprüft; es entstehen „Mythen“, gestützt auf Einzelfälle.</td><td>Eigene Gewohnheiten an Forschungsbefunden prüfen.</td><td>1.8</td></tr>
+      </tbody>
+    </table></div>
+    <p class="filter-empty" hidden>Kein Prinzip passt zum Filter.</p>
+  </div>
+
+  <div class="card">
+    <h3>Interesse als eigenes Qualitätsmerkmal</h3>
+    <p>Der Band betont den Interesseneinbruch in Physik: Auch 43 % der in PISA hochkompetenten deutschen Jugendlichen bezeichnen sich als kaum an Naturwissenschaften interessiert (Kap. 5.6). <span class="tt" tabindex="0" data-tip="Erwartung, eine Aufgabe aus eigener Kraft erfolgreich bewältigen zu können.">Selbstwirksamkeitserfahrungen</span>, kooperative und produktorientierte Arbeit sowie authentische Kontexte heben emotionales, wertbezogenes und epistemisches Interesse und das Selbstkonzept – besonders bei Mädchen (Kap. 5.4).</p>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Vor jedem Demonstrations- oder Schülerexperiment eine Minute „Was erwartest du – und warum?“ schriftlich festhalten lassen. Das macht kognitive Aktivierung für alle verbindlich und liefert dir nebenbei die Schülervorstellungen der Klasse.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Die Leitfrage der Einheit sichtbar stehen lassen (Tafelrand, Lernseite) und jede Stunde ausdrücklich darauf zurückbeziehen – so wird die Sachstruktur für die Lernenden erkennbar.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Feedback als Satzmuster bereithalten: „Tragfähig ist …“ – „Prüfe noch …“ – „Nächster Schritt …“. Das hält Rückmeldungen prozessbezogen statt nur richtig/falsch.</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ 2 METHODEN -->
+<section class="phase" id="ph2" data-title="Methoden">
+  <div class="card">
+    <h2>Unterrichtsmethoden und Gestaltung</h2>
+    <p>Der Band liefert keine Methodenliste, sondern Befunde dazu, <em>wie</em> Methoden wirken. Die zentrale Botschaft: Offene, schülerzentrierte Arbeitsformen lohnen sich, wenn sie fokussiert, strukturiert und gedanklich anspruchsvoll sind (Kap. 5.5).</p>
+    <h3>Drei Unterrichtsmuster und ihre Wirkung (PISA 2006, Kap. 5.5.4)</h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Muster</th><th>Merkmale</th><th>Kompetenz</th><th>Interesse</th></tr></thead>
+      <tbody>
+        <tr><td>Traditionell lehrerzentriert</td><td>Stofforientierte Vermittlung, wenig Gelegenheit zum Nachdenken und Erklären</td><td>Hoch im Papier-und-Bleistift-Test</td><td>▼ starker Einbruch</td></tr>
+        <tr><td>Globale Schüleraktivitäten</td><td>Viel Experimentieren und Forschen, wenig Fokussierung</td><td>Verständnis unzureichend gesichert</td><td>▲ motivierend</td></tr>
+        <tr class="row-hl"><td><strong>Fokussierte Schüleraktivitäten</strong></td><td>Experimente gezielt eingesetzt, zum Denken anregend</td><td>Gut</td><td>● kein starker Einbruch</td></tr>
+      </tbody>
+    </table></div>
+    <p>Folgerung der Autoren: Physikunterricht braucht eine ausgewogene Verbindung von Instruktion und Konstruktion, von systematisch-begrifflichen und erfahrungsbasierten Zugängen.</p>
+  </div>
+
+  <div class="card">
+    <h3>Klassenführung: sechs Prinzipien (Renkl 2008, Kap. 4.2.4)</h3>
+    <p>Ziel: Unterrichtszeit maximal als Lernzeit nutzen – durch Prävention und durch Korrektur von Störungen.</p>
+    <ol class="numlist">
+      <li>Ein effizientes Regelsystem etablieren.</li>
+      <li>Leerlaufphasen verhindern.</li>
+      <li>Störungen kontrollieren.</li>
+      <li>Nicht fachbezogene Aktivitäten auslagern.</li>
+      <li>Einen zügigen Unterrichtsfluss sichern.</li>
+      <li>Für Klarheit und ein angemessenes Anforderungsniveau sorgen.</li>
+    </ol>
+    <p>Zum pädagogischen Wissen gehört außerdem, viele Unterrichtsformen zu beherrschen, damit je nach Inhalt, Ziel und Lerngruppe die passende verfügbar ist.</p>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Schülerexperimente sind Leerlauf-Gefahrenzonen. Material in vorgepackten Kisten, feste Ausgabe- und Rückgabepunkte und Rollen in der Gruppe (Material, Protokoll, Zeit) sparen spürbar Lernzeit.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Forschendes Lernen</h3>
+    <p>Forschend-entwickelndes Lernen gilt als natürlicher und authentischer Zugang. Es verlangt aber ein Lernumfeld, das zugleich offen und herausfordernd sowie systematisch strukturiert und unterstützend ist (Kap. 5.5.3).</p>
+    <div class="flow" aria-label="Phasen forschenden Lernens">
+      <div class="flow-step"><span class="flow-n">1</span>Problem identifizieren, Ziel definieren</div>
+      <div class="flow-step"><span class="flow-n">2</span>Strategie entwickeln, Vermutungen formulieren</div>
+      <div class="flow-step"><span class="flow-n">3</span>Lösung verfolgen: planen, messen, modellieren</div>
+      <div class="flow-step"><span class="flow-n">4</span>Lösung und Lösungsweg bewerten</div>
+      <div class="flow-step"><span class="flow-n">5</span>Eigenes Vorgehen reflektieren</div>
+    </div>
+    <div class="callout callout-warn">⚠️ <span><strong>Zwei Warnungen des Bandes:</strong> Lernende forschen fast nie im wissenschaftlichen Sinn – Ergebnisse sind meist bekannt, Mittel begrenzt. Diesen Unterschied offen ansprechen. Und offene Experimentierphasen führen nicht automatisch zu besserem Begriffsverständnis, wirken aber dem Absinken von Interesse und Selbstwirksamkeit entgegen (Hopf 2007).</span></div>
+    <p><strong>Rolle der Lehrkraft – die Bergführerin:</strong> Sie geht nicht voraus und umgeht nicht alle Schwierigkeiten, sondern berät, sorgt für Sicherheit und lässt die Gruppe den Weg selbst finden („Hilf mir, es selbst zu tun“). Voraussetzung: ein für alle klar erkennbares Ziel und ein sinnstiftender Kontext (Kap. 5.3.2).</p>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Bergführer-Haltung im Alltag: Auf Fragen in der Experimentierphase zuerst mit einer Gegenfrage antworten („Was habt ihr schon ausgeschlossen?“) und nur bei echter Sackgasse einen Hinweis geben.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Problemorientierte Sequenzierung (Trendel et al. 2007, Kap. 1.7)</h3>
+    <p>Ein Problem wird präzisiert, indem <strong>Anfangszustand, Lösungsziel und die Barriere</strong> dazwischen festgehalten werden. Die Lehrkraft vergewissert sich, dass allen Ziel, Ausgangsbedingungen und Schwierigkeiten bewusst sind.</p>
+    <div class="grid3">
+      <div class="mini">❓ Wie lautet die Problemstellung?</div>
+      <div class="mini">🎯 Was sind die Lösungskriterien?</div>
+      <div class="mini">🧱 Welche Schwierigkeiten gibt es?</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Projekte und fächerübergreifende Themen</h3>
+    <p>Komplexe Themen wie Energiewende, Klimawandel oder Nullenergiehaus sollen als Projekte konzipiert werden (Kap. 6.1.3). Gute Labor- und Projektumgebungen (Kap. 5.5.3):</p>
+    <ul class="dotlist">
+      <li>aktivieren, fordern heraus und fördern Selbstständigkeit, Kooperation und Kommunikation,</li>
+      <li>sind in sinnstiftende Kontexte eingebettet (Muckenfuß),</li>
+      <li>stellen Werkzeuge bereit: Experimentieren, Konstruieren, Messen, Datenanalyse, Visualisieren, Modellieren, Optimieren, Präsentieren,</li>
+      <li>vermeiden rezeptartige Anleitungen mit vorhersehbarem Ergebnis.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Außerschulische Lernorte einbinden</h3>
+    <p>Ein einzelner <span class="tt" tabindex="0" data-tip="Außerschulischer Lernort mit Laborcharakter an Hochschule, Forschungsinstitut oder Unternehmen.">Schülerlaborbesuch</span> hebt Interesse und Selbstkonzept messbar, oft über Wochen. Zum Lernerfolg führt er aber nur bei guter Einbettung (Kap. 5.4, 5.5.4):</p>
+    <ul class="dotlist">
+      <li>Vor- und Nachbereitung im Unterricht – mindestens ein Gespräch vorher und nachher.</li>
+      <li>Themen des Besuchs später im Unterricht wieder aufgreifen.</li>
+      <li>Strukturiertes Begleitmaterial: In der Studie von Waltner und Wiesner (Optik, Klasse 7) lernte die Museumsgruppe nur mit gut strukturiertem Material besser als die Kontrollgruppe, ohne Struktur sogar schlechter. Eigenes Experimentieren vor Ort steigerte den Ertrag weiter.</li>
+    </ul>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Vor einer Exkursion drei Beobachtungsfragen mitgeben, die in der Folgestunde ausgewertet werden. Das ist die kleinste wirksame Form von „strukturiertem Begleitmaterial“.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Lernstrategien als Unterrichtsziel</h3>
+    <p>Lernstrategien (Mandl und Friedrich) sind zugleich Werkzeug der Lehrkraft und Lernziel für Schüler:innen (Kap. 4.1.2): Elaborations-, Organisations- und Wiederholungsstrategien, Selbstkontrolle und Selbstregulation, Kooperations- und Motivationsstrategien. Sie werden ausdrücklich unterrichtet, um selbstbestimmtes Lernen zu ermöglichen.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 3 EXPERIMENTE -->
+<section class="phase" id="ph3" data-title="Experimente">
+  <div class="card">
+    <h2>Experimente im Physikunterricht</h2>
+    <p>Das Experiment bleibt das wichtigste Medium des Physikunterrichts: Medium, Lernobjekt und Baustein der naturwissenschaftlichen Methodologie zugleich (Kap. 6). Sein Lernwert entsteht erst durch die Einbindung in Denkprozesse – <strong>hands-on braucht minds-on</strong> (Kap. 5.5).</p>
+    <h3>Ist-Zustand: Was Videostudien zeigen (Tesch 2005, Kap. 5.5.2)</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">≈ 70 %</span><span class="stat-l">der Unterrichtszeit sind vom Experiment bestimmt</span></div>
+      <div class="stat"><span class="stat-n">selten</span><span class="stat-l">eigene Fragestellungen oder selbst geplante Versuche</span></div>
+      <div class="stat"><span class="stat-n">kaum</span><span class="stat-l">ergebnisoffene Versuche und vorab geäußerte Vermutungen</span></div>
+    </div>
+    <p>Experimente dienen meist als Motivator und zur Bestätigung der vorgegebenen Theorie; in Schülerübungen werden oft nur Anleitungen abgearbeitet. Folge: Rezeptartiges Experimentieren vermittelt ein falsches, induktivistisches Bild von Wissenschaft.</p>
+  </div>
+
+  <div class="card">
+    <h3>Funktionen von Experimenten</h3>
+    <div class="filter-row"><label for="f-funk">🔎 Funktionen filtern</label><input type="search" class="filter-inp" id="f-funk" data-filter="t-funk" placeholder="z. B. explorativ, Modell …"></div>
+    <div class="tbl-wrap"><table class="tbl" id="t-funk">
+      <thead><tr><th>Funktion</th><th>Bedeutung</th><th>Kap.</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Explorativ</strong></td><td>Konfrontation mit Neuem, Unerwartetem, Erklärungsbedürftigem; Ausgangspunkt für Hypothesen</td><td>5.5.1</td></tr>
+        <tr><td><strong>Prüfend</strong></td><td>Test von Vorhersagen aus Hypothesen und Modellen</td><td>6.2.2, 6.3.3</td></tr>
+        <tr><td><strong>Epistemisches Werkzeug</strong></td><td>Durch Reflexion werden Experimente zu „Denkzeugen“; Experimentieren und Modellieren befruchten sich bis hin zu Gedankenexperimenten</td><td>5.5.1</td></tr>
+        <tr><td><strong>Verankerung</strong></td><td>Experimentelle Erfahrung verankert Begriffe in Anwendungen und baut prozedurales Wissen auf</td><td>5.5.1</td></tr>
+        <tr><td><strong>Realitätserfahrung</strong></td><td>Qualitative Experimente zeigen Grundphänomene und Grundlagen der technischen Welt</td><td>6.3.3</td></tr>
+        <tr><td><strong>Lernhilfe</strong></td><td>Veranschaulichung der begrifflichen und methodischen Struktur der Physik</td><td>6.3.3</td></tr>
+        <tr><td><strong>Wissenschaftstheoretisch</strong></td><td>Quantitative Experimente zeigen das Wechselspiel von Theorie und Experiment und das Ringen um sinnvolle Daten</td><td>6.3.3</td></tr>
+        <tr><td><strong>Motivational</strong></td><td>Experimente machen Unterricht erlebnisreicher und zufriedenstellender</td><td>6.3.3</td></tr>
+      </tbody>
+    </table></div>
+    <p class="filter-empty" hidden>Keine passende Funktion.</p>
+    <p>Für allgemeinbildenden Unterricht, der vor allem qualitativ erklärt, genügen häufig qualitative Experimente.</p>
+  </div>
+
+  <div class="card">
+    <h3>Kritik der „induktiven Methode“ (Kap. 6.2)</h3>
+    <p>Die induktive Methode ist wissenschaftstheoretisch nicht haltbar (Popper, Duhem, Whitehead) und war nie die tatsächliche Arbeitsweise der Physik. Beobachtungen sind theoriegeladen; Phänomene sind „in zähem Ringen Produziertes“. Ein Unterricht, der aus wenigen Messwerten vorschnell ein Gesetz „gewinnt“ und das Vorverständnis übergeht, „manipuliert“ die Lernenden.</p>
+    <p>Als tragfähige Idealisierung gilt das <span class="tt" tabindex="0" data-tip="Aus einer Hypothese werden Vorhersagen abgeleitet und experimentell geprüft; Ergebnisse gelten als vorläufig bewährt, nicht als bewiesen.">hypothetisch-deduktive</span> Vorgehen:</p>
+    <div class="flow">
+      <div class="flow-step"><span class="flow-n">1</span>Hypothese / Modell</div>
+      <div class="flow-step"><span class="flow-n">2</span>Vorhersage unter Randbedingungen</div>
+      <div class="flow-step"><span class="flow-n">3</span>Experiment</div>
+      <div class="flow-step"><span class="flow-n">4</span>Daten als „Spuren der Realität“</div>
+      <div class="flow-step"><span class="flow-n">5</span>vorläufig bewährt oder verworfen</div>
+    </div>
+    <div class="callout callout-warn">⚠️ <span><strong>Typische Missverständnisse vermeiden:</strong> Ein Experiment beweise oder widerlege eine Theorie endgültig · Messdaten und Vorhersage müssten exakt übereinstimmen · aus Messdaten werde induktiv auf ein Gesetz geschlossen · überzeugende Experimente hingen vor allem von der Show der Lehrkraft ab.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Nach einer Messreihe mit drei, vier Messpunkten bewusst fragen: „Reicht das, um ein Gesetz zu behaupten?“ – und kurz vergleichen, wie lange die Wissenschaft dafür gebraucht hat. Das ist ehrlicher Umgang mit Daten in zwei Minuten.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Gelingensbedingungen für Lernen durch Experimentieren</h3>
+    <ol class="numlist">
+      <li>Vor dem Versuch Vermutungen und Hypothesen formulieren lassen.</li>
+      <li>Lernende an Fragestellung, Planung und Auswertung beteiligen.</li>
+      <li>Experimente in Kontexte einbetten, deren Zweck erkennbar ist.</li>
+      <li>Ergebnisoffene Durchführung mit Raum für eigene Ideen und Lösungsansätze.</li>
+      <li>Reflexionsphasen einplanen: Verallgemeinerung, Anwendung, Transfer.</li>
+      <li>Struktur und Unterstützung bieten, besonders bei offenen Settings.</li>
+    </ol>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Offenheit schrittweise erhöhen: zuerst die Auswertung öffnen, dann die Planung, zuletzt die Fragestellung. So wächst die Klasse in offene Experimente hinein, ohne im Chaos zu landen.</span></div>
+    <p class="caption">Kurzdefinition zum Weiterdenken (Kap. 6.3.3): Bei einem Experiment werden in einem realen System bewusst gesetzte Bedingungen verändert, kontrolliert und wiederholt beobachtet.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 4 MODELLE -->
+<section class="phase" id="ph4" data-title="Modelle">
+  <div class="card">
+    <h2>Modelle, Modellbildung und Darstellungsformen</h2>
+    <p>Unser Wissen basiert auf Modellen und entfaltet sich in ihnen; sie vermitteln zwischen Phänomen und Theorie (Kap. 5.5.1). Didaktisch zentral ist der <em>kritische Umgang</em> mit ihren Möglichkeiten und Grenzen (Kap. 11.6, 12.5).</p>
+    <h3>Modellbildung im Unterricht ≠ Theoriebildung in der Forschung (Kap. 6.3)</h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Aspekt</th><th>Forschung</th><th>Unterricht</th></tr></thead>
+      <tbody>
+        <tr><td>Ergebnis</td><td>Theorie mit hohem Anspruch</td><td>Modell, oft qualitativ</td></tr>
+        <tr><td>Allgemeine Bedingungen (Gesellschaft, Techniken)</td><td>Hoher Einfluss</td><td>Geringer Einfluss</td></tr>
+        <tr><td>Individuelle Bedingungen</td><td>Weltbild, Expertise</td><td>Alltagsvorstellungen – stärker prägend</td></tr>
+        <tr><td>Techniken</td><td>Hochspezialisiert</td><td>Begrenztes Repertoire</td></tr>
+      </tbody>
+    </table></div>
+    <p>Die These, Physikunterricht müsse der physikalischen Methode folgen, ist eine Übertreibung. Physikalische Methoden wirken nur über die Lernziele auf die Unterrichtsmethode. Hypothesenbildung ist ein kreativer Akt (Einstein: „kein logischer Weg, sondern nur die auf Einfühlung in die Erfahrung sich stützende Intuition“).</p>
+  </div>
+
+  <div class="card">
+    <h3>Zyklus von Forschen und Entwickeln (Kap. 11.6)</h3>
+    <div class="two-col">
+      <div class="world"><div class="world-h">🧪 Welt der Erfahrung</div><p>Phänomen, Experiment, Messung</p></div>
+      <div class="world"><div class="world-h">💭 Welt der Ideen</div><p>Modell, Hypothese, Theorie</p></div>
+    </div>
+    <p>Kreative Prozesse vermitteln in beide Richtungen. Dabei greifen zwei Wissensformen ineinander:</p>
+    <ul class="dotlist">
+      <li><strong>Logisch-analytisches, formales Wissen:</strong> streng und abstrakt – für viele der Grund, Physik als schwer zu erleben.</li>
+      <li><strong>Modell- und erfahrungsbasiertes, analogisches Wissen:</strong> intuitiv und schnell, aber anfällig für Fehlurteile und Fehlvorstellungen.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Leitlinien für den Umgang mit Modellen</h3>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>1 · Grenzen benennen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Ersatzschaltbild einer Membran oder Protein als Feder sind grobe Vereinfachungen; der kritische Umgang mit Modellen ist ein eigenes Lernziel (Kap. 12.5.2).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>2 · Formalismus ist nicht Wirklichkeit</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Ein anschaulicher Rechenformalismus (z. B. rotierende Zeiger) erlaubt Vorhersagen, sagt aber nichts darüber aus, wie die Objekte „wirklich“ sind (Kap. 7.4).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>3 · Keine Bildwechsel ohne Formalismus</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">„Welle beim Durchgang, Kugel bei der Detektion“ ist an Hochschulen verbreitet, für die Schule aber nicht zu empfehlen: Den Lernenden fehlt der Formalismus, der solche Metamorphosen auffängt (Kap. 7.3.3).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>4 · Modelle sind keine Abbilder</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">„Modelle repräsentieren die Wirklichkeit“ steht auf der Liste der NOS-Mythen (Kap. 6.4.3).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>5 · Analogien und Analogexperimente nutzen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Wo Originalexperimente unmöglich sind: akustische Rastermikroskopie als Modell für Rastertunnel- und Rasterkraftmikroskop (Kap. 11), „Prinzip des Sehens“ mit geworfenen Bällen für Streuexperimente (Kap. 8.5.1).</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>6 · Größenordnungen verankern</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Referenzpunkte setzen: DNA-Durchmesser 2 nm, Membrandicke 4 nm, ATP-Hydrolyse ≈ 20 kT (Kap. 12.5.3); die relative Längenänderung 10⁻²¹ bei Gravitationswellen in Atomkerndurchmessern ausdrücken (Kap. 14.6).</div></div></div>
+    </div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Jedes Modell mit einem festen Satzpaar abschließen: „Das Modell erklärt …“ – „Nicht erklären kann es …“. Das trainiert Modellkritik ganz nebenbei.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Fachspezifische Darstellungsformen</h3>
+    <div class="grid2">
+      <div class="mini"><strong>Feynman-Diagramme</strong><br>als Skizzen, die zeigen, um welchen Prozess es sich handelt (Kap. 8.4)</div>
+      <div class="mini"><strong>Ereignisbilder</strong><br>echter Detektordaten zur Klassifikation (Masterclasses, Kap. 8.5.2)</div>
+      <div class="mini"><strong>Hertzsprung-Russell-Diagramm</strong><br>und Himmelskarten in der Astronomie (Kap. 9.5)</div>
+      <div class="mini"><strong>Zeitreihen und Zustandsraum</strong><br>Phasenraum, Feigenbaum-Diagramm (Kap. 10)</div>
+      <div class="mini"><strong>Zeigerformalismus</strong><br>für Interferenz von der Optik bis zur Quantenphysik (Kap. 7.4.2)</div>
+      <div class="mini"><strong>Modellbildungssysteme</strong><br>stationäre Schrödinger-Gleichung mit Schulmathematik (Kap. 7.4.4)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 5 NOS -->
+<section class="phase" id="ph5" data-title="NOS">
+  <div class="card">
+    <h2>Nature of Science explizit unterrichten</h2>
+    <p>Angemessene Vorstellungen darüber, wie physikalisches Wissen entsteht, wie verlässlich und wie veränderlich es ist, gehören zum Fachwissen (Kap. 6.4). Sie entstehen <strong>nicht automatisch</strong> beim Fachlernen, sondern müssen ausdrücklich Thema werden.</p>
+    <h3>Warum NOS? Fünf Legitimationen (Driver et al.)</h3>
+    <div class="grid2">
+      <div class="mini"><strong>Nützlichkeit</strong><br>Argumente und Qualitätsangaben im Alltag beurteilen</div>
+      <div class="mini"><strong>Demokratie</strong><br>an Entscheidungen zu Energie, Klima, Technik teilhaben</div>
+      <div class="mini"><strong>Kultur</strong><br>eine naturwissenschaftlich-technisch geprägte Kultur verstehen</div>
+      <div class="mini"><strong>Moral</strong><br>Normen der Wissenschaft wie Offenlegung und Teilen erkennen</div>
+      <div class="mini"><strong>Lernpsychologie</strong><br>Genese von Konzepten fördert Verständnis – als einziges Argument bereits empirisch gestützt</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Mythen und adäquate Ansichten</h3>
+    <div class="two-col">
+      <div class="myth">
+        <div class="myth-h">❌ Typische Mythen (Auswahl aus 15, McComas)</div>
+        <ul class="dotlist">
+          <li>Hypothesen werden zu Theorien, Theorien zu Gesetzen.</li>
+          <li>Es gibt eine universelle naturwissenschaftliche Methode.</li>
+          <li>Sorgfältig gesammelte Daten führen zu sicherem Wissen.</li>
+          <li>Naturwissenschaft liefert absolute Beweise.</li>
+          <li>Erkenntnis entsteht grundsätzlich durch Experimente.</li>
+          <li>Modelle bilden die Wirklichkeit ab.</li>
+          <li>Naturwissenschaftler:innen sind besonders objektiv und arbeiten allein.</li>
+        </ul>
+      </div>
+      <div class="myth ok">
+        <div class="myth-h">✔ Adäquate Ansichten (Auswahl aus 13)</div>
+        <ul class="dotlist">
+          <li>Beobachtungen sind theoriegeleitet.</li>
+          <li>Wissen ist zuverlässig, aber nicht unveränderlich.</li>
+          <li>Es gibt nicht nur einen Erkenntnisweg.</li>
+          <li>Naturwissenschaftler:innen sind kreativ.</li>
+          <li>Gesetze und Theorien dienen unterschiedlichen Zwecken.</li>
+          <li>Naturwissenschaft ist sozial und kulturell eingebettet.</li>
+          <li>Naturwissenschaft und Technik beeinflussen sich gegenseitig.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout callout-info">ℹ️ <span>Der Band illustriert die Ansichten an der Entdeckung und Umklassifizierung von <strong>Pluto</strong> – und warnt zugleich: Zu jedem Satz gibt es Gegenbeispiele (z. B. ist ein LHC-Experiment nicht unabhängig replizierbar). Die Listen sind <strong>Ausgangspunkt, nicht Ergebnis</strong> des Unterrichts und keine Merksätze. Angemessenheit zeigt sich darin, Standpunkte und Beispiele zu kennen und zu beurteilen.</span></div>
+    <p>Eine Quelle der Mythen ist der Unterricht selbst – etwa wenn Gesetze dort „einfach und unproblematisch“ gewonnen werden.</p>
+  </div>
+
+  <div class="card">
+    <h3>Fünf Rahmenbedingungen für NOS-Unterricht</h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Merkmal</th><th>Bedeutung</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reflexiv</strong></td><td>Kritische, diskursive, vielseitige Auseinandersetzung</td></tr>
+        <tr><td><strong>Explizit</strong></td><td>NOS wird direkt benannt, nicht stillschweigend „mitgelernt“</td></tr>
+        <tr><td><strong>Integriert</strong></td><td>NOS und Physik werden gemeinsam gelernt</td></tr>
+        <tr><td><strong>Authentisch</strong></td><td>Reale schulische, aktuelle oder historische Situationen</td></tr>
+        <tr><td><strong>Exemplarisch</strong></td><td>Typische Beispiele, die einen Aspekt besonders gut zeigen</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h3>Vier Unterrichtsverfahren (Höttecke)</h3>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>📜 Historische Fallbeispiele</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Pluto, Röntgens zufällige Entdeckung, Lise Meitner und die Situation von Frauen in der Wissenschaft, Dufays Ladungsexperimente, N-Strahlen als Irrtum, Kirchhoffs Publikationsprobleme, Manhattan-Projekt.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>🔬 Forschungsorientiertes Arbeiten</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Etwas selbst herausfinden (Fadenpendel, Knickwärmer, Gewitter) und das eigene Vorgehen reflektieren: Kreativität, mehrere Lösungen, vorläufige Ergebnisse, Vorwissen prägt Beobachtung. Dabei offen ansprechen, worin sich Schulforschung von echter Forschung unterscheidet.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>🏛️ Kontexte in gesellschaftlichen Zusammenhängen</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Forschungsbudgets und Politik, ethische Debatten, unsichere Wissenslagen (Klimawandel, Mobilfunk), Risiko-Nutzen-Abwägungen (Kernenergie), kritischer Umgang mit Daten.</div></div></div>
+      <div class="acc-item"><button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)"><span>🧠 Wissenschaftstheoretische Konzepte</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Induktionsproblem, Struktur wissenschaftlicher Argumente, Rolle von Experimenten, Axiome, Wissenschaft vs. Pseudowissenschaft. Handlungsorientiert z. B. mit <strong>„Tricky Tracks“</strong>: Lernende beschreiben ein Spurenmuster und merken, dass sie unbewusst schon „Vogelspuren“ interpretieren.</div></div></div>
+    </div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> „Tricky Tracks“ eignet sich als zehnminütiger Einstieg in jede Einheit mit Beobachtungen: erst beschreiben lassen, dann gemeinsam trennen, was gesehen und was gedeutet wurde.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Bei jeder Gesetzesherleitung im Unterricht kurz innehalten und vergleichen, wie die Wissenschaft zu diesem Gesetz kam. Das schmälert die Akzeptanz von Schülerexperimenten nicht – Lernende verstehen, dass Schule kein Forschungsinstitut ist (Kap. 6.4.6).</span></div>
+    <p>Ziel für die Lehrkraft: Fachwissen, Wissen über NOS und Wissen über schulische Erkenntniswege bilden zusammen das fachdidaktische Wissen über NOS (Abd-El-Khalick).</p>
+  </div>
+</section>
+
+<!-- ============================================================ 6 REFLEXION -->
+<section class="phase" id="ph6" data-title="Reflexion">
+  <div class="card">
+    <h2>Kompetenzorientierung, Differenzierung und Reflexion</h2>
+    <p>Differenzierung und Leistungsbeurteilung behandelt der Band nur am Rand; die ausführlichen Kapitel stehen im Grundlagen-Band. Verwertbar sind ein Stufenmodell für experimentelle Kompetenz und klare Hinweise zur professionellen Reflexion.</p>
+    <h3>Stufenmodell zum Experimentieren (Mayer et al., Kap. 10.5)</h3>
+    <p>Bildungsstandards und EPA ordnen Physikkompetenz vier Bereichen zu: Fachwissen, Erkenntnisgewinnung, Kommunikation, Bewertung. Für Planung und Durchführung von Untersuchungen gibt es fünf Niveaus:</p>
+    <div class="ladder">
+      <div class="rung"><span class="rung-n">5</span>Untersuchungsmethoden reflektieren (Genauigkeit, Fehler abwägen)</div>
+      <div class="rung"><span class="rung-n">4</span>Stichprobe, Messwiederholung und Versuchsdauer berücksichtigen</div>
+      <div class="rung"><span class="rung-n">3</span>Kontrollvariablen berücksichtigen, Bedingungen konstant halten</div>
+      <div class="rung"><span class="rung-n">2</span>Veränderte und gemessene Variable in Beziehung setzen</div>
+      <div class="rung"><span class="rung-n">1</span>Eine Variable identifizieren</div>
+    </div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Die fünf Stufen eignen sich als Raster für gestufte Experimentieraufträge: Dieselbe Fragestellung bekommt je nach Gruppe Unterstützung bis Stufe 2, 3 oder 4 – und du siehst sofort, wo die Klasse steht.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Hinweise zur Differenzierung</h3>
+    <ul class="dotlist">
+      <li>Zunehmend heterogene Lernvoraussetzungen verlangen mehr Differenzierung und Diagnose; Sprachbildung rückt in den Fokus des Fachunterrichts (Kap. 4).</li>
+      <li>Schülerlabore variieren Aufgaben nach drei Stellschrauben: <strong>Schwierigkeit, Offenheit, Unterstützung</strong> (Kap. 5.2.1) – direkt übertragbar auf Schülerexperimente.</li>
+      <li>Projektartige, kooperative Arbeit erreicht auch Lernende, die sich sonst wenig einbringen, und verkleinert den Gender-Gap beim Selbstkonzept: Jede:r kann sich nach eigenen Stärken einbringen und Erfolg erleben (Kap. 5.4).</li>
+      <li>Lernstrategien explizit vermitteln, damit selbstgesteuertes Arbeiten gelingt (Kap. 4.1.2).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Eigene Unterrichtsbilder reflektieren</h3>
+    <p>Lehrkräfte bringen <span class="tt" tabindex="0" data-tip="Unbewusste, stabile Alltagsannahmen über Lehren und Lernen, oft aus der eigenen Schulzeit (Meyer: „Unterrichtsbilder“).">subjektive Theorien</span> aus der eigenen Schulzeit mit. Sie sind stabil, oft unbewusst und nicht validiert. Professionell ist, sie aufzuspüren und an wissenschaftlichen Theorien zu prüfen (Kap. 4.1.3).</p>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Handlungsart (Dann und Haag)</th><th>Merkmal</th><th>Wie sie gelernt wird</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Originär zielgerichtet</strong></td><td>Geplant, bewusst, steuernd</td><td>Akademisches Wissen plus schulpraktische Rückkopplung</td></tr>
+        <tr><td><strong>Routine</strong></td><td>Schnell, nicht bewusst gesteuert, bewährt; entlastet kognitiv</td><td>Training in echten, gespielten oder videobasierten Situationen</td></tr>
+        <tr><td><strong>Handeln unter Druck</strong></td><td>Erzwungen durch Ereignisse gegen das Unterrichtsziel; fehleranfällig</td><td>Mit erfahrenen Kolleg:innen reflektieren, bis tragfähige Routinen entstehen</td></tr>
+      </tbody>
+    </table></div>
+    <p>Auch das eigene Wissenschaftsverständnis prägt den Unterricht: Wer Physik als Abbild der Natur sieht, plant anders als jemand, der Erkenntnis als Konstruktion versteht.</p>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Eine knifflige Situation „unter Druck“ (Störung, unerwartetes Messergebnis) direkt nach der Stunde in zwei Sätzen notieren und mit Mentor:in durchspielen: Was war meine Reaktion – was wäre eine bessere Routine?</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Feedback einholen (Kap. 3.2.5)</h3>
+    <div class="grid3">
+      <div class="mini"><strong>🗣️ Schüler-Feedback</strong><br>Gesprächsrunde oder Fragebogen: gefördert und gefordert? Anforderungen angemessen? Lernklima positiv?</div>
+      <div class="mini"><strong>👥 Kollegiale Hospitation</strong><br>mit vorher vereinbarten Beobachtungskriterien und Gesprächsregeln (konstruktiv, aktives Zuhören)</div>
+      <div class="mini"><strong>🎥 Unterrichtsvideo</strong><br>eigene Aufnahme allein analysieren, Szenen im Kollegium diskutieren oder fremde Videos nutzen</div>
+    </div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Vor einem Unterrichtsbesuch oder einer Hospitation zwei, drei Beobachtungsschwerpunkte selbst vorschlagen (z. B. „Übergänge im Schülerexperiment“). Das verhindert Pauschalurteile und macht das Nachgespräch ergiebiger.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Alle paar Wochen drei Fragen per Zettel: „Was hat dir beim Lernen geholfen? Was war zu schwer? Was soll ich ändern?“ – fünf Minuten, aber wertvolle Rückmeldung zur eigenen Wirkung.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Was Fortbildung wirksam macht (Kap. 3.2.2)</h3>
+    <p>Veränderung braucht längere Zeiträume. Sie gelingt, wenn sie bei vorhandenen Vorstellungen und Erfahrungen ansetzt, in die tägliche Arbeit integriert ist, gute Praxiserfahrungen ermöglicht und durch <span class="tt" tabindex="0" data-tip="Gegenseitige Begleitung unter Kolleg:innen, z. B. in Tandems oder Fachgruppen.">Peer-Coaching</span> in Fachgruppen oder Tandems gestützt wird.</p>
+  </div>
+
+  <div class="card">
+    <h3>Gesund bleiben als Teil der Professionskompetenz (Kap. 4.1)</h3>
+    <p>Professionskompetenz umfasst neben Professionswissen auch motivationale Orientierungen, Selbstregulation sowie Überzeugungen und Werthaltungen (Baumert und Kunter). Günstig ist das <span class="tt" tabindex="0" data-tip="Arbeitsbezogenes Verhaltens- und Erlebensmuster (Schaarschmidt): Gesundheitsmuster G, Schonmuster S, Risikomuster A und B.">AVEM</span>-Gesundheitsmuster: hohes Engagement bei guter Distanzierungsfähigkeit.</p>
+    <ul class="dotlist">
+      <li>Feste Zeiten für soziale Kontakte, Bewegung und Erholung einplanen – gern verbindlich mit anderen.</li>
+      <li>Arbeitszeit in einem Plan begrenzen und den Plan einhalten; ausreichend schlafen.</li>
+      <li>Einen privaten Raum schaffen und erhalten.</li>
+      <li>Mit einer Vertrauensperson über berufliche Probleme reden; wenn nötig professionelle Hilfe suchen.</li>
+    </ul>
+    <p>Gerade in kleinen Fachgruppen wie Physik hilft ein kooperatives Kollegium gegen das Gefühl, Einzelkämpfer zu sein.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 7 INHALTE -->
+<section class="phase" id="ph7" data-title="Moderne Physik">
+  <div class="card">
+    <h2>Didaktische Zugänge in den Inhaltskapiteln</h2>
+    <p>Alle Inhaltskapitel (7–14) behandeln moderne Physik und folgen ähnlichen Mustern: an Wesenszüge statt an Formalismen anknüpfen, Analogien und echte Daten nutzen, offene Forschungsfragen als Motivation einsetzen.</p>
+    <div class="filter-row"><label for="f-inh">🔎 Themen filtern</label><input type="search" class="filter-inp" id="f-inh" data-filter="t-inh" placeholder="z. B. Analogie, Daten, Klima …"></div>
+    <div class="tbl-wrap"><table class="tbl" id="t-inh">
+      <thead><tr><th>Kap.</th><th>Thema</th><th>Didaktischer Kern</th><th>Konkrete Anregung</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td><strong>Quantenphysik</strong></td><td>Experimente nach vier Wesenszügen ordnen: Quantelung, stochastisches Verhalten, Interferenz, <span class="tt" tabindex="0" data-tip="Interferenzmuster und Welcher-Weg-Information schließen sich aus.">Komplementarität</span>. Weltbildliche Bedeutung vor Rechentechnik.</td><td>Verbaler Formalismus: (1) Auch einzelne Quantenobjekte tragen zu Interferenz bei, wenn es mehrere klassisch denkbare Möglichkeiten gibt. (2) Interferenz und Unterscheidbarkeit schließen sich aus. Dazu Zeigerformalismus, Wahrscheinlichkeitspakete, Schrödinger-Gleichung mit Modellbildungssoftware.</td></tr>
+        <tr><td>8</td><td><strong>Elementarteilchen</strong></td><td>Drei Blöcke: Bausteine in drei Familien, Kräfte als Teilchenaustausch, offene Fragen (Dunkle Materie, Gravitation). Fragestellungen sind einfach, auch wenn die Experimente komplex sind.</td><td>„Prinzip des Sehens“: Bälle auf ein verdecktes Objekt werfen; kleinere Bälle = höhere Auflösung. Masterclass-Übung mit echten ATLAS-Ereignisbildern.</td></tr>
+        <tr><td>9</td><td><strong>Astronomie</strong></td><td>Fünf Themen: Orientierung am Himmel, Sonnensystem, Sonne, Sterne, großräumige Struktur. Vom Speziellen (Sonne) zum Allgemeinen (Sterne).</td><td>Grenzen des Wissens (Sternexplosionen, Schwarze Löcher) als Faszination nutzen; auf Basis physikalischer Gesetze begründet spekulieren; Wissenschaftsgeschichte (Einstein) einbinden.</td></tr>
+        <tr><td>10</td><td><strong>Chaos und Strukturbildung</strong></td><td>Besonders geeignet für Erkenntnisgewinnung; stellt Vorstellungen zu Kausalität, Zufall und Vorhersagbarkeit infrage; ästhetische Zugänge.</td><td>Forschendes Lernen mit einfachen Mitteln (chaotisches Pendel, tropfender Wasserhahn, Wachstumsfraktale); Zeitreihen und Zustandsraum; Experimentiersets aus dem Projekt NiliPhEx.</td></tr>
+        <tr><td>11</td><td><strong>Nanowelt</strong></td><td>Positiv besetzt, hohes Interesse; interdisziplinär; zeigt Unterschied und Verzahnung von Naturwissenschaft (Wissen) und Technik (Produkte).</td><td>Analogexperimente (akustisches Rastermikroskop, Modell eines Rasterkraftmikroskops); Chancen und Risiken thematisieren; Grenzen der Analogien reflektieren.</td></tr>
+        <tr><td>12</td><td><strong>Biophysik</strong></td><td>Baut auf klassischer Physik auf – Wiederholung in neuem Kontext. Hürden: unterschiedliche Fachsprachen, Begriffsvielfalt.</td><td>Begriffe strukturiert einführen; Referenzgrößen für Skalen; Demos wie Lipid-Monolagen, Elektrophorese, Membrankapazität; Kooperation mit der Biologie.</td></tr>
+        <tr><td>13</td><td><strong>Klimawandel</strong></td><td>Wissen führt nicht automatisch zum Handeln; drei Barrieren: Risiken werden nicht erkannt, eigener Einfluss unterschätzt, Gewohnheiten resistent.</td><td>Vier Schritte: verstehen (mit Experimenten) → regionale Folgen recherchieren → Handlungsnotwendigkeit über das CO₂-Budget wecken → konkret handeln (CO₂-Rechner, Infografiken).</td></tr>
+        <tr><td>14</td><td><strong>Gravitationswellen</strong></td><td>Aktuelle Forschung (Nachweis 2015) mit Schulmathematik zugänglich; viele offene Fragen.</td><td>Größenordnungsaufgaben: Längenänderung 10⁻²¹ für Mensch, LIGO- und LISA-Arm; abgestrahlte Leistung von Stab, Doppelstern und Sonne–Erde vergleichen.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="filter-empty" hidden>Kein Thema passt zum Filter.</p>
+  </div>
+
+  <div class="card">
+    <h3>Quer gelesen: fünf wiederkehrende Strategien</h3>
+    <ol class="numlist">
+      <li><strong>Wesenszüge vor Formalismus:</strong> zuerst qualitativ verstehen, welche Phänomene neu sind und warum.</li>
+      <li><strong>Analogien und Analogexperimente</strong> dort, wo Originalversuche unmöglich sind – mit Besprechung ihrer Grenzen.</li>
+      <li><strong>Echte Daten</strong> (Ereignisbilder, Messkurven, Klimadaten) statt rein ausgedachter Aufgaben.</li>
+      <li><strong>Offene Forschungsfragen</strong> zeigen: Sie motivieren und vermitteln ein angemessenes Wissenschaftsbild.</li>
+      <li><strong>Außerschulische und digitale Angebote</strong> einbinden (Masterclasses, Schülerlabore, Haus der Astronomie) – mit Vor- und Nachbereitung.</li>
+    </ol>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Für Quantenphysik in der Oberstufe nicht zwischen „Welle“ und „Kügelchen“ hin- und herspringen, sondern früh den verbalen Formalismus (klassisch denkbare Möglichkeiten, Unterscheidbarkeit) einführen – er trägt bis zur Komplementarität.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Beim Klimawandel nicht beim Treibhauseffekt stehen bleiben: Regionale Daten (Landesumweltportale) und ein CO₂-Rechner machen aus Wissen Betroffenheit und Handlungsoptionen.</span></div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Für nichtlineare Physik gibt es erprobte Experimentiersets (NiliPhEx, FU Berlin) – 70 % der befragten Lehrkräfte nannten fehlendes Material als Hürde.</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ 8 CHECKLISTE -->
+<section class="phase" id="ph8" data-title="Checkliste">
+  <div class="card">
+    <h2>Checkliste für die Stundenplanung</h2>
+    <p>Die Checkliste übersetzt die Befunde des Bandes in Prüffragen für eine Stunde oder Einheit. Häkchen werden in diesem Browser gespeichert.</p>
+    <div class="ck-ctrl">
+      <span class="ck-count" id="ck-count" aria-live="polite"></span>
+      <button class="btn btn-ghost btn-sm" type="button" id="ck-reset">↺ Alle Häkchen entfernen</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="window.print()">🖨️ Drucken</button>
+    </div>
+    <div class="ck-group"><h3>Planung</h3>
+      <label class="ck"><input type="checkbox" data-ck="p1"> Ist das Lernziel klar, und begründet es die gewählte Methode, nicht umgekehrt?</label>
+      <label class="ck"><input type="checkbox" data-ck="p2"> Welche Schülervorstellungen sind zu erwarten, und an welcher Stelle greife ich sie auf?</label>
+      <label class="ck"><input type="checkbox" data-ck="p3"> Hat die Einheit einen erkennbaren roten Faden?</label>
+      <label class="ck"><input type="checkbox" data-ck="p4"> Ist der Kontext Ausgangspunkt statt Anhängsel?</label>
+      <label class="ck"><input type="checkbox" data-ck="p5"> Haben die Aufgaben Denkpotenzial (erklären, begründen, vorhersagen)?</label>
+      <label class="ck"><input type="checkbox" data-ck="p6"> Sind Schwierigkeit, Offenheit und Unterstützung für verschiedene Lernende abgestuft?</label>
+    </div>
+    <div class="ck-group"><h3>Experimente</h3>
+      <label class="ck"><input type="checkbox" data-ck="e1"> Formulieren die Lernenden vor dem Versuch Vermutungen?</label>
+      <label class="ck"><input type="checkbox" data-ck="e2"> Sind sie an Fragestellung, Planung oder Auswertung beteiligt?</label>
+      <label class="ck"><input type="checkbox" data-ck="e3"> Ist der Zweck des Experiments für sie erkennbar?</label>
+      <label class="ck"><input type="checkbox" data-ck="e4"> Ziehe ich aus wenigen Messwerten ein Gesetz – und spreche ich das ehrlich an?</label>
+      <label class="ck"><input type="checkbox" data-ck="e5"> Ist eine Reflexionsphase eingeplant, die vom Handeln zum Verallgemeinern führt?</label>
+    </div>
+    <div class="ck-group"><h3>Modelle und NOS</h3>
+      <label class="ck"><input type="checkbox" data-ck="m1"> Benenne ich Möglichkeiten und Grenzen des Modells oder der Analogie?</label>
+      <label class="ck"><input type="checkbox" data-ck="m2"> Gibt es eine Gelegenheit, Wege der Erkenntnisgewinnung ausdrücklich zu reflektieren?</label>
+    </div>
+    <div class="ck-group"><h3>Durchführung</h3>
+      <label class="ck"><input type="checkbox" data-ck="d1"> Sind Regeln, Übergänge und Materialausgabe so geplant, dass kein Leerlauf entsteht?</label>
+      <label class="ck"><input type="checkbox" data-ck="d2"> Werden offene Phasen mit einer Systematisierung abgeschlossen?</label>
+      <label class="ck"><input type="checkbox" data-ck="d3"> Erhalten die Lernenden prozessbezogenes Feedback?</label>
+    </div>
+    <div class="ck-group"><h3>Reflexion</h3>
+      <label class="ck"><input type="checkbox" data-ck="r1"> Hole ich gelegentlich Schüler-Feedback ein?</label>
+      <label class="ck"><input type="checkbox" data-ck="r2"> Habe ich eine Situation „unter Druck“ mit Kolleg:innen nachbesprochen?</label>
+      <label class="ck"><input type="checkbox" data-ck="r3"> Nutze ich Hospitation oder Video mit vorab vereinbarten Kriterien?</label>
+    </div>
+    <div class="callout ptipp">💡 <span><strong>Praxistipp:</strong> Nicht jede Stunde muss jeden Punkt erfüllen. Wähle pro Woche zwei Prüffragen als persönlichen Schwerpunkt – so wird die Liste zum Entwicklungsplan statt zur Pflichtübung.</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ 9 GLOSSAR -->
+<section class="phase" id="ph9" data-title="Glossar">
+  <div class="card">
+    <h2>Glossar A–Z</h2>
+    <div class="filter-row"><label for="f-glo">🔎 Begriff suchen</label><input type="search" class="filter-inp" id="f-glo" data-filter="glo" placeholder="Begriff oder Stichwort eingeben …"></div>
+    <div class="az" id="az" aria-label="Anfangsbuchstaben"></div>
+    <dl class="glo" id="glo">
+      <div class="g"><dt>Analogexperiment</dt><dd>Makroskopisches Ersatzexperiment, das das Prinzip eines unzugänglichen Vorgangs zeigt, z. B. akustisches Rastermikroskop, Bälle-Streuung. <span class="ref">Kap. 8, 11</span></dd></div>
+      <div class="g"><dt>AVEM</dt><dd>Arbeitsbezogenes Verhaltens- und Erlebensmuster (Schaarschmidt) mit Gesundheitsmuster G, Schonmuster S, Risikomustern A und B. <span class="ref">Kap. 4.1.1</span></dd></div>
+      <div class="g"><dt>Didaktisches Dreieck</dt><dd>Beziehung von Lehrkraft (Darstellungen, Interventionen), Lernenden (Vorstellungen) und Inhalt (kognitives Potenzial der Aufgaben). <span class="ref">Kap. 4.2.2</span></dd></div>
+      <div class="g"><dt>Elementarisierung</dt><dd>Fachinhalte so vereinfachen, dass sie lernbar werden, ohne sie fachlich zu verfälschen; Beispiel: schultaugliche Formalismen der Quantenphysik. <span class="ref">Kap. 7</span></dd></div>
+      <div class="g"><dt>Epistemisches Werkzeug</dt><dd>Experiment als „Denkzeug“: Durch Reflexion entsteht aus experimentellem Handeln Wissen, bis hin zum Gedankenexperiment. <span class="ref">Kap. 5.5.1</span></dd></div>
+      <div class="g"><dt>Fachdidaktisches Wissen (PCK)</dt><dd>Pedagogical Content Knowledge: Wissen über Schülervorstellungen, Lehrstrategien und Darstellungen, um Lerngelegenheiten zu schaffen. <span class="ref">Kap. 4.2.2</span></dd></div>
+      <div class="g"><dt>Fachwissen (CK)</dt><dd>Content Knowledge: notwendige, aber nicht hinreichende Voraussetzung guten Unterrichts; für Lehrkräfte vertieftes Schulwissen plus akademisches Wissen. <span class="ref">Kap. 4.2.1</span></dd></div>
+      <div class="g"><dt>Forschendes Lernen</dt><dd>Lernende identifizieren Probleme, entwickeln Strategien, verfolgen und bewerten Lösungen und reflektieren ihr Vorgehen. <span class="ref">Kap. 5.5.3, 6.4.6</span></dd></div>
+      <div class="g"><dt>Hypothetisch-deduktives Vorgehen</dt><dd>Aus einer Hypothese werden Vorhersagen abgeleitet und experimentell geprüft; Ergebnisse gelten als vorläufig bewährt. <span class="ref">Kap. 6.2.2</span></dd></div>
+      <div class="g"><dt>Induktive Methode</dt><dd>Schluss von wenigen Beobachtungen auf allgemeine Gesetze; wissenschaftstheoretisch nicht haltbar und im Unterricht problematisch. <span class="ref">Kap. 6.2.1</span></dd></div>
+      <div class="g"><dt>Klassenführung</dt><dd>Maßnahmen, die Unterrichtszeit als Lernzeit sichern: Regeln, kein Leerlauf, Störungskontrolle, zügiger Fluss, Klarheit. <span class="ref">Kap. 4.2.4</span></dd></div>
+      <div class="g"><dt>Kognitive Aktivierung</dt><dd>Unterricht, der Lernende zu aktivem, verständnisorientiertem Denken anregt; Merkmal der Tiefenstruktur. <span class="ref">Kap. 1.6, 4.2.2</span></dd></div>
+      <div class="g"><dt>Komplementarität</dt><dd>Interferenzmuster und Unterscheidbarkeit der klassisch denkbaren Möglichkeiten (Welcher-Weg-Information) schließen sich aus. <span class="ref">Kap. 7.2.4, 7.4.1</span></dd></div>
+      <div class="g"><dt>Kontextorientierung</dt><dd>Fachinhalte in lebensweltliche oder gesellschaftliche Zusammenhänge einbetten; fördert Interesse bei mindestens gleichem fachlichem Niveau. <span class="ref">Kap. 5.5.2</span></dd></div>
+      <div class="g"><dt>Lehr-Lern-Labor</dt><dd>Schülerlabor, in dem Lehramtsstudierende kleine Schülergruppen betreuen und so in überschaubaren Situationen Praxis sammeln. <span class="ref">Kap. 5.3.3</span></dd></div>
+      <div class="g"><dt>Masterclass</dt><dd>Programm der Teilchenphysik, in dem Lernende echte Ereignisbilder von Detektoren klassifizieren. <span class="ref">Kap. 8.5.2</span></dd></div>
+      <div class="g"><dt>Nature of Science (NOS)</dt><dd>Vorstellungen über Entstehung, Bedeutung, Gültigkeit und Grenzen naturwissenschaftlichen Wissens. <span class="ref">Kap. 6</span></dd></div>
+      <div class="g"><dt>Oberflächenstruktur</dt><dd>Sichtbare Organisation des Unterrichts wie Sozialform und Experimenteinsatz. <span class="ref">Kap. 1.6</span></dd></div>
+      <div class="g"><dt>Pädagogisches Wissen (PK)</dt><dd>Fächerübergreifendes Wissen über Klassenführung, lernförderliches Klima, Lernprozesse und Unterrichtsformen. <span class="ref">Kap. 4.2.4</span></dd></div>
+      <div class="g"><dt>Peer-Coaching</dt><dd>Gegenseitige Begleitung unter Kolleg:innen in Tandems oder Fachgruppen; unabdingbar, um Fortbildungsideen in der Praxis zu festigen. <span class="ref">Kap. 3.2.2</span></dd></div>
+      <div class="g"><dt>Professionskompetenz</dt><dd>Professionswissen, motivationale Orientierungen, Selbstregulation sowie Überzeugungen und Werthaltungen (Baumert und Kunter). <span class="ref">Kap. 4.1</span></dd></div>
+      <div class="g"><dt>Sachstruktur</dt><dd>Die Art, wie Inhalte einer Stunde oder Einheit aufeinander aufbauen; beeinflusst den Lernerfolg. <span class="ref">Kap. 1.6</span></dd></div>
+      <div class="g"><dt>Schülerforschungszentrum</dt><dd>Außerschulischer Lernort für besonders interessierte Jugendliche mit langfristigen eigenen Forschungsprojekten. <span class="ref">Kap. 5.3.2</span></dd></div>
+      <div class="g"><dt>Schülerlabor</dt><dd>Außerschulischer Lernort mit Laborcharakter; fördert Interesse und Selbstkonzept, besonders bei guter Einbindung in den Unterricht. <span class="ref">Kap. 5</span></dd></div>
+      <div class="g"><dt>Selbstwirksamkeitserwartung</dt><dd>Erwartung, eine Aufgabe aus eigener Kraft bewältigen zu können – bei Lernenden wie bei Lehrkräften wichtig. <span class="ref">Kap. 4.1.1, 5.4</span></dd></div>
+      <div class="g"><dt>Subjektive Theorien</dt><dd>Stabile, oft unbewusste Annahmen über Lehren und Lernen („Unterrichtsbilder“), die es aufzuspüren und zu prüfen gilt. <span class="ref">Kap. 4.1.3</span></dd></div>
+      <div class="g"><dt>Tiefenstruktur</dt><dd>Nicht direkt sichtbare Qualitätsmerkmale: Sachstruktur, kognitive Aktivierung, Klassenführung, motivationale Unterstützung. <span class="ref">Kap. 1.6</span></dd></div>
+      <div class="g"><dt>Tricky Tracks</dt><dd>NOS-Aktivität: Ein Spurenmuster beschreiben lassen, um den Unterschied zwischen Beobachtung und Deutung erfahrbar zu machen. <span class="ref">Kap. 6.4.6</span></dd></div>
+      <div class="g"><dt>Zeigerformalismus</dt><dd>Schultauglicher Formalismus für Interferenz: Zeiger werden entlang der Wege gedreht und addiert. <span class="ref">Kap. 7.4.2</span></dd></div>
+    </dl>
+    <p class="filter-empty" hidden>Kein Begriff gefunden – probiere die Volltextsuche oben.</p>
+  </div>
+</section>
+
+  <div class="card src">
+    <h3>Quelle</h3>
+    <p>Kircher, E.; Girwidz, R.; Fischer, H. E. (Hrsg.) (2020): <em>Physikdidaktik | Methoden und Inhalte.</em> 4. Aufl., Berlin: Springer Spektrum. doi:10.1007/978-3-662-59496-4. Kapitelangaben beziehen sich auf diesen Band. Ergänzend: <em>Physikdidaktik | Grundlagen</em> (Unterrichtsmethoden, Lernziele, Elementarisierung, Medien, Schülervorstellungen, Leistungsbewertung).</p>
+  </div>
+
+
+  <button type="button" class="to-top" id="to-top" aria-label="Nach oben zum Seitenanfang">▲ Nach oben</button>
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261102-A410DA" title="Kennnummer MR-20261102-A410DA">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
+
+</div>
+<script>
+var __LH={i:"MR-20261102-A410DA",j:2026};
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  solBtnShow(btn);
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
+
+
+/* ============================================================
+   Nachschlage-Erweiterungen: Volltextsuche, Filterfelder, Glossar A–Z,
+   Tippsammlung, Checkliste (Speicher-Schlüssel mit LH_NS)
+   ============================================================ */
+(function(){
+  function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/[​‌⁠]/g,''); }
+  function terms(q){ return norm(q).split(/\s+/).filter(function(t){ return t.length>=2; }); }
+  function esc(s){ return s.replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function phaseOf(el){ var s=el.closest('.phase'); return s?parseInt(s.id.replace('ph',''),10):-1; }
+  function phaseTitle(n){ var s=document.getElementById('ph'+n); return s?(s.dataset.title||''):''; }
+  function sectionOf(el){
+    var card=el.closest('.card'); if(!card) return '';
+    var hs=[].slice.call(card.querySelectorAll('h2,h3')), best='';
+    hs.forEach(function(h){ if(h===el || (h.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) best=h.textContent; });
+    return best;
+  }
+  function cleanText(el){
+    var c=el.cloneNode(true); c.querySelectorAll('.acc-icon').forEach(function(x){ x.remove(); }); c.querySelectorAll('dt,td,th,br').forEach(function(x){ x.after(' '); });
+    return (c.textContent||'').replace(/[​‌⁠]/g,'').replace(/\s+/g,' ').trim();
+  }
+
+  /* ---------- Hervorheben im Dokument ---------- */
+  function clearHL(){
+    document.querySelectorAll('mark.hl').forEach(function(m){ var p=m.parentNode; p.replaceChild(document.createTextNode(m.textContent),m); p.normalize(); });
+  }
+  function highlightIn(root,ts){
+    if(!ts.length) return;
+    var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      if(n.parentNode.closest('script,style,svg,mark,button.acc-head .acc-icon')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT; }});
+    var nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(n){
+      var txt=n.nodeValue, low=norm(txt), hits=[];
+      ts.forEach(function(t){ var i=low.indexOf(t); while(i>=0){ hits.push([i,i+t.length]); i=low.indexOf(t,i+t.length); } });
+      if(!hits.length || low.length!==txt.length) return;
+      hits.sort(function(a,b){ return a[0]-b[0]; });
+      var merged=[]; hits.forEach(function(h){ var l=merged[merged.length-1]; if(l && h[0]<=l[1]) l[1]=Math.max(l[1],h[1]); else merged.push(h.slice()); });
+      var frag=document.createDocumentFragment(), pos=0;
+      merged.forEach(function(h){ frag.appendChild(document.createTextNode(txt.slice(pos,h[0])));
+        var m=document.createElement('mark'); m.className='hl'; m.textContent=txt.slice(h[0],h[1]); frag.appendChild(m); pos=h[1]; });
+      frag.appendChild(document.createTextNode(txt.slice(pos)));
+      n.parentNode.replaceChild(frag,n);
+    });
+  }
+  function snippet(text,ts){
+    var low=norm(text), first=-1;
+    ts.forEach(function(t){ var i=low.indexOf(t); if(i>=0 && (first<0||i<first)) first=i; });
+    var a=Math.max(0,first-60), b=Math.min(text.length,(first<0?0:first)+140);
+    var s=(a>0?'… ':'')+text.slice(a,b)+(b<text.length?' …':'');
+    var out=esc(s);
+    if(low.length===text.length){
+      ts.forEach(function(t){ var re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'); out=out.replace(re,'<mark>$1</mark>'); });
+    }
+    return out;
+  }
+
+  /* ---------- Zu einer Stelle springen ---------- */
+  function goTo(el,ts){
+    var n=phaseOf(el); if(n<0) return;
+    showPhase(n);
+    var accItem=el.closest('.acc-item');
+    if(accItem){ var h=accItem.querySelector('.acc-head'); if(h && !h.classList.contains('open')) toggleAcc(h); }
+    var row=el.closest('tr'); if(row) row.hidden=false;
+    var g=el.closest('.g'); if(g) g.hidden=false;
+    clearHL(); if(ts && ts.length) highlightIn(el,ts);
+    setTimeout(function(){
+      var off=16;
+      var y=el.getBoundingClientRect().top+window.pageYOffset-off;
+      window.scrollTo({top:y,behavior:'smooth'});
+      el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    },380);
+  }
+  window.lhGoTo=goTo;
+
+  /* ---------- Volltextsuche ---------- */
+  var INDEX=[];
+  function buildIndex(){
+    var sel='.phase h2, .phase h3, .phase p, .phase li, .phase tbody tr, .phase .callout, .phase .g, .phase .mini, .phase .flow-step, .phase .rung, .phase .acc-item, .phase label.ck, .phase figcaption, .phase .lead-q, .phase .world, .phase .stat';
+    var all=[].slice.call(document.querySelectorAll(sel)), set=new Set(all);
+    INDEX=all.filter(function(el){
+      for(var p=el.parentElement;p;p=p.parentElement){ if(set.has(p)) return false; }
+      return !el.closest('.tc-box');
+    }).map(function(el){ var t=cleanText(el); return {el:el,text:t,low:norm(t),tip:el.classList.contains('ptipp'),ph:phaseOf(el)}; })
+      .filter(function(o){ return o.text.length>2; });
+  }
+  function runSearch(){
+    var inp=document.getElementById('gsearch'), onlyTips=document.getElementById('gsearch-tipps').checked;
+    var info=document.getElementById('gsearch-info'), list=document.getElementById('gsearch-results');
+    var q=inp.value, ts=terms(q);
+    document.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on', norm(c.dataset.q)===norm(q.trim())); });
+    list.innerHTML=''; clearHL();
+    if(!ts.length && !onlyTips){ info.textContent=q.trim()?'Bitte mindestens zwei Buchstaben eingeben.':''; return; }
+    var hits=INDEX.filter(function(o){ return (!onlyTips||o.tip) && ts.every(function(t){ return o.low.indexOf(t)>=0; }); });
+    hits.sort(function(a,b){ return (b.tip?1:0)-(a.tip?1:0) || a.ph-b.ph; });
+    if(!onlyTips) hits.sort(function(a,b){ return a.ph-b.ph; });
+    info.textContent = hits.length ? (hits.length+(hits.length===1?' Treffer':' Treffer')+(onlyTips?' unter den Praxistipps':'')+(hits.length>60?' – die ersten 60 werden angezeigt':'')+' · Enter springt zum ersten Treffer')
+                                   : 'Keine Treffer. Tipp: kürzeren Wortstamm versuchen (z. B. „experiment“ statt „Experimentieren“).';
+    hits.slice(0,60).forEach(function(o){
+      var li=document.createElement('li'), b=document.createElement('button'); b.type='button'; b.className='sr';
+      b.innerHTML='<span class="sr-head"><span class="sr-ph">'+esc(phaseTitle(o.ph))+'</span><span class="sr-sec">'+esc(sectionOf(o.el))+'</span>'+(o.tip?'<span class="sr-tip">💡 Praxistipp</span>':'')+'</span>'+snippet(o.text,ts);
+      b.onclick=function(){ goTo(o.el,ts); };
+      li.appendChild(b); list.appendChild(li);
+    });
+  }
+  function initSearch(){
+    buildIndex();
+    var inp=document.getElementById('gsearch'); if(!inp) return;
+    var tmr=null;
+    inp.addEventListener('input',function(){ clearTimeout(tmr); tmr=setTimeout(runSearch,140); });
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){ e.preventDefault(); var f=document.querySelector('#gsearch-results .sr'); if(f) f.click(); }
+      if(e.key==='Escape'){ inp.value=''; runSearch(); }
+    });
+    document.getElementById('gsearch-tipps').addEventListener('change',runSearch);
+    document.getElementById('gsearch-clear').addEventListener('click',function(){ inp.value=''; document.getElementById('gsearch-tipps').checked=false; runSearch(); inp.focus(); });
+    document.querySelectorAll('.chip[data-q]').forEach(function(c){ c.addEventListener('click',function(){ inp.value=c.dataset.q; runSearch(); inp.focus(); }); });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='/' && !/input|textarea/i.test((document.activeElement||{}).tagName||'')){ e.preventDefault(); inp.focus(); }
+    });
+  }
+
+  /* ---------- Filterfelder (Tabellen und Glossar) ---------- */
+  function applyFilter(inp,letter){
+    var target=document.getElementById(inp.dataset.filter); if(!target) return;
+    var ts=terms(inp.value), items=target.tagName==='TABLE'?[].slice.call(target.querySelectorAll('tbody tr')):[].slice.call(target.querySelectorAll('.g'));
+    var shown=0;
+    clearHL();
+    items.forEach(function(it){
+      var low=norm(cleanText(it)), ok=ts.every(function(t){ return low.indexOf(t)>=0; });
+      if(letter){ var dt=it.querySelector('dt'); ok=ok && dt && norm(dt.textContent).charAt(0)===letter; }
+      it.hidden=!ok; if(ok){ shown++; if(ts.length) highlightIn(it,ts); }
+    });
+    var card=inp.closest('.card'), empty=card?card.querySelector('.filter-empty'):null;
+    if(empty) empty.hidden=shown>0;
+  }
+  function initFilters(){
+    document.querySelectorAll('.filter-inp').forEach(function(inp){
+      inp.addEventListener('input',function(){
+        if(inp.dataset.filter==='glo'){ document.querySelectorAll('#az button').forEach(function(b){ b.classList.toggle('on',b.dataset.l===''); }); }
+        applyFilter(inp);
+      });
+      inp.addEventListener('keydown',function(e){ if(e.key==='Escape'){ inp.value=''; applyFilter(inp); } });
+    });
+  }
+  function initAZ(){
+    var az=document.getElementById('az'), glo=document.getElementById('glo'), inp=document.getElementById('f-glo'); if(!az||!glo||!inp) return;
+    var letters=[]; glo.querySelectorAll('dt').forEach(function(dt){ var l=norm(dt.textContent).charAt(0); if(letters.indexOf(l)<0) letters.push(l); });
+    letters.sort();
+    var mk=function(lbl,l){ var b=document.createElement('button'); b.type='button'; b.textContent=lbl; b.dataset.l=l; if(l==='') b.classList.add('on');
+      b.onclick=function(){ az.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); }); inp.value=''; applyFilter(inp,l); };
+      az.appendChild(b); };
+    mk('Alle','');
+    letters.forEach(function(l){ mk(l.toUpperCase(),l); });
+  }
+
+  /* ---------- Tippsammlung ---------- */
+  function initTipps(){
+    var tips=[].slice.call(document.querySelectorAll('.phase .ptipp')).filter(function(t){ return !t.closest('.tipp-carousel'); });
+    var meta=document.getElementById('tc-meta'), txt=document.getElementById('tc-text'); if(!meta||!txt||!tips.length) return;
+    var key=LH_NS+'tippIdx', idx;
+    try{ idx=parseInt(localStorage.getItem(key),10); }catch(e){}
+    if(isNaN(idx)){ var d=new Date(), start=new Date(d.getFullYear(),0,0); idx=Math.floor((d-start)/864e5)%tips.length; }
+    function show(i){
+      idx=(i+tips.length)%tips.length;
+      var t=tips[idx], s=cleanText(t).replace(/^💡\s*/,'').replace(/^Praxistipp:\s*/,'');
+      meta.textContent='Tipp '+(idx+1)+' von '+tips.length+' · '+phaseTitle(phaseOf(t))+' · '+sectionOf(t);
+      txt.textContent=s;
+      try{ localStorage.setItem(key,String(idx)); }catch(e){}
+    }
+    document.getElementById('tc-prev').onclick=function(){ show(idx-1); };
+    document.getElementById('tc-next').onclick=function(){ show(idx+1); };
+    document.getElementById('tc-rand').onclick=function(){ var r=idx; if(tips.length>1){ while(r===idx) r=Math.floor(Math.random()*tips.length); } show(r); };
+    document.getElementById('tc-go').onclick=function(){ goTo(tips[idx],[]); };
+    show(idx);
+  }
+
+  /* ---------- Checkliste ---------- */
+  function initChecklist(){
+    var boxes=[].slice.call(document.querySelectorAll('input[data-ck]')); if(!boxes.length) return;
+    var cnt=document.getElementById('ck-count');
+    function upd(){ var n=0; boxes.forEach(function(b){ b.closest('.ck').classList.toggle('done',b.checked); if(b.checked) n++; });
+      if(cnt) cnt.textContent=n+' von '+boxes.length+' Prüffragen abgehakt'; }
+    boxes.forEach(function(b){
+      try{ b.checked=localStorage.getItem(LH_NS+'ck_'+b.dataset.ck)==='1'; }catch(e){}
+      b.addEventListener('change',function(){ try{ localStorage.setItem(LH_NS+'ck_'+b.dataset.ck,b.checked?'1':'0'); }catch(e){} upd(); });
+    });
+    var r=document.getElementById('ck-reset');
+    if(r) r.onclick=function(){ boxes.forEach(function(b){ b.checked=false; try{ localStorage.removeItem(LH_NS+'ck_'+b.dataset.ck); }catch(e){} }); upd(); };
+    upd();
+  }
+
+  /* ---------- Reiter merken ---------- */
+  function initPhaseMemory(){
+    var orig=window.showPhase;
+    window.showPhase=function(n){ orig(n); try{ localStorage.setItem(LH_NS+'phase',String(n)); }catch(e){} };
+    var p=null; try{ p=parseInt(localStorage.getItem(LH_NS+'phase'),10); }catch(e){}
+    if(!isNaN(p) && p!==null && document.getElementById('ph'+p)){ orig(p); }
+  }
+
+  function initToTop(){
+    var b=document.getElementById('to-top'); if(!b) return;
+    var upd=function(){ b.classList.toggle('show', window.pageYOffset>400); };
+    window.addEventListener('scroll',upd,{passive:true}); upd();
+    b.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); var h=document.querySelector('.pagehead'); if(h){ h.setAttribute('tabindex','-1'); try{ h.focus({preventScroll:true}); }catch(e){} } });
+  }
+  function init(){ initToTop(); initPhaseMemory(); initSearch(); initFilters(); initAZ(); initTipps(); initChecklist(); }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',init); } else { init(); }
+})();
+</script>
+</body>
+</html>
