@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261101-C9B681 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261101-C9B681" data-lh-j="2026">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261101-C9B681">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 8 · LB1 · Das fliegende Haus – Auftrieb in Luft</title>
+<style>
+/* lh:MR-20261101-C9B681 */
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+/* ---------- Urheber-Fußzeile ---------- */
+.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn);border-radius:var(--radius);background:var(--warn-bg);color:var(--text);font-size:var(--fs-base);}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light);text-align:center;font-size:var(--fs-sm);color:var(--text-3);}
+
+@media print{
+  .lh-foot{display:block !important;}
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+/* ── Seitenspezifisch: Simulationen ── */
+.sim{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;background:var(--surface-warm, #FDF9F3);}
+.sim-row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;}
+.sim canvas,.sim-svg{max-width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--border-light);background:#FFFFFF;}
+.sim-svg{width:300px;}
+.two-col .sim-svg{width:100%;max-width:280px;}
+.sim-panel{flex:1 1 220px;display:flex;flex-direction:column;gap:8px;min-width:200px;}
+.sim-panel input[type=range]{width:100%;accent-color:var(--accent);}
+.sim-panel select.inp{width:auto;max-width:100%;}
+.sim-read{font-size:var(--fs-base);line-height:1.5;}
+.sim-btns{display:flex;flex-wrap:wrap;gap:8px;}
+.sim-status{min-height:1.6em;font-weight:600;color:var(--accent);}
+.lock-note{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;border:1.5px dashed var(--border);
+  border-radius:var(--radius);background:var(--surface-2);color:var(--text-2);}
+table.data{border-collapse:collapse;margin:12px 0;}
+table.data th,table.data td{border:1px solid var(--border);padding:6px 10px;text-align:left;}
+table.data th{background:var(--accent-light);}
+@media print{ .sim-btns,.sim-panel input,.sim-panel select,.lock-note{display:none !important;} [data-unlock]{display:block !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="ParadiseFalls">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow">Klasse 8 · LB1</div>
+    <h1>Das fliegende Haus – Auftrieb in Luft⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​​​‌​​‌​‌‌​‌​‌​​​​‌‌​​‌‌‌​​‌​‌​​​​‌​​​‌‌​‌‌​​​‌‌‌​​​​​‌‌​​​‌⁠</h1>
+    <div class="goal">🎯 Die Lernenden berechnen die Tragkraft eines Heliumballons, indem sie den Auftrieb aus dem Luftdruckunterschied herleiten und mit der Gewichtskraft von Füllung und Hülle vergleichen.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​​​‌​​‌​‌‌​‌​‌​​​​‌‌​​‌‌‌​​‌​‌​​​​‌​​​‌‌​‌‌​​​‌‌‌​​​​​‌‌​​​‌⁠</div>
+  </header>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum">Einstieg</span>Filmfrage</button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum">Phase 1</span>Luftdruck</button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum">Phase 2</span>Tragkraft</button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum">Phase 3</span>Das Haus hebt ab</button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">Sicherung</span>Film-Check</button>
+  </nav>
+
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2>Filmfrage: Hätte das in echt funktioniert?</h2>
+    <p>Im Animationsfilm <strong>„Oben“</strong> (2009) bindet der 78-jährige Carl Fredricksen tausende Heliumballons an sein Holzhaus. Plötzlich reißt das Haus aus dem Boden und schwebt bis nach Südamerika. Beim Abheben sind im Film <strong>20&nbsp;622 Ballons</strong> zu sehen.</p>
+    <div class="callout callout-info">🎈 <span>Heute rechnest du nach, ob das klappen kann – mit dem <span class="tt" data-tip="Druck, den die Luft durch ihr eigenes Gewicht auf alles in ihr ausübt">Luftdruck</span> und dem <span class="tt" data-tip="Kraft, die ein Körper in einer Flüssigkeit oder einem Gas nach oben erfährt">Auftrieb</span>. Aus dem Unterricht kennst du schon: Druck ist Kraft pro Fläche.</span></div>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · Schätzen</button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · Was hebt den Ballon?</button>
+      <button class="substep-all" onclick="revealSub(0,2)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <h3>Dein Bauchgefühl zuerst</h3>
+      <div class="poe-box" id="poe-anzahl">
+        <div class="poe-label">🤔 Wie viele Partyballons bräuchte man wirklich, um das Haus anzuheben? Schreib eine Zahl und einen kurzen Grund auf.</div>
+        <textarea id="poe-anzahl-in" rows="2" placeholder="Ich schätze … Ballons, weil …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-anzahl')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-anzahl-out" hidden></div>
+      </div>
+      <p class="connector-text">Bevor wir rechnen, eine Frage, über die sich sogar Erwachsene streiten: Wer hebt eigentlich den Ballon?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)">Zur Streitfrage ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <h3>Was hebt einen Heliumballon?</h3>
+      <div class="quiz-item">
+        <div class="quiz-q">Drei Kinder streiten. Wer hat recht?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-hebt', this, 'w')">Mia: „Das Helium zieht den Ballon nach oben.“</button>
+          <button class="quiz-btn" onclick="quizCheck('q-hebt', this, 'c')">Ben: „Die Luft um den Ballon drückt ihn nach oben.“</button>
+          <button class="quiz-btn" onclick="quizCheck('q-hebt', this, 'w')">Ella: „Helium hat keine Masse, deshalb wird es nicht von der Erde angezogen.“</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-hebt"></div>
+      </div>
+      <p>Damit die Luft etwas nach oben drücken kann, muss sie selbst etwas wiegen. Prüfe dein Wissen über Luft:</p>
+      <div class="ex">
+        <p><strong>Aufgabe E:</strong> Markiere alle Aussagen, die stimmen.</p>
+        <div class="baustein" data-type="mark" id="mark-luft">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)">1&nbsp;m³ Luft hat eine Masse von etwa 1,2&nbsp;kg.</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Luft hat keine Masse.</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Der Luftdruck wirkt von allen Seiten.</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Der Luftdruck wirkt nur von oben nach unten.</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">Helium hat eine kleinere Dichte als Luft.</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">Helium wird von der Erde nicht angezogen.</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-e-luft">
+          <div data-tipp>Denk an eine Luftmatratze: Sie ist voller Luft. Ist sie dann schwerer als leer?</div>
+          <div data-tipp>Alles, was aus Teilchen besteht, hat Masse – auch Gase. Und: Ein Luftballon wird von allen Seiten gleich rund gedrückt.</div>
+          <div data-tipp>Drei Aussagen stimmen. Die falschen behaupten etwas über „keine Masse“, „nur von oben“ oder „nicht angezogen“.</div>
+          <div data-muster><p>Richtig sind: <em>1&nbsp;m³ Luft hat etwa 1,2&nbsp;kg Masse</em>, <em>der Luftdruck wirkt von allen Seiten</em> und <em>Helium hat eine kleinere Dichte als Luft</em>. Luft und Helium haben Masse und werden beide von der Erde angezogen – Helium nur weniger stark, weil es bei gleichem Volumen leichter ist.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Luft wiegt also etwas – und genau das ist der Schlüssel. Wenn Luft wiegt, drückt die Luft oben auf die Luft darunter. Was heißt das für einen Ballon, der mitten drin steckt?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Ab in die Luft →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2>Luftdruck: Warum es unten mehr drückt</h2>
+    <p>Wir leben am Boden eines riesigen Luftmeeres. Die ganze Luft über uns drückt mit ihrem Gewicht nach unten. Je höher du steigst, desto weniger Luft liegt über dir – der Luftdruck nimmt ab.</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · Luftdruck und Höhe</button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · Der Würfelballon</button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · Was zählt?</button>
+      <button class="substep-all" onclick="revealSub(1,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <h3>🧪 Simulation: Luftdruck in verschiedenen Höhen</h3>
+      <p>Schieb den Ballon nach oben und beobachte Luftdruck und <span class="tt" data-tip="Masse pro Volumen, ρ = m : V, Einheit kg/m³">Dichte</span> der Luft.</p>
+      <div class="sim" id="sim-hoehe">
+        <div class="sim-row">
+          <svg class="sim-svg" id="hoehe-svg" viewBox="0 0 300 260" role="img" aria-label="Luftsäule mit Ballon in wählbarer Höhe">
+            <defs><linearGradient id="hoehe-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCE8F5"/><stop offset="1" stop-color="#5C86BF"/></linearGradient></defs>
+            <rect x="20" y="10" width="120" height="230" fill="url(#hoehe-grad)" stroke="#3F5E8C"/>
+            <g id="hoehe-dots"></g>
+            <line x1="150" y1="10" x2="150" y2="240" stroke="#4A4542"/>
+            <g id="hoehe-ticks"></g>
+            <circle id="hoehe-ball" cx="80" cy="230" r="9" fill="#D94F30" stroke="#8C3A4A"/>
+            <rect x="0" y="240" width="300" height="20" fill="#7FA35B"/>
+          </svg>
+          <div class="sim-panel">
+            <label for="hoehe-h">Höhe <i>h</i>: <strong><span id="hoehe-hval">0</span>&nbsp;m</strong></label>
+            <input type="range" id="hoehe-h" min="0" max="10000" step="100" value="0">
+            <div class="sim-read">Luftdruck <i>p</i>: <strong><span id="hoehe-p">1013</span>&nbsp;hPa</strong></div>
+            <div class="sim-read">Dichte der Luft: <strong><span id="hoehe-rho">1,20</span>&nbsp;kg/m³</strong></div>
+            <div class="sim-read">Ort: <span id="hoehe-ort">Elbwiesen</span></div>
+          </div>
+        </div>
+        <p class="caption">Simulation – vereinfacht: gleiche Temperatur in allen Höhen. Die Punkte stehen für Luftteilchen.</p>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Warum ist die Luft unten dichter als oben?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-dicht', this, 'w')">Weil unten die Pflanzen Sauerstoff abgeben.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-dicht', this, 'c')">Weil die Luft darüber mit ihrem Gewicht die unteren Schichten zusammendrückt.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-dicht', this, 'w')">Weil die Sonne oben die Luft wegbläst.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-dicht"></div>
+      </div>
+      <div class="callout">📏 <span>Faustregel für Bodennähe: Pro Meter Höhe nimmt der Luftdruck um etwa <strong>12&nbsp;Pa</strong> ab (1&nbsp;hPa = 100&nbsp;Pa).</span></div>
+      <p class="connector-text">12&nbsp;Pa pro Meter – das klingt winzig. Aber was macht dieser kleine Unterschied mit einem Ballon, der unten und oben unterschiedlich stark gedrückt wird?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)">Den Ballon unter die Lupe nehmen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <h3>Der Würfelballon</h3>
+      <div class="two-col">
+        <div>
+          <p>Damit wir mit ebenen Flächen rechnen können, stellen wir uns den Ballon als <strong>Würfel</strong> mit der Kantenlänge <i>a</i>&nbsp;=&nbsp;24&nbsp;cm vor. So ein Ballon fasst etwa so viel wie ein runder Partyballon.</p>
+          <p>Die Luft drückt von allen Seiten auf ihn – unten etwas stärker als oben.</p>
+        </div>
+        <svg viewBox="0 0 260 240" class="sim-svg" role="img" aria-label="Würfelballon mit Druckpfeilen: unten längere Pfeile als oben, seitlich gleich lange Pfeile">
+          <rect x="80" y="70" width="100" height="100" fill="#FFE4CC" stroke="#C0392B" stroke-width="3"/>
+          <text x="130" y="118" text-anchor="middle" font-size="13" fill="#111">Würfelballon</text>
+          <text x="130" y="136" text-anchor="middle" font-size="12" fill="#4A4542">a = 24 cm</text>
+          <g stroke="#3F5E8C" stroke-width="2.5" fill="#3F5E8C">
+            <line x1="105" y1="30" x2="105" y2="62"/><polygon points="99,60 111,60 105,69"/>
+            <line x1="155" y1="30" x2="155" y2="62"/><polygon points="149,60 161,60 155,69"/>
+          </g>
+          <g stroke="#3F5E8C" stroke-width="4.5" fill="#3F5E8C">
+            <line x1="105" y1="225" x2="105" y2="182"/><polygon points="97,184 113,184 105,172"/>
+            <line x1="155" y1="225" x2="155" y2="182"/><polygon points="147,184 163,184 155,172"/>
+          </g>
+          <g stroke="#3F5E8C" stroke-width="3" fill="#3F5E8C">
+            <line x1="25" y1="120" x2="70" y2="120"/><polygon points="68,113 68,127 79,120"/>
+            <line x1="235" y1="120" x2="190" y2="120"/><polygon points="192,113 192,127 181,120"/>
+          </g>
+          <text x="130" y="20" text-anchor="middle" font-size="12" fill="#4A4542">Luftdruck oben: kleiner</text>
+          <text x="130" y="238" text-anchor="middle" font-size="12" fill="#4A4542">Luftdruck unten: größer</text>
+        </svg>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 1.1:</strong> Berechne den Unterschied Δ<i>p</i> des Luftdrucks zwischen der Unter- und der Oberseite des Würfelballons.</p>
+        <p>Δ<i>p</i> = <input class="inp" id="a11" inputmode="decimal" aria-label="Druckunterschied in Pascal"> <span class="unit">Pa</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a11', 2.88, 0.05]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a11')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a11">Höhenunterschied <i>h</i> = <i>a</i> = 24&nbsp;cm = 0,24&nbsp;m<br>Δ<i>p</i> = 12&nbsp;Pa/m · 0,24&nbsp;m = <strong>2,88&nbsp;Pa</strong></div>
+        <div class="hs" id="hs-a11">
+          <div data-tipp>Wie viel höher liegt die Oberseite als die Unterseite?</div>
+          <div data-tipp>Pro Meter Höhe sind es 12&nbsp;Pa weniger. Rechne die Kantenlänge in Meter um.</div>
+          <div data-tipp>24&nbsp;cm = 0,24&nbsp;m. Rechne: Δ<i>p</i> = 12&nbsp;Pa/m · 0,24&nbsp;m</div>
+          <div data-muster><p class="heft">geg.: <i>h</i> = 0,24&nbsp;m; Abnahme 12&nbsp;Pa je Meter · ges.: Δ<i>p</i><br>Δ<i>p</i> = 12&nbsp;Pa/m · 0,24&nbsp;m<br><u>Δ<i>p</i> = 2,88&nbsp;Pa</u></p><p>Unten ist der Luftdruck um 2,88&nbsp;Pa größer als oben.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 1.2:</strong> Berechne die Fläche <i>A</i> einer Würfelseite und daraus die Kraft Δ<i>F</i>, mit der die Luft von unten stärker drückt als von oben.</p>
+        <p><i>A</i> = <input class="inp" id="a12a" inputmode="decimal" aria-label="Fläche in Quadratmetern"> <span class="unit">m²</span> &nbsp;
+          Δ<i>F</i> = <input class="inp" id="a12b" inputmode="decimal" aria-label="Kraftunterschied in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a12a', 0.0576, 0.0006],['a12b', 0.166, 0.006]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a12')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a12"><i>A</i> = <i>a</i> · <i>a</i> = 0,24&nbsp;m · 0,24&nbsp;m = 0,0576&nbsp;m²<br>Aus <i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> folgt Δ<i>F</i> = Δ<i>p</i> · <i>A</i> = 2,88&nbsp;N/m² · 0,0576&nbsp;m² ≈ <strong>0,17&nbsp;N</strong></div>
+        <div class="hs" id="hs-a12">
+          <div data-tipp>Druck ist Kraft pro Fläche. Welche Fläche wird oben und unten gedrückt?</div>
+          <div data-tipp>Fläche eines Quadrats: <i>A</i> = <i>a</i> · <i>a</i>. Aus <i>p</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>A</i></span></span> wird umgestellt <i>F</i> = <i>p</i> · <i>A</i>. 1&nbsp;Pa = 1&nbsp;N/m².</div>
+          <div data-tipp><i>A</i> = 0,24&nbsp;m · 0,24&nbsp;m. Dann Δ<i>F</i> = 2,88&nbsp;N/m² · <i>A</i></div>
+          <div data-muster><p class="heft">geg.: <i>a</i> = 0,24&nbsp;m; Δ<i>p</i> = 2,88&nbsp;Pa · ges.: <i>A</i>, Δ<i>F</i><br><i>A</i> = 0,24&nbsp;m · 0,24&nbsp;m = <u>0,0576&nbsp;m²</u><br>Δ<i>F</i> = Δ<i>p</i> · <i>A</i> = 2,88&nbsp;N/m² · 0,0576&nbsp;m² <u>≈ 0,17&nbsp;N</u></p><p>Die Luft drückt von unten um etwa 0,17&nbsp;N stärker als von oben.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Oben und unten hast du verglichen. Aber die Luft drückt ja auch von links, rechts, vorn und hinten. Heben die sich auf – oder schieben sie den Ballon zur Seite?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)">Die Seiten prüfen ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <h3>Was zählt – und was nicht?</h3>
+      <div class="quiz-item">
+        <div class="quiz-q">Aufgabe 1.3: Warum spielen die Druckkräfte auf die vier Seitenflächen für das Steigen keine Rolle?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-seiten', this, 'w')">Weil an den Seiten gar kein Luftdruck herrscht.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-seiten', this, 'c')">Weil gegenüberliegende Seiten auf gleicher Höhe liegen: gleicher Druck, gleich große Kräfte in entgegengesetzte Richtungen.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-seiten', this, 'w')">Weil die Seitenflächen kleiner sind als die Ober- und Unterseite.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-seiten"></div>
+        <div class="hs" id="hs-q-seiten">
+          <div data-tipp>Zeichne in Gedanken Pfeile an die linke und die rechte Seite. Wohin zeigen sie?</div>
+          <div data-tipp>Der Druck hängt nur von der Höhe ab. Liegen linke und rechte Seite auf derselben Höhe?</div>
+          <div data-tipp>Zwei gleich große Kräfte in entgegengesetzte Richtungen heben sich auf.</div>
+          <div data-muster><p>Linke und rechte (und vordere und hintere) Seite liegen auf gleicher Höhe. Dort herrscht derselbe Druck, die Kräfte sind gleich groß und entgegengesetzt – sie heben sich auf. Nur oben und unten bleibt ein Unterschied.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 1.4:</strong> Vervollständige den Merksatz.</p>
+        <div class="baustein" data-type="dtw" id="dtw-auftrieb">
+          <div class="dtw-pool">
+            <span class="dtw-word" data-w="größer" onclick="dtwSelect(this)">größer</span>
+            <span class="dtw-word" data-w="aufheben" onclick="dtwSelect(this)">aufheben</span>
+            <span class="dtw-word" data-w="oben" onclick="dtwSelect(this)">oben</span>
+            <span class="dtw-word" data-w="Auftriebskraft" onclick="dtwSelect(this)">Auftriebskraft</span>
+          </div>
+          <p class="dtw-text">Unten ist der Luftdruck
+            <span class="dtw-gap" data-answer="größer" onclick="dtwPlace(this)">______</span> als oben. Deshalb drückt die Luft einen Körper nach
+            <span class="dtw-gap" data-answer="oben" onclick="dtwPlace(this)">______</span>. Diese Kraft heißt
+            <span class="dtw-gap" data-answer="Auftriebskraft" onclick="dtwPlace(this)">______</span>. Die Kräfte auf gegenüberliegende Seitenflächen können sich gegenseitig
+            <span class="dtw-gap" data-answer="aufheben" onclick="dtwPlace(this)">______</span>.</p>
+          <button class="btn btn-primary btn-sm" onclick="dtwCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="dtwReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-dtw-auftrieb">
+          <div data-tipp>Lies zuerst den ganzen Satz, ohne die Lücken zu füllen.</div>
+          <div data-tipp>Erinnere dich an die Simulation: Wo ist der Luftdruck höher?</div>
+          <div data-tipp>Die erste Lücke ist ein Vergleichswort, die letzte ein Verb in der Grundform.</div>
+          <div data-muster><p>Unten ist der Luftdruck <strong>größer</strong> als oben. Deshalb drückt die Luft einen Körper nach <strong>oben</strong>. Diese Kraft heißt <strong>Auftriebskraft</strong>. Die Kräfte auf gegenüberliegende Seitenflächen können sich gegenseitig <strong>aufheben</strong>.</p></div>
+        </div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Auftrieb in Luft</div>
+        <p>Der Luftdruck nimmt mit der Höhe ab. Deshalb drückt die Luft unten stärker auf einen Körper als oben. Die resultierende Kraft nach oben heißt <strong>Auftriebskraft <i>F</i><sub>A</sub></strong>.</p>
+        <p><i>F</i><sub>A</sub> = Δ<i>p</i> · <i>A</i> (Druckunterschied mal Fläche)</p>
+      </div>
+      <p class="connector-text">Die Auftriebskraft hast du jetzt über den Luftdruck berechnet. Geht das auch einfacher – mit einer Formel, die Archimedes schon vor über 2000 Jahren kannte?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)">Zu Archimedes →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2>Tragkraft: Was ein Ballon wirklich schafft</h2>
+    <p>Archimedes fand heraus: Die Auftriebskraft ist genau so groß wie die <span class="tt" data-tip="Kraft, mit der die Erde einen Körper anzieht: F_G = m · g">Gewichtskraft</span> des Gases oder der Flüssigkeit, die der Körper verdrängt.</p>
+    <div class="formula"><i>F</i><sub>A</sub> = <i>ρ</i><sub>Luft</sub> · <i>V</i> · <i>g</i></div>
+    <table class="data">
+      <tr><th>Größe</th><th>Wert</th></tr>
+      <tr><td>Ortsfaktor <i>g</i></td><td>9,81&nbsp;N/kg</td></tr>
+      <tr><td>Dichte der Luft <i>ρ</i><sub>Luft</sub> (20&nbsp;°C, 1013&nbsp;hPa)</td><td>1,2&nbsp;kg/m³</td></tr>
+      <tr><td>Dichte von Helium <i>ρ</i><sub>He</sub></td><td>0,17&nbsp;kg/m³</td></tr>
+      <tr><td>Masse der Ballonhülle mit Schnur</td><td>4&nbsp;g</td></tr>
+    </table>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · Archimedes</button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · Tragkraft</button>
+      <button class="substep-chip locked" onclick="revealSub(2,3)">3 · Ballon-Labor</button>
+      <button class="substep-all" onclick="revealSub(2,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+      <h3>Auftrieb mit der Formel</h3>
+      <div class="ex">
+        <p><strong>Aufgabe 2.1:</strong> Berechne das Volumen des Würfelballons (<i>a</i>&nbsp;=&nbsp;24&nbsp;cm) in m³ und in Litern.</p>
+        <p><i>V</i> = <input class="inp" id="a21a" inputmode="decimal" aria-label="Volumen in Kubikmetern"> <span class="unit">m³</span> &nbsp;=&nbsp;
+          <input class="inp" id="a21b" inputmode="decimal" aria-label="Volumen in Litern"> <span class="unit">l</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a21a', 0.0138, 0.0002],['a21b', 13.8, 0.2]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a21')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a21"><i>V</i> = <i>a</i>³ = (0,24&nbsp;m)³ = 0,013824&nbsp;m³ ≈ <strong>0,0138&nbsp;m³</strong> = <strong>13,8&nbsp;l</strong> (1&nbsp;m³ = 1000&nbsp;l)</div>
+        <div class="hs" id="hs-a21">
+          <div data-tipp>Wie berechnet man das Volumen eines Würfels?</div>
+          <div data-tipp><i>V</i> = <i>a</i> · <i>a</i> · <i>a</i>. Setze die Kantenlänge in Meter ein. 1&nbsp;m³ = 1000&nbsp;l.</div>
+          <div data-tipp><i>V</i> = 0,24&nbsp;m · 0,24&nbsp;m · 0,24&nbsp;m – dann mit 1000 malnehmen für Liter.</div>
+          <div data-muster><p class="heft">geg.: <i>a</i> = 0,24&nbsp;m · ges.: <i>V</i><br><i>V</i> = <i>a</i>³ = (0,24&nbsp;m)³ = 0,013824&nbsp;m³<br><u><i>V</i> ≈ 0,0138&nbsp;m³ = 13,8&nbsp;l</u></p><p>Der Ballon fasst etwa 13,8 Liter.</p></div>
+        </div>
+      </div>
+      <div class="ex">
+        <p><strong>Aufgabe 2.2:</strong> Berechne die Auftriebskraft mit der Formel von Archimedes. Vergleiche mit deinem Ergebnis aus 1.2.</p>
+        <p><i>F</i><sub>A</sub> = <input class="inp" id="a22" inputmode="decimal" aria-label="Auftriebskraft in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a22', 0.163, 0.004]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a22')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a22"><i>F</i><sub>A</sub> = 1,2&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg ≈ <strong>0,163&nbsp;N</strong><br>Das passt zu 1.2: Beide Wege liefern rund 0,16 bis 0,17&nbsp;N. Die kleine Abweichung kommt von der gerundeten Faustregel „12&nbsp;Pa pro Meter“.</div>
+        <div class="hs" id="hs-a22">
+          <div data-tipp>Welche drei Größen stecken in der Formel von Archimedes?</div>
+          <div data-tipp>Dichte der Luft, Volumen des Ballons, Ortsfaktor – alles miteinander malnehmen.</div>
+          <div data-tipp><i>F</i><sub>A</sub> = 1,2&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg</div>
+          <div data-muster><p class="heft">geg.: <i>ρ</i><sub>Luft</sub> = 1,2&nbsp;kg/m³; <i>V</i> = 0,0138&nbsp;m³; <i>g</i> = 9,81&nbsp;N/kg · ges.: <i>F</i><sub>A</sub><br><i>F</i><sub>A</sub> = <i>ρ</i><sub>Luft</sub> · <i>V</i> · <i>g</i> = 1,2&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg<br><u><i>F</i><sub>A</sub> ≈ 0,163&nbsp;N</u></p><p>Die Auftriebskraft beträgt etwa 0,16&nbsp;N – fast genau so viel wie über den Luftdruck berechnet.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Der Auftrieb ist berechnet. Aber kann der Ballon diese ganze Kraft für das Haus verwenden? Er muss ja auch sich selbst tragen …</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Was bleibt übrig? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <h3>Tragkraft eines Ballons</h3>
+      <div class="ex">
+        <p><strong>Aufgabe 3.0:</strong> Ordne jeder Kraft am Ballon ihre Richtung und Ursache zu.</p>
+        <div class="baustein" data-type="match" id="match-kraefte">
+          <div class="m-pool">
+            <span class="m-chip" data-id="fa" onclick="matchSelect(this)">Auftriebskraft</span>
+            <span class="m-chip" data-id="fhe" onclick="matchSelect(this)">Gewichtskraft des Heliums</span>
+            <span class="m-chip" data-id="fh" onclick="matchSelect(this)">Gewichtskraft der Hülle</span>
+          </div>
+          <div class="m-zone" data-correct="fa" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">⬆ nach oben – entsteht, weil die Luft unten stärker drückt als oben.</span></div>
+          <div class="m-zone" data-correct="fhe" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">⬇ nach unten – die Erde zieht das Gas im Inneren an.</span></div>
+          <div class="m-zone" data-correct="fh" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def">⬇ nach unten – die Erde zieht Gummi und Schnur an.</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-match-kraefte">
+          <div data-tipp>Nur eine der drei Kräfte zeigt nach oben.</div>
+          <div data-tipp>Gewichtskräfte entstehen, weil die Erde etwas anzieht – sie zeigen immer nach unten.</div>
+          <div data-tipp>Unterscheide die beiden Gewichtskräfte danach, was angezogen wird: das Gas oder der Gummi.</div>
+          <div data-muster><p>Auftriebskraft: nach oben, durch den Druckunterschied der Luft. Gewichtskraft des Heliums: nach unten, die Erde zieht das Gas an. Gewichtskraft der Hülle: nach unten, die Erde zieht Gummi und Schnur an.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 3.1:</strong> Berechne die Gewichtskraft des Heliums im Ballon (<i>V</i> = 0,0138&nbsp;m³).</p>
+        <p><i>F</i><sub>He</sub> = <input class="inp" id="a31" inputmode="decimal" aria-label="Gewichtskraft Helium in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a31', 0.023, 0.0015]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a31')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a31"><i>m</i><sub>He</sub> = <i>ρ</i><sub>He</sub> · <i>V</i> = 0,17&nbsp;kg/m³ · 0,0138&nbsp;m³ ≈ 0,00235&nbsp;kg<br><i>F</i><sub>He</sub> = <i>m</i> · <i>g</i> = 0,00235&nbsp;kg · 9,81&nbsp;N/kg ≈ <strong>0,023&nbsp;N</strong></div>
+        <div class="hs" id="hs-a31">
+          <div data-tipp>Du brauchst zuerst die Masse des Heliums.</div>
+          <div data-tipp>Masse: <i>m</i> = <i>ρ</i> · <i>V</i>. Gewichtskraft: <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i>.</div>
+          <div data-tipp><i>m</i> = 0,17&nbsp;kg/m³ · 0,0138&nbsp;m³, danach mal 9,81&nbsp;N/kg.</div>
+          <div data-muster><p class="heft">geg.: <i>ρ</i><sub>He</sub> = 0,17&nbsp;kg/m³; <i>V</i> = 0,0138&nbsp;m³ · ges.: <i>F</i><sub>He</sub><br><i>m</i><sub>He</sub> = 0,17&nbsp;kg/m³ · 0,0138&nbsp;m³ ≈ 0,00235&nbsp;kg<br><i>F</i><sub>He</sub> = 0,00235&nbsp;kg · 9,81&nbsp;N/kg <u>≈ 0,023&nbsp;N</u></p><p>Das Helium wird mit etwa 0,023&nbsp;N nach unten gezogen.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 3.2:</strong> Berechne die Gewichtskraft der Hülle mit Schnur (4&nbsp;g).</p>
+        <p><i>F</i><sub>Hülle</sub> = <input class="inp" id="a32" inputmode="decimal" aria-label="Gewichtskraft Hülle in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a32', 0.039, 0.0015]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a32')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a32"><i>F</i><sub>Hülle</sub> = 0,004&nbsp;kg · 9,81&nbsp;N/kg ≈ <strong>0,039&nbsp;N</strong></div>
+        <div class="hs" id="hs-a32">
+          <div data-tipp>Welche Einheit braucht die Masse in der Formel?</div>
+          <div data-tipp>Rechne Gramm in Kilogramm um und nimm mit <i>g</i> mal.</div>
+          <div data-tipp>4&nbsp;g = 0,004&nbsp;kg. <i>F</i> = 0,004&nbsp;kg · 9,81&nbsp;N/kg</div>
+          <div data-muster><p class="heft">geg.: <i>m</i> = 4&nbsp;g = 0,004&nbsp;kg · ges.: <i>F</i><sub>Hülle</sub><br><i>F</i><sub>Hülle</sub> = 0,004&nbsp;kg · 9,81&nbsp;N/kg <u>≈ 0,039&nbsp;N</u></p><p>Die Hülle wird mit etwa 0,039&nbsp;N nach unten gezogen.</p></div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <p><strong>Aufgabe 3.3:</strong> Berechne die <span class="tt" data-tip="Kraft, die ein Ballon nach Abzug seines eigenen Gewichts noch nach oben übrig hat">Tragkraft</span> <i>F</i><sub>Trag</sub> eines Ballons. Gib an, wie viel Gramm er damit hochheben könnte.</p>
+        <p><i>F</i><sub>Trag</sub> = <input class="inp" id="a33a" inputmode="decimal" aria-label="Tragkraft in Newton"> <span class="unit">N</span> &nbsp;
+          das entspricht <input class="inp" id="a33b" inputmode="decimal" aria-label="Masse in Gramm"> <span class="unit">g</span>
+          <button class="btn btn-primary btn-sm" onclick="checkUnlock(this, [['a33a', 0.10, 0.005],['a33b', 10.2, 0.6]], 'labor')">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a33')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a33"><i>F</i><sub>Trag</sub> = <i>F</i><sub>A</sub> − <i>F</i><sub>He</sub> − <i>F</i><sub>Hülle</sub> = 0,163&nbsp;N − 0,023&nbsp;N − 0,039&nbsp;N ≈ <strong>0,10&nbsp;N</strong><br><i>m</i> = <span class="frac"><span class="fn"><i>F</i><sub>Trag</sub></span><span class="fd"><i>g</i></span></span> = <span class="frac"><span class="fn">0,10&nbsp;N</span><span class="fd">9,81&nbsp;N/kg</span></span> ≈ 0,010&nbsp;kg = <strong>10&nbsp;g</strong> – etwa zwei Blatt Papier.</div>
+        <div class="hs" id="hs-a33">
+          <div data-tipp>Der Auftrieb muss zuerst den Ballon selbst tragen. Was bleibt übrig?</div>
+          <div data-tipp>Tragkraft = Auftriebskraft minus beide Gewichtskräfte. Für die Masse: <i>m</i> = <span class="frac"><span class="fn"><i>F</i></span><span class="fd"><i>g</i></span></span>.</div>
+          <div data-tipp><i>F</i><sub>Trag</sub> = 0,163&nbsp;N − 0,023&nbsp;N − 0,039&nbsp;N. Dann durch 9,81&nbsp;N/kg teilen und in Gramm umrechnen.</div>
+          <div data-muster><p class="heft">geg.: <i>F</i><sub>A</sub> = 0,163&nbsp;N; <i>F</i><sub>He</sub> = 0,023&nbsp;N; <i>F</i><sub>Hülle</sub> = 0,039&nbsp;N · ges.: <i>F</i><sub>Trag</sub>, <i>m</i><br><i>F</i><sub>Trag</sub> = 0,163&nbsp;N − 0,023&nbsp;N − 0,039&nbsp;N <u>≈ 0,10&nbsp;N</u><br><i>m</i> = <span class="frac"><span class="fn">0,10&nbsp;N</span><span class="fd">9,81&nbsp;N/kg</span></span> ≈ 0,010&nbsp;kg <u>≈ 10&nbsp;g</u></p><p>Ein Ballon kann nur etwa 10&nbsp;g hochheben.</p></div>
+        </div>
+      </div>
+
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Auftrieb und Tragkraft</div>
+        <p><strong>Auftriebskraft (Archimedes):</strong> <i>F</i><sub>A</sub> = <i>ρ</i><sub>Luft</sub> · <i>V</i> · <i>g</i></p>
+        <p><strong>Tragkraft:</strong> <i>F</i><sub>Trag</sub> = <i>F</i><sub>A</sub> − <i>F</i><sub>Gas</sub> − <i>F</i><sub>Hülle</sub></p>
+        <table>
+          <tr><td><i>F</i><sub>A</sub></td><td>Auftriebskraft</td><td>Newton (N)</td></tr>
+          <tr><td><i>ρ</i><sub>Luft</sub></td><td>Dichte der Luft</td><td>kg/m³</td></tr>
+          <tr><td><i>V</i></td><td>Volumen des Körpers</td><td>m³</td></tr>
+          <tr><td><i>g</i></td><td>Ortsfaktor</td><td>N/kg</td></tr>
+        </table>
+        <p>Ein Ballon steigt, wenn <i>F</i><sub>A</sub> größer ist als seine gesamte Gewichtskraft (Gas + Hülle + Last).</p>
+      </div>
+      <p class="connector-text">Ein Ballon schafft nur ein paar Gramm. Bevor wir das ganze Haus angehen: Probier im Labor aus, wovon die Tragkraft abhängt.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,3)">Ins Ballon-Labor ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-3">
+      <h3>🧪 Ballon-Labor</h3>
+      <div class="lock-note" id="lock-labor">🔒 <span>Das Labor öffnet sich, sobald du Aufgabe 3.3 richtig gelöst hast.</span></div>
+      <div class="sim" id="labor" data-unlock="labor" hidden>
+        <p>Wähle Gas, Ballongröße und Last. Mit „Loslassen“ siehst du, ob der Ballon steigt.</p>
+        <div class="sim-row">
+          <canvas id="labor-cv" width="360" height="300" aria-label="Ballon an einer Schnur mit Kraftpfeilen"></canvas>
+          <div class="sim-panel">
+            <label for="labor-gas">Füllung</label>
+            <select id="labor-gas" class="inp">
+              <option value="0.17">Helium (0,17&nbsp;kg/m³)</option>
+              <option value="0.084">Wasserstoff (0,084&nbsp;kg/m³)</option>
+              <option value="1.2">Luft (1,2&nbsp;kg/m³)</option>
+            </select>
+            <label for="labor-a">Kantenlänge <i>a</i>: <strong><span id="labor-aval">24</span>&nbsp;cm</strong></label>
+            <input type="range" id="labor-a" min="10" max="40" step="1" value="24">
+            <label for="labor-last">Angehängte Last: <strong><span id="labor-lastval">0</span>&nbsp;g</strong></label>
+            <input type="range" id="labor-last" min="0" max="40" step="1" value="0">
+            <div class="sim-read" id="labor-werte"></div>
+            <div class="sim-btns">
+              <button class="btn btn-primary btn-sm" id="labor-start">▶ Loslassen</button>
+              <button class="btn btn-ghost btn-sm" id="labor-pause">⏸ Pause</button>
+              <button class="btn btn-ghost btn-sm" id="labor-reset">↺ Zurück</button>
+            </div>
+            <div class="sim-status" id="labor-status" aria-live="polite"></div>
+          </div>
+        </div>
+        <p class="caption">Simulation – Annahmen: Würfelballon, die Hülle wiegt bei 24&nbsp;cm Kantenlänge 4&nbsp;g und wird mit der Fläche schwerer; keine Luftreibung bei der Kraftberechnung.</p>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Teste im Labor: Verdopple die Kantenlänge von 15&nbsp;cm auf 30&nbsp;cm. Was passiert mit der Last, die der Heliumballon gerade noch heben kann?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-labor', this, 'w')">Sie verdoppelt sich genau.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-labor', this, 'c')">Sie wird viel mehr als doppelt so groß.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-labor', this, 'w')">Sie bleibt gleich, weil die Hülle auch schwerer wird.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-labor"></div>
+      </div>
+      <p class="connector-text">Große Ballons lohnen sich also. Carl hat aber ganz normale Partyballons genommen. Reichen 20&nbsp;622 Stück für ein ganzes Haus?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)">Das Haus wartet →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2>Das Haus hebt ab</h2>
+    <p>Carls Holzhaus wiegt mit Einrichtung geschätzt <strong>50&nbsp;t</strong> – ohne Fundament. Wie viele Partyballons mit der Tragkraft aus Aufgabe 3.3 braucht er?</p>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · Rechnen</button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · Haus-Heber</button>
+      <button class="substep-chip locked" onclick="revealSub(3,3)">3 · ★ Riesenballons</button>
+      <button class="substep-all" onclick="revealSub(3,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <div class="ex">
+        <p><strong>Aufgabe 4.1:</strong> Berechne die Gewichtskraft des Hauses (<i>m</i> = 50&nbsp;t).</p>
+        <p><i>F</i><sub>G,Haus</sub> = <input class="inp" id="a41" inputmode="decimal" aria-label="Gewichtskraft des Hauses in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a41', 490500, 600]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a41')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a41">50&nbsp;t = 50&nbsp;000&nbsp;kg<br><i>F</i><sub>G</sub> = 50&nbsp;000&nbsp;kg · 9,81&nbsp;N/kg = <strong>490&nbsp;500&nbsp;N</strong></div>
+        <div class="hs" id="hs-a41">
+          <div data-tipp>Wie viele Kilogramm sind eine Tonne?</div>
+          <div data-tipp>1&nbsp;t = 1000&nbsp;kg. Gewichtskraft: <i>F</i><sub>G</sub> = <i>m</i> · <i>g</i>.</div>
+          <div data-tipp><i>F</i><sub>G</sub> = 50&nbsp;000&nbsp;kg · 9,81&nbsp;N/kg</div>
+          <div data-muster><p class="heft">geg.: <i>m</i> = 50&nbsp;t = 50&nbsp;000&nbsp;kg · ges.: <i>F</i><sub>G</sub><br><i>F</i><sub>G</sub> = 50&nbsp;000&nbsp;kg · 9,81&nbsp;N/kg <u>= 490&nbsp;500&nbsp;N</u></p><p>Das Haus wird mit rund 490&nbsp;500&nbsp;N nach unten gezogen.</p></div>
+        </div>
+      </div>
+      <div class="ex">
+        <p><strong>Aufgabe 4.2:</strong> Berechne, wie viele Ballons das Haus mindestens zum Schweben bringen. Gib das Ergebnis in Millionen an.</p>
+        <p><i>n</i> ≈ <input class="inp" id="a42" inputmode="decimal" aria-label="Anzahl in Millionen"> <span class="unit">Millionen Ballons</span>
+          <button class="btn btn-primary btn-sm" onclick="checkUnlock(this, [['a42', 4.9, 0.15]], 'heber')">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a42')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a42"><i>n</i> = <span class="frac"><span class="fn"><i>F</i><sub>G,Haus</sub></span><span class="fd"><i>F</i><sub>Trag</sub></span></span> = <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd">0,10&nbsp;N</span></span> ≈ 4&nbsp;905&nbsp;000 ≈ <strong>4,9 Millionen</strong></div>
+        <div class="hs" id="hs-a42">
+          <div data-tipp>Jeder Ballon trägt einen kleinen Teil. Wie viele Teile braucht man für das Ganze?</div>
+          <div data-tipp>Teile die Gewichtskraft des Hauses durch die Tragkraft eines Ballons: <i>n</i> = <span class="frac"><span class="fn"><i>F</i><sub>G,Haus</sub></span><span class="fd"><i>F</i><sub>Trag</sub></span></span>.</div>
+          <div data-tipp><i>n</i> = <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd">0,10&nbsp;N</span></span>. Für Millionen durch 1&nbsp;000&nbsp;000 teilen.</div>
+          <div data-muster><p class="heft">geg.: <i>F</i><sub>G,Haus</sub> = 490&nbsp;500&nbsp;N; <i>F</i><sub>Trag</sub> = 0,10&nbsp;N · ges.: <i>n</i><br><i>n</i> = <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd">0,10&nbsp;N</span></span> ≈ 4&nbsp;905&nbsp;000<br><u><i>n</i> ≈ 4,9 Millionen</u></p><p>Das Haus braucht rund 4,9 Millionen Partyballons.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Eine Zahl mit sechs Nullen – kann man sich das vorstellen? Im Haus-Heber kannst du es ausprobieren.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)">Leinen los ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <h3>🧪 Haus-Heber</h3>
+      <div class="lock-note" id="lock-heber">🔒 <span>Der Haus-Heber öffnet sich, sobald du Aufgabe 4.2 richtig gelöst hast.</span></div>
+      <div class="sim" id="heber" data-unlock="heber" hidden>
+        <p>Stell die Zahl der Ballons ein und lass das Haus los. Mit dem Film-Knopf siehst du, was 20&nbsp;622 Ballons schaffen.</p>
+        <div class="sim-row">
+          <canvas id="heber-cv" width="320" height="300" aria-label="Haus mit Ballontraube, das abhebt oder am Boden bleibt"></canvas>
+          <div class="sim-panel">
+            <label for="heber-n">Ballons: <strong><span id="heber-nval">20 622</span></strong></label>
+            <input type="range" id="heber-n" min="0" max="1000" step="1" value="0">
+            <button class="btn btn-ghost btn-sm" id="heber-film">🎬 Film-Wert</button>
+            <div class="sim-read" id="heber-werte"></div>
+            <div class="sim-btns">
+              <button class="btn btn-primary btn-sm" id="heber-start">▶ Leinen los</button>
+              <button class="btn btn-ghost btn-sm" id="heber-pause">⏸ Pause</button>
+              <button class="btn btn-ghost btn-sm" id="heber-reset">↺ Zurück</button>
+            </div>
+            <div class="sim-status" id="heber-status" aria-live="polite"></div>
+          </div>
+        </div>
+        <p class="caption">Simulation – Annahmen: Haus 50&nbsp;t ohne Fundament, Partyballons mit der Tragkraft aus 3.3, kein Wind. Die Ballontraube ist nicht maßstabsgetreu.</p>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Im Film hebt das Haus samt Fundament ab. Was bedeutet das für die Zahl der Ballons?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-fundament', this, 'w')">Nichts – das Fundament gehört nicht zum Gewicht.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-fundament', this, 'c')">Man bräuchte noch deutlich mehr Ballons, weil zusätzlich Beton und Erde mitgehoben werden müssten.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-fundament', this, 'w')">Man bräuchte weniger Ballons, weil das Fundament das Haus stabilisiert.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-fundament"></div>
+      </div>
+      <p class="connector-text">Millionen Ballons aufzublasen dauert ewig. Gibt es einen Trick, mit weniger Ballons auszukommen? Für Profis:</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,3)">★ Riesenballons ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-3">
+      <div class="ex">
+        <p><strong>★ Aufgabe 4.3:</strong> Carl nimmt Riesenballons mit doppelter Kantenlänge (48&nbsp;cm); die Hülle wiegt dann 16&nbsp;g. Berechne die Tragkraft eines Riesenballons und die neue Anzahl in Tausend.</p>
+        <p><i>F</i><sub>Trag</sub> = <input class="inp" id="a43a" inputmode="decimal" aria-label="Tragkraft Riesenballon in Newton"> <span class="unit">N</span> &nbsp;
+          <i>n</i> ≈ <input class="inp" id="a43b" inputmode="decimal" aria-label="Anzahl in Tausend"> <span class="unit">Tausend</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a43a', 0.961, 0.02],['a43b', 511, 15]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a43')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a43"><i>V</i> = (0,48&nbsp;m)³ ≈ 0,1106&nbsp;m³<br><i>F</i><sub>A</sub> = 1,2&nbsp;kg/m³ · 0,1106&nbsp;m³ · 9,81&nbsp;N/kg ≈ 1,302&nbsp;N<br><i>F</i><sub>He</sub> = 0,17&nbsp;kg/m³ · 0,1106&nbsp;m³ · 9,81&nbsp;N/kg ≈ 0,184&nbsp;N · <i>F</i><sub>Hülle</sub> = 0,016&nbsp;kg · 9,81&nbsp;N/kg ≈ 0,157&nbsp;N<br><i>F</i><sub>Trag</sub> ≈ 1,302&nbsp;N − 0,184&nbsp;N − 0,157&nbsp;N ≈ <strong>0,96&nbsp;N</strong><br><i>n</i> = <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd">0,961&nbsp;N</span></span> ≈ <strong>510&nbsp;000</strong> – fast zehnmal weniger.</div>
+        <div class="hs" id="hs-a43">
+          <div data-tipp>Rechne die Aufgaben 2.1 bis 3.3 einfach noch einmal – mit der neuen Kantenlänge.</div>
+          <div data-tipp>Neues Volumen: <i>V</i> = (0,48&nbsp;m)³. Dann Auftrieb, Gewicht des Heliums, Gewicht der Hülle (16&nbsp;g) und Tragkraft.</div>
+          <div data-tipp><i>V</i> ≈ 0,1106&nbsp;m³; <i>F</i><sub>A</sub> ≈ 1,30&nbsp;N; <i>F</i><sub>He</sub> ≈ 0,18&nbsp;N; <i>F</i><sub>Hülle</sub> ≈ 0,16&nbsp;N. Zum Schluss <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd"><i>F</i><sub>Trag</sub></span></span>.</div>
+          <div data-muster><p class="heft">geg.: <i>a</i> = 0,48&nbsp;m; <i>m</i><sub>Hülle</sub> = 0,016&nbsp;kg · ges.: <i>F</i><sub>Trag</sub>, <i>n</i><br><i>V</i> = (0,48&nbsp;m)³ ≈ 0,1106&nbsp;m³<br><i>F</i><sub>A</sub> = 1,2&nbsp;kg/m³ · 0,1106&nbsp;m³ · 9,81&nbsp;N/kg ≈ 1,302&nbsp;N<br><i>F</i><sub>He</sub> = 0,17&nbsp;kg/m³ · 0,1106&nbsp;m³ · 9,81&nbsp;N/kg ≈ 0,184&nbsp;N<br><i>F</i><sub>Hülle</sub> = 0,016&nbsp;kg · 9,81&nbsp;N/kg ≈ 0,157&nbsp;N<br><i>F</i><sub>Trag</sub> = 1,302&nbsp;N − 0,184&nbsp;N − 0,157&nbsp;N <u>≈ 0,96&nbsp;N</u><br><i>n</i> = <span class="frac"><span class="fn">490&nbsp;500&nbsp;N</span><span class="fd">0,961&nbsp;N</span></span> <u>≈ 510&nbsp;000</u></p><p>Mit Riesenballons braucht Carl nur rund 510 Tausend Stück.</p></div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">★ Warum sind es fast zehnmal weniger Ballons, obwohl jeder Ballon nur doppelt so breit ist?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-skal', this, 'w')">Weil große Ballons mit besserem Helium gefüllt werden.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-skal', this, 'c')">Weil das Volumen (und damit der Auftrieb) auf das 8-Fache wächst, die Hülle aber nur auf das 4-Fache.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-skal', this, 'w')">Weil der Luftdruck bei großen Ballons höher ist.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-skal"></div>
+        <div class="hs" id="hs-q-skal">
+          <div data-tipp>Wie oft passt ein kleiner Würfel in einen Würfel mit doppelter Kantenlänge?</div>
+          <div data-tipp>Volumen: 2 · 2 · 2. Fläche der Hülle: 2 · 2.</div>
+          <div data-tipp>Der Auftrieb hängt vom Volumen ab, das Gewicht der Hülle von ihrer Fläche.</div>
+          <div data-muster><p>Bei doppelter Kantenlänge wächst das Volumen auf das 2 · 2 · 2 = 8-Fache – und damit der Auftrieb. Die Hülle wächst nur mit der Fläche auf das 2 · 2 = 4-Fache. Der Anteil, den die Hülle „wegfrisst“, wird kleiner, deshalb steigt die Tragkraft fast auf das 10-Fache.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Jetzt hast du alle Zahlen beisammen. Zeit für das Urteil: Wie realistisch ist der Film?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)">Zum Film-Check →</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>Film-Check: Wie realistisch ist „Oben“?</h2>
+    <p>Das Filmteam hat für die Abhebeszene 20&nbsp;622 Ballons gezeichnet. Pixar-Fachleute sollen selbst ausgerechnet haben, dass ein echtes Haus über 20 Millionen Ballons bräuchte. Wer liegt näher an deinem Ergebnis?</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="3">
+      <span class="substep-label">Teile:</span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · Vergleichen</button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · Wie hoch?</button>
+      <button class="substep-chip locked" onclick="revealSub(4,3)">3 · Exit-Ticket</button>
+      <button class="substep-all" onclick="revealSub(4,3)">Alle Teile anzeigen</button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <div class="ex">
+        <p><strong>Aufgabe 5.1:</strong> Vergleiche dein Ergebnis aus 4.2 mit den 20&nbsp;622 Ballons aus dem Film. Wie viel Mal zu wenig Ballons sind im Film zu sehen?</p>
+        <p>Faktor ≈ <input class="inp" id="a51" inputmode="decimal" aria-label="Faktor"> <span class="unit">-mal</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a51', 238, 10]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a51')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-a51"><span class="frac"><span class="fn">4&nbsp;900&nbsp;000</span><span class="fd">20&nbsp;622</span></span> ≈ <strong>238</strong> – im Film fehlen über 99&nbsp;% der Ballons.</div>
+        <div class="hs" id="hs-a51">
+          <div data-tipp>„Wie viel Mal“ fragt nach einem Verhältnis.</div>
+          <div data-tipp>Teile deine Anzahl aus 4.2 durch die Anzahl im Film.</div>
+          <div data-tipp><span class="frac"><span class="fn">4&nbsp;900&nbsp;000</span><span class="fd">20&nbsp;622</span></span> ausrechnen.</div>
+          <div data-muster><p class="heft">ges.: Faktor<br>Faktor = <span class="frac"><span class="fn">4&nbsp;900&nbsp;000</span><span class="fd">20&nbsp;622</span></span> <u>≈ 238</u></p><p>Im Film sind etwa 240-mal zu wenig Ballons zu sehen.</p></div>
+        </div>
+      </div>
+      <div class="ex">
+        <p><strong>Aufgabe 5.2:</strong> Pixar kam auf über 20 Millionen Ballons, eine andere Rechnung mit Ballons von 90&nbsp;cm Durchmesser auf rund 106&nbsp;000. Markiere alle Annahmen, die das Ergebnis stark verändern.</p>
+        <div class="baustein" data-type="mark" id="mark-annahmen">
+          <p class="mark-text">
+            <span class="mw" data-correct="1" onclick="markToggle(this)">die Masse des Hauses</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">die Größe der Ballons</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">die Farbe der Ballons</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">ob das Fundament mitgehoben wird</span>
+            <span class="mw" data-correct="1" onclick="markToggle(this)">die Masse der Ballonhüllen</span>
+            <span class="mw" data-correct="0" onclick="markToggle(this)">das Alter von Carl</span>
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="markCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm" onclick="markReset(this)">↺ Zurücksetzen</button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-mark-annahmen">
+          <div data-tipp>Geh deine Rechnung Schritt für Schritt durch. Welche Zahlen hast du eingesetzt?</div>
+          <div data-tipp>Alles, was in eine Formel eingeht, verändert das Ergebnis – alles andere nicht.</div>
+          <div data-tipp>Vier Annahmen sind wichtig: zwei betreffen das Haus, zwei die Ballons.</div>
+          <div data-muster><p>Wichtig sind die Masse des Hauses, ob das Fundament mitgehoben wird, die Größe der Ballons (Volumen → Auftrieb) und die Masse der Hüllen. Farbe der Ballons und Carls Alter spielen keine Rolle. Solche Rechnungen liefern deshalb Größenordnungen, keine exakten Zahlen.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Angenommen, Carl hätte genug Ballons. Steigt das Haus dann immer weiter – bis ins Weltall?</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)">Wie hoch geht es? ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <div class="poe-box" id="poe-hoehe">
+        <div class="poe-label">🤔 Was passiert, wenn das Haus immer höher steigt? Halte deine Vermutung fest.</div>
+        <textarea id="poe-hoehe-in" rows="2" placeholder="Ich vermute …"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-hoehe')">Vermutung festhalten</button>
+        <div class="poe-locked" id="poe-hoehe-out" hidden></div>
+      </div>
+      <h3>🧪 Simulation: Steighöhe</h3>
+      <div class="sim" id="steig">
+        <div class="sim-row">
+          <canvas id="steig-cv" width="320" height="320" aria-label="Haus mit Ballons steigt in einer Höhenskala bis zu einer Schwebehöhe"></canvas>
+          <div class="sim-panel">
+            <label for="steig-n">Ballons: <strong><span id="steig-nval">6,0</span> Millionen</strong></label>
+            <input type="range" id="steig-n" min="50" max="200" step="1" value="60">
+            <div class="sim-read" id="steig-werte"></div>
+            <div class="sim-btns">
+              <button class="btn btn-primary btn-sm" id="steig-start">▶ Start</button>
+              <button class="btn btn-ghost btn-sm" id="steig-pause">⏸ Pause</button>
+              <button class="btn btn-ghost btn-sm" id="steig-reset">↺ Zurück</button>
+            </div>
+            <div class="sim-status" id="steig-status" aria-live="polite"></div>
+          </div>
+        </div>
+        <p class="caption">Simulation – Annahmen: Haus 50&nbsp;t, starre Partyballons, die ihre Größe nicht ändern, Helium bleibt im Ballon, gleiche Temperatur in allen Höhen, kein Wind.</p>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">Aufgabe 5.3: Warum kann das Haus nicht beliebig hoch steigen?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-hoehe', this, 'w')">Weil oben die Schwerkraft stärker wird.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-hoehe', this, 'c')">Weil mit der Höhe der Luftdruck und damit die Dichte der Luft abnimmt – der Auftrieb wird kleiner, bis er gerade die Gewichtskraft ausgleicht.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-hoehe', this, 'w')">Weil das Helium oben schwerer wird.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-hoehe"></div>
+        <div class="hs" id="hs-q-hoehe">
+          <div data-tipp>Schau in der Simulation auf die Dichte der Luft während des Steigens.</div>
+          <div data-tipp>In der Formel <i>F</i><sub>A</sub> = <i>ρ</i><sub>Luft</sub> · <i>V</i> · <i>g</i> ändert sich mit der Höhe vor allem eine Größe.</div>
+          <div data-tipp>Das Haus hört auf zu steigen, wenn Auftrieb und Gewichtskraft gleich groß sind.</div>
+          <div data-muster><p>Mit zunehmender Höhe nimmt der Luftdruck ab. Damit sinkt die Dichte der Luft, die verdrängte Luft wird leichter und der Auftrieb kleiner. Das Haus steigt nur so lange, bis Auftrieb und Gewichtskraft gleich groß sind – in dieser Höhe schwebt es.</p></div>
+        </div>
+      </div>
+      <p class="connector-text">Vergleiche jetzt mit deiner Vermutung von eben. Danach: das Exit-Ticket.</p>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,3)">Zum Exit-Ticket ↓</button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-3">
+      <h3>🎟️ Exit-Ticket</h3>
+      <div class="quiz-item">
+        <div class="quiz-q">E1: Ein Ballon schwebt genau, ohne zu steigen oder zu sinken. Was gilt?</div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'w')">Es wirkt keine Kraft auf ihn.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'c')">Die Auftriebskraft ist genau so groß wie seine gesamte Gewichtskraft.</button>
+          <button class="quiz-btn" onclick="quizCheck('q-exit1', this, 'w')">Die Auftriebskraft ist größer als seine Gewichtskraft.</button>
+        </div>
+        <div class="quiz-fb" id="qfb-q-exit1"></div>
+        <div class="hs" id="hs-q-exit1">
+          <div data-tipp>Welche Kräfte wirken auf einen Ballon? Nenne beide.</div>
+          <div data-tipp>Bewegt sich etwas nicht, heben sich die Kräfte gegenseitig auf.</div>
+          <div data-tipp>Aufheben heißt: gleich groß, entgegengesetzt gerichtet.</div>
+          <div data-muster><p>Auf den Ballon wirken Auftriebskraft (nach oben) und Gewichtskraft (nach unten). Schwebt er, sind beide gleich groß und heben sich auf.</p></div>
+        </div>
+      </div>
+      <div class="ex">
+        <p><strong>E2:</strong> Ein Wasserstoffballon (<i>ρ</i> = 0,084&nbsp;kg/m³) hat dasselbe Volumen und dieselbe Hülle wie unser Heliumballon. Kann er mehr oder weniger tragen? Berechne seine Tragkraft.</p>
+        <p><i>F</i><sub>Trag</sub> = <input class="inp" id="ae2" inputmode="decimal" aria-label="Tragkraft Wasserstoffballon in Newton"> <span class="unit">N</span>
+          <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['ae2', 0.112, 0.005]])">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-ae2')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div class="sol" id="sol-ae2"><i>F</i><sub>H</sub> = 0,084&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg ≈ 0,011&nbsp;N<br><i>F</i><sub>Trag</sub> = 0,163&nbsp;N − 0,011&nbsp;N − 0,039&nbsp;N ≈ <strong>0,11&nbsp;N</strong> – nur wenig mehr als mit Helium. Wasserstoff ist aber brennbar, deshalb nimmt man Helium.</div>
+        <div class="hs" id="hs-ae2">
+          <div data-tipp>Was ändert sich im Vergleich zum Heliumballon – und was bleibt gleich?</div>
+          <div data-tipp>Nur die Gewichtskraft des Gases ändert sich. Auftrieb und Hülle bleiben gleich.</div>
+          <div data-tipp><i>F</i><sub>Gas</sub> = 0,084&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg; dann <i>F</i><sub>Trag</sub> = 0,163&nbsp;N − <i>F</i><sub>Gas</sub> − 0,039&nbsp;N</div>
+          <div data-muster><p class="heft">geg.: <i>ρ</i> = 0,084&nbsp;kg/m³; <i>V</i> = 0,0138&nbsp;m³; <i>F</i><sub>A</sub> = 0,163&nbsp;N; <i>F</i><sub>Hülle</sub> = 0,039&nbsp;N · ges.: <i>F</i><sub>Trag</sub><br><i>F</i><sub>Gas</sub> = 0,084&nbsp;kg/m³ · 0,0138&nbsp;m³ · 9,81&nbsp;N/kg ≈ 0,011&nbsp;N<br><i>F</i><sub>Trag</sub> = 0,163&nbsp;N − 0,011&nbsp;N − 0,039&nbsp;N <u>≈ 0,11&nbsp;N</u></p><p>Der Wasserstoffballon trägt etwas mehr, weil sein Gas leichter ist.</p></div>
+        </div>
+      </div>
+      <div class="hefter-box">
+        <div class="hefter-label">📓 Heftereintrag — Das fliegende Haus</div>
+        <p>Ein Partyballon trägt nur etwa 10&nbsp;g. Für ein 50-t-Haus bräuchte man rund 4,9 Millionen Ballons – etwa 240-mal so viele wie im Film.</p>
+        <p>Mit der Höhe sinken Luftdruck, Luftdichte und Auftrieb. Ein Ballon steigt nur bis zu der Höhe, in der Auftrieb und Gewichtskraft gleich groß sind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3>Das hast du gelernt</h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Woher der Auftrieb kommt</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Der Luftdruck nimmt mit der Höhe ab. Unten drückt die Luft stärker als oben – diese Differenz ist die Auftriebskraft.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Wie groß der Auftrieb ist</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">So groß wie die Gewichtskraft der verdrängten Luft: <i>F</i><sub>A</sub> = <i>ρ</i><sub>Luft</sub> · <i>V</i> · <i>g</i>.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span>Was ein Ballon tragen kann</span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Tragkraft = Auftrieb minus Gewicht von Gas und Hülle. Große Ballons lohnen sich, weil das Volumen schneller wächst als die Hülle.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-success">🎉 <span>Du kannst jetzt ausrechnen, ob ein Ballon steigt – und hast einen Hollywood-Film auf den Prüfstand gestellt.</span></div>
+    <p class="connector-text">Nächste Stunde: Heißluftballons haben gar kein Helium – nur warme Luft. Wie kann Luft in Luft schweben?</p>
+    <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
+  </div>
+
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261101-C9B681" title="Kennnummer MR-20261101-C9B681">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
+
+</div>
+<script>
+var __LH={i:"MR-20261101-C9B681",j:2026};
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+const quizFeedback = {
+  /* 'frage-id': { ok:'✅ <strong>Richtig!</strong> …',
+                   ng:'❌ <strong>Nicht ganz.</strong> …',
+                   hint:'Denkimpuls, der die Lösung NICHT verrät' } */
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:'✅ <strong>Richtig!</strong>'; fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:'Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.';
+    fb.innerHTML='💡 <strong>Tipp:</strong> '+hint+' <em>Du hast noch einen Versuch.</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:'❌ Nicht ganz — lies die anderen Optionen nochmal durch.'; fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const ex=btn.closest('.ex'), fb=btn.parentElement.querySelector('.grp-fb') || (ex?ex.querySelector(':scope > .grp-fb'):null);
+  if(fb){ fb.textContent=(ok===spec.length?'✓ Richtig! ':'')+ok+' von '+spec.length+' richtig.'+(ok<spec.length?' Prüfe die rot markierten Felder – Einheit umgerechnet?':''); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  if(ok===spec.length) solBtnShow(btn);   /* Lösungsweg erst nach richtiger Antwort */
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
+  out.textContent='Deine Vermutung: '+txt; out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag in die Zwischenablage ---------- */
+async function writeClip(html,text,fb){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([text],{type:'text/plain'}) })]);
+    fb.textContent='✓ kopiert — in Word mit Strg+V einfügen';
+  } catch(e){ fb.textContent='⚠️ Kopieren blockiert — bitte Text manuell markieren'; }
+}
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach((box,i)=>{
+    if(box.querySelector('.hefter-btn')) return;
+    const bar=document.createElement('div'); bar.className='hefter-btn';
+    const btn=document.createElement('button'); btn.className='btn btn-ghost btn-sm';
+    btn.textContent='📋 in den Hefter übernehmen';
+    const fb=document.createElement('span'); fb.className='hefter-fb';
+    btn.onclick=()=>writeClip(box.innerHTML, box.innerText, fb);
+    bar.appendChild(btn); bar.appendChild(fb); box.appendChild(bar);
+  });
+  const all=document.getElementById('hefter-all');
+  if(all && !all.dataset.wired){
+    all.dataset.wired='1';
+    const fb=document.createElement('span'); fb.className='hefter-fb'; all.after(fb);
+    all.onclick=()=>{
+      const boxes=[...document.querySelectorAll('.hefter-box')];
+      writeClip(boxes.map(b=>b.innerHTML).join('<hr>'), boxes.map(b=>b.innerText).join('\n\n'), fb);
+    };
+  }
+}
+
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[['Tipp 1',2],['Tipp 2',4],['Tipp 3',6],['Musterlösung',10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 Hilfestellungen</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">Hilfestellung</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.textContent=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.textContent=box._t0?'(in '+hilfeFormat(min-el)+')':'(nach '+min+' Min.)';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; f.textContent=msg; f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+/* ============================================================
+   Seitenspezifisch: Das fliegende Haus (Auftrieb in Luft)
+   ============================================================ */
+
+/* Zahlen mit Leerzeichen oder Tausenderpunkt (490 500 / 490.500) erlauben */
+(function(){
+  const _cn = checkNum;
+  checkNum = function(id, soll, tol){
+    const el = document.getElementById(id);
+    if(el){
+      let v = (el.value||'').replace(/[\s  ']/g,'');
+      if(Math.abs(soll)>=1000 && /^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g,'');   /* Tausenderpunkt nur bei großen Sollwerten */
+      el.value = v;
+    }
+    return _cn(id, soll, tol);
+  };
+})();
+
+/* ---------- Werkzeuge erst nach eigener Leistung freischalten ---------- */
+const SIM_INIT = {};
+function unlockTool(key){
+  const box = document.querySelector('[data-unlock="'+key+'"]'); if(!box) return;
+  box.hidden = false;
+  const note = document.getElementById('lock-'+key); if(note) note.hidden = true;
+  try{ localStorage.setItem(LH_NS+'unlock_'+key,'1'); }catch(e){}
+  if(SIM_INIT[key] && !box._init){ box._init = true; SIM_INIT[key](); }
+}
+function checkUnlock(btn, spec, key){
+  const ok = checkNumGroup(btn, spec);
+  if(ok) unlockTool(key);
+  return ok;
+}
+function initUnlocks(){
+  document.querySelectorAll('[data-unlock]').forEach(box=>{
+    const key = box.dataset.unlock; let on=false;
+    try{ on = localStorage.getItem(LH_NS+'unlock_'+key)==='1'; }catch(e){}
+    if(on || hsTeach()) unlockTool(key);
+  });
+}
+/* Lehrermodus öffnet auch alle Werkzeuge */
+(function(){
+  const _t = teachSetUI;
+  teachSetUI = function(active){ _t(active); if(active) document.querySelectorAll('[data-unlock]').forEach(b=>unlockTool(b.dataset.unlock)); };
+})();
+
+/* Hilfsfunktionen */
+const G = 9.81, RHO0 = 1.2, H_SKALA = 8400;
+function de(x, d){ return x.toLocaleString('de-DE',{minimumFractionDigits:d, maximumFractionDigits:d}); }
+function deInt(x){ return Math.round(x).toLocaleString('de-DE').replace(/\./g,' '); }
+function makeLoop(step){
+  let raf=null, last=0;
+  function frame(t){ const dt=Math.min(0.05,(t-last)/1000||0); last=t; if(step(dt)!==false) raf=requestAnimationFrame(frame); else raf=null; }
+  return { start(){ if(raf) return; last=performance.now(); raf=requestAnimationFrame(frame); },
+           pause(){ if(raf) cancelAnimationFrame(raf); raf=null; },
+           running(){ return !!raf; } };
+}
+
+/* ---------- Simulation 1: Luftdruck und Höhe (SVG, Schieberegler) ---------- */
+function initHoehe(){
+  const s = document.getElementById('hoehe-h'); if(!s) return;
+  const dots = document.getElementById('hoehe-dots'), ticks = document.getElementById('hoehe-ticks');
+  const top=10, bot=240, hmax=10000;
+  const yOf = h => bot - 8 - (h/hmax)*(bot-top-8);
+  /* Luftteilchen: Dichte nimmt nach oben ab (fester Zufall) */
+  let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  let html='';
+  for(let i=0;i<420;i++){ const h=rnd()*hmax; if(rnd() < Math.exp(-h/H_SKALA)){
+    html+='<circle cx="'+(24+rnd()*112).toFixed(1)+'" cy="'+yOf(h).toFixed(1)+'" r="1.6" fill="#1E2F4A" opacity="0.55"/>'; } }
+  dots.innerHTML = html;
+  let th='';
+  [0,2000,4000,6000,8000,10000].forEach(h=>{ const y=yOf(h);
+    th+='<line x1="146" y1="'+y+'" x2="154" y2="'+y+'" stroke="#4A4542"/><text x="160" y="'+(y+4)+'" font-size="11" fill="#4A4542">'+deInt(h)+'\u00a0m</text>'; });
+  ticks.innerHTML = th;
+  const orte=[[0,'Meereshöhe'],[1200,'Fichtelberg (1215\u00a0m)'],[2900,'Zugspitze (2962\u00a0m)'],[8800,'Mount Everest (8849\u00a0m)'],[10000,'Reiseflughöhe eines Flugzeugs']];
+  function upd(){
+    const h=+s.value, f=Math.exp(-h/H_SKALA);
+    document.getElementById('hoehe-hval').textContent = deInt(h);
+    document.getElementById('hoehe-p').textContent = deInt(1013*f);
+    document.getElementById('hoehe-rho').textContent = de(RHO0*f,2);
+    let ort='zwischen den Orten'; orte.forEach(o=>{ if(h>=o[0]) ort=o[1]; });
+    if(h>0 && h<1200) ort='über dem Elbtal';
+    document.getElementById('hoehe-ort').textContent = ort;
+    document.getElementById('hoehe-ball').setAttribute('cy', Math.min(bot-10, yOf(h)).toFixed(1));
+  }
+  s.addEventListener('input', upd); upd();
+}
+
+/* ---------- Simulation 2: Ballon-Labor (Canvas) ---------- */
+SIM_INIT.labor = function(){
+  const cv=document.getElementById('labor-cv'), ctx=cv.getContext('2d');
+  const gas=document.getElementById('labor-gas'), sa=document.getElementById('labor-a'), sl=document.getElementById('labor-last');
+  let y=0, v=0;
+  function werte(){
+    const a=(+sa.value)/100, V=a*a*a, rg=+gas.value, last=(+sl.value)/1000;
+    const mH=0.004*Math.pow((+sa.value)/24,2);
+    const FA=RHO0*V*G, FGas=rg*V*G, FH=mH*G, FL=last*G;
+    return {a,V,FA,FGas,FH,FL,net:FA-FGas-FH-FL};
+  }
+  function arrow(x,y0,len,col,lbl,up){
+    let cut=false; if(len>125){ len=125; cut=true; } if(len<2) len=2;
+    const d = up? -1 : 1, y1 = y0 + d*len;
+    ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,y1-d*6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x-7,y1-d*8); ctx.lineTo(x+7,y1-d*8); ctx.lineTo(x,y1+d*2); ctx.closePath(); ctx.fill();
+    if(cut){ ctx.fillStyle='#FFFFFF'; ctx.fillRect(x-8,y1-d*40,16,4); ctx.fillRect(x-8,y1-d*46,16,4); }
+    ctx.fillStyle='#111111'; ctx.font='12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(lbl, x, up? y0+16 : y0-8);
+  }
+  function draw(){
+    const w=werte(); ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#EEF3FA'; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#7FA35B'; ctx.fillRect(0,cv.height-18,175,18);
+    const size=30+ (+sa.value-10)*2.2, cx=90, cy=cv.height-150+y;
+    ctx.strokeStyle='#4A4542'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(cx,cy+size/2); ctx.lineTo(cx,cy+size/2+40); ctx.stroke();
+    if(+sl.value>0){ const lw=8+Math.sqrt(+sl.value)*3; ctx.fillStyle='#8C5E22'; ctx.fillRect(cx-lw/2,cy+size/2+40,lw,lw); }
+    const col = gas.value==='1.2' ? '#B9C3CF' : (gas.value==='0.084' ? '#F2C14E' : '#D94F30');
+    ctx.fillStyle=col; ctx.strokeStyle='#5A2A1E'; ctx.lineWidth=2;
+    ctx.fillRect(cx-size/2,cy-size/2,size,size); ctx.strokeRect(cx-size/2,cy-size/2,size,size);
+    /* Kräftediagramm rechts: Pfeillänge proportional zur Kraft */
+    ctx.fillStyle='#FFFFFF'; ctx.fillRect(180,8,cv.width-186,cv.height-16);
+    ctx.strokeStyle='#C9C2B8'; ctx.lineWidth=1; ctx.strokeRect(180,8,cv.width-186,cv.height-16);
+    ctx.fillStyle='#4A4542'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText('Kräfte am Ballon', 270, 24);
+    const y0=160; ctx.strokeStyle='#7A736E'; ctx.beginPath(); ctx.moveTo(186,y0); ctx.lineTo(cv.width-12,y0); ctx.stroke();
+    const k = 110/Math.max(1e-6, w.FA);
+    arrow(205, y0, w.FA*k, '#2D8B55', 'Auftrieb', true);
+    arrow(245, y0, w.FGas*k, '#7B6DAA', 'Gas', false);
+    arrow(290, y0, w.FH*k, '#1B8FBE', 'Hülle', false);
+    if(w.FL>0) arrow(332, y0, w.FL*k, '#8C5E22', 'Last', false);
+    document.getElementById('labor-aval').textContent = sa.value;
+    document.getElementById('labor-lastval').textContent = sl.value;
+    document.getElementById('labor-werte').innerHTML =
+      'Volumen: '+de(w.V*1000,1)+'&nbsp;l<br>Auftrieb <i>F</i><sub>A</sub>: '+de(w.FA,3)+'&nbsp;N<br>'+
+      'Gewicht Gas: '+de(w.FGas,3)+'&nbsp;N<br>Gewicht Hülle: '+de(w.FH,3)+'&nbsp;N<br>Gewicht Last: '+de(w.FL,3)+'&nbsp;N<br>'+
+      '<strong>Überschuss nach oben: '+de(w.net,3)+'&nbsp;N</strong>';
+    return w;
+  }
+  const loop = makeLoop(dt=>{
+    const w=werte(); const acc = Math.sign(w.net)*Math.min(80, Math.abs(w.net)*400);
+    v += -acc*dt; v*=0.96; y += v*dt*20;
+    const sz=30+(+sa.value-10)*2.2, minY=-(cv.height-160-sz/2), maxY=150-18-sz/2-42-(+sl.value>0?8+Math.sqrt(+sl.value)*3:0);
+    let stop=false;
+    if(y<minY){ y=minY; stop=true; } if(y>maxY){ y=maxY; stop=true; }
+    draw();
+    const st=document.getElementById('labor-status');
+    st.textContent = w.net>0.0005 ? '⬆ Der Ballon steigt.' : (w.net<-0.0005 ? '⬇ Der Ballon sinkt.' : '↔ Der Ballon schwebt.');
+    return !stop;
+  });
+  function reset(){ loop.pause(); y=0; v=0; draw(); document.getElementById('labor-status').textContent=''; }
+  [gas,sa,sl].forEach(el=>el.addEventListener('input', reset));
+  document.getElementById('labor-start').onclick = ()=>{ y=0; v=0; loop.start(); };
+  document.getElementById('labor-pause').onclick = ()=>loop.pause();
+  document.getElementById('labor-reset').onclick = reset;
+  reset();
+};
+
+/* ---------- Simulation 3: Haus-Heber (Canvas) ---------- */
+SIM_INIT.heber = function(){
+  const cv=document.getElementById('heber-cv'), ctx=cv.getContext('2d'), sn=document.getElementById('heber-n');
+  const M=50000, FTRAG=0.1004; let n=20622, y=0, v=0;
+  const nOf = val => { const x=Math.pow(10, 3+4*val/1000); const p=Math.pow(10, Math.floor(Math.log10(x))-2); return Math.round(x/p)*p; };
+  const valOf = nn => Math.round((Math.log10(nn)-3)/4*1000);
+  sn.value = valOf(n);
+  let seed=11; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  const cols=['#D94F30','#F2C14E','#2D8B55','#1B8FBE','#7B6DAA','#E57FA8'];
+  const pts=[]; for(let i=0;i<160;i++){ const r=Math.sqrt(rnd()), t=rnd()*Math.PI*2; pts.push([r*Math.cos(t), r*Math.sin(t)*0.8, cols[i%cols.length]]); }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#EEF3FA'; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#7FA35B'; ctx.fillRect(0,cv.height-20,cv.width,20);
+    const hx=160, hy=cv.height-20-y;
+    /* Ballontraube: Größe wächst mit log(n) */
+    const R = 14 + 13*(Math.log10(Math.max(n,1000))-3), cy = hy-95-R*0.6;
+    ctx.strokeStyle='#4A4542'; ctx.lineWidth=1;
+    for(let i=-2;i<=2;i++){ ctx.beginPath(); ctx.moveTo(hx+i*4, hy-70); ctx.lineTo(hx+i*R*0.25, cy+R*0.6); ctx.stroke(); }
+    const shown = Math.min(pts.length, 12 + Math.round(36*(Math.log10(Math.max(n,1000))-3)));
+    for(let i=0;i<shown;i++){ const p=pts[i]; ctx.fillStyle=p[2]; ctx.beginPath(); ctx.arc(hx+p[0]*R, cy+p[1]*R, Math.max(3,R*0.13), 0, Math.PI*2); ctx.fill(); }
+    /* Haus */
+    ctx.fillStyle='#E9D8A6'; ctx.strokeStyle='#5A4632'; ctx.lineWidth=2;
+    ctx.fillRect(hx-40,hy-50,80,50); ctx.strokeRect(hx-40,hy-50,80,50);
+    ctx.fillStyle='#8C3A4A'; ctx.beginPath(); ctx.moveTo(hx-48,hy-50); ctx.lineTo(hx,hy-82); ctx.lineTo(hx+48,hy-50); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#5A4632'; ctx.fillRect(hx-8,hy-28,16,28); ctx.fillStyle='#BFD7EA'; ctx.fillRect(hx-32,hy-42,16,14); ctx.fillRect(hx+16,hy-42,16,14);
+    ctx.fillStyle='#8C3A4A'; ctx.fillRect(hx+18,hy-80,9,22);
+    const FB = n*FTRAG, FG=M*G;
+    document.getElementById('heber-nval').textContent = deInt(n);
+    document.getElementById('heber-werte').innerHTML = 'Tragkraft aller Ballons: <strong>'+deInt(FB)+'&nbsp;N</strong><br>Gewichtskraft des Hauses: <strong>'+deInt(FG)+'&nbsp;N</strong>';
+    return {FB,FG};
+  }
+  const loop = makeLoop(dt=>{
+    const f=draw(), st=document.getElementById('heber-status');
+    if(f.FB<=f.FG){ st.textContent='🏠 Das Haus bleibt am Boden. Die Ballons schaffen nur '+de(100*f.FB/f.FG,1)+' % der Gewichtskraft.'; return false; }
+    v += Math.min(60,(f.FB/f.FG-1)*200)*dt; y += v*dt*10;
+    st.textContent='🎈 Das Haus hebt ab!';
+    const R=14+13*(Math.log10(Math.max(n,1000))-3), ymax=cv.height-20-100-1.4*R-6; if(y>ymax){ y=ymax; return false; }
+    return true;
+  });
+  function reset(){ loop.pause(); y=0; v=0; draw(); document.getElementById('heber-status').textContent=''; }
+  sn.addEventListener('input', ()=>{ n=nOf(+sn.value); reset(); });
+  document.getElementById('heber-film').onclick = ()=>{ n=20622; sn.value=valOf(n); reset(); };
+  document.getElementById('heber-start').onclick = ()=>{ y=0; v=0; loop.start(); };
+  document.getElementById('heber-pause').onclick = ()=>loop.pause();
+  document.getElementById('heber-reset').onclick = reset;
+  reset();
+};
+
+/* ---------- Simulation 4: Steighöhe (Canvas) ---------- */
+function initSteig(){
+  const cv=document.getElementById('steig-cv'); if(!cv) return;
+  const ctx=cv.getContext('2d'), sn=document.getElementById('steig-n');
+  const M=50000, V=0.013824, MHE=0.17*V, MH=0.004, HMAX=6000;
+  let h=0, n=6e6;
+  const yOf = hh => cv.height-20 - hh/HMAX*(cv.height-50);
+  function heq(){ const r=(M/n+MHE+MH)/V; return r>=RHO0 ? 0 : H_SKALA*Math.log(RHO0/r); }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const g=ctx.createLinearGradient(0,0,0,cv.height); g.addColorStop(0,'#1E2F4A'); g.addColorStop(1,'#BFD7EA');
+    ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height);
+    /* Wolkenband */
+    ctx.fillStyle='rgba(255,255,255,0.55)';
+    [[60,1800],[200,2100],[120,2400]].forEach(c=>{ const yy=yOf(c[1]); ctx.beginPath(); ctx.ellipse(c[0],yy,40,10,0,0,Math.PI*2); ctx.fill(); });
+    ctx.fillStyle='#7FA35B'; ctx.fillRect(0,cv.height-20,cv.width,20);
+    /* Höhenskala mit Bergen */
+    ctx.fillStyle='#FFFFFF'; ctx.strokeStyle='#FFFFFF'; ctx.font='11px sans-serif'; ctx.textAlign='left';
+    for(let hh=0; hh<=HMAX; hh+=1000){ const yy=yOf(hh); ctx.beginPath(); ctx.moveTo(cv.width-62,yy); ctx.lineTo(cv.width-54,yy); ctx.stroke(); ctx.fillText(deInt(hh)+'\u00a0m', cv.width-52, yy+4); }
+    [[1215,'Fichtelberg'],[2962,'Zugspitze']].forEach(b=>{ const yy=yOf(b[0]); ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(10,yy); ctx.lineTo(cv.width-64,yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillText(b[1], 12, yy-3); });
+    /* Haus mit Ballons */
+    const hx=150, hy=yOf(h);
+    ctx.fillStyle='#E9D8A6'; ctx.fillRect(hx-14,hy-16,28,16);
+    ctx.fillStyle='#8C3A4A'; ctx.beginPath(); ctx.moveTo(hx-17,hy-16); ctx.lineTo(hx,hy-28); ctx.lineTo(hx+17,hy-16); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#4A4542'; ctx.beginPath(); ctx.moveTo(hx,hy-28); ctx.lineTo(hx,hy-40); ctx.stroke();
+    ['#D94F30','#F2C14E','#2D8B55','#1B8FBE','#7B6DAA'].forEach((c,i)=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(hx-12+i*6, hy-48-(i%2)*5, 6, 0, Math.PI*2); ctx.fill(); });
+    const f=Math.exp(-h/H_SKALA), FA=n*RHO0*f*V*G/1000, FG=(M+n*(MHE+MH))*G/1000;
+    document.getElementById('steig-nval').textContent = de(n/1e6,1);
+    document.getElementById('steig-werte').innerHTML = 'Höhe: <strong>'+deInt(h)+'&nbsp;m</strong><br>Dichte der Luft: '+de(RHO0*f,3)+'&nbsp;kg/m³<br>Auftrieb: '+de(FA,0)+'&nbsp;kN<br>Gewichtskraft gesamt: '+de(FG,0)+'&nbsp;kN';
+  }
+  const loop = makeLoop(dt=>{
+    const target=heq(), d=target-h;
+    h += Math.sign(d)*Math.min(Math.abs(d), Math.max(15, Math.abs(d)*0.9)*dt*1.2);
+    draw();
+    const st=document.getElementById('steig-status');
+    if(Math.abs(target-h)<1){ h=target; draw(); st.textContent='↔ Das Haus schwebt in etwa '+deInt(h)+' m Höhe: Hier ist der Auftrieb genau so groß wie die Gewichtskraft.'; return false; }
+    st.textContent='⬆ Das Haus steigt …'; return true;
+  });
+  function reset(){ loop.pause(); h=0; draw(); document.getElementById('steig-status').textContent=''; }
+  sn.addEventListener('input', ()=>{ n=(+sn.value)*1e5; reset(); });
+  document.getElementById('steig-start').onclick = ()=>loop.start();
+  document.getElementById('steig-pause').onclick = ()=>loop.pause();
+  document.getElementById('steig-reset').onclick = reset;
+  reset();
+}
+
+/* ---------- Quiz-Rückmeldungen ---------- */
+Object.assign(quizFeedback, {
+  'q-hebt': { ok:'✅ <strong>Richtig!</strong> Die umgebende Luft drückt von unten stärker als von oben. Das Helium selbst wird nach unten gezogen – nur weniger stark als die Luft, die der Ballon verdrängt.',
+              ng:'❌ <strong>Nicht ganz.</strong> Helium hat Masse und wird von der Erde angezogen – es kann nichts „nach oben ziehen“. Die Kraft nach oben kommt von der Luft um den Ballon.',
+              hint:'Würde ein Heliumballon auch im luftleeren Raum steigen? Überlege, wer dann fehlt.' },
+  'q-dicht': { ok:'✅ <strong>Richtig!</strong> Die oberen Luftschichten liegen wie ein Stapel Decken auf den unteren und pressen sie zusammen.',
+               ng:'❌ <strong>Nicht ganz.</strong> Entscheidend ist das Gewicht der Luft darüber: Es drückt die unteren Schichten zusammen.',
+               hint:'Stell dir einen Stapel Matratzen vor. Welche ist am stärksten zusammengedrückt?' },
+  'q-seiten': { ok:'✅ <strong>Richtig!</strong> Gleiche Höhe heißt gleicher Druck – die seitlichen Kräfte heben sich auf.',
+                ng:'❌ <strong>Nicht ganz.</strong> An den Seiten herrscht sehr wohl Luftdruck, und alle Flächen sind gleich groß. Entscheidend ist, dass gegenüberliegende Seiten auf gleicher Höhe liegen.',
+                hint:'Vergleiche die Höhe der linken und der rechten Seitenfläche.' },
+  'q-labor': { ok:'✅ <strong>Richtig!</strong> Bei doppelter Kantenlänge kann der Ballon mehr als zehnmal so viel tragen.',
+               ng:'❌ <strong>Nicht ganz.</strong> Probier es im Labor aus: Bei 15&nbsp;cm schafft der Ballon kaum 2&nbsp;g, bei 30&nbsp;cm über 20&nbsp;g.',
+               hint:'Stell im Labor 15&nbsp;cm ein und erhöhe die Last, bis der Ballon sinkt. Dann dasselbe mit 30&nbsp;cm.' },
+  'q-fundament': { ok:'✅ <strong>Richtig!</strong> Ein Fundament aus Beton wiegt leicht noch einmal so viel wie das Haus – die Zahl der Ballons würde stark steigen.',
+                   ng:'❌ <strong>Nicht ganz.</strong> Alles, was mit hochgehoben wird, zählt zur Gewichtskraft. Beton und Erde sind sehr schwer.',
+                   hint:'Was müsste man zusätzlich anheben, wenn das Haus samt Fundament aus dem Boden reißt?' },
+  'q-skal': { ok:'✅ <strong>Richtig!</strong> Volumen ×8, Hülle nur ×4 – deshalb lohnen sich große Ballons.',
+              ng:'❌ <strong>Nicht ganz.</strong> Gas und Luftdruck sind gleich geblieben. Es liegt an der Geometrie: Volumen wächst mit <i>a</i>³, Fläche nur mit <i>a</i>².',
+              hint:'Wie oft passt ein kleiner Würfel in einen Würfel mit doppelter Kantenlänge?' },
+  'q-hoehe': { ok:'✅ <strong>Richtig!</strong> Die dünnere Luft liefert weniger Auftrieb. In der Schwebehöhe sind Auftrieb und Gewichtskraft gleich groß.',
+               ng:'❌ <strong>Nicht ganz.</strong> Die Schwerkraft ändert sich in diesen Höhen kaum, und das Helium bleibt gleich schwer. Es ist die Luft, die sich ändert.',
+               hint:'Schau in der Simulation, welcher Wert sich beim Steigen ändert.' },
+  'q-exit1': { ok:'✅ <strong>Richtig!</strong> Beim Schweben sind Auftriebskraft und Gewichtskraft gleich groß und heben sich auf.',
+               ng:'❌ <strong>Nicht ganz.</strong> Auf den Ballon wirken weiterhin Kräfte – sie sind nur gleich groß und entgegengesetzt.',
+               hint:'Was passiert, wenn eine der beiden Kräfte größer ist?' }
+});
+
+/* ---------- Init ---------- */
+function initSimSeite(){ initHoehe(); initSteig(); initUnlocks(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initSimSeite); } else { initSimSeite(); }
+
+
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
+
+</script>
+</body>
+</html>
