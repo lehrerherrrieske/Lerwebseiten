@@ -62,8 +62,13 @@
   wip    : optional, true zeigt die Karte ausgegraut und nicht anklickbar
            mit Badge "In Arbeit" (für Seiten, die noch nicht fertig sind).
            Im Lehrermodus sind diese Seiten trotzdem anklickbar.
-  pw     : optional, Passwort des Lehrermodus DIESER Lernseite – wird nur im
-           Lehrermodus des Portals auf der Karte angezeigt
+  pw     : optional, Passwort des Lehrermodus DIESER Lernseite (schaltet alles
+           frei, auch Tipps und Musterlösungen) – wird nur im Lehrermodus des
+           Portals auf der Karte angezeigt
+  pw2    : optional, nur bei Seiten mit Freischalt-Modus: 2. Passwort
+           („freie Navigation“, data-pw2 der Lernseite). Hebt nur das
+           chronologische Abarbeiten auf, Lösungen bleiben gesperrt. Wird wie pw
+           nur im Lehrermodus des Portals angezeigt.
   hidden : optional, true blendet die Seite für SuS komplett aus (auch aus
            den Seitenzahlen). Nur im Lehrermodus sichtbar, Badge "Versteckt".
 
@@ -271,6 +276,13 @@
   .seite-pw{display:inline-block;margin-top:4px;font-size:var(--fs-sm);color:var(--color-text-secondary);
     background:#E8EEF5;border:1px solid #C9D5E3;border-radius:6px;padding:1px 8px;}
   .seite-pw code{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:#33475B;}
+  .seite-pws{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:flex-start;}
+  .seite-pw2{background:#FBF1E9;border-color:#F0C39A;}
+  .pw-copy{font:inherit;font-size:var(--fs-sm);margin-left:6px;padding:0 7px;line-height:1.5;cursor:pointer;
+    background:#FFFFFF;border:1px solid #C9D5E3;border-radius:5px;color:#33475B;vertical-align:baseline;}
+  .pw-copy:hover{background:#F2F5F9;border-color:#33475B;}
+  .pw-copy.ok{background:#E8F5EE;border-color:#A7D7BC;color:#166534;}
+  .seite-pw small{display:block;font-size:var(--fs-sm);color:var(--color-text-muted);line-height:1.3;}
   .seite-card.versteckt{border-style:dashed;border-color:#C9B3DB;}
   .badge-hidden{
     background:#F3E8FD;color:#6B3A8C;font-size:var(--fs-sm);
@@ -574,7 +586,7 @@ const SEITEN = [
   // =================Klasse 9=================
   { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"ERD aus Text erstellen", datei:"K9 - LB1 - ERD_aus_Text_erstellen.html" ,pw:"Turniertag"},
   { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"Übungsaufgabe - ERD aus Text erstellen", datei:"K9 - LB1 - Uebungsaufgaben ER_Modell_erstellen.html", pw:"Ü_ERD01" },
-  { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"Erstellung eines Relationenschema", datei:"K9 - LB1 - ERD_zu_Relationenschema.html", pw:"Fremdschluessel", neu:true },
+  { fach:"informatik", klasse:"9", lb:"LB1 - Informationen und Daten", titel:"Erstellung eines Relationenschema", datei:"K9 - LB1 - ERD_zu_Relationenschema.html", pw:"Fremdschluessel", pw2:"Kardinalitaet" },
 
   // =================Klasse 10=================
   { fach:"informatik", klasse:"10", lb:"LB1 - Algorithmen ", titel:"Befehlssammlung Programmierung in Python ", datei:"K10 - Hefter.html", pw:"InfoIstCool" },
@@ -592,7 +604,7 @@ const SEITEN = [
   
   // LB4
   { fach:"informatik", klasse:"11GK", lb:"LB4 - Informationssicherheit", titel:"Schutzziele Datenschutz", datei:"K11GK - LB4 - Schutzziele_Datenschutz.html", pw:"Datenschatz" },
-  { fach:"informatik", klasse:"11GK", lb:"LB4 - Informationssicherheit", titel:"RAID Systeme Simulator", datei:"K11GK - LB4 - RAID_Systeme_Simulator.html", pw:"XORacle", wip:true },
+  { fach:"informatik", klasse:"11GK", lb:"LB4 - Informationssicherheit", titel:"RAID Systeme Simulator", datei:"K11GK - LB4 - RAID_Systeme_Simulator.html", pw:"XORacle", hidden:true },
 
   { fach:"informatik", klasse:"11GK", lb:"LB4 - Informationssicherheit", ulb:"Quiz", titel:"Quiz Schutzziele 01", datei:"K11GK - LB4 - CyberQuiz Schutzziele.html", pw:"Nicht Gesetzt" },
   { fach:"informatik", klasse:"11GK", lb:"LB4 - Informationssicherheit", ulb:"Quiz", titel:"Quiz Schutzziele 02", datei:"K11GK - LB4 - CyberQuiz Schutzziele_2.html", pw:"Nicht Gesetzt" },
@@ -982,7 +994,9 @@ function goSeiten(fach, klasseId, klasseLabel){
       const badges = (s.hidden ? '<span class="badge-hidden">Versteckt</span>' : "")
                    + (s.wip ? '<span class="badge-wip">In Arbeit</span>'
                             : (s.neu ? '<span class="badge-neu">Neu</span>' : ""));
-      const pwInfo = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code></div>` : "";
+      const pw1Info = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code>${pwCopyBtn(s.pw)}<small>Lehrermodus – schaltet alles frei, auch Tipps und Musterlösungen</small></div>` : "";
+      const pw2Info = (teach && s.pw2) ? `<div class="seite-pw seite-pw2">🔓 Passwort 2: <code>${s.pw2}</code>${pwCopyBtn(s.pw2)}<small>chronologisches Abarbeiten ausschalten</small></div>` : "";
+      const pwInfo = (pw1Info || pw2Info) ? `<div class="seite-pws">${pw1Info}${pw2Info}</div>` : "";
       el.innerHTML = `<div>
           <div class="seite-titel">${s.titel}${badges}</div>
           ${pwInfo}
@@ -1126,6 +1140,27 @@ function teachActivate(){
   teachSetUI(true);
 }
 function teachDeactivate(){ try{ sessionStorage.removeItem('lp_teachmode'); }catch(e){} teachSetUI(false); teachSlide(false); }
+/* ── Passwort kopieren (Button auf der Karte; Karte ist ein Link, deshalb Klick abfangen) ── */
+function pwCopyBtn(pw){
+  const v=String(pw).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  return `<button type="button" class="pw-copy" data-copy="${v}" title="Passwort kopieren" aria-label="Passwort kopieren">📋</button>`;
+}
+async function pwCopy(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(err){} ta.remove(); return ok;
+  }
+}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('.pw-copy'); if(!b) return;
+  e.preventDefault(); e.stopPropagation();
+  const ok=await pwCopy(b.dataset.copy||'');
+  b.textContent=ok?'✓':'⚠️'; b.classList.toggle('ok',ok); b.title=ok?'Kopiert':'Kopieren nicht möglich';
+  clearTimeout(b._t); b._t=setTimeout(()=>{ b.textContent='📋'; b.classList.remove('ok'); b.title='Passwort kopieren'; },1500);
+},true);
+
 function initTeachbar(){
   let on=false; try{ on=sessionStorage.getItem('lp_teachmode')==='1'; }catch(e){}
   teachSetUI(on);

@@ -590,12 +590,13 @@ u.pkfk{text-decoration-line:underline;text-decoration-style:solid;text-decoratio
 <body>
 <div class="wrap">
 
-  <div class="teachbar" id="teachbar" data-pw="Fremdschluessel">
+  <div class="teachbar" id="teachbar" data-pw="Fremdschluessel" data-pw2="Kardinalitaet">
     <span class="teachbar-label">Lehrermodus</span>
     <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
            onkeydown="if(event.key==='Enter'){teachActivate();}">
     <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
     <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <button class="teachbar-tool" id="teach-free-off" onclick="gateFreeOff()" hidden>🔒 Sperren wieder einschalten</button>
     <button class="teachbar-tool" id="teach-unlock-btn" onclick="teachAllesFreischalten()" hidden>🔓 Alles freischalten</button>
     <button class="teachbar-tool teachbar-danger" id="teach-reset-btn" onclick="teachLernappReset()" hidden>↺ Lernapp zurücksetzen</button>
     <span class="teachbar-status" id="teachbar-status">inaktiv</span>
@@ -2780,6 +2781,27 @@ showStep=function(prefix,n,btn){
 };
 
 
+/* ---------- Freie Navigation (2. Passwort, data-pw2) ----------
+   Hebt NUR die Freischalt-Sperren auf (Kapitel, Teile, Überführungs-Schritte).
+   Hilfestellungen, Musterlösungen, Lehrer-Hinweise und das Access-Kapitel bleiben
+   gesperrt. Gilt in diesem Browser bis „Sperren wieder einschalten“ oder
+   „Lernapp zurücksetzen“ (Schlüssel im Seiten-Präfix erdrs_v3_). */
+const FREE_KEY='erdrs_v3_frei';
+function gateFree(){ try{ return localStorage.getItem(FREE_KEY)==='1'; }catch(e){ return false; } }
+function gateOff(){ return hsTeach()||gateFree(); }
+function gateFreeOff(){ try{ localStorage.removeItem(FREE_KEY); }catch(e){} location.reload(); }
+const _teachActivateBase=teachActivate;
+teachActivate=function(){
+  const bar=document.getElementById('teachbar'), pw=document.getElementById('teachbar-pw');
+  if(bar && pw && bar.dataset.pw2 && (pw.value||'')===bar.dataset.pw2){
+    try{ localStorage.setItem(FREE_KEY,'1'); }catch(e){}
+    pw.value=''; teachSetUI(hsTeach());
+    gateToast('🔓 <strong>Freie Navigation:</strong> Alle Kapitel und Teile sind frei. Hilfestellungen und Musterlösungen bleiben wie gewohnt gesperrt.');
+    return;
+  }
+  _teachActivateBase();
+};
+
 /* ---------- Access vorerst nur im Lehrermodus ---------- */
 const _teachSetUIBase=teachSetUI;
 teachSetUI=function(active){
@@ -2789,7 +2811,10 @@ teachSetUI=function(active){
   ['teach-unlock-btn','teach-reset-btn'].forEach(id=>{ const b=document.getElementById(id); if(b) b.hidden=!active; });
   const pn=document.getElementById('pn5');
   if(pn){ pn.setAttribute('aria-disabled',active?'false':'true'); pn.title=active?'':'Gesperrt – wird von der Lehrkraft freigeschaltet'; }
-  if(active){ document.querySelectorAll('#ue-nav .step-btn').forEach(b=>b.disabled=false);
+  const frei=gateFree(), fo=document.getElementById('teach-free-off'); if(fo) fo.hidden=!frei;
+  const bar=document.getElementById('teachbar'), stat=document.getElementById('teachbar-status');
+  if(frei && !active){ if(stat){ stat.textContent='freie Navigation'; stat.className='teachbar-status on'; } if(bar) bar.classList.add('active'); }
+  if(active||frei){ document.querySelectorAll('#ue-nav .step-btn').forEach(b=>b.disabled=false);
     const nx=document.getElementById('ue-next'); if(nx) nx.hidden=false; const m=document.getElementById('ue-msg'); if(m) m.hidden=true; }
 };
 function hefterAllFilter(){
@@ -2836,7 +2861,7 @@ function reqItems(scope){
 function subDone(sub){ return !sub || reqItems(sub).every(i=>isDone(i.key)); }
 function subOf(p,n){ return document.getElementById('ph'+p+'-sub-'+n); }
 function chapterDone(p){ const sec=document.getElementById('ph'+p); return !sec || [...sec.querySelectorAll('.subphase')].every(subDone); }
-function chapterOpen(p){ if(hsTeach()||p===0) return true; for(let j=0;j<p;j++){ if(j===5) continue; if(!chapterDone(j)) return false; } return true; }
+function chapterOpen(p){ if(gateOff()||p===0) return true; for(let j=0;j<p;j++){ if(j===5) continue; if(!chapterDone(j)) return false; } return true; }
 function firstOpenChapter(p){ for(let j=0;j<p;j++){ if(j===5) continue; if(!chapterDone(j)) return j; } return -1; }
 function gateToast(msg){
   let t=document.getElementById('gate-toast');
@@ -2861,7 +2886,7 @@ function gateText(open){
   return parts.join(' · ');
 }
 function refreshGates(){
-  const teach=hsTeach();
+  const teach=gateOff(), lehrer=hsTeach();
   document.querySelectorAll('.phase').forEach(sec=>{
     const subs=[...sec.querySelectorAll('.subphase')];
     subs.forEach((sub,idx)=>{
@@ -2871,7 +2896,7 @@ function refreshGates(){
       if(!st){ st=document.createElement('div'); st.className='gate-status'; st.setAttribute('role','status');
         const nx=sub.querySelector(':scope > .subphase-next'); if(nx) sub.insertBefore(st,nx); else sub.appendChild(st); }
       const last=!sub.querySelector(':scope > .subphase-next');
-      if(teach){ st.className='gate-status teach'; st.innerHTML='🧑‍🏫 Lehrermodus: alle Sperren aufgehoben'+(open.length?' (für Lernende noch offen: '+gateText(open)+')':''); }
+      if(teach){ st.className='gate-status teach'; st.innerHTML=(lehrer?'🧑‍🏫 Lehrermodus':'🔓 Freie Navigation')+': alle Sperren aufgehoben'+(open.length?' (für Lernende noch offen: '+gateText(open)+')':''); }
       else if(open.length){ st.className='gate-status open'; st.innerHTML='🔒 <span>Noch offen: '+gateText(open)+'</span> <button class="btn btn-ghost btn-sm" type="button">Zeig mir, was fehlt</button>';
         st.querySelector('button').onclick=()=>gateShowOpen(sub); }
       else { st.className='gate-status ok'; st.textContent=last?'✅ Alles bearbeitet – stark!':'✅ Alles bearbeitet – weiter geht’s!'; }
@@ -2890,7 +2915,7 @@ setRevealed=function(p,n){ try{ localStorage.setItem(GATE_NS+'reveal_ph'+p,Strin
 /* Teile nur der Reihe nach aufdecken */
 const _revealSubGate=revealSub;
 revealSub=function(phase,n){
-  if(hsTeach()){ _revealSubGate(phase,n); refreshGates(); return; }
+  if(gateOff()){ _revealSubGate(phase,n); refreshGates(); return; }
   let allowed=1; while(allowed<n && subDone(subOf(phase,allowed))) allowed++;
   if(getRevealed(phase)>allowed) setRevealed(phase,allowed);
   _revealSubGate(phase,allowed);
