@@ -896,13 +896,15 @@ u.pkfk{text-decoration-line:underline;text-decoration-style:solid;text-decoratio
       </div>
 
       <div class="hefter-box">
-        <div class="hefter-label">📓 Heftereintrag — Regeln: vom ERD zum Relationenschema</div>
-        <p><strong>1.</strong> Jeder Entitätstyp wird eine Tabelle (Relation).<br>
-           <strong>2.</strong> Jedes Attribut wird eine Spalte.<br>
-           <strong>3.</strong> Das Schlüsselattribut wird Primärschlüssel (PK) – <u>durchgezogen unterstrichen</u>.<br>
-           <strong>4.</strong> Beziehung 1:n → Der PK der 1-Seite wird als Fremdschlüssel (FK) in die Tabelle der n-Seite aufgenommen – <u class="fk" style="text-decoration-style:dashed;text-underline:dash">gestrichelt unterstrichen</u>.<br>
-           <strong>5.</strong> Beziehung n:m → eigene Zwischentabelle mit beiden PKs als FKs; zusammen bilden sie den PK – <u class="pkfk" style="border-bottom:1.5px dashed">beide Linien</u>.<br>
-           <strong>6.</strong> Jede Spalte bekommt einen Datentyp; FK und zugehöriger PK haben denselben Datentyp.</p>
+        <div class="hefter-label">📓 Heftereintrag — Kapitel 3 · Überführen</div>
+        <p>Ein ERD überführst du in ein Relationenschema, indem du …</p>
+        <p><strong>1.</strong> jeden Entitätstyp in eine Tabelle (Relation) transformierst.<br>
+           <strong>2.</strong> jedes Attribut in eine Zeile schreibst.<br>
+           <strong>3.</strong> das Schlüsselattribut als Primärschlüssel (PK) kennzeichnest (PK / <u>unterstrichen</u> / <strong>fett</strong>).<br>
+           <strong>4.</strong> die Beziehung bestimmst:<br>
+           &emsp;&emsp;<strong>1:n</strong> → Der PK der 1-Seite wird als Fremdschlüssel (FK) in die Tabelle der n-Seite aufgenommen.<br>
+           &emsp;&emsp;<strong>n:m</strong> → eigene Zwischentabelle mit beiden PKs als FKs.<br>
+           <strong>5.</strong> jedem Attribut einen Datentyp zuweist; FK und zugehöriger PK haben denselben Datentyp.</p>
       </div>
             <div class="subphase-next" id="ue-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Geht das auch ohne Zeichnung? ↓</button></div>
     </div>
