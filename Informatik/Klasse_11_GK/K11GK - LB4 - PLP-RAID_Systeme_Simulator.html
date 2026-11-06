@@ -589,6 +589,13 @@ img{max-width:100%;height:auto;}
 .tgl-b{font-size:var(--fs-lg);font-weight:800;width:2.2em;height:1.9em;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;color:var(--text-2);}
 .tgl-b.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 .tgl.ok{outline:2.5px solid var(--ok);} .tgl.err{outline:2.5px solid var(--err);}
+.callout-merke > div{flex:1;min-width:0;}
+.callout-merke p{margin-bottom:6px;color:var(--text-2);}
+.callout-merke p:last-child{margin-bottom:0;}
+.callout-merke .tbl{background:var(--surface);margin-bottom:0;}
+.merke-titel{color:var(--text) !important;}
+.callout-merke .tbl tr > th:first-child{white-space:nowrap;}
+@media print{ .callout-merke{break-inside:avoid;} }
 /* >>> RESET-KNOPF-CSS */
 /* Lehrkraft-Werkzeuge in der Lehrermodus-Leiste (nur bei aktivem Lehrermodus sichtbar) */
 .teachbar-tool{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:var(--surface);color:#33475B;
@@ -709,11 +716,11 @@ img{max-width:100%;height:auto;}
         <div class="quiz-fb" id="qfb-q0"></div>
       </div>
 
-      <div class="hefter-box">
-        <div class="hefter-label">📓 Heftereintrag — Vom Zeichen zum Bit</div>
+      <div class="callout callout-merke">💡 <div>
+        <p class="merke-titel"><strong>Merke: Vom Zeichen zum Bit</strong></p>
         <p><strong>ASCII:</strong> Zeichentabelle, die jedem Zeichen eine Zahl von 0 bis 127 zuordnet (z.&nbsp;B. A = 65).</p>
         <p><strong>Byte:</strong> 8 Bit. Ein ASCII-Zeichen belegt ein Byte, z.&nbsp;B. A = 0100&#8201;0001.</p>
-      </div>
+      </div></div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Was passiert, wenn mehrere Platten zusammenarbeiten? → Teil 1</button></div>
     </div>
   </div>
@@ -845,11 +852,11 @@ img{max-width:100%;height:auto;}
   <div class="gated" hidden>
   <div class="prog" data-phase="2"></div>
   <div class="card">
-    <div class="hefter-box">
-      <div class="hefter-label">📓 Heftereintrag — RAID 0 und RAID 1</div>
+    <div class="callout callout-merke">💡 <div>
+      <p class="merke-titel"><strong>Merke: RAID 0 und RAID 1</strong></p>
       <p><strong>RAID 0 (Striping):</strong> Die Daten werden in Blöcke aufgeteilt und abwechselnd auf die Platten geschrieben. <em>Vorteil:</em> schnell, volle Kapazität. <em>Nachteil:</em> keine Redundanz – fällt eine Platte aus, sind alle Daten verloren.</p>
       <p><strong>RAID 1 (Mirroring):</strong> Die Daten werden auf alle Platten gespiegelt. <em>Vorteil:</em> hohe Verfügbarkeit – die Daten bleiben erhalten, solange eine Platte intakt ist. <em>Nachteil:</em> nur die Kapazität einer Platte nutzbar → teuer.</p>
-    </div>
+    </div></div>
     <div class="leitfrage">❓ RAID 0 ist günstig, aber unsicher. RAID 1 ist sicher, aber teuer. Geht das sicher <strong>und</strong> günstig?</div>
     <p>Die Idee dafür steckt in einer Schaltung, die ihr aus jedem Treppenhaus kennt.</p>
 
@@ -1154,13 +1161,13 @@ img{max-width:100%;height:auto;}
   <div class="gated" hidden>
   <div class="prog" data-phase="4"></div>
   <div class="card">
-    <div class="hefter-box">
-      <div class="hefter-label">📓 Heftereintrag — RAID 5 (Striping mit verteilter Parität)</div>
+    <div class="callout callout-merke">💡 <div>
+      <p class="merke-titel"><strong>Merke: RAID 5 (Striping mit verteilter Parität)</strong></p>
       <p>Die Paritätsblöcke sind das <strong>XOR</strong> aller Datenblöcke eines Streifens: P = D<sub>1</sub> ⊕ D<sub>2</sub> ⊕ …</p>
       <p>Die Parität <strong>wandert</strong> über alle Platten, damit keine Platte zum Flaschenhals wird.</p>
       <p><strong>Eine</strong> Platte darf ausfallen: Der fehlende Block ist das XOR aller übrigen Blöcke inklusive Parität.</p>
       <p>Nutzbar sind (<i>n</i> − 1) von <i>n</i> Platten.</p>
-    </div>
+    </div></div>
     <h2>Teil 4 – Welches RAID für die Abizeitung?</h2>
 
     <div class="ex">
@@ -1261,15 +1268,15 @@ img{max-width:100%;height:auto;}
   <div class="gated" hidden>
   <div class="prog" data-phase="5"></div>
   <div class="card">
-    <div class="hefter-box">
-      <div class="hefter-label">📓 Heftereintrag — RAID im Vergleich (5 Platten à 5&nbsp;TB)</div>
+    <div class="callout callout-merke">💡 <div>
+      <p class="merke-titel"><strong>Merke: RAID im Vergleich (5 Platten à 5&nbsp;TB)</strong></p>
       <table class="tbl">
         <tr><th></th><th>Nutzdaten</th><th>verkraftbare Ausfälle</th><th>Speichern</th><th>Preis pro TB</th></tr>
         <tr><th>RAID 0</th><td>25&nbsp;TB (<i>n</i> · <i>c</i>)</td><td>0</td><td>schnell</td><td>günstig</td></tr>
         <tr><th>RAID 1</th><td>5&nbsp;TB (<i>c</i>)</td><td>4</td><td>wie 1 Platte</td><td>teuer</td></tr>
         <tr><th>RAID 5</th><td>20&nbsp;TB ((<i>n</i> − 1) · <i>c</i>)</td><td>1</td><td>schnell, Schreiben etwas langsamer (Parität)</td><td>mittel</td></tr>
       </table>
-    </div>
+    </div></div>
     <h2>Teil 5 – Daten retten</h2>
     <p><strong>Pflicht:</strong> Aufgaben 5.1 und 5.2. <strong>Danach:</strong> Wählt aus den Aufgaben 5.3 bis 5.6. Kontrolliert eure Ergebnisse jeweils mit „Prüfen“.</p>
 
@@ -1478,11 +1485,11 @@ img{max-width:100%;height:auto;}
     </div>
 
     <div class="subphase" id="ph6-sub-2">
-      <div class="hefter-box">
-        <div class="hefter-label">📓 Heftereintrag — RAID ist kein Backup</div>
+      <div class="callout callout-merke">💡 <div>
+        <p class="merke-titel"><strong>Merke: RAID ist kein Backup</strong></p>
         <p><strong>RAID</strong> schützt nur vor dem Ausfall von Hardware – nicht vor Datenverlust durch Löschen, Schadsoftware, Brand oder Diebstahl. Dasselbe gilt für die Synchronisation in eine Cloud.</p>
         <p><strong>3-2-1-Regel:</strong> 3 Kopien der Daten, auf 2 verschiedenen Medien, davon 1 Kopie außer Haus.</p>
-      </div>
+      </div></div>
       <div class="ex">
         <p><strong>Aufgabe 6.2 – Beratungsbrief:</strong> Schreibt dem Abi-Komitee einen kurzen Brief (4–7 Sätze).</p>
         <div class="check-list">
@@ -1546,7 +1553,6 @@ img{max-width:100%;height:auto;}
           <div class="acc-body"><div class="acc-body-inner">RAID schützt vor Hardwareausfall, nicht vor Löschen, Schadsoftware oder Brand. Sichert nach der 3-2-1-Regel.</div></div>
         </div>
       </div>
-      <button class="btn btn-ghost btn-sm" id="hefter-all">📋 Gesamten Hefter übernehmen</button>
     </div>
   </div>
   </div>
@@ -1834,7 +1840,7 @@ function hsTick(box){
 function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
 
 /* ---------- Init ---------- */
-function initSeite(){ initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); }
+function initSeite(){ initSubReveal(); initPredicts(); /* initHefter() entfällt: kein „in den Hefter übernehmen“ */ initHS(); initTeachbar(); initHilfe(); }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
 
 /* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
@@ -2086,7 +2092,7 @@ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded
 /* ================= RAID-Simulator (Verfügbarkeit, PLP-Fassung) ================= */
 var RAID_MAX = 12;
 var RAID = {
-  text: 'Abizeitung', convSel: 0,
+  text: 'Abizeitung', conv: 'Abizeitung', convSel: 0,   /* text = Simulatoren (Teil 1 + 3), conv = Einstieg */
   st: {
     0: {n:2, bs:1, dead:[], sel:0},
     1: {n:2, bs:1, dead:[], sel:0},
@@ -2111,23 +2117,32 @@ function raidClean(t){
   }
   return {t:out, rep:rep};
 }
+/* Der Einstieg (Umrechner) hat einen eigenen Text. Die Simulatoren in Teil 1 und Teil 3
+   starten immer mit „Abizeitung“ und teilen sich ihren Text untereinander. */
+function txtIsConv(el){ return !!el.closest('#ph0'); }
 function raidInput(el){
-  var r = raidClean(el.value);
+  var r = raidClean(el.value), conv = txtIsConv(el);
   if(r.t !== el.value){ el.value = r.t; }
+  if(conv){
+    RAID.conv = r.t;
+    try{ localStorage.setItem(LH_NS + 'conv_text', r.t); }catch(e){}
+    var w0 = el.closest('.sim').querySelector('.txt-warn'); if(w0) w0.hidden = !r.rep;
+    if(RAID.convSel >= RAID.conv.length) RAID.convSel = 0;
+    convRender(); return;
+  }
   RAID.text = r.t;
-  try{ localStorage.setItem(LH_NS + 'raid_text', r.t); }catch(e){}
-  document.querySelectorAll('.txt-in').forEach(function(i){ if(i !== el) i.value = r.t; });
-  document.querySelectorAll('.txt-warn').forEach(function(w){ w.hidden = !r.rep; });
-  if(RAID.convSel >= RAID.text.length) RAID.convSel = 0;
+  try{ localStorage.setItem(LH_NS + 'sim_text', r.t); }catch(e){}
+  document.querySelectorAll('.txt-in').forEach(function(i){ if(i !== el && !txtIsConv(i)) i.value = r.t; });
+  document.querySelectorAll('.sim[data-level] .txt-warn').forEach(function(w){ w.hidden = !r.rep; });
   RAID.st[5].rec = [];
-  raidRenderAll();
+  [0,1,5].forEach(function(L){ raidRender(L); timeRender(L); });
 }
 function raidRenderAll(){ convRender(); [0,1,5].forEach(function(L){ raidRender(L); timeRender(L); }); }
 
 /* ---------- Umrechner Text → ASCII → Binär ---------- */
 function convRender(){
   var box = document.getElementById('conv-out'); if(!box) return;
-  var B = raidBytes();
+  var B = []; for(var q = 0; q < RAID.conv.length; q++) B.push(RAID.conv.charCodeAt(q));
   if(!B.length){ box.innerHTML = '<p>✏️ Gebt oben einen Text ein.</p>'; return; }
   var h = '<div class="tbl-wrap"><table class="tbl"><tr><th>Nr.</th><th>Zeichen</th><th>ASCII-Code (dezimal)</th><th>Binär (8 Bit = 1 Byte)</th></tr>';
   B.forEach(function(v, i){
@@ -2890,9 +2905,11 @@ function formelCheck(btn){
 
 /* ---------- Start ---------- */
 function raidInit(){
-  try{ var t = localStorage.getItem(LH_NS + 'raid_text'); if(t != null) RAID.text = raidClean(t).t; }catch(e){}
+  try{ var t = localStorage.getItem(LH_NS + 'sim_text'); if(t != null) RAID.text = raidClean(t).t; }catch(e){}
+  try{ var t0 = localStorage.getItem(LH_NS + 'conv_text'); if(t0 != null) RAID.conv = raidClean(t0).t; }catch(e){}
+  try{ localStorage.removeItem(LH_NS + 'raid_text'); }catch(e){}   /* alter gemeinsamer Schlüssel */
   try{ RAID.st[5].own = parseInt(localStorage.getItem(LH_NS + 'werk_own') || '0', 10) || 0; }catch(e){}
-  document.querySelectorAll('.txt-in').forEach(function(i){ i.value = RAID.text; });
+  document.querySelectorAll('.txt-in').forEach(function(i){ i.value = txtIsConv(i) ? RAID.conv : RAID.text; });
   raidRenderAll(); tRender(); smallRender(); obsRender(); asciiInit(); briefInit(); exRestore(); quizRestore(); gateRefresh(); progUpdate();
 }
 if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', raidInit); } else { raidInit(); }

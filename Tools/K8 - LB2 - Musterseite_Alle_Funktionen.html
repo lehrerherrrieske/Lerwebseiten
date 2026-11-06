@@ -380,6 +380,30 @@ img{max-width:100%;height:auto;}
 .hefter-box table{border-collapse:collapse;margin:6px 0;} .hefter-box td{border:1px solid var(--border);padding:5px 10px;background:var(--surface);}
 .fc-card{width:260px;font-size:var(--fs-h2);}
 @media print{.step-content{display:block !important;}}
+/* LH-UEBERSETZEN:start */
+.lh-lang{float:right;display:flex;align-items:center;gap:8px;margin:0 0 8px 16px;
+  font-size:var(--fs-sm);color:var(--text-2);}
+.lh-lang label{font-weight:700;white-space:nowrap;}
+.lh-lang select{font-family:var(--font);font-size:var(--fs-sm);color:var(--text);
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:5px 8px;cursor:pointer;max-width:220px;}
+.lh-lang select:focus-visible{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-light);}
+.lh-lang-hint{flex-basis:100%;max-width:340px;background:var(--color-bg-warm);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 10px;
+  color:var(--text);font-size:var(--fs-sm);}
+@media (max-width:640px){.lh-lang{float:none;justify-content:flex-start;margin:0 0 10px 0;flex-wrap:wrap;}}
+@media print{.lh-lang{display:none !important;}}
+/* Rechts-nach-links (Arabisch u. a.): Text rechtsbündig, Mathematik bleibt LTR */
+html.translated-rtl body,html.lh-rtl body{direction:rtl;}
+html.translated-rtl .lh-lang,html.lh-rtl .lh-lang{float:left;margin:0 16px 8px 0;}
+html.translated-rtl [translate="no"],html.lh-rtl [translate="no"],
+html.translated-rtl input,html.lh-rtl input,html.translated-rtl textarea,html.lh-rtl textarea{
+  direction:ltr;unicode-bidi:isolate;}
+html.translated-rtl .lh-lang,html.lh-rtl .lh-lang{direction:ltr;}
+/* Zeilen mit Eingabefeld sind Formeln (R = [__] Ω) und laufen weiter links-nach-rechts */
+html.translated-rtl :is(p,div,li):has(> input),html.lh-rtl :is(p,div,li):has(> input){direction:ltr;text-align:left;}
+/* LH-UEBERSETZEN:end */
 </style>
 </head>
 <body>
@@ -398,6 +422,20 @@ img{max-width:100%;height:auto;}
   </div>
 
   <header class="pagehead">
+    <!-- LH-UEBERSETZEN:start -->
+    <div class="lh-lang" translate="no">
+      <label for="lh-lang-sel">🌐 Übersetzen</label>
+      <select id="lh-lang-sel" onchange="lhTranslate(this.value)" aria-label="Seite in eine andere Sprache übersetzen">
+      <option value="">Sprache wählen …</option>
+      <option value="es" lang="es">Español · Spanisch</option>
+      <option value="so" lang="so">Soomaali · Somali</option>
+      <option value="ru" lang="ru">Русский · Russisch</option>
+      <option value="uk" lang="uk">Українська · Ukrainisch</option>
+      <option value="ar" lang="ar">العربية · Arabisch</option>
+      </select>
+      <span class="lh-lang-hint" id="lh-lang-hint" role="status" hidden></span>
+    </div>
+    <!-- LH-UEBERSETZEN:end -->
     <div class="eyebrow">Klasse 8 · LB2</div>
     <h1>Musterseite: Alle Funktionen der Lernseiten</h1>
     <div class="goal">🎯 Die Lernenden berechnen den Widerstand eines Bauteils, indem sie Spannung und Stromstärke in das Ohmsche Gesetz einsetzen.</div>
@@ -937,7 +975,7 @@ function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
   let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
   const fb=btn.parentElement.querySelector('.grp-fb');
   if(fb){ fb.textContent=ok+' von '+spec.length+' richtig.'; fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
-  solBtnShow(btn);
+  if(ok===spec.length) solBtnShow(btn);   /* Lösungsweg erst nach richtiger Antwort */
   return ok===spec.length;
 }
 function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
@@ -1363,5 +1401,84 @@ Object.assign(quizFeedback,{
           hint:'Setze ein Beispiel in <i>I</i> = <span class="frac"><span class="fn"><i>U</i></span><span class="fd"><i>R</i></span></span> ein und verdopple <i>U</i>.'}
 });
 </script>
+<script></script>
+<script></script>
+<script></script>
+<script>/* LH-UEBERSETZEN:start */
+(function(){
+  var RTL = ["ar", "fa", "he", "ps", "ur"];
+  /* Was nie übersetzt werden darf: Mathematik, Code, Gitter und Wort-Kärtchen der Bausteine,
+     Lehrermodus-Leiste und Urheber-Fußzeile. */
+  var SCHUTZ = '.frac,.formula,.math,code,pre,kbd,.cw-grid,.ws-grid,.ws-words,.dtw-word,.dtw-gap,'
+             + '.m-chip,.m-drop,.mw,#teachbar,#lh-foot,.lh-foot,#lh-warn,.lh-lang';
+  function schuetze(root){
+    if(!root || root.nodeType !== 1 || root.tagName === 'FONT') return;
+    var liste = [];
+    if(root.matches && root.matches(SCHUTZ + ',i')) liste.push(root);
+    root.querySelectorAll(SCHUTZ + ',i').forEach(function(el){ liste.push(el); });
+    liste.forEach(function(el){
+      /* <i> nur, wenn es ein Formelzeichen ist (1–2 Zeichen wie U, I, R, Δt) */
+      if(el.tagName === 'I' && (el.textContent || '').trim().length > 2) return;
+      if(el.getAttribute('translate') !== 'no'){ el.setAttribute('translate', 'no'); el.classList.add('notranslate'); }
+    });
+  }
+  schuetze(document.body);
+  try{
+    new MutationObserver(function(ms){
+      ms.forEach(function(m){ m.addedNodes.forEach(schuetze); });
+    }).observe(document.body, {childList:true, subtree:true});
+  }catch(e){}
+
+  var host = location.hostname;
+  var aufProxy = /\.translate\.goog$/.test(host);
+
+  /* https://name-github-io.translate.goog/pfad?_x_tr_tl=uk  ->  https://name.github.io/pfad */
+  function originalUrl(href){
+    var u = new URL(href);
+    if(/\.translate\.goog$/.test(u.hostname)){
+      var h = u.hostname.replace(/\.translate\.goog$/, '').replace(/--/g, '\u0000').replace(/-/g, '.').replace(/\u0000/g, '-');
+      u.hostname = h;
+      Array.from(u.searchParams.keys()).forEach(function(k){ if(/^_x_tr_/.test(k)) u.searchParams.delete(k); });
+    }
+    return u.toString();
+  }
+  function zielUrl(code, href){
+    if(code === 'de') return originalUrl(href);
+    var u = new URL(href);
+    if(/\.translate\.goog$/.test(u.hostname)){ u.searchParams.set('_x_tr_tl', code); u.searchParams.set('_x_tr_hl', code); return u.toString(); }
+    return 'https://translate.google.com/translate?sl=de&tl=' + code + '&hl=' + code + '&u=' + encodeURIComponent(href);
+  }
+  function lokal(){
+    return !/^https?:$/.test(location.protocol) || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(host) || /\.(localhost|test)$/.test(host);
+  }
+  window.lhUebersetzenUrl = zielUrl;   /* für Tests */
+  window.lhOriginalUrl = originalUrl;
+
+  window.lhTranslate = function(code){
+    var sel = document.getElementById('lh-lang-sel'), hint = document.getElementById('lh-lang-hint');
+    if(!code) return;
+    if(lokal()){
+      if(hint){
+        hint.textContent = 'Die Übersetzung per Knopf klappt nur, wenn die Seite online geöffnet ist. '
+          + 'Hier geht es so: Rechtsklick auf die Seite → „Übersetzen in …“.';
+        hint.hidden = false;
+      }
+      if(sel) sel.value = '';
+      return;
+    }
+    location.href = zielUrl(code, location.href);
+  };
+
+  /* Läuft die Seite schon über den Übersetzer: Auswahl setzen, „Deutsch · Original“ anbieten */
+  var sel = document.getElementById('lh-lang-sel');
+  if(aufProxy && sel){
+    var tl = new URL(location.href).searchParams.get('_x_tr_tl') || '';
+    var o = document.createElement('option'); o.value = 'de'; o.textContent = 'Deutsch · Original';
+    sel.insertBefore(o, sel.options[1] || null);
+    sel.value = tl;
+    if(RTL.indexOf(tl) >= 0) document.documentElement.classList.add('lh-rtl');
+  }
+})();
+/* LH-UEBERSETZEN:end */</script>
 </body>
 </html>
