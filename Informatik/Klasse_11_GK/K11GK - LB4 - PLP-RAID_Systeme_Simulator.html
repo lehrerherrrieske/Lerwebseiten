@@ -589,6 +589,17 @@ img{max-width:100%;height:auto;}
 .tgl-b{font-size:var(--fs-lg);font-weight:800;width:2.2em;height:1.9em;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;color:var(--text-2);}
 .tgl-b.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 .tgl.ok{outline:2.5px solid var(--ok);} .tgl.err{outline:2.5px solid var(--err);}
+/* >>> RESET-KNOPF-CSS */
+/* Lehrkraft-Werkzeuge in der Lehrermodus-Leiste (nur bei aktivem Lehrermodus sichtbar) */
+.teachbar-tool{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:var(--surface);color:#33475B;
+  border:1.5px solid #33475B;border-radius:var(--radius-full);padding:5px 14px;cursor:pointer;}
+.teachbar-tool:hover{background:var(--surface-2);}
+.teachbar-danger{color:var(--err);border-color:var(--err-b);}
+.teachbar-danger:hover{background:var(--err-bg);}
+.reset-info{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;max-width:min(560px,92vw);
+  background:var(--ok-bg);border:1.5px solid var(--ok-b);color:#166534;border-radius:var(--radius);
+  padding:10px 16px;box-shadow:var(--shadow-md);font-weight:600;text-align:center;}
+@media print{ .teachbar-tool,.reset-info{display:none !important;} }
 </style>
 </head>
 <body>
@@ -600,6 +611,7 @@ img{max-width:100%;height:auto;}
            onkeydown="if(event.key==='Enter'){teachActivate();}">
     <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
     <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <button class="teachbar-tool teachbar-danger" id="teach-reset-btn" onclick="teachResetAll()" hidden title="Alle Fortschritte dieser Seite in diesem Browser löschen">🗑️ Fortschritt zurücksetzen</button>
     <span class="teachbar-status" id="teachbar-status">inaktiv</span>
   </div>
   <div class="lehrer-only" hidden>
@@ -2884,6 +2896,53 @@ function raidInit(){
   raidRenderAll(); tRender(); smallRender(); obsRender(); asciiInit(); briefInit(); exRestore(); quizRestore(); gateRefresh(); progUpdate();
 }
 if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', raidInit); } else { raidInit(); }
+/* >>> RESET-KNOPF */
+/* ---------- 🗑️ Fortschritt zurücksetzen (Standard auf jeder Lern-HTML) ----------
+   Nur im Lehrermodus sichtbar. Löscht nach Rückfrage ALLES, was diese Seite in diesem
+   Browser gespeichert hat: Eingaben, Häkchen, Quiz-Ergebnisse, aufgedeckte Teile,
+   freigeschaltete Teile/Kapitel, Vermutungen, Texte, Hilfe-Timer, Lehrermodus.
+   Erkannt wird alles über die Kennnummer im Speicher-Schlüssel (LH_NS) – andere
+   Lernseiten unter derselben Domain bleiben unberührt. Danach wird neu geladen.
+   Die Seite selbst nutzt keine Cookies; vorsorglich werden Cookies mit der
+   Kennnummer im Namen ebenfalls gelöscht. */
+function teachResetAll(){
+  if(!hsTeach()) return;
+  if(!confirm('Alle Fortschritte dieser Lernseite in diesem Browser löschen?\n\n'+
+    'Gelöscht werden Eingaben, Lösungen, Häkchen, aufgedeckte und freigeschaltete Teile, '+
+    'Notizen, Texte und Hilfe-Timer. Der Lehrermodus wird beendet.\n\n'+
+    'Das lässt sich nicht rückgängig machen.')) return;
+  var ns=(typeof LH_NS==='string')?LH_NS:'';
+  var gate=(typeof GATE_NS==='string')?GATE_NS:'';
+  /* ohne Kennnummer nur die bekannten Schlüssel der Engine – nie den ganzen Speicher der Domain */
+  var alt=/^(subreveal_ph|predict_|hs_|hilfe_|teachmode|gate_)/;
+  function trifft(k){ if(!k) return false; if(ns) return k.indexOf(ns)>=0; if(gate && k.indexOf(gate)===0) return true; return alt.test(k); }
+  [window.localStorage, window.sessionStorage].forEach(function(st){
+    try{ var del=[]; for(var i=0;i<st.length;i++){ var k=st.key(i); if(trifft(k)) del.push(k); }
+      del.forEach(function(k){ st.removeItem(k); }); }catch(e){}
+  });
+  try{ if(ns) document.cookie.split(';').forEach(function(c){ var n=c.split('=')[0].trim();
+    if(n && n.indexOf(ns)>=0) document.cookie=n+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'; }); }catch(e){}
+  try{ sessionStorage.setItem(ns+'reset_info','1'); }catch(e){}
+  location.reload();
+}
+function teachResetInfo(){
+  var ns=(typeof LH_NS==='string')?LH_NS:'', f=null;
+  try{ f=sessionStorage.getItem(ns+'reset_info'); sessionStorage.removeItem(ns+'reset_info'); }catch(e){}
+  if(!f) return;
+  var d=document.createElement('div'); d.className='reset-info'; d.setAttribute('role','status');
+  d.textContent='✅ Alle Fortschritte dieser Seite wurden gelöscht.';
+  document.body.appendChild(d); setTimeout(function(){ d.remove(); },5000);
+}
+(function(){
+  var base=teachSetUI;
+  teachSetUI=function(active){ base(active);
+    var b=document.getElementById('teach-reset-btn'); if(b) b.hidden=!active; };
+  function start(){ var b=document.getElementById('teach-reset-btn'); if(b) b.hidden=!hsTeach(); teachResetInfo(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+/* Freischalt-Modus: der alte Teil-Reset wird durch den vollständigen ersetzt */
+if(typeof teachLernappReset==='function'){ teachLernappReset=teachResetAll; }
+/* <<< RESET-KNOPF */
 </script>
 </body>
 </html>
