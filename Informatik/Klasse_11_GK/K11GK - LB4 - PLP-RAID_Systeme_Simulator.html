@@ -556,6 +556,39 @@ img{max-width:100%;height:auto;}
 .brief-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);padding:12px 16px;margin:12px 0;background:var(--surface);}
 .brief-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;margin:6px 0;resize:vertical;}
 .brief-view{white-space:pre-wrap;background:var(--surface-2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:6px 0;}
+.prog{position:sticky;top:0;z-index:30;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;margin:0 0 14px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.prog-in{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;}
+.prog-lbl{font-weight:700;color:var(--text);}
+.prog-bar{flex:1 1 12em;height:.9em;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
+.prog-bar > span{display:block;height:100%;background:var(--accent);border-radius:var(--radius-full);transition:width .4s ease;}
+.prog b{font-family:var(--mono);font-size:var(--fs-sm);}
+.prog-list{margin-top:6px;color:var(--text-2);}
+.prog.full{border-color:var(--ok);background:var(--ok-bg);}
+.prog.full .prog-bar > span{background:var(--ok);}
+.pnav{position:relative;}
+.pnav-bar{position:absolute;left:10px;right:10px;bottom:4px;height:4px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
+.pnav-bar > span{display:block;height:100%;background:var(--accent);transition:width .4s ease;}
+.pnav.pdone .pnav-bar > span{background:var(--ok);}
+@media print{ .prog,.pnav-bar{display:none;} }
+.ex.star{border:2px solid #6B4A7A;background:#F7F1F9;border-style:solid;}
+.star-label{display:inline-block;background:#6B4A7A;color:#fff;font-weight:800;font-size:var(--fs-sm);letter-spacing:.02em;padding:3px 12px;border-radius:var(--radius-full);margin-bottom:8px;}
+.ex.star.star-inner{margin-top:14px;}
+.star-mini{border:2px solid #6B4A7A;background:#F7F1F9;border-radius:var(--radius);padding:8px 12px;margin:10px 0;}
+.star-mini .star-label{margin:0 8px 0 0;}
+.th-main{display:block;}
+.th-q{display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text-2);margin-top:4px;line-height:1.35;}
+.prog-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.prog-go{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;color:var(--accent-hover);background:var(--accent-light);border:1.5px solid var(--accent-muted);border-radius:var(--radius-full);padding:3px 10px;cursor:pointer;}
+.prog-go:hover{background:var(--accent);color:#fff;}
+.flash{animation:flash 2.6s ease;}
+@keyframes flash{0%,70%{outline:4px solid #F2A900;outline-offset:4px;box-shadow:0 0 0 10px rgba(242,169,0,.25);}100%{outline:4px solid transparent;outline-offset:4px;box-shadow:none;}}
+.formel-in{width:100%;max-width:36em;font-family:var(--mono);}
+.formel-keys{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px;}
+.formel-keys .btn{font-family:var(--mono);min-width:3em;}
+.tgl{display:inline-flex;gap:6px;border-radius:10px;padding:2px;}
+.tgl-b{font-size:var(--fs-lg);font-weight:800;width:2.2em;height:1.9em;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;color:var(--text-2);}
+.tgl-b.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tgl.ok{outline:2.5px solid var(--ok);} .tgl.err{outline:2.5px solid var(--err);}
 </style>
 </head>
 <body>
@@ -576,7 +609,6 @@ img{max-width:100%;height:auto;}
   <header class="pagehead">
     <div class="eyebrow">Klasse 11GK · LB4</div>
     <h1>Gewährleistung von Verfügbarkeit – RAID⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​‌​‌​​‌​‌‌​‌​‌​​​​​‌​​‌‌​‌​​​‌​​​‌​‌​​‌‌​​‌‌​​‌‌​​​​​‌​​​​‌​⁠</h1>
-    <div class="goal">🎯 Die Lernenden erläutern, wie RAID-Systeme durch Redundanz die Verfügbarkeit von Daten gewährleisten, indem sie das Verhalten von RAID 0 und 1 beim Plattenausfall beobachten, die Rückrechenbarkeit der XOR-Verknüpfung entdecken und damit ausgefallene Daten eines RAID 5 rekonstruieren.⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​​​​‌‌​‌​‌​​‌​‌‌​‌​‌​​​​​‌​​‌‌​‌​​​‌​​​‌​‌​​‌‌​​‌‌​​‌‌​​​​​‌​​​​‌​⁠</div>
   </header>
 
   <nav class="phase-nav" id="phase-nav">
@@ -590,7 +622,16 @@ img{max-width:100%;height:auto;}
   </nav>
 
 <!-- ======================= EINSTIEG ======================= -->
-<section class="phase on" id="ph0">
+<section class="phase on" id="ph0" data-gate="0">
+  <div class="card gate-card">
+    <h2>🔒 Start – Die Abizeitung in Gefahr</h2>
+    <p>Diese Lernseite wird im Unterricht freigeschaltet. Gebt das Start-Passwort ein, das an der Tafel steht.</p>
+    <p><input class="inp gate-pw" type="text" autocomplete="off" spellcheck="false" aria-label="Start-Passwort" onkeydown="if(event.key==='Enter')gateTry(0,this)">
+      <button class="btn btn-primary btn-sm" onclick="gateTry(0,this)">🔓 Freischalten</button></p>
+    <div class="fb gate-fb"></div>
+  </div>
+  <div class="gated" hidden>
+  <div class="prog" data-phase="0"></div>
   <div class="card">
     <h2>Die Abizeitung in Gefahr</h2>
     <div class="callout callout-info">📰 <span><strong>Zwei Wochen vor der Druckabgabe.</strong> Alle Fotos, Steckbriefe und Layouts der Abizeitung liegen auf <strong>einer</strong> externen Festplatte. Seit heute Morgen macht sie merkwürdige Klickgeräusche …</span></div>
@@ -664,6 +705,7 @@ img{max-width:100%;height:auto;}
       <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)">Was passiert, wenn mehrere Platten zusammenarbeiten? → Teil 1</button></div>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- ======================= TEIL 1: RAID 0 & 1 ======================= -->
@@ -676,6 +718,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="1"></div>
   <div class="card">
     <h2>Teil 1 – Zwei Platten, zwei Ideen</h2>
     <p>Ihr bekommt zwei RAID-Systeme mit je zwei oder mehr Festplatten. Niemand erklärt euch, wie sie arbeiten – das findet ihr selbst heraus. Arbeitet zu zweit und haltet eure Beobachtungen fest.</p>
@@ -788,6 +831,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="2"></div>
   <div class="card">
     <div class="hefter-box">
       <div class="hefter-label">📓 Heftereintrag — RAID 0 und RAID 1</div>
@@ -836,21 +880,32 @@ img{max-width:100%;height:auto;}
       </div>
 
       <div class="ex star">
-        <p><strong>★ Aufgabe 2.2:</strong> Aus LB&nbsp;1 kennt ihr AND (∧), OR (∨) und NOT (¬). Welcher Ausdruck beschreibt die Lampe?</p>
-        <div class="quiz-item">
-          <div class="quiz-opts">
-            <button class="quiz-btn" onclick="quizCheck('q2z', this, 'w')">A ∨ B</button>
-            <button class="quiz-btn" onclick="quizCheck('q2z', this, 'c')">(A ∧ ¬B) ∨ (¬A ∧ B)</button>
-            <button class="quiz-btn" onclick="quizCheck('q2z', this, 'w')">(A ∧ B) ∨ (¬A ∧ ¬B)</button>
-          </div>
-          <div class="quiz-fb" id="qfb-q2z"></div>
+        <div class="star-label">★ Expertenaufgabe · freiwillig</div>
+        <p><strong>Aufgabe 2.2:</strong> Aus LB&nbsp;1 kennt ihr NICHT (NOT), UND (AND) und ODER (OR). Stellt selbst einen Ausdruck auf, der genau dann 1 liefert, wenn die Lampe leuchtet. Erlaubt sind nur <strong>A</strong>, <strong>B</strong>, <strong>NOT</strong>, <strong>AND</strong>, <strong>OR</strong> und Klammern.</p>
+        <p><input class="inp formel-in" id="xor-f" autocomplete="off" spellcheck="false" placeholder="Ausdruck mit A, B, NOT, AND, OR …" aria-label="Ausdruck für die Lampe" onkeydown="if(event.key==='Enter')formelCheck(this)"></p>
+        <div class="formel-keys" role="group" aria-label="Bausteine einfügen">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('A')">A</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('B')">B</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('NOT')">NOT</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('AND')">AND</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('OR')">OR</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd('(')">(</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelAdd(')')">)</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelBack()">⌫</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="formelClear()">Leeren</button>
         </div>
-        <div class="hs" id="hs-q2z">
-          <div data-tipp>Setzt für jede Zeile eurer Tabelle A und B in die Ausdrücke ein.</div>
-          <div data-tipp>Prüft besonders die Zeile A = 1, B = 1. Welche Ausdrücke liefern dort 0?</div>
-          <div data-tipp>Der gesuchte Ausdruck ist 1, wenn „A an und B aus“ oder „A aus und B an“.</div>
-          <div data-muster><p><strong>(A ∧ ¬B) ∨ (¬A ∧ B)</strong>: Der erste Teil ist 1 bei A = 1, B = 0, der zweite bei A = 0, B = 1. A ∨ B wäre bei 1&nbsp;1 auch 1, der dritte Ausdruck ist genau das Gegenteil.</p></div>
+        <p><button class="btn btn-primary btn-sm" onclick="formelCheck(this)">✓ Prüfen</button>
+          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-xf')">Lösungsweg zeigen</button></p>
+        <div class="fb grp-fb"></div>
+        <div id="xor-tt"></div>
+        <div class="sol" id="sol-xf">Die Lampe leuchtet bei A = 1 und B = 0 <em>oder</em> bei A = 0 und B = 1: <strong>(A AND NOT B) OR (NOT A AND B)</strong>, also (A ∧ ¬B) ∨ (¬A ∧ B). Gleichwertig ist z.&nbsp;B. (A OR B) AND NOT (A AND B).</div>
+        <div class="hs" id="hs-xf">
+          <div data-tipp>Schaut in eure Tabelle aus 2.1: In welchen Zeilen leuchtet die Lampe?</div>
+          <div data-tipp>Beschreibt jede dieser Zeilen einzeln mit AND und NOT, z.&nbsp;B. „A ist 1 und B ist 0“. Verbindet die Zeilen dann mit OR.</div>
+          <div data-tipp>„A ist 1 und B ist 0“ heißt: A AND NOT B. Wie lautet die zweite Zeile?</div>
+          <div data-muster><p><strong>(A AND NOT B) OR (NOT A AND B)</strong></p><p>Der erste Teil ist 1 bei A = 1, B = 0, der zweite bei A = 0, B = 1. In allen anderen Zeilen sind beide Teile 0.</p></div>
         </div>
+        <div class="callout">🌐 <span><strong>Schaltung bauen:</strong> Baut euren Ausdruck im Online-Editor <a href="https://logigator.com/editor/" target="_blank" rel="noopener">Logigator</a> als Schaltung nach: zwei Schalter als Eingänge A und B, dazu NOT-, AND- und OR-Gatter und eine LED als Lampe. Testet alle vier Schalterstellungen und vergleicht mit eurer Tabelle aus Aufgabe 2.1. <em>(Dafür braucht ihr Internet.)</em></span></div>
       </div>
       <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)">Kann man aus dieser Tabelle mehr herauslesen? ↓</button></div>
     </div>
@@ -903,7 +958,8 @@ img{max-width:100%;height:auto;}
       </div>
 
       <div class="ex star">
-        <p><strong>★ Aufgabe 2.4:</strong> Klappt das auch mit drei Werten? Hier ist P = A ⊕ B ⊕ C. Berechnet C.</p>
+        <div class="star-label">★ Expertenaufgabe · freiwillig</div>
+        <p><strong>Aufgabe 2.4:</strong> Klappt das auch mit drei Werten? Hier ist P = A ⊕ B ⊕ C. Berechnet C.</p>
         <table class="tbl tbl-mini">
           <tr><th>A</th><th>B</th><th>C</th><th>P</th></tr>
           <tr><td>1</td><td>0</td><td><input class="inp inp-bit" id="r-c1" maxlength="1" aria-label="C, Zeile 1"></td><td>1</td></tr>
@@ -939,6 +995,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="3"></div>
   <div class="card">
     <div class="hefter-box">
       <div class="hefter-label">📓 Heftereintrag — XOR</div>
@@ -1041,7 +1098,8 @@ img{max-width:100%;height:auto;}
       </div>
 
       <div class="ex star">
-        <p><strong>★ Aufgabe 3.2:</strong> Warum liegt die Parität nicht immer auf derselben Platte? Testet es mit dem Schreibtest: Die Abizeitung wird überarbeitet, 1200 Fotos werden einzeln geändert.</p>
+        <div class="star-label">★ Expertenaufgabe · freiwillig</div>
+        <p><strong>Aufgabe 3.2:</strong> Warum liegt die Parität nicht immer auf derselben Platte? Testet es mit dem Schreibtest: Die Abizeitung wird überarbeitet, 1200 Fotos werden einzeln geändert.</p>
         <div class="sim" id="small-sim">
           <div class="sim-bar">
             <label>Parität <select id="small-mode" onchange="smallReset()"><option value="rot" selected>wandert über alle Platten</option><option value="fix">liegt immer auf der letzten Platte</option></select></label>
@@ -1082,6 +1140,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="4"></div>
   <div class="card">
     <div class="hefter-box">
       <div class="hefter-label">📓 Heftereintrag — RAID 5 (Striping mit verteilter Parität)</div>
@@ -1150,7 +1209,8 @@ img{max-width:100%;height:auto;}
     </div>
 
     <div class="ex star">
-      <p><strong>★ Aufgabe 4.4:</strong> Wie viel Speicher ist bei <i>n</i> Platten mit je <i>c</i>&nbsp;TB nutzbar? Ordnet zu.</p>
+      <div class="star-label">★ Expertenaufgabe · freiwillig</div>
+        <p><strong>Aufgabe 4.4:</strong> Wie viel Speicher ist bei <i>n</i> Platten mit je <i>c</i>&nbsp;TB nutzbar? Ordnet zu.</p>
       <div class="baustein" data-type="match" id="match-kap">
         <div class="m-pool">
           <span class="m-chip" data-id="k5" onclick="matchSelect(this)">(<i>n</i> − 1) · <i>c</i></span>
@@ -1187,6 +1247,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="5"></div>
   <div class="card">
     <div class="hefter-box">
       <div class="hefter-label">📓 Heftereintrag — RAID im Vergleich (5 Platten à 5&nbsp;TB)</div>
@@ -1313,8 +1374,10 @@ img{max-width:100%;height:auto;}
         <div data-tipp>Spalte 2: 0, 1, ?, 0 mit Parität 0. Wie muss ? sein, damit das XOR der Spalte 0 ergibt?</div>
         <div data-muster><p>Spalte 2: 0 ⊕ 1 ⊕ ? ⊕ 0 = 0 → ? = 1. Spalte 4: 1 ⊕ 0 ⊕ ? ⊕ 1 = 1 → ? = 1. Probe Zeile 3: 1 ⊕ 1 ⊕ 0 ⊕ 1 = 1 ✓</p></div>
       </div>
-      <div class="quiz-item">
-        <div class="quiz-q">★ Welche verlorenen Bits ließen sich auch mit Kreuzparität <em>nicht</em> mehr eindeutig rekonstruieren?</div>
+      <div class="ex star star-inner">
+        <div class="star-label">★ Expertenaufgabe · freiwillig</div>
+              <div class="quiz-item">
+        <div class="quiz-q">Welche verlorenen Bits ließen sich auch mit Kreuzparität <em>nicht</em> mehr eindeutig rekonstruieren?</div>
         <div class="quiz-opts">
           <button class="quiz-btn" onclick="quizCheck('q55', this, 'w')">Zwei Bits in derselben Spalte.</button>
           <button class="quiz-btn" onclick="quizCheck('q55', this, 'w')">Drei Bits in drei verschiedenen Zeilen und Spalten.</button>
@@ -1327,6 +1390,7 @@ img{max-width:100%;height:auto;}
         <div data-tipp>Sucht eine Anordnung, bei der keine einzige Zeile und keine einzige Spalte genau ein fehlendes Bit enthält.</div>
         <div data-tipp>Zeichnet vier Fragezeichen in zwei Zeilen und zwei Spalten.</div>
         <div data-muster><p>Vier Bits an den <strong>Ecken eines Rechtecks</strong>: Jede betroffene Zeile und jede betroffene Spalte enthält zwei Unbekannte – keine Gleichung lässt sich eindeutig lösen.</p></div>
+      </div>
       </div>
     </div>
 
@@ -1364,6 +1428,7 @@ img{max-width:100%;height:auto;}
     <div class="fb gate-fb"></div>
   </div>
   <div class="gated" hidden>
+  <div class="prog" data-phase="6"></div>
   <div class="card">
     <h2>Teil 6 – Hilft RAID immer?</h2>
     <p>Erinnert euch an die Datenpanne vom Stundenanfang. Hätte ein RAID dort geholfen?</p>
@@ -1372,18 +1437,18 @@ img{max-width:100%;height:auto;}
       <span class="substep-label">Teile:</span>
       <button class="substep-chip active" onclick="subGo(6,1)">1 · Gefahren</button>
       <button class="substep-chip locked" onclick="subGo(6,2)">2 · Beratungsbrief</button>
-      <button class="substep-chip locked" onclick="subGo(6,3)">3 · Exit-Ticket</button>
+      <button class="substep-chip locked" onclick="subGo(6,3)">3 · Abschluss</button>
     </div>
 
     <div class="subphase on" id="ph6-sub-1">
       <div class="ex">
-        <p><strong>Aufgabe 6.1:</strong> Wogegen schützt was? Wählt ✓ (schützt) oder ✗ (schützt nicht).</p>
+        <p><strong>Aufgabe 6.1:</strong> Wogegen schützt was? Klickt jeweils ✓ (schützt) oder ✗ (schützt nicht).</p>
         <div class="tbl-wrap"><table class="tbl tbl-check">
           <tr><th>Gefahr</th><th>RAID 1 / RAID 5</th><th>Synchronisation in die Cloud</th><th>Backup nach 3-2-1-Regel*</th></tr>
-          <tr><th>Festplatte defekt</th><td><select id="g-11" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-12" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-13" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td></tr>
-          <tr><th>Ordner versehentlich gelöscht</th><td><select id="g-21" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-22" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-23" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td></tr>
-          <tr><th>Schadsoftware verschlüsselt alle Dateien</th><td><select id="g-31" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-32" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-33" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td></tr>
-          <tr><th>Brand oder Diebstahl</th><td><select id="g-41" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-42" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td><td><select id="g-43" class="sel"><option value="">–</option><option>✓</option><option>✗</option></select></td></tr>
+          <tr><th>Festplatte defekt</th><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-11"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-12"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-13"></td></tr>
+          <tr><th>Ordner versehentlich gelöscht</th><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-21"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-22"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-23"></td></tr>
+          <tr><th>Schadsoftware verschlüsselt alle Dateien</th><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-31"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-32"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-33"></td></tr>
+          <tr><th>Brand oder Diebstahl</th><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-41"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-42"></td><td><span class="tgl" role="group" aria-label="schützt oder schützt nicht"><button type="button" class="tgl-b" onclick="tglSet(this,'✓')" aria-pressed="false" title="schützt">✓</button><button type="button" class="tgl-b" onclick="tglSet(this,'✗')" aria-pressed="false" title="schützt nicht">✗</button></span><input type="hidden" id="g-43"></td></tr>
         </table></div>
         <p class="sim-howto">* 3-2-1-Regel: 3 Kopien der Daten, auf 2 verschiedenen Medien, davon 1 Kopie außer Haus.</p>
         <p><button class="btn btn-primary btn-sm" onclick="exCheck(this, [['g-11','✓','text'],['g-12','✓','text'],['g-13','✓','text'],['g-21','✗','text'],['g-22','✗','text'],['g-23','✓','text'],['g-31','✗','text'],['g-32','✗','text'],['g-33','✓','text'],['g-41','✗','text'],['g-42','✓','text'],['g-43','✓','text']])">✓ Prüfen</button>
@@ -1436,7 +1501,7 @@ img{max-width:100%;height:auto;}
             </div></div>
           </div>
         </div>
-        <p class="star-note">★ Rechnet mit echten Plattenpreisen: Was kostet eure Lösung?</p>
+        <div class="star-mini"><span class="star-label">★ Expertenaufgabe · freiwillig</span> Rechnet mit echten Plattenpreisen: Was kostet eure Lösung?</div>
         <div class="hs" id="hs-brief">
           <div data-tipp>Beginnt mit eurer Empfehlung aus Teil 4.</div>
           <div data-tipp>Begründet mit Zahlen: nutzbarer Speicher und verkraftbare Ausfälle.</div>
@@ -1448,37 +1513,6 @@ img{max-width:100%;height:auto;}
     </div>
 
     <div class="subphase" id="ph6-sub-3">
-      <h3>🎟️ Exit-Ticket</h3>
-      <div class="ex">
-        <p><strong>1.</strong> Rekonstruiert das fehlende Byte. Platte 1: <span class="mono">0100&#8201;0001</span>, Parität: <span class="mono">0000&#8201;0110</span>, Platte 2 ist ausgefallen.</p>
-        <p>Platte 2: <input class="inp inp-bits" id="x-b" autocomplete="off" spellcheck="false" aria-label="Byte Platte 2"> als Zeichen: <input class="inp inp-ch" id="x-c" maxlength="1" autocomplete="off" aria-label="Zeichen Platte 2">
-          <button class="btn btn-primary btn-sm" onclick="exCheck(this, [['x-b','01000111','bits'],['x-c','G','text']])">✓ Prüfen</button>
-          <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-x')">Lösungsweg zeigen</button></p>
-        <div class="fb grp-fb"></div>
-        <div class="sol" id="sol-x"><span class="mono">0100&#8201;0001 ⊕ 0000&#8201;0110 = 0100&#8201;0111</span> = 64 + 4 + 2 + 1 = 71 = <strong>G</strong>.</div>
-        <div class="hs" id="hs-x">
-          <div data-tipp>Verknüpft Platte 1 und Parität Bit für Bit mit XOR.</div>
-          <div data-tipp>Unterschiedliche Bits ergeben 1, gleiche Bits 0.</div>
-          <div data-tipp>Die beiden Bytes unterscheiden sich an den Stellen mit den Werten 4 und 2.</div>
-          <div data-muster><p class="mono">&nbsp;&nbsp;0100&#8201;0001<br>⊕ 0000&#8201;0110<br>= 0100&#8201;0111</p><p>= 71 → <strong>G</strong>.</p></div>
-        </div>
-      </div>
-      <div class="quiz-item">
-        <div class="quiz-q"><strong>2.</strong> Die Abizeitung liegt jetzt auf einem RAID 5. Sind die Daten damit sicher?</div>
-        <div class="quiz-opts">
-          <button class="quiz-btn" onclick="quizCheck('q6x', this, 'w')">Ja, RAID 5 kann jeden verlorenen Block wiederherstellen.</button>
-          <button class="quiz-btn" onclick="quizCheck('q6x', this, 'c')">Nur vor dem Ausfall einer Platte. Gegen Löschen, Schadsoftware oder Brand braucht es zusätzlich ein Backup.</button>
-          <button class="quiz-btn" onclick="quizCheck('q6x', this, 'w')">Ja, solange höchstens zwei Platten gleichzeitig ausfallen.</button>
-        </div>
-        <div class="quiz-fb" id="qfb-q6x"></div>
-      </div>
-      <div class="hs" id="hs-q6x">
-        <div data-tipp>Schaut noch einmal in eure Tabelle aus Aufgabe 6.1.</div>
-        <div data-tipp>Wie viele Platten darf RAID 5 verlieren?</div>
-        <div data-tipp>Was passiert bei RAID 5 mit einer gelöschten Datei?</div>
-        <div data-muster><p>RAID 5 schützt nur vor dem Ausfall <strong>einer</strong> Platte. Gelöschte, verschlüsselte oder verbrannte Daten holt nur ein Backup zurück.</p></div>
-      </div>
-
       <div class="callout callout-info">🔮 <span><strong>Ausblick:</strong> RAID rettet uns, wenn wir wissen, <em>welche</em> Platte fehlt. Was aber, wenn ein Bit unbemerkt kippt und die Platte einfach weiterläuft? Darum geht es in der nächsten Stunde: <strong>Gewährleistung von Integrität</strong>.</span></div>
 
       <h3>Das habt ihr gelernt</h3>
@@ -2270,7 +2304,7 @@ function werkCheck(){
   if(!ok){ fb.textContent = '❌ Noch nicht richtig. ' + (msg || 'Prüft die Spalten noch einmal Bit für Bit.'); fb.className = 'fb grp-fb err'; return; }
   s.rec.push(s.sel); s.own++;
   try{ localStorage.setItem(LH_NS + 'werk_own', String(s.own)); }catch(e){}
-  raidRender(5); werkStatus();
+  raidRender(5); werkStatus(); progUpdate();
 }
 function werkAuto(){
   var s = RAID.st[5], lay = raidLayout(5);
@@ -2443,7 +2477,7 @@ function tToggle(k){ TS[k] = TS[k] ? 0 : 1; tRender(); }
 /* ---------- Passwortschutz der Themenkomplexe ----------
    Kein Sicherheitsmechanismus, sondern Unterrichtssteuerung: Die Passwörter stehen
    als Prüfsumme im Code; der Lehrermodus öffnet alle Teile. */
-var GATE_H = {1:3298694222, 2:4290089079, 3:1446538720, 4:274425777, 5:1197609551, 6:77446041};
+var GATE_H = {0:2388881730, 1:3298694222, 2:4290089079, 3:1446538720, 4:274425777, 5:1197609551, 6:77446041};
 var GATE_ALL = 932519433;   /* „freie Navigation“: öffnet alle Teile, aber keine Lösungen */
 function gateHash(s){ var x = 0x811c9dc5, b = new TextEncoder().encode(String(s).trim().toLowerCase()); for(var i = 0; i < b.length; i++){ x ^= b[i]; x = Math.imul(x, 0x01000193) >>> 0; } return x >>> 0; }
 function gateIsOpen(n){ if(hsTeach()) return true; try{ return localStorage.getItem(LH_NS + 'gate_all') === '1' || localStorage.getItem(LH_NS + 'gate_' + n) === '1'; }catch(e){ return false; } }
@@ -2487,14 +2521,15 @@ function exCheck(btn, spec){                 /* spec: [[id, soll, 'num'|'bits'|'
       good = raw === String(sp[1]);
       if(!good && raw && raw.toLowerCase() === String(sp[1]).toLowerCase()) msgs.push('Achtet auf Groß- und Kleinschreibung.');
     }
-    el.classList.toggle('ok', good); el.classList.toggle('err', !good);
+    var vis = el.type === 'hidden' ? el.previousElementSibling : el;
+    vis.classList.toggle('ok', good); vis.classList.toggle('err', !good);
     if(good) ok++;
   });
   var all = ok === spec.length, fb = btn.closest('.ex').querySelector('.grp-fb');
   var uniq = msgs.filter(function(m, i){ return msgs.indexOf(m) === i; });
   fb.innerHTML = all ? '✅ Alles richtig!' : '❌ ' + ok + ' von ' + spec.length + ' richtig. ' + (uniq.join(' ') || 'Prüft die rot markierten Felder noch einmal.');
   fb.className = 'fb grp-fb ' + (all ? 'ok' : 'err');
-  if(all) solBtnShow(btn);
+  if(all){ solBtnShow(btn); exSave(spec); }
   return all;
 }
 
@@ -2503,11 +2538,6 @@ quizFeedback['q0'] = {
   ok: '✅ <strong>Richtig!</strong> ASCII kennt nur 128 Zeichen (Codes 0–127) – Umlaute, ß und Emojis gehören nicht dazu. Dafür gibt es größere Codes wie UTF-8.',
   ng: '❌ <strong>Nicht ganz.</strong> Am Simulator liegt es nicht – es liegt an der Zeichentabelle selbst.',
   hint: 'Schaut, wie groß die ASCII-Tabelle ist und ob dort deutsche Sonderzeichen vorkommen.'
-};
-quizFeedback['q2z'] = {
-  ok: '✅ <strong>Richtig!</strong> (A ∧ ¬B) ∨ (¬A ∧ B) ist genau dann 1, wenn A und B verschieden sind.',
-  ng: '❌ <strong>Nicht ganz.</strong> Setzt die Zeile A = 1, B = 1 ein: Dort muss 0 herauskommen, bei 0&nbsp;1 und 1&nbsp;0 aber 1.',
-  hint: 'Prüft jeden Ausdruck mit der Zeile A = 1, B = 1 und mit A = 0, B = 1.'
 };
 quizFeedback['q3z'] = {
   ok: '✅ <strong>Richtig!</strong> Jede Änderung schreibt auch die Parität neu. Liegt sie immer auf derselben Platte, wird diese zum Flaschenhals. Wandert sie, teilen sich alle Platten die Arbeit.',
@@ -2544,21 +2574,16 @@ quizFeedback['q56'] = {
   ng: '❌ <strong>Nicht ganz.</strong> Probiert zwei verschiedene Paare für D1 und D2 aus, die beide zur Parität passen.',
   hint: 'Wie viele Unbekannte, wie viele Gleichungen?'
 };
-quizFeedback['q6x'] = {
-  ok: '✅ <strong>Richtig!</strong> RAID ist kein Backup: Es schützt vor einem Plattenausfall, nicht vor Löschen, Schadsoftware oder Brand.',
-  ng: '❌ <strong>Nicht ganz.</strong> Denkt an eure Tabelle aus Aufgabe 6.1.',
-  hint: 'Was passiert bei RAID 5 mit einer versehentlich gelöschten Datei?'
-};
 
 
 /* ---------- Beobachtungstabelle (eine Tabelle, mehrfach eingeblendet, gespeichert) ---------- */
 var OBS_COLS = [
-  ['vert',   'Verteilung der Daten',                 'Die Zeichen werden …'],
-  ['ausfall','Ausfallwahrscheinlichkeit',            'Die Daten sind weg, wenn …'],
-  ['tempo',  'Geschwindigkeit',                      'im Vergleich zu 1 Platte …'],
-  ['preis',  'Preis pro TB relativ',                 'günstig / teuer …'],
-  ['nutz',   'Nutzdaten bei 5 × 5 TB',               '… TB'],
-  ['x',      'verlustfrei dürfen x Platten ausfallen','x = …']
+  ['vert',   'Verteilung der Daten',                  'Die Zeichen werden …',            'Wie liegen die Zeichen auf den Platten?'],
+  ['ausfall','Ausfallwahrscheinlichkeit',             'Das System fällt aus, wenn …',     'Ab wann ist das gesamte System fehlerhaft?'],
+  ['tempo',  'Geschwindigkeit',                       'z. B. 2:30 min → hoch',           'Speicherzeit laut Simulator in min und Einschätzung: hoch / mittel / niedrig'],
+  ['preis',  'Preis pro TB relativ',                  'günstig / mittel / teuer',        'Wie viel Plattenplatz bezahlt ihr für 1 TB, das ihr wirklich nutzen könnt?'],
+  ['nutz',   'Nutzdaten bei 5 × 5 TB',                '… TB',                            'Wie viele TB sind bei 5 Platten à 5 TB nutzbar?'],
+  ['x',      'verlustfrei dürfen x Platten ausfallen','x = …',                           'Wie viele Platten dürfen gleichzeitig ausfallen, ohne dass Daten verloren gehen?']
 ];
 var OBS_ROWS = {'0':'RAID 0', '1':'RAID 1', '5':'RAID 5'};
 function obsKey(r, c){ return LH_NS + 'obs_' + r + '_' + c; }
@@ -2566,7 +2591,7 @@ function obsGet(r, c){ try{ return localStorage.getItem(obsKey(r, c)) || ''; }ca
 function obsRender(){
   document.querySelectorAll('.obs-tbl').forEach(function(box){
     var rows = (box.dataset.rows || '').split(','), copy = box.dataset.copy === '1';
-    var h = '<div class="tbl-wrap"><table class="tbl obs-table"><tr><th></th>' + OBS_COLS.map(function(c){ return '<th>' + c[1] + '</th>'; }).join('') + '</tr>';
+    var h = '<div class="tbl-wrap"><table class="tbl obs-table"><tr><th></th>' + OBS_COLS.map(function(c){ return '<th><span class="th-main">' + c[1] + '</span><span class="th-q">' + c[3] + '</span></th>'; }).join('') + '</tr>';
     rows.forEach(function(r){
       h += '<tr><th>' + OBS_ROWS[r] + '</th>' + OBS_COLS.map(function(c){
         return '<td><textarea class="obs-in" rows="3" data-r="' + r + '" data-c="' + c[0] + '" placeholder="' + c[2] + '" aria-label="' + OBS_ROWS[r] + ': ' + c[1] + '" oninput="obsInput(this)">' + rEsc(obsGet(r, c[0])) + '</textarea></td>';
@@ -2581,6 +2606,7 @@ function obsInput(el){
   var r = el.dataset.r, c = el.dataset.c;
   try{ localStorage.setItem(obsKey(r, c), el.value); }catch(e){}
   document.querySelectorAll('.obs-in[data-r="' + r + '"][data-c="' + c + '"]').forEach(function(t){ if(t !== el) t.value = el.value; });
+  progUpdate();
 }
 function obsCopy(btn){
   var box = btn.closest('.obs-tbl'), rows = (box.dataset.rows || '').split(','), fb = btn.parentElement.querySelector('.hefter-fb');
@@ -2632,7 +2658,7 @@ function briefLock(on){
   var fb = document.getElementById('brief-fb');
   if(on && !briefText().trim()){ fb.textContent = 'Schreibt zuerst euren Brief.'; return; }
   try{ localStorage.setItem(LH_NS + 'brief_lock', on ? '1' : '0'); }catch(e){}
-  briefUI(); fb.textContent = on ? '✓ gesichert' : '';
+  briefUI(); fb.textContent = on ? '✓ gesichert' : ''; progUpdate();
   if(!on) document.getElementById('brief-in').focus();
 }
 function briefUI(){
@@ -2663,12 +2689,199 @@ function briefInit(){
   briefUI();
 }
 
+
+/* ---------- Fortschritt pro Teil ----------
+   Gezählt werden alle Aufgaben ohne ★. Rechenaufgaben zählen, wenn sie richtig gelöst sind,
+   Quizfragen, wenn sie aufgelöst sind, Beobachtungen, wenn sie festgehalten sind. */
+var PROG = {
+  0: [['ex:a-i','Aufgabe E1'], ['q:q0','Frage zu den Fragezeichen']],
+  1: [['p:poe-t0','Schätzung zur Speicherzeit'], ['obs:0','Beobachtungstabelle: Zeile RAID 0'], ['obs:1','Beobachtungstabelle: Zeile RAID 1'], ['ex:a-c0','Aufgabe 1.2']],
+  2: [['ex:t-00','Aufgabe 2.1'], ['ex:r-a1','Aufgabe 2.3'], ['p:obs-regel','Eure Regel']],
+  3: [['p:obs-p','Beobachtung zur Parität'], ['werk','Einen Streifen selbst retten'], ['p:obs-rek','Erklärung der Rettung'], ['p:obs-zwei','Beobachtung zu zwei Ausfällen'], ['obs:5','Aufgabe 3.1 (Zeile RAID 5)']],
+  4: [['obs:all','Aufgabe 4.1 (Tabelle vollständig)'], ['ex:k-n0','Aufgabe 4.2'], ['q:q4a','Aufgabe 4.3']],
+  5: [['ex:u1-b','Aufgabe 5.1'], ['ex:u2-b','Aufgabe 5.2 a'], ['q:q52','Aufgabe 5.2 b'], ['q:q53','Aufgabe 5.3'], ['q:q54','Aufgabe 5.4'], ['ex:u5-x','Aufgabe 5.5'], ['q:q56','Aufgabe 5.6']],
+  6: [['ex:g-11','Aufgabe 6.1'], ['brief','Beratungsbrief gesichert']]
+};
+var PROG_NAME = {0:'Einstieg', 1:'Teil 1', 2:'Teil 2', 3:'Teil 3', 4:'Teil 4', 5:'Teil 5', 6:'Teil 6'};
+function doneGet(){ try{ return JSON.parse(localStorage.getItem(LH_NS + 'done') || '{}') || {}; }catch(e){ return {}; } }
+function markDone(k, v){ var d = doneGet(); d[k] = v || 1; try{ localStorage.setItem(LH_NS + 'done', JSON.stringify(d)); }catch(e){} progUpdate(); }
+function isDone(k){
+  if(k === 'werk') return RAID.st[5].own > 0;
+  if(k === 'brief'){ try{ return localStorage.getItem(LH_NS + 'brief_lock') === '1'; }catch(e){ return false; } }
+  if(k.indexOf('obs:') === 0){
+    var rows = k === 'obs:all' ? ['0','1','5'] : [k.slice(4)];
+    return rows.every(function(r){ return OBS_COLS.every(function(c){ return obsGet(r, c[0]).trim() !== ''; }); });
+  }
+  return !!doneGet()[k];
+}
+function progUpdate(){
+  Object.keys(PROG).forEach(function(n){
+    var t = PROG[n], done = t.filter(function(x){ return isDone(x[0]); }).length, pc = Math.round(100 * done / t.length), full = done === t.length;
+    var box = document.querySelector('.prog[data-phase="' + n + '"]');
+    if(box){
+      var open = box.querySelector('.prog-list') && !box.querySelector('.prog-list').hidden;
+      box.classList.toggle('full', full);
+      box.innerHTML = '<div class="prog-in"><span class="prog-lbl">' + (full ? '✅ ' + PROG_NAME[n] + ': alles erledigt!' : '📊 Fortschritt ' + PROG_NAME[n]) + '</span>' +
+        '<span class="prog-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pc + '" aria-label="Fortschritt ' + PROG_NAME[n] + '"><span style="width:' + pc + '%"></span></span>' +
+        '<b>' + done + ' / ' + t.length + ' · ' + pc + '&nbsp;%</b>' +
+        (full ? '' : '<button class="btn btn-ghost btn-sm" onclick="progMiss(' + n + ')">Was fehlt? →</button>') + '</div>' +
+        '<div class="prog-list"' + (open && !full ? '' : ' hidden') + '>Noch offen: ' + t.filter(function(x){ return !isDone(x[0]); }).map(function(x){ return '<button type="button" class="prog-go" onclick="progGo(' + n + ',\'' + x[0] + '\')">' + x[1] + '</button>'; }).join(' ') + '</div>';
+    }
+    var nav = document.getElementById('pn' + n);
+    if(nav){
+      var nb = nav.querySelector('.pnav-bar');
+      if(!nb){ nb = document.createElement('span'); nb.className = 'pnav-bar'; nb.innerHTML = '<span></span>'; nav.appendChild(nb); }
+      nb.firstChild.style.width = pc + '%'; nav.classList.toggle('pdone', full);
+      nav.title = PROG_NAME[n] + ': ' + done + ' von ' + t.length + ' Aufgaben erledigt';
+    }
+  });
+}
+function progMiss(n){
+  var l = document.querySelector('.prog[data-phase="' + n + '"] .prog-list'); if(l) l.hidden = false;
+  var first = PROG[n].filter(function(x){ return !isDone(x[0]); })[0];
+  if(first) progGo(n, first[0]);
+}
+function progTarget(n, k){
+  var ph = document.getElementById('ph' + n), el = null;
+  if(k.indexOf('ex:') === 0){ el = document.getElementById(k.slice(3)); el = el && el.closest('.ex'); }
+  else if(k.indexOf('q:') === 0){ el = document.getElementById('qfb-' + k.slice(2)); el = el && (el.closest('.ex') || el.closest('.quiz-item')); }
+  else if(k.indexOf('p:') === 0){ el = document.getElementById(k.slice(2)); }
+  else if(k.indexOf('obs:') === 0){
+    var r = k === 'obs:all' ? '5' : k.slice(4);
+    var t = [].slice.call(ph.querySelectorAll('.obs-tbl')).filter(function(x){ return x.dataset.rows.split(',').indexOf(r) >= 0; })[0];
+    el = t && (t.closest('.ex') || t);
+  }
+  else if(k === 'werk'){ el = document.querySelector('.sim[data-level="5"]'); }
+  else if(k === 'brief'){ el = document.getElementById('brief'); }
+  return el;
+}
+function progGo(n, k){
+  var el = progTarget(n, k); if(!el) return;
+  if(!document.getElementById('ph' + n).classList.contains('on')) showPhase(n);
+  var sub = el.closest('.subphase');
+  if(sub && !sub.classList.contains('on')){ var m = sub.id.match(/^ph(\d+)-sub-(\d+)$/); if(m) revealSub(+m[1], +m[2]); }
+  setTimeout(function(){
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    setTimeout(function(){ el.classList.remove('flash'); }, 2600);
+  }, 120);
+}
+
+/* Ergebnisse merken und nach dem Neuladen wiederherstellen */
+function exSave(spec){
+  var vals = spec.map(function(sp){ return [sp[0], document.getElementById(sp[0]).value]; });
+  try{ localStorage.setItem(LH_NS + 'exv_' + spec[0][0], JSON.stringify(vals)); }catch(e){}
+  markDone('ex:' + spec[0][0]);
+}
+function exRestore(){
+  Object.keys(doneGet()).forEach(function(k){
+    if(k.indexOf('ex:') !== 0) return;
+    var key = k.slice(3), vals = null;
+    try{ vals = JSON.parse(localStorage.getItem(LH_NS + 'exv_' + key) || 'null'); }catch(e){}
+    if(!vals) return;
+    vals.forEach(function(v){ var el = document.getElementById(v[0]); if(!el) return; el.value = v[1];
+      if(el.type === 'hidden'){ tglShow(el.previousElementSibling, v[1]); el.previousElementSibling.classList.add('ok'); } else el.classList.add('ok'); });
+    if(key === 'xor-f') formelTable(document.getElementById('xor-f').value);
+    var first = document.getElementById(key), ex = first && first.closest('.ex'); if(!ex) return;
+    var fb = ex.querySelector('.grp-fb'); if(fb){ fb.innerHTML = '✅ Alles richtig!'; fb.className = 'fb grp-fb ok'; }
+    var sb = ex.querySelector('.solbtn'); if(sb) sb.hidden = false;
+  });
+}
+var _quizCheckEngine = quizCheck;
+quizCheck = function(id, el, verdict){
+  _quizCheckEngine(id, el, verdict);
+  var fb = document.getElementById('qfb-' + id);
+  if(fb && /\b(ok|ng)\b/.test(fb.className)) markDone('q:' + id, /\bok\b/.test(fb.className) ? 'c' : 'ng');
+};
+function quizRestore(){
+  var d = doneGet();
+  Object.keys(d).forEach(function(k){
+    if(k.indexOf('q:') !== 0) return;
+    var id = k.slice(2), fb = document.getElementById('qfb-' + id); if(!fb) return;
+    var btns = document.querySelectorAll('.quiz-btn[onclick*="quizCheck(\'' + id + '\'"]');
+    btns.forEach(function(b){ b.disabled = true; if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(b.getAttribute('onclick') || '')) b.classList.add('correct'); });
+    var data = quizFeedback[id] || {};
+    fb.innerHTML = d[k] === 'c' ? (data.ok || '✅ Richtig!') : (data.ng || '❌ Nicht ganz.');
+    fb.className = 'quiz-fb ' + (d[k] === 'c' ? 'ok' : 'ng');
+  });
+}
+var _lockPredictEngine = lockPredict;
+lockPredict = function(id){
+  _lockPredictEngine(id);
+  var t = null; try{ t = localStorage.getItem(LH_NS + 'predict_' + id); }catch(e){}
+  if(t) markDone('p:' + id);
+};
+
+
+/* ---------- Umschalter ✓ / ✗ (Aufgabe 6.1) ---------- */
+function tglShow(grp, v){ grp.querySelectorAll('.tgl-b').forEach(function(b){ var on = b.textContent === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); }
+function tglSet(btn, v){
+  var grp = btn.parentElement, inp = grp.nextElementSibling;
+  inp.value = v; tglShow(grp, v); grp.classList.remove('ok', 'err');
+}
+
+/* ---------- ★ Aufgabe 2.2: Ausdruck aus NOT, AND, OR selbst aufstellen ---------- */
+function formelAdd(t){
+  var el = document.getElementById('xor-f'), v = el.value.replace(/\s+$/, '');
+  if(t === ')') el.value = v + ')';
+  else if(/\($/.test(v) || v === '') el.value = v + t;
+  else el.value = v + ' ' + t;
+  el.focus();
+}
+function formelBack(){ var el = document.getElementById('xor-f'); el.value = el.value.replace(/\s*(NOT|AND|OR|[AB()])\s*$/i, ''); el.focus(); }
+function formelClear(){ var el = document.getElementById('xor-f'); el.value = ''; document.getElementById('xor-tt').innerHTML = ''; el.focus(); }
+function formelParse(src){
+  var s = String(src), toks = [], m;
+  var rx = /^\s*(?:(NOT|NICHT)\b|(AND|UND)\b|(OR|ODER)\b|(XOR|XODER)\b|([AB])\b|(¬|!)|(∧|&&?)|(∨|\|\|?)|(⊕)|(\()|(\)))/i;
+  s = s.replace(/\s+$/, '');
+  while(s.length){
+    m = s.match(rx);
+    if(!m) return {err:'Unbekannt: „' + s.trim().split(/\s+/)[0] + '“. Erlaubt sind A, B, NOT, AND, OR und Klammern.'};
+    if(m[4] || m[9]) return {err:'XOR selbst ist hier nicht erlaubt – baut es aus NOT, AND und OR zusammen.'};
+    toks.push(m[1] || m[6] ? 'NOT' : m[2] || m[7] ? 'AND' : m[3] || m[8] ? 'OR' : m[5] ? m[5].toUpperCase() : m[10] ? '(' : ')');
+    s = s.slice(m[0].length);
+  }
+  if(!toks.length) return {err:'Gebt zuerst einen Ausdruck ein.'};
+  var i = 0;
+  function expr(){ var a = term(); while(toks[i] === 'OR'){ i++; var b = term(); a = (function(x, y){ return function(e){ return x(e) || y(e); }; })(a, b); } return a; }
+  function term(){ var a = fac(); while(toks[i] === 'AND'){ i++; var b = fac(); a = (function(x, y){ return function(e){ return x(e) && y(e); }; })(a, b); } return a; }
+  function fac(){
+    var t = toks[i];
+    if(t === 'NOT'){ i++; var f = fac(); return function(e){ return !f(e); }; }
+    if(t === '('){ i++; var e = expr(); if(toks[i] !== ')') throw 'k'; i++; return e; }
+    if(t === 'A' || t === 'B'){ i++; return function(e){ return !!e[t]; }; }
+    throw 's';
+  }
+  try{ var f = expr(); if(i !== toks.length) throw 's'; }
+  catch(e){ return {err: e === 'k' ? 'Eine Klammer ist nicht geschlossen.' : 'Der Ausdruck ist unvollständig oder falsch aufgebaut. Prüft, ob zwischen zwei Werten immer AND oder OR steht.'}; }
+  return {f:f, toks:toks};
+}
+function formelTable(src){
+  var box = document.getElementById('xor-tt'), p = formelParse(src);
+  if(p.err){ box.innerHTML = ''; return null; }
+  var rows = [[0,0,0],[0,1,1],[1,0,1],[1,1,0]], ok = 0;
+  var h = '<table class="tbl tbl-mini"><tr><th>A</th><th>B</th><th>euer Ausdruck</th><th>Lampe</th><th></th></tr>';
+  rows.forEach(function(r){ var v = p.f({A:r[0], B:r[1]}) ? 1 : 0, good = v === r[2]; if(good) ok++;
+    h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td><strong>' + v + '</strong></td><td>' + r[2] + '</td><td>' + (good ? '✓' : '✗') + '</td></tr>'; });
+  box.innerHTML = h + '</table>';
+  return ok;
+}
+function formelCheck(btn){
+  var el = document.getElementById('xor-f'), ex = el.closest('.ex'), fb = ex.querySelector('.grp-fb'), p = formelParse(el.value);
+  if(p.err){ fb.innerHTML = '❌ ' + p.err; fb.className = 'fb grp-fb err'; el.classList.add('err'); el.classList.remove('ok'); document.getElementById('xor-tt').innerHTML = ''; return; }
+  var ok = formelTable(el.value), all = ok === 4;
+  el.classList.toggle('ok', all); el.classList.toggle('err', !all);
+  fb.innerHTML = all ? '✅ Richtig! Euer Ausdruck verhält sich genau wie die Treppenhauslampe.' : '❌ In ' + (4 - ok) + ' von 4 Zeilen stimmt euer Ausdruck nicht mit der Lampe überein (✗ in der Tabelle).';
+  fb.className = 'fb grp-fb ' + (all ? 'ok' : 'err');
+  if(all){ solBtnShow(ex.querySelector('.solbtn')); exSave([['xor-f']]); }
+}
+
 /* ---------- Start ---------- */
 function raidInit(){
   try{ var t = localStorage.getItem(LH_NS + 'raid_text'); if(t != null) RAID.text = raidClean(t).t; }catch(e){}
   try{ RAID.st[5].own = parseInt(localStorage.getItem(LH_NS + 'werk_own') || '0', 10) || 0; }catch(e){}
   document.querySelectorAll('.txt-in').forEach(function(i){ i.value = RAID.text; });
-  raidRenderAll(); tRender(); smallRender(); obsRender(); asciiInit(); briefInit(); gateRefresh();
+  raidRenderAll(); tRender(); smallRender(); obsRender(); asciiInit(); briefInit(); exRestore(); quizRestore(); gateRefresh(); progUpdate();
 }
 if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', raidInit); } else { raidInit(); }
 </script>
