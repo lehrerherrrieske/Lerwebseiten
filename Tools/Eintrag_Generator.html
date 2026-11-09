@@ -503,17 +503,16 @@ const LB_VORSCHLAEGE = {
 // DaZ-Bereich der index.html: Ordner (ohne Klassen-Unterordner) und Sprachen.
 // aktiv:true = steht in der index.html schon in SPRACHEN. Neue Sprache: aktiv weglassen –
 // der Generator zeigt dann die passende SPRACHEN-Zeile für die index.html mit an.
-const DAZ_ORDNER = "DaZ";
+const DAZ_ORDNER = "DAZ";   // genau wie in der index.html (DAZ.ordner) und im Repo
 const SPRACHEN = [
   { id:"ru", name:"Русский",    de:"Russisch",    flagge:"🇷🇺", aktiv:true, text:"Здесь страницы на русском языке. На каждой странице можно переключиться на немецкий." },
   { id:"uk", name:"Українська", de:"Ukrainisch",  flagge:"🇺🇦", text:"Тут сторінки українською мовою. На кожній сторінці можна перемкнутися на німецьку." },
   { id:"ar", name:"العربية",     de:"Arabisch",    flagge:"🇸🇾", rtl:true },
   { id:"tr", name:"Türkçe",     de:"Türkisch",    flagge:"🇹🇷", text:"Burada Türkçe sayfalar var. Her sayfada Almancaya geçebilirsin." },
   { id:"fa", name:"فارسی",       de:"Persisch",    flagge:"🇮🇷", rtl:true },
+  { id:"es", name:"Español",    de:"Spanisch",    flagge:"🇪🇸", aktiv:true, text:"Aquí tienes páginas en español. En cada página puedes cambiar al alemán." },
+  { id:"cs", name:"Čeština",    de:"Tschechisch", flagge:"🇨🇿", aktiv:true, text:"Tady jsou stránky v češtině. Na každé stránce můžeš přepnout do němčiny." },
   { id:"en", name:"English",    de:"Englisch",    flagge:"🇬🇧", text:"Here you find pages in English. On every page you can switch to German." },
-  { id:"cs", name:"Čeština",    de:"Tschechisch", flagge:"🇨🇿", text:"Zde najdeš stránky v češtině. Na každé stránce můžeš přepnout do němčiny." },
-  { id:"es", name:"Español",    de:"Spanisch",    flagge:"🇪🇸", text:"Aquí encontrarás páginas en español. En cada página puedes cambiar al alemán." },
-  { id:"so", name:"Soomaali",   de:"Somali",      flagge:"🇸🇴", text:"Halkan waxaad ka helaysaa bogag af-Soomaali ah. Bog kasta waxaad u beddeli kartaa af-Jarmal." },
 ];
 
 // Linksammlung (Tools/Linksammlung.html): Fächer und Kategorien – ids müssen dort gleich sein
@@ -650,11 +649,9 @@ function titelAusHtml(text){
   const teile = roh.split(/\s+[·|–—-]\s+/).map(x => x.trim()).filter(Boolean);
   if (teile.length < 2) return { de: roh, ms: "" };
   const latein = x => /^[\u0000-\u024F\s\d.,:;!?()'"&+\/-]+$/.test(x);   // lateinische Schrift (inkl. Umlaute)
-  // Genau ein lateinischer Teil (z. B. Russisch, Arabisch) -> das ist Deutsch.
-  // Sonst (z. B. Tschechisch, Spanisch, Somali: beide lateinisch) gilt die Reihenfolge
-  // der Überschrift "Muttersprache · Deutsch" -> Deutsch ist der letzte Teil.
-  const lat = teile.filter(latein);
-  const de = lat.length === 1 ? lat[0] : teile[teile.length - 1];
+  // Gibt es einen Teil in nicht-lateinischer Schrift, ist der lateinische Deutsch; sonst gilt das
+  // Muster der DaZ-Seiten "Muttersprache · Deutsch" (letzter Teil = Deutsch)
+  const de = teile.some(x => !latein(x)) ? teile.find(latein) : teile[teile.length - 1];
   const ms = teile.find(x => x !== de && !latein(x)) || teile.find(x => x !== de) || "";
   return { de, ms };
 }
