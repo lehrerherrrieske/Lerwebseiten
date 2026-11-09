@@ -23,6 +23,14 @@
     werden Klasse, Lernbereich und Titel vorgeschlagen.
   - Fächer, Klassenstufen und bekannte Lernbereiche stehen unten im Skript
     (FAECHER, KLASSEN, LB_VORSCHLAEGE) und können angepasst werden.
+  - DaZ-Seiten (Reiter "DaZ-Seite"): erzeugt Zeilen für DAZ_SEITEN. Alle DaZ-
+    Dateien liegen ohne Klassen-Ordner zusammen in DAZ_ORDNER ("DaZ"). Beim
+    Einlesen einer Datei werden Sprache (aus "_DaZ_Russisch" im Dateinamen),
+    deutscher Titel und Titel in der Muttersprache (aus der Überschrift
+    "Двоичные числа · Binärzahlen") und das Passwort vorgeschlagen.
+    Sprachen stehen in SPRACHEN; aktiv:true = in der index.html schon
+    eingetragen. Für eine neue Sprache zeigt der Generator die passende
+    SPRACHEN-Zeile für die index.html mit an.
   - Tools: "gruppe" = Dropdown, "ugruppe" = Unterordner darin.
   - Linksammlung: Fächer und Kategorien (LINK_FAECHER, LINK_KATEGORIEN) müssen
     zu den gleichnamigen Listen in Tools/Linksammlung.html passen. Liegt der
@@ -163,6 +171,11 @@
   .hinweis-badge{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;color:#7A4B12;
     background:#FDF3E1;border:1px solid #F1D9AE;border-radius:6px;padding:1px 8px;}
 
+  /* DaZ */
+  .seite-ms{font-size:var(--fs-base);color:var(--color-text-secondary);margin-top:1px;}
+  .badge.sprache{background:var(--color-bg-warm);color:var(--color-text-secondary);border:1px solid var(--color-border);}
+  .zusatz-lbl{font-size:var(--fs-sm);font-weight:700;color:var(--color-text-secondary);margin:14px 0 6px;}
+
   /* Sammlung */
   .sammlung{margin-top:22px;}
   .sammlung textarea{font-family:var(--font-mono);font-size:var(--fs-sm);min-height:8em;background:var(--color-surface-warm);}
@@ -189,6 +202,7 @@
 <main class="wrap">
   <div class="tabbar">
     <button class="tab-btn on" id="tabSeite">📄 Lernseite (SEITEN)</button>
+    <button class="tab-btn" id="tabDaz">🌍 DaZ-Seite (DAZ_SEITEN)</button>
     <button class="tab-btn" id="tabTool">🔧 Tool / Link (TOOLS)</button>
     <button class="tab-btn" id="tabLink">🔗 Linksammlung (LINKS)</button>
   </div>
@@ -258,6 +272,72 @@
         <div class="btns">
           <button class="btn ghost" id="sNaechste" title="Fach, Klasse, Lernbereich und Unterbereich bleiben stehen">↻ Nächste Seite (gleicher Lernbereich)</button>
           <button class="btn ghost" id="sLeeren">Alles leeren</button>
+        </div>
+      </section>
+
+      <!-- DaZ-Seite -->
+      <section class="card" id="formDaz" hidden>
+        <h2>DaZ-Seite eintragen</h2>
+
+        <div class="field">
+          <label class="lbl" for="dDateiPick">HTML-Datei <span class="opt">(optional – füllt Felder automatisch)</span></label>
+          <input type="file" id="dDateiPick" accept=".html,.htm">
+          <span class="hint">Liest Dateinamen, Sprache, Fach, beide Titel und das Lehrermodus-Passwort aus – bitte kurz prüfen. Es wird nichts hochgeladen.</span>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label class="lbl" for="dSprache">Sprache <code style="font-family:var(--font-mono)">sprache</code></label>
+            <select id="dSprache"></select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="dFach">Fach <code style="font-family:var(--font-mono)">fach</code></label>
+            <select id="dFach"></select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="dKlasse">Klasse <span class="opt">(nur Anzeige)</span></label>
+            <select id="dKlasse"></select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="dLb">Lernbereich <span class="opt">(nur Anzeige)</span></label>
+            <input type="text" id="dLb" list="dLbListe" placeholder="z. B. LB1 - Informationen und Daten" autocomplete="off">
+            <datalist id="dLbListe"></datalist>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dTitel">Titel auf Deutsch <code style="font-family:var(--font-mono)">titel</code></label>
+            <input type="text" id="dTitel" placeholder="z. B. Binärzahlen" autocomplete="off">
+            <span class="hint">So heißt die Stunde auch in der Klasse – hilft beim Wiedererkennen.</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dTitelMs">Titel in der Muttersprache <code style="font-family:var(--font-mono)">titel_ms</code> <span class="opt">(optional, empfohlen)</span></label>
+            <input type="text" id="dTitelMs" placeholder="z. B. Двоичные числа" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dDatei">Dateiname <code style="font-family:var(--font-mono)">datei</code></label>
+            <input type="text" id="dDatei" placeholder="K7 - LB1 - Binaerzahlen_DaZ_Russisch.html" autocomplete="off">
+            <span class="hint" id="dOrdnerHint"></span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dPw">Passwort der Lernseite <code style="font-family:var(--font-mono)">pw</code> <span class="opt">(optional)</span></label>
+            <input type="text" id="dPw" placeholder="wird nur im Lehrermodus des Portals angezeigt" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px;">
+          <span class="lbl">Status</span>
+        </div>
+        <div class="flags">
+          <label class="flag"><input type="checkbox" id="dNeu">
+            <span><b>Neu</b><span class="hint">Grünes Badge „Neu“ auf der Karte.</span></span></label>
+          <label class="flag"><input type="checkbox" id="dWip">
+            <span><b>In Arbeit</b><span class="hint">Für SuS ausgegraut und nicht anklickbar, im Lehrermodus offen.</span></span></label>
+          <label class="flag"><input type="checkbox" id="dHidden">
+            <span><b>Versteckt</b><span class="hint">Für SuS komplett unsichtbar, nur im Lehrermodus zu sehen.</span></span></label>
+        </div>
+
+        <div class="btns">
+          <button class="btn ghost" id="dNaechste" title="Sprache und Fach bleiben stehen">↻ Nächste DaZ-Seite (gleiche Sprache)</button>
+          <button class="btn ghost" id="dLeeren">Alles leeren</button>
         </div>
       </section>
 
@@ -358,6 +438,11 @@
           <span class="copy-fb" id="kopierFb"></span>
         </div>
         <div class="warns" id="warns"></div>
+        <div id="zusatzWrap" hidden>
+          <div class="zusatz-lbl">Zusätzlich in der <code style="font-family:var(--font-mono)">index.html</code> ins Array <code style="font-family:var(--font-mono)">SPRACHEN</code>:</div>
+          <div class="code" id="zusatz"></div>
+          <div class="btns"><button class="btn ghost" id="zusatzKopieren">📋 SPRACHEN-Zeile kopieren</button><span class="copy-fb" id="zusatzFb"></span></div>
+        </div>
         <div class="info" id="wohin"></div>
 
         <div class="vorschau-lbl" id="vorschauLbl">So sieht die Karte im Portal aus</div>
@@ -371,7 +456,7 @@
 
       <section class="card sammlung">
         <h2>Sammlung <span class="count" id="sammelCount"></span></h2>
-        <textarea id="sammelText" readonly placeholder="Hier landen alle Zeilen, die du mit „➕ Zur Sammlung“ hinzufügst – praktisch, wenn du mehrere Seiten oder Links auf einmal einträgst. Tipp: SEITEN-, TOOLS- und LINKS-Zeilen nicht mischen, sie gehören in verschiedene Arrays."></textarea>
+        <textarea id="sammelText" readonly placeholder="Hier landen alle Zeilen, die du mit „➕ Zur Sammlung“ hinzufügst – praktisch, wenn du mehrere Seiten oder Links auf einmal einträgst. Tipp: SEITEN-, DAZ_SEITEN-, TOOLS- und LINKS-Zeilen nicht mischen, sie gehören in verschiedene Arrays."></textarea>
         <div class="btns">
           <button class="btn" id="sammelKopieren">📋 Alle kopieren</button>
           <button class="btn ghost" id="sammelLeeren">Sammlung leeren</button>
@@ -414,6 +499,22 @@ const LB_VORSCHLAEGE = {
   "biologie|8":    ["LB 1 : Sinnesorgane, Nerven- und Hormonsystem des Menschen"],
   "biologie|9":    ["LB1 1: Anatomie und Physiologie der Samenpflanzen"],
 };
+
+// DaZ-Bereich der index.html: Ordner (ohne Klassen-Unterordner) und Sprachen.
+// aktiv:true = steht in der index.html schon in SPRACHEN. Neue Sprache: aktiv weglassen –
+// der Generator zeigt dann die passende SPRACHEN-Zeile für die index.html mit an.
+const DAZ_ORDNER = "DaZ";
+const SPRACHEN = [
+  { id:"ru", name:"Русский",    de:"Russisch",    flagge:"🇷🇺", aktiv:true, text:"Здесь страницы на русском языке. На каждой странице можно переключиться на немецкий." },
+  { id:"uk", name:"Українська", de:"Ukrainisch",  flagge:"🇺🇦", text:"Тут сторінки українською мовою. На кожній сторінці можна перемкнутися на німецьку." },
+  { id:"ar", name:"العربية",     de:"Arabisch",    flagge:"🇸🇾", rtl:true },
+  { id:"tr", name:"Türkçe",     de:"Türkisch",    flagge:"🇹🇷", text:"Burada Türkçe sayfalar var. Her sayfada Almancaya geçebilirsin." },
+  { id:"fa", name:"فارسی",       de:"Persisch",    flagge:"🇮🇷", rtl:true },
+  { id:"en", name:"English",    de:"Englisch",    flagge:"🇬🇧", text:"Here you find pages in English. On every page you can switch to German." },
+  { id:"cs", name:"Čeština",    de:"Tschechisch", flagge:"🇨🇿", text:"Zde najdeš stránky v češtině. Na každé stránce můžeš přepnout do němčiny." },
+  { id:"es", name:"Español",    de:"Spanisch",    flagge:"🇪🇸", text:"Aquí encontrarás páginas en español. En cada página puedes cambiar al alemán." },
+  { id:"so", name:"Soomaali",   de:"Somali",      flagge:"🇸🇴", text:"Halkan waxaad ka helaysaa bogag af-Soomaali ah. Bog kasta waxaad u beddeli kartaa af-Jarmal." },
+];
 
 // Linksammlung (Tools/Linksammlung.html): Fächer und Kategorien – ids müssen dort gleich sein
 const LINK_FAECHER = [
@@ -464,6 +565,19 @@ function fuelleKlassen(behalte){
   $("sKlasse").innerHTML = (KLASSEN[fach] || []).map(k => `<option value="${k}">Klasse ${klasseLabel(k)}</option>`).join("");
   if ((KLASSEN[fach] || []).includes(alt)) $("sKlasse").value = alt;
   fuelleLb();
+}
+function fuelleDaz(){
+  $("dSprache").innerHTML = SPRACHEN.map(sp => `<option value="${sp.id}">${sp.flagge} ${esc(sp.name)} – ${esc(sp.de)}${sp.aktiv ? "" : " (neu)"}</option>`).join("");
+  $("dFach").innerHTML = FAECHER.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("");
+  fuelleDazKlassen();
+}
+function fuelleDazKlassen(behalte){
+  const alt = behalte !== undefined ? behalte : $("dKlasse").value;
+  const ks = KLASSEN[$("dFach").value] || [];
+  $("dKlasse").innerHTML = `<option value="">– keine –</option>` + ks.map(k => `<option value="${k}">Klasse ${klasseLabel(k)}</option>`).join("");
+  $("dKlasse").value = ks.includes(alt) ? alt : "";
+  const liste = LB_VORSCHLAEGE[$("dFach").value + "|" + $("dKlasse").value] || [];
+  $("dLbListe").innerHTML = liste.map(l => `<option value="${esc(l)}">`).join("");
 }
 function fuelleLinkListen(){
   $("lFach").innerHTML = LINK_FAECHER.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("");
@@ -519,6 +633,78 @@ $("sDateiPick").addEventListener("change", e => {
 });
 let pwHinweis = "";
 
+/* ---------- Datei auswerten (DaZ-Seite) ---------- */
+// "K7 - LB1 - Binaerzahlen_DaZ_Russisch.html" -> Sprache über den deutschen Sprachnamen
+function spracheAusDateiname(name){
+  const m = name.match(/_DaZ_([A-Za-zÄÖÜäöü]+)\.html?$/i);
+  if (!m) return null;
+  const sp = SPRACHEN.find(sp => sp.de.toLowerCase() === m[1].toLowerCase() || sp.id === m[1].toLowerCase());
+  return sp ? sp.id : null;
+}
+// Überschrift der Lernseite: "Двоичные числа · Binärzahlen" -> Muttersprache und Deutsch trennen
+function titelAusHtml(text){
+  const m = text.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+  if (!m) return null;
+  const t = document.createElement("div"); t.innerHTML = m[1];
+  const roh = t.textContent.replace(/[\u200B-\u200D\u2060\uFEFF]/g, "").replace(/\s+/g, " ").trim();
+  const teile = roh.split(/\s+[·|–—-]\s+/).map(x => x.trim()).filter(Boolean);
+  if (teile.length < 2) return { de: roh, ms: "" };
+  const latein = x => /^[\u0000-\u024F\s\d.,:;!?()'"&+\/-]+$/.test(x);   // lateinische Schrift (inkl. Umlaute)
+  // Genau ein lateinischer Teil (z. B. Russisch, Arabisch) -> das ist Deutsch.
+  // Sonst (z. B. Tschechisch, Spanisch, Somali: beide lateinisch) gilt die Reihenfolge
+  // der Überschrift "Muttersprache · Deutsch" -> Deutsch ist der letzte Teil.
+  const lat = teile.filter(latein);
+  const de = lat.length === 1 ? lat[0] : teile[teile.length - 1];
+  const ms = teile.find(x => x !== de && !latein(x)) || teile.find(x => x !== de) || "";
+  return { de, ms };
+}
+let dPwHinweis = "";
+$("dDateiPick").addEventListener("change", e => {
+  const file = e.target.files[0]; if (!file) return;
+  $("dDatei").value = file.name;
+  const sp = spracheAusDateiname(file.name);
+  if (sp) $("dSprache").value = sp;
+  const v = vorschlagAusDateiname(file.name);
+  if (v){
+    if ((KLASSEN[$("dFach").value] || []).includes(v.klasse)) fuelleDazKlassen(v.klasse);
+    if (!$("dLb").value.trim()){
+      const bekannt = (LB_VORSCHLAEGE[$("dFach").value + "|" + $("dKlasse").value] || [])
+        .find(l => l.replace(/\s+/g, "").toUpperCase().startsWith(v.lbKurz + "-"));
+      $("dLb").value = bekannt || v.lbKurz;
+    }
+    if (!$("dTitel").value.trim()) $("dTitel").value = v.titel.replace(/\s*DaZ\s+\S+$/i, "");
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const txt = String(reader.result);
+    // Fach aus dem Inhalt raten (häufigster Fachname), dann Klasse/Lernbereich passend dazu
+    const zahl = f => (txt.match(new RegExp(f.name, "g")) || []).length;
+    const rang = FAECHER.map(f => [f.id, zahl(f)]).sort((a, b) => b[1] - a[1]);
+    if (rang[0][1] >= 2 && rang[0][1] > rang[1][1] && rang[0][0] !== $("dFach").value){
+      const lbVorher = $("dLb").value.trim();
+      $("dFach").value = rang[0][0];
+      fuelleDazKlassen(v ? v.klasse : $("dKlasse").value);
+      if (v && (!lbVorher || lbVorher.replace(/\s+/g, "").toUpperCase().startsWith(v.lbKurz))){
+        const bekannt = (LB_VORSCHLAEGE[$("dFach").value + "|" + $("dKlasse").value] || [])
+          .find(l => l.replace(/\s+/g, "").toUpperCase().startsWith(v.lbKurz + "-"));
+        $("dLb").value = bekannt || v.lbKurz;
+      }
+    }
+    const pw = passwortAusHtml(txt);
+    if (pw !== null && !$("dPw").value.trim()) $("dPw").value = pw;
+    dPwHinweis = (pw === null) ? "In der Datei wurde kein Lehrermodus-Passwort gefunden." : "";
+    const t = titelAusHtml(txt);
+    if (t){
+      // Titel aus der Überschrift ist besser als der aus dem Dateinamen (Umlaute!)
+      if (t.de && (!$("dTitel").value.trim() || (v && $("dTitel").value === v.titel.replace(/\s*DaZ\s+\S+$/i, "")))) $("dTitel").value = t.de;
+      if (t.ms && !$("dTitelMs").value.trim()) $("dTitelMs").value = t.ms;
+    }
+    aktualisieren();
+  };
+  reader.readAsText(file);
+  aktualisieren();
+});
+
 $("tDateiPick").addEventListener("change", e => {
   const file = e.target.files[0]; if (!file) return;
   $("tDatei").value = file.name;
@@ -540,6 +726,29 @@ function teileSeite(){
   if ($("fNeu").checked)    t.push(["neu", true, "Badge „Neu“"]);
   if ($("fWip").checked)    t.push(["wip", true, "In Arbeit: grau, nur Lehrer klickbar"]);
   if ($("fHidden").checked) t.push(["hidden", true, "Versteckt: nur im Lehrermodus sichtbar"]);
+  return t;
+}
+function teileDaz(){
+  const t = [
+    ["sprache", $("dSprache").value, "Sprache (id aus SPRACHEN) = Sprachknopf im DaZ-Bereich"],
+    ["fach",    $("dFach").value,    "Fach = Gruppe im DaZ-Bereich"],
+  ];
+  if ($("dKlasse").value)     t.push(["klasse", $("dKlasse").value, "Klasse (nur Anzeige auf der Karte)"]);
+  if ($("dLb").value.trim())  t.push(["lb", $("dLb").value.trim(), "Lernbereich (nur Anzeige auf der Karte)"]);
+  t.push(["titel", $("dTitel").value.trim(), "Deutscher Titel auf der Karte"]);
+  if ($("dTitelMs").value.trim()) t.push(["titel_ms", $("dTitelMs").value.trim(), "Titel in der Muttersprache (zweite Zeile)"]);
+  t.push(["datei", $("dDatei").value.trim(), "Dateiname im Ordner " + DAZ_ORDNER + "/ (keine Klassen-Ordner)"]);
+  if ($("dPw").value.trim()) t.push(["pw", $("dPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  if ($("dNeu").checked)    t.push(["neu", true, "Badge „Neu“"]);
+  if ($("dWip").checked)    t.push(["wip", true, "In Arbeit: grau, nur Lehrer klickbar"]);
+  if ($("dHidden").checked) t.push(["hidden", true, "Versteckt: nur im Lehrermodus sichtbar"]);
+  return t;
+}
+// SPRACHEN-Zeile für die index.html (für noch nicht eingetragene Sprachen)
+function sprachZeile(sp){
+  const t = [["id", sp.id], ["name", sp.name], ["de", sp.de], ["flagge", sp.flagge]];
+  if (sp.text) t.push(["text", sp.text]);
+  if (sp.rtl) t.push(["rtl", true]);
   return t;
 }
 function teileTool(){
@@ -600,7 +809,7 @@ function zeileHtml(teile){
 
 /* ---------- Anzeige aktualisieren ---------- */
 function aktualisieren(){
-  const teile = modus === "seite" ? teileSeite() : modus === "tool" ? teileTool() : teileLink();
+  const teile = modus === "seite" ? teileSeite() : modus === "daz" ? teileDaz() : modus === "tool" ? teileTool() : teileLink();
   $("ausgabe").innerHTML = zeileHtml(teile);
 
   // Aufbau-Tabelle
@@ -611,10 +820,12 @@ function aktualisieren(){
   const warns = [];
   const pflicht = modus === "seite"
     ? [["sLb","Lernbereich"],["sTitel","Titel"],["sDatei","Dateiname"]]
+    : modus === "daz"
+    ? [["dTitel","Deutscher Titel"],["dDatei","Dateiname"]]
     : modus === "tool"
     ? [["tTitel","Titel"], toolArt() === "datei" ? ["tDatei","Dateiname"] : ["tUrl","Adresse"]]
     : [["lTitel","Titel"],["lUrl","Adresse"]];
-  ["sLb","sTitel","sDatei","tTitel","tDatei","tUrl","lTitel","lUrl"].forEach(id => $(id).classList.remove("fehlt"));
+  ["sLb","sTitel","sDatei","dTitel","dDatei","tTitel","tDatei","tUrl","lTitel","lUrl"].forEach(id => $(id).classList.remove("fehlt"));
   pflicht.forEach(([id, name]) => { if (!$(id).value.trim()){ $(id).classList.add("fehlt"); warns.push(name + " fehlt noch."); } });
 
   if (modus === "seite"){
@@ -626,6 +837,21 @@ function aktualisieren(){
     if (pwHinweis) warns.push(pwHinweis);
     const v = vorschlagAusDateiname(d);
     if (v && v.klasse !== $("sKlasse").value) warns.push(`Der Dateiname sagt Klasse ${klasseLabel(v.klasse)}, ausgewählt ist Klasse ${klasseLabel($("sKlasse").value)}.`);
+    if (/_DaZ_/i.test(d)) warns.push("Das sieht nach einer DaZ-Seite aus – dafür den Reiter „🌍 DaZ-Seite“ nehmen.");
+  } else if (modus === "daz"){
+    const d = $("dDatei").value.trim();
+    const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
+    if (d && !/\.html?$/i.test(d)) warns.push("Der Dateiname endet nicht auf .html.");
+    if (d && /[\/\\]/.test(d)) warns.push("Nur den Dateinamen eintragen – der Ordner " + DAZ_ORDNER + "/ kommt automatisch.");
+    if (d && /[äöüÄÖÜß]/.test(d)) warns.push("Umlaute im Dateinamen können auf GitHub Pages Probleme machen.");
+    const spD = spracheAusDateiname(d);
+    if (spD && spD !== $("dSprache").value){ const x = SPRACHEN.find(y => y.id === spD); warns.push(`Der Dateiname sagt ${x.de}, ausgewählt ist ${sp ? sp.de : "?"}.`); }
+    const v = vorschlagAusDateiname(d);
+    if (v && $("dKlasse").value && v.klasse !== $("dKlasse").value) warns.push(`Der Dateiname sagt Klasse ${klasseLabel(v.klasse)}, ausgewählt ist Klasse ${klasseLabel($("dKlasse").value)}.`);
+    if (!$("dTitelMs").value.trim()) warns.push("Tipp: Mit Titel in der Muttersprache finden die SuS die Seite leichter.");
+    if (sp && !sp.aktiv) warns.push(`${sp.de} steht noch nicht in der index.html – die SPRACHEN-Zeile unten dort mit eintragen, sonst gibt es keinen Sprachknopf.`);
+    if ($("dWip").checked && $("dHidden").checked) warns.push("Hinweis: In Arbeit + Versteckt geht, für SuS ist die Seite dann einfach unsichtbar.");
+    if (dPwHinweis) warns.push(dPwHinweis);
   } else if (modus === "tool"){
     if (toolArt() === "url"){
       const u = $("tUrl").value.trim();
@@ -641,6 +867,9 @@ function aktualisieren(){
     if (!$("lBeschr").value.trim()) warns.push("Tipp: Eine kurze Beschreibung hilft beim späteren Wiederfinden (Suche).");
   }
   $("warns").innerHTML = warns.map(w => `<div class="warn">⚠️ ${esc(w)}</div>`).join("");
+  const spNeu = modus === "daz" ? SPRACHEN.find(x => x.id === $("dSprache").value && !x.aktiv) : null;
+  $("zusatzWrap").hidden = !spNeu;
+  if (spNeu) $("zusatz").innerHTML = zeileHtml(sprachZeile(spNeu));
 
   // Wohin einfügen / hochladen
   if (modus === "seite"){
@@ -650,6 +879,12 @@ function aktualisieren(){
     $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>SEITEN</code>, Abschnitt `
       + `<b>${esc(fach ? fach.name.toUpperCase() : "")}</b> → <b>${esc(abschnittVon($("sKlasse").value))}</b>.<br>`
       + `<b>Hochladen:</b> die Datei nach <code>${esc(ordner)}/</code>`;
+  } else if (modus === "daz"){
+    const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
+    $("dOrdnerHint").innerHTML = `Datei gehört im Repo nach <code>${esc(DAZ_ORDNER)}/</code> – ohne Klassen-Ordner`;
+    $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>DAZ_SEITEN</code>.<br>`
+      + `<b>Hochladen:</b> die Datei nach <code>${esc(DAZ_ORDNER)}/</code><br>`
+      + `<b>Direktlink für die SuS:</b> <code>index.html#daz/${esc(sp ? sp.id : "")}</code>`;
   } else if (modus === "tool"){
     const g = $("tGruppe").value.trim(), u = $("tUgruppe").value.trim();
     $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>TOOLS</code>`
@@ -672,6 +907,21 @@ function aktualisieren(){
     $("vorschau").innerHTML = `<div class="seite-card${$("fWip").checked ? " wip" : ""}${$("fHidden").checked ? " versteckt" : ""}">
         <div><div class="seite-titel">${esc(titel)}${badges}</div><div class="seite-sub">${esc(pfad)}</div></div>
         <div class="goto">${$("fWip").checked ? "" : "→"}</div></div>`;
+  } else if (modus === "daz"){
+    const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
+    const titel = $("dTitel").value.trim() || "Deutscher Titel";
+    const ms = $("dTitelMs").value.trim();
+    const badges = (sp ? `<span class="badge sprache">${sp.flagge} ${esc(sp.name)}</span>` : "")
+      + ($("dHidden").checked ? '<span class="badge hid">Versteckt</span>' : "")
+      + ($("dWip").checked ? '<span class="badge wip">In Arbeit</span>' : ($("dNeu").checked ? '<span class="badge neu">Neu</span>' : ""));
+    const meta = [$("dKlasse").value ? "Klasse " + klasseLabel($("dKlasse").value) : "", $("dLb").value.trim()].filter(Boolean).join(" · ");
+    const fach = FAECHER.find(f => f.id === $("dFach").value);
+    $("vorschau").innerHTML = `<div class="seite-sub" style="margin-bottom:6px">🌍 DaZ › ${esc(fach ? fach.name : "")}</div>
+      <div class="seite-card${$("dWip").checked ? " wip" : ""}${$("dHidden").checked ? " versteckt" : ""}">
+        <div><div class="seite-titel">${esc(titel)}${badges}</div>
+        ${ms ? `<div class="seite-ms" lang="${sp ? sp.id : ""}"${sp && sp.rtl ? ' dir="rtl"' : ""}>${esc(ms)}</div>` : ""}
+        ${meta ? `<div class="seite-sub">${esc(meta)}</div>` : ""}</div>
+        <div class="goto">${$("dWip").checked ? "" : "→"}</div></div>`;
   } else if (modus === "link"){
     const titel = $("lTitel").value.trim() || "Titel des Links";
     const u = saubereUrl($("lUrl").value);
@@ -737,6 +987,19 @@ function leereSeitenFelder(alles){
   (alles ? $("sLb") : $("sTitel")).focus();
 }
 $("sNaechste").addEventListener("click", () => leereSeitenFelder(false));
+function leereDazFelder(alles){
+  ["dTitel","dTitelMs","dDatei","dPw"].concat(alles ? ["dLb"] : []).forEach(id => $(id).value = "");
+  ["dNeu","dWip","dHidden"].forEach(id => $(id).checked = false);
+  if (alles){ $("dSprache").selectedIndex = 0; $("dFach").selectedIndex = 0; fuelleDazKlassen(""); }
+  $("dDateiPick").value = ""; dPwHinweis = "";
+  aktualisieren(); $("dTitel").focus();
+}
+$("dNaechste").addEventListener("click", () => leereDazFelder(false));
+$("dLeeren").addEventListener("click", () => leereDazFelder(true));
+$("zusatzKopieren").addEventListener("click", () => {
+  const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
+  if (sp) kopiere(zeileText(sprachZeile(sp)), $("zusatzFb"));
+});
 $("sLeeren").addEventListener("click", () => leereSeitenFelder(true));
 $("tLeeren").addEventListener("click", () => {
   ["tTitel","tDatei","tUrl","tBeschr","tGruppe","tUgruppe"].forEach(id => $(id).value = "");
@@ -756,6 +1019,8 @@ $("lUrl").addEventListener("blur", () => { const u = saubereUrl($("lUrl").value)
 function setModus(m){
   modus = m;
   $("tabSeite").classList.toggle("on", m === "seite");
+  $("tabDaz").classList.toggle("on", m === "daz");
+  $("formDaz").hidden = m !== "daz";
   $("tabTool").classList.toggle("on", m === "tool");
   $("tabLink").classList.toggle("on", m === "link");
   $("formSeite").hidden = m !== "seite";
@@ -764,6 +1029,7 @@ function setModus(m){
   aktualisieren();
 }
 $("tabSeite").addEventListener("click", () => setModus("seite"));
+$("tabDaz").addEventListener("click", () => setModus("daz"));
 $("tabTool").addEventListener("click", () => setModus("tool"));
 $("tabLink").addEventListener("click", () => setModus("link"));
 document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener("change", () => {
@@ -775,6 +1041,8 @@ document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener(
 /* ---------- Live-Aktualisierung ---------- */
 $("sFach").addEventListener("change", () => fuelleKlassen());
 $("sKlasse").addEventListener("change", fuelleLb);
+$("dFach").addEventListener("change", () => fuelleDazKlassen());
+$("dKlasse").addEventListener("change", () => fuelleDazKlassen());
 $("tGruppe").addEventListener("input", fuelleUgruppen);
 document.querySelectorAll("input, select, textarea").forEach(el => {
   if (el.type === "file") return;
@@ -783,7 +1051,9 @@ document.querySelectorAll("input, select, textarea").forEach(el => {
 });
 
 // Start
-fuelleFaecher(); fuelleKlassen("7"); fuelleLinkListen(); fuelleUgruppen(); zeigeSammlung(); aktualisieren();
+fuelleFaecher(); fuelleKlassen("7"); fuelleDaz(); fuelleLinkListen(); fuelleUgruppen(); zeigeSammlung(); aktualisieren();
+if (location.hash === "#daz") setModus("daz");
+window.addEventListener("hashchange", () => { if (location.hash === "#daz") setModus("daz"); });
 </script>
 </body>
 </html>

@@ -78,6 +78,28 @@
              { fach:"informatik", klasse:"11GK", lb:"LB1 - Technische Informatik",
                ulb:"Quiz", titel:"Quiz Prozessoren", datei:"..." }
 
+  DaZ-BEREICH (Lernseiten in der Muttersprache):
+  Eigene Karte "DaZ" auf der Startseite, nach den Fächern. KEINE Klassen-Ordner:
+  alle DaZ-Seiten liegen zusammen in EINEM Ordner (DAZ.ordner, Standard "DaZ";
+  liegen sie direkt neben der index.html, ordner:"" setzen).
+    /DaZ/K7 - LB1 - Binaerzahlen_DaZ_Russisch.html
+    /DaZ/...
+  Im DaZ-Bereich wählt man keine Klassenstufe, sondern optional die Sprache
+  (Knöpfe oben, nur Sprachen mit mindestens einer Seite). Die Seiten sind nach
+  Fach gruppiert; Klasse und Lernbereich stehen klein auf der Karte.
+  Neue Sprache: eine Zeile in SPRACHEN (id, name in der Sprache selbst, de,
+  flagge, optional text = kurzer Satz in der Sprache, rtl:true für Arabisch o. Ä.).
+  Neue Seite: eine Zeile in DAZ_SEITEN, z. B.
+    { sprache:"ru", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten",
+      titel:"Binärzahlen", titel_ms:"Двоичные числа",
+      datei:"K7 - LB1 - Binaerzahlen_DaZ_Russisch.html", pw:"Matrjoschka256" }
+  sprache  : id aus SPRACHEN
+  fach     : id aus FAECHER (für Gruppe, Icon, Farbe)
+  klasse, lb : nur zur Anzeige auf der Karte (optional)
+  titel_ms : optional, Titel in der Muttersprache (zweite Zeile auf der Karte)
+  datei    : NUR der Dateiname – der Ordner kommt aus DAZ.ordner
+  neu, wip, pw, pw2, hidden : wie bei SEITEN
+
   LERNBEREICHE:
   Jeder Lernbereich (lb) einer Klasse ist ein aufklappbares Dropdown-Feld,
   Unterbereiche (ulb) sind Dropdowns darin. Alle sind anfangs eingeklappt.
@@ -100,6 +122,9 @@
     index.html#physik       Klassenstufen eines Fachs (id aus FAECHER)
     index.html#physik/7     Lernseiten einer Klasse (id aus KLASSEN, z. B. 11GK)
     index.html#tools        Tools & Links (nur im Lehrermodus, sonst Fachauswahl)
+    index.html#daz          DaZ-Bereich, alle Sprachen
+    index.html#daz/ru       DaZ-Bereich, nur eine Sprache (id aus SPRACHEN) –
+                            praktisch als Direktlink für die DaZ-SuS
 
   Falls eine Klassenstufe (noch) keine Einträge hat, zeigt die Seite
   automatisch einen freundlichen Platzhaltertext – kein Fehler.
@@ -374,6 +399,24 @@
   .teach-slide.open{grid-template-rows:1fr;opacity:1;}
   .teach-slide:not(.open) .teachbar{visibility:hidden;}   /* nicht per Tab erreichbar */
   .brand-mark{cursor:default;user-select:none;-webkit-tap-highlight-color:transparent;}
+  /* ── DaZ-Bereich ── */
+  .fach-card.daz{border-style:dashed;border-width:1.5px;border-color:color-mix(in srgb, var(--fach) 45%, white);
+    background:linear-gradient(135deg, var(--color-surface) 60%, color-mix(in srgb, var(--fach) 8%, white));}
+  .fach-card .sprach-flaggen{font-size:var(--fs-lg);letter-spacing:4px;}
+  .sprach-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .sprach-chip{cursor:pointer;border:1.5px solid var(--color-border);background:var(--color-surface);
+    border-radius:var(--radius-full);padding:7px 16px;font-family:var(--font-body);font-size:var(--fs-base);
+    font-weight:600;color:var(--color-text-secondary);transition:.15s;}
+  .sprach-chip:hover{border-color:var(--fach);color:color-mix(in srgb, var(--fach) 82%, black);}
+  .sprach-chip.on{background:var(--fach);border-color:var(--fach);color:#fff;}
+  .sprach-chip:focus-visible{outline:3px solid var(--fach);outline-offset:2px;}
+  .sprach-chip .n{font-size:var(--fs-sm);font-weight:500;opacity:.8;margin-left:4px;}
+  .daz-info{background:color-mix(in srgb, var(--fach) 10%, white);border:1.5px solid color-mix(in srgb, var(--fach) 30%, white);
+    border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;color:var(--color-text-secondary);}
+  .daz-info .gruss{font-size:var(--fs-lg);font-weight:700;color:color-mix(in srgb, var(--fach) 82%, black);display:block;}
+  .seite-ms{font-size:var(--fs-base);color:var(--color-text-secondary);margin-top:1px;}
+  .badge-sprache{background:var(--color-bg-warm);color:var(--color-text-secondary);font-size:var(--fs-sm);
+    font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;border:1px solid var(--color-border);}
 .lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light, #EEEBE5);text-align:center;font-size:var(--fs-sm);color:var(--text-3, #7A736E);}@media print{.lh-foot{display:block !important;}}.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn, #C2410C);border-radius:10px;background:var(--warn-bg, #FBF1E9);color:var(--text, #111);font-size:var(--fs-base);}
 </style>
 </head>
@@ -635,6 +678,28 @@ const SEITEN = [
 
 ];
 
+// >>> DaZ-BEREICH: Lernseiten in der Muttersprache der DaZ-SuS
+// Eigene Karte auf der Startseite. KEINE Klassen-Ordner: alle Dateien liegen
+// zusammen in DAZ.ordner (leer lassen = direkt neben der index.html).
+const DAZ = {
+  name:"DaZ", titel:"DaZ – Lernen in deiner Sprache", icon:"🌍", farbe:"#8C5E22",
+  ordner:"DaZ",
+  text:"Lernseiten in deiner Muttersprache – mit Umschalter auf Deutsch, Hefter-Hilfe und Wörterbuch.",
+};
+// Sprachen: name in der Sprache selbst, text = kurzer Satz in der Sprache (optional), rtl:true für Schriften von rechts nach links
+const SPRACHEN = [
+  { id:"ru", name:"Русский", de:"Russisch", flagge:"🇷🇺", text:"Здесь страницы на русском языке. На каждой странице можно переключиться на немецкий." },
+  // { id:"uk", name:"Українська", de:"Ukrainisch", flagge:"🇺🇦", text:"Тут сторінки українською мовою." },
+  // { id:"ar", name:"العربية", de:"Arabisch", flagge:"🇸🇾", rtl:true },
+  // { id:"tr", name:"Türkçe", de:"Türkisch", flagge:"🇹🇷" },
+];
+// >>> DaZ-SEITEN HIER EINTRAGEN – "datei" ist NUR der Dateiname
+const DAZ_SEITEN = [
+  { sprache:"ru", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Двоичные числа",datei:"K7 - LB1 - Binaerzahlen_DaZ_Russisch.html", pw:"Matrjoschka256", neu:true },
+  { sprache:"es", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Números binarios", datei:"K7 - LB1 - Binaerzahlen_DaZ_Spanisch.html", pw:"UnoYCero", wip:true },
+  { sprache:"cs", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Números binarios", datei:"K7 - LB1 - Binaerzahlen_DaZ_Tschechisch.html", pw:"Knedlik256", wip:true },
+];
+
 // >>> TOOLS & LINKS: nur im Lehrermodus über den Reiter "Tools & nützliche Links"
 // sichtbar. Jede Zeile entweder
 //   { titel, datei, beschreibung (optional), gruppe (optional), ugruppe (optional) }  -> Datei im Ordner TOOLS_ORDNER
@@ -720,6 +785,24 @@ function renderFaecher(){
     card.addEventListener("click", () => navi(f.id));
     grid.appendChild(card);
   });
+  // DaZ-Karte nach den Fächern
+  if (typeof DAZ === "object" && DAZ){
+    const anzahl = DAZ_SEITEN.filter(sichtbar).length;
+    const flaggen = SPRACHEN.filter(sp => DAZ_SEITEN.some(s => s.sprache === sp.id && sichtbar(s)))
+                            .map(sp => sp.flagge).join(" ");
+    const card = document.createElement("button");
+    card.className = "fach-card daz";
+    card.dataset.fach = "daz";
+    card.style.setProperty("--fach", DAZ.farbe);
+    card.innerHTML = `
+      <div class="icon">${DAZ.icon}</div>
+      <h2>${DAZ.titel}</h2>
+      <p>${DAZ.text}</p>
+      ${flaggen ? `<span class="sprach-flaggen" aria-hidden="true">${flaggen}</span>` : ""}
+      <span class="arrow">${anzahl ? seitenText(anzahl) + " · " : ""}Zu ${DAZ.name} →</span>`;
+    card.addEventListener("click", () => navi("daz"));
+    grid.appendChild(card);
+  }
 }
 
 const viewFach = document.getElementById("view-fach");
@@ -963,6 +1046,142 @@ function goKlasse(fach){
   showView(viewKlasse);
 }
 
+/* ---------- Gemeinsame Bausteine für Lernseiten-Listen (Fächer und DaZ) ---------- */
+// Eine Seiten-Karte bauen. extra (optional): { meta:"…", sprache:true } für den DaZ-Bereich
+function seiteKarte(s, ordner, extra){
+  extra = extra || {};
+  const offen = anklickbar(s);             // WIP nur im Lehrermodus anklickbar
+  const el = document.createElement(offen ? "a" : "div");
+  el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "")
+               + (s.hidden ? " versteckt" : "");
+  if (offen){
+    el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
+  } else {
+    el.setAttribute("aria-disabled", "true");
+  }
+  const sp = extra.sprache ? SPRACHEN.find(x => x.id === s.sprache) : null;
+  const badges = (sp ? `<span class="badge-sprache">${sp.flagge} ${sp.name}</span>` : "")
+               + (s.hidden ? '<span class="badge-hidden">Versteckt</span>' : "")
+               + (s.wip ? '<span class="badge-wip">In Arbeit</span>'
+                        : (s.neu ? '<span class="badge-neu">Neu</span>' : ""));
+  const spMs = SPRACHEN.find(x => x.id === s.sprache);
+  const ms = s.titel_ms ? `<div class="seite-ms" lang="${s.sprache || ""}"${spMs && spMs.rtl ? ' dir="rtl"' : ""}>${s.titel_ms}</div>` : "";
+  const meta = extra.meta ? `<div class="seite-meta">${extra.meta}</div>` : "";
+  const pw1Info = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code>${pwCopyBtn(s.pw)}<small>Lehrermodus – schaltet alles frei, auch Tipps und Musterlösungen</small></div>` : "";
+  const pw2Info = (teach && s.pw2) ? `<div class="seite-pw seite-pw2">🔓 Passwort 2: <code>${s.pw2}</code>${pwCopyBtn(s.pw2)}<small>chronologisches Abarbeiten ausschalten</small></div>` : "";
+  const pwInfo = (pw1Info || pw2Info) ? `<div class="seite-pws">${pw1Info}${pw2Info}</div>` : "";
+  el.innerHTML = `<div>
+      <div class="seite-titel">${s.titel}${badges}</div>
+      ${ms}${meta}
+      ${pwInfo}
+    </div>
+    <div class="goto">→</div>`;
+  return el;
+}
+// Dropdown bauen (für Lernbereich und Unterbereich gleich) – standardmäßig zu,
+// standardAuf=true öffnet es, solange der Nutzer es nicht selbst zugeklappt hat
+const lbZu = new Set();
+function lbDropdown(key, titel, n, kinder, unter, standardAuf){
+  const block = document.createElement("div");
+  block.className = "lb-group" + (unter ? " ulb" : "");
+  const head = document.createElement("button");
+  const auf = lbOffen.has(key) || (standardAuf && !lbZu.has(key));
+  head.className = "lb-head" + (auf ? " open" : "");
+  head.setAttribute("aria-expanded", auf ? "true" : "false");
+  head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count">${seitenText(n)}</span></span>
+    <span class="lb-icon" aria-hidden="true">▲</span>`;
+  head.querySelector(".lb-title").textContent = titel;
+  head.addEventListener("click", () => {
+    const jetztAuf = head.classList.toggle("open");
+    head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
+    if (jetztAuf){ lbOffen.add(key); lbZu.delete(key); } else { lbOffen.delete(key); lbZu.add(key); }
+  });
+  const body = document.createElement("div");
+  body.className = "lb-body";
+  const inner = document.createElement("div");
+  inner.className = "lb-body-inner";
+  kinder.forEach(k => inner.appendChild(k));
+  body.appendChild(inner);
+  block.appendChild(head);
+  block.appendChild(body);
+  return block;
+}
+
+/* ---------- DaZ-Bereich: Sprache wählen (optional), Seiten nach Fach gruppiert ---------- */
+function goDaz(sprache){
+  const sp = SPRACHEN.find(x => x.id === sprache) || null;
+  currentFach = "daz"; currentKlasse = sp ? sp.id : null;
+  document.body.setAttribute("data-fach", "daz");
+  document.body.style.setProperty("--fach", DAZ.farbe);
+  document.getElementById("seitenTitle").textContent = sp ? `${DAZ.name} — ${sp.flagge} ${sp.name}` : DAZ.titel;
+
+  const liste = document.getElementById("seitenListe");
+  liste.innerHTML = "";
+
+  // Sprachknöpfe: "Alle" + jede Sprache mit mindestens einer (angezeigten) Seite
+  const mitSeiten = SPRACHEN.filter(x => DAZ_SEITEN.some(s => s.sprache === x.id && angezeigt(s)));
+  if (mitSeiten.length){
+    const leiste = document.createElement("div");
+    leiste.className = "sprach-chips";
+    leiste.setAttribute("role", "group");
+    leiste.setAttribute("aria-label", "Sprache wählen");
+    const chip = (id, label, n) => {
+      const b = document.createElement("button");
+      b.className = "sprach-chip" + ((sp ? sp.id : "") === id ? " on" : "");
+      b.setAttribute("aria-pressed", (sp ? sp.id : "") === id ? "true" : "false");
+      b.innerHTML = label + `<span class="n">${n}</span>`;
+      b.addEventListener("click", () => navi(id ? "daz/" + id : "daz"));
+      return b;
+    };
+    leiste.appendChild(chip("", "🌍 Alle Sprachen", DAZ_SEITEN.filter(sichtbar).length));
+    mitSeiten.forEach(x => {
+      const c = chip(x.id, `${x.flagge} ${x.name}`, DAZ_SEITEN.filter(s => s.sprache === x.id && sichtbar(s)).length);
+      c.lang = x.id; if (x.rtl) c.dir = "rtl"; c.title = x.de;
+      leiste.appendChild(c);
+    });
+    liste.appendChild(leiste);
+  }
+  if (sp && sp.text){
+    const info = document.createElement("div");
+    info.className = "daz-info"; info.lang = sp.id; if (sp.rtl) info.dir = "rtl";
+    info.innerHTML = `<span class="gruss">${sp.flagge} ${sp.name}</span>`;
+    info.appendChild(document.createTextNode(sp.text));
+    liste.appendChild(info);
+  }
+
+  const treffer = DAZ_SEITEN.filter(s => angezeigt(s) && (!sp || s.sprache === sp.id));
+  if (treffer.length === 0){
+    const leer = document.createElement("div");
+    leer.className = "empty-state";
+    leer.innerHTML = `<div class="em-icon">🌍</div>
+        Hier sind noch keine Lernseiten hinterlegt.<br>Schau in Kürze wieder vorbei!`;
+    liste.appendChild(leer);
+  } else {
+    const zaehle = items => items.filter(s => s.wip ? teach : true).length;
+    const gruppen = [];
+    treffer.forEach(s => {
+      let g = gruppen.find(g => g.fach === s.fach);
+      if (!g){ g = {fach: s.fach, items: []}; gruppen.push(g); }
+      g.items.push(s);
+    });
+    const wenige = gruppen.length <= 2;   // bei wenigen Fächern gleich aufgeklappt
+    gruppen.forEach(g => {
+      const f = FACH[g.fach];
+      const titel = f ? `${f.icon || "📘"} ${f.name}` : (g.fach || "Weitere");
+      const karten = g.items.map(s => seiteKarte(s, DAZ.ordner, {
+        sprache: !sp,
+        meta: [s.klasse ? "Klasse " + s.klasse : "", String(s.lb || "").trim()].filter(Boolean).join(" · ")
+      }));
+      liste.appendChild(lbDropdown("daz|" + g.fach, titel, zaehle(g.items), karten, false, wenige));
+    });
+  }
+
+  crumbbar.classList.add("active");
+  crumbPath.innerHTML = `<b>${DAZ.name}</b>` + (sp ? ` · ${sp.flagge} ${sp.name}` : "");
+  btnBack.onclick = () => navi(sp ? "daz" : "");
+  showView(viewSeiten);
+}
+
 function goSeiten(fach, klasseId, klasseLabel){
   currentFach = fach; currentKlasse = klasseId; currentKlasseLabel = klasseLabel;
   document.getElementById("seitenTitle").textContent = FACHNAME[fach] + " — Klasse " + klasseLabel;
@@ -981,56 +1200,8 @@ function goSeiten(fach, klasseId, klasseLabel){
         Schau in Kürze wieder vorbei!
       </div>`;
   } else {
-    // Eine Seiten-Karte bauen
-    const karte = s => {
-      const offen = anklickbar(s);             // WIP nur im Lehrermodus anklickbar
-      const el = document.createElement(offen ? "a" : "div");
-      el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "")
-                   + (s.hidden ? " versteckt" : "");
-      if (offen){
-        el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
-      } else {
-        el.setAttribute("aria-disabled", "true");
-      }
-      const badges = (s.hidden ? '<span class="badge-hidden">Versteckt</span>' : "")
-                   + (s.wip ? '<span class="badge-wip">In Arbeit</span>'
-                            : (s.neu ? '<span class="badge-neu">Neu</span>' : ""));
-      const pw1Info = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code>${pwCopyBtn(s.pw)}<small>Lehrermodus – schaltet alles frei, auch Tipps und Musterlösungen</small></div>` : "";
-      const pw2Info = (teach && s.pw2) ? `<div class="seite-pw seite-pw2">🔓 Passwort 2: <code>${s.pw2}</code>${pwCopyBtn(s.pw2)}<small>chronologisches Abarbeiten ausschalten</small></div>` : "";
-      const pwInfo = (pw1Info || pw2Info) ? `<div class="seite-pws">${pw1Info}${pw2Info}</div>` : "";
-      el.innerHTML = `<div>
-          <div class="seite-titel">${s.titel}${badges}</div>
-          ${pwInfo}
-        </div>
-        <div class="goto">→</div>`;
-      return el;
-    };
-    // Dropdown bauen (für Lernbereich und Unterbereich gleich) – standardmäßig zu
-    const dropdown = (key, titel, n, kinder, unter) => {
-      const block = document.createElement("div");
-      block.className = "lb-group" + (unter ? " ulb" : "");
-      const head = document.createElement("button");
-      const auf = lbOffen.has(key);
-      head.className = "lb-head" + (auf ? " open" : "");
-      head.setAttribute("aria-expanded", auf ? "true" : "false");
-      head.innerHTML = `<span><span class="lb-title"></span><span class="lb-count">${seitenText(n)}</span></span>
-        <span class="lb-icon" aria-hidden="true">▲</span>`;
-      head.querySelector(".lb-title").textContent = titel;
-      head.addEventListener("click", () => {
-        const jetztAuf = head.classList.toggle("open");
-        head.setAttribute("aria-expanded", jetztAuf ? "true" : "false");
-        jetztAuf ? lbOffen.add(key) : lbOffen.delete(key);
-      });
-      const body = document.createElement("div");
-      body.className = "lb-body";
-      const inner = document.createElement("div");
-      inner.className = "lb-body-inner";
-      kinder.forEach(k => inner.appendChild(k));
-      body.appendChild(inner);
-      block.appendChild(head);
-      block.appendChild(body);
-      return block;
-    };
+    const karte = s => seiteKarte(s, ordner);
+    const dropdown = lbDropdown;
     const zaehle = items => items.filter(s => s.wip ? teach : true).length;   // WIP zählt nur im Lehrermodus
     const gruppiere = (items, feld) => {        // Reihenfolge des ersten Auftretens
       const out = [];
@@ -1084,6 +1255,11 @@ function route(){
   if (fach === "tools"){
     if (teach){ goTools(); titel += " – Tools"; }
     else { korrigiere(); goFach(); }
+  } else if (fach === "daz" && typeof DAZ === "object" && DAZ){
+    const sp = klasse ? SPRACHEN.find(x => x.id === klasse) : null;
+    if (klasse && !sp) history.replaceState(null, "", adresseFuer("daz"));   // unbekannte Sprache -> DaZ
+    goDaz(sp ? sp.id : null);
+    titel += " – " + DAZ.name + (sp ? " " + sp.de : "");
   } else if (fach && FACH[fach]){
     const k = klasse ? (KLASSEN[fach] || []).find(k => k.id === klasse) : null;
     if (k){
