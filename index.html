@@ -57,7 +57,11 @@
   lb     : beliebiger kurzer Lernbereichs-Name, wird als Gruppen-Überschrift
            und als Chip angezeigt
   titel  : Anzeigename der Stunde
-  datei  : relativer Pfad zur .html-Datei im Repo
+  datei  : Dateiname der .html-Datei (Ordner kommt aus KLASSEN) – ODER ein
+           externer Link, z. B. "https://studyflix.de/…" (auch "www.…" geht).
+           Links werden nicht mit dem Ordner verbunden, öffnen in einem neuen
+           Tab und bekommen ein Badge mit dem Namen der Webseite (↗ studyflix.de).
+           Funktioniert genauso in DAZ_SEITEN.
   neu    : optional, true setzt ein "Neu"-Badge
   wip    : optional, true zeigt die Karte ausgegraut und nicht anklickbar
            mit Badge "In Arbeit" (für Seiten, die noch nicht fertig sind).
@@ -71,6 +75,10 @@
            nur im Lehrermodus des Portals angezeigt.
   hidden : optional, true blendet die Seite für SuS komplett aus (auch aus
            den Seitenzahlen). Nur im Lehrermodus sichtbar, Badge "Versteckt".
+  kommentar : optional, kleiner Text unter dem Titel, den ALLE sehen – z. B.
+           Arbeitsauftrag oder Tipp zum Link. \n = neue Zeile.
+  notiz  : optional, Notiz nur für dich – erscheint nur im Lehrermodus des
+           Portals (gelbes 📝-Schild), z. B. "läuft nur am PC".
 
   ulb    : optional, Unterbereich innerhalb des Lernbereichs, z. B. "Quiz".
            Alle Seiten mit gleichem lb UND gleichem ulb landen in einem eigenen
@@ -98,7 +106,8 @@
   klasse, lb : nur zur Anzeige auf der Karte (optional)
   titel_ms : optional, Titel in der Muttersprache (zweite Zeile auf der Karte)
   datei    : NUR der Dateiname – der Ordner kommt aus DAZ.ordner
-  neu, wip, pw, pw2, hidden : wie bei SEITEN
+  neu, wip, pw, pw2, hidden, kommentar, notiz : wie bei SEITEN
+  (datei darf auch hier ein externer Link "https://…" sein)
 
   LERNBEREICHE:
   Jeder Lernbereich (lb) einer Klasse ist ein aufklappbares Dropdown-Feld,
@@ -280,6 +289,19 @@
     font-weight:700;border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;
   }
   .goto{font-size:1.3rem;color:var(--sc-accent);flex-shrink:0;}
+  /* Externe Links (datei = "https://…") */
+  .badge-extern{
+    background:#EEF2F7;color:#33475B;font-size:var(--fs-sm);font-weight:600;
+    border-radius:var(--radius-full);padding:2px 10px;margin-left:8px;border:1px solid #C9D5E3;
+    white-space:nowrap;
+  }
+  .seite-card.extern .goto{font-weight:700;}
+  /* Kommentar (sehen alle) und Notiz (nur Lehrermodus) */
+  .seite-kommentar{font-size:var(--fs-sm);color:var(--color-text-secondary);margin-top:4px;white-space:pre-line;
+    border-left:3px solid color-mix(in srgb, var(--sc-accent) 35%, white);padding-left:9px;line-height:1.45;}
+  .seite-card.wip .seite-kommentar{color:var(--color-text-muted);}
+  .seite-notiz{display:inline-block;margin-top:6px;font-size:var(--fs-sm);color:#5B4A1F;background:#FFF8E1;
+    border:1px dashed #E6CF8B;border-radius:6px;padding:1px 8px;white-space:pre-line;}
 
   /* ── Seiten "unter Arbeit" ── */
   .seite-card.wip{
@@ -596,6 +618,10 @@ const SEITEN = [
   { fach:"physik", klasse:"7", lb:"LB0 - Grundlagen", titel:"Übungswebseite :  Rechnen in der Physik \n Themen Klasse 6 und Beginn Klasse 7", datei:"K7 - LB1 - Rechnen_in_der_Physik.html", pw:"Physik6" },
   { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", titel:"Hookesches Gesetz", datei:"K7 - LB1 - Hookesches_Gesetz.html", pw:"feder2026" },
   { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", titel:"Einseitiger Zweiseitiger Hebel", datei:"K7 - LB2 - Einseitiger_Zweiseitiger_Hebel.html", pw:"Weggehebelt",wip:true },
+  { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", ulb:"Simulation", titel:"Simulation Reibung", datei:"K7 - LB1 - Reibung-simulation.html", kommentar:"Reibung mit Zoom auf Oberflächen" },
+  { fach:"physik", klasse:"7", lb:"LB1 - Kräfte", ulb:"Simulation", titel:"Simulation Rutherford Streuversuch", datei:"https://phet.colorado.edu/de/simulations/rutherford-scattering", kommentar:"RUTHERFORD-Streuung (Simulation von PhET)" },
+
+
   // Klasse 8=================
   { fach:"physik", klasse:"8", lb:"LB1 - Mechanik der Flüssigkeiten und Gase", titel:"Druck – Hydraulik (Vertiefung)", datei:"K8 - LB1 - Druck Hydraulik Vertiefung.html" ,pw:"Pumpenkolben"},
   { fach:"physik", klasse:"8", lb:"LB1 - Mechanik der Flüssigkeiten und Gase", titel:"Schweredruck in Flüssigkeiten", datei:"K8 - LB1 - Schweredruck_Fluessigkeiten.html", wip:true },
@@ -622,6 +648,7 @@ const SEITEN = [
   // =================Informatik===============================
   // ==========================================================
   // =================Klasse 7=================
+  { fach:"informatik", klasse:"7", lb:"LB0 - Grundlagen", titel:"Grundlagenkenntnisse PC", datei:"Computer_Grundlagen_Lernpfad.html", pw:"Doppelklick", kommentar:"Grundlagen Kenntnisse\nMaus - Tastatur\nOrdnerstrukturen\nEMail´s schreiben", neu:true },
   { fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", datei:"K7 - LB1 - Binaerzahlen.html",pw:"Byte256" },
   { fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"ASCII Geheimnachrichten", datei:"K7 - LB1 - ASCII_Geheimnachrichten.html", pw:"OperationByte" },
   // =================Klasse 8=================
@@ -691,6 +718,7 @@ const SPRACHEN = [
   { id:"ru", name:"Русский", de:"Russisch", flagge:"🇷🇺", text:"Здесь страницы на русском языке. На каждой странице можно переключиться на немецкий." },
   { id:"es", name:"Español", de:"Spanisch", flagge:"🇪🇸", text:"Aquí tienes páginas en español. En cada página puedes cambiar al alemán." },
   { id:"cs", name:"Čeština", de:"Tschechisch", flagge:"🇨🇿", text:"Tady jsou stránky v češtině. Na každé stránce můžeš přepnout do němčiny." },
+  { id:"so", name:"Soomaali", de:"Somali", flagge:"🇸🇴", text:"Halkan waxaa ku jira bogag af Soomaali ah. Bog kasta waxaad ku beddeli kartaa af Jarmal." },
   // { id:"uk", name:"Українська", de:"Ukrainisch", flagge:"🇺🇦", text:"Тут сторінки українською мовою." },
   // { id:"ar", name:"العربية", de:"Arabisch", flagge:"🇸🇾", rtl:true },
   // { id:"tr", name:"Türkçe", de:"Türkisch", flagge:"🇹🇷" },
@@ -700,6 +728,8 @@ const DAZ_SEITEN = [
   { sprache:"ru", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Двоичные числа",datei:"K7 - LB1 - Binaerzahlen_DaZ_Russisch.html", pw:"Matrjoschka256", neu:true },
   { sprache:"es", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Números binarios", datei:"K7 - LB1 - Binaerzahlen_DaZ_Spanisch.html", pw:"UnoYCero", neu:true },
   { sprache:"cs", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Dvojková čísla", datei:"K7 - LB1 - Binaerzahlen_DaZ_Tschechisch.html", pw:"Knedlik256", neu:true },
+  { sprache:"so", fach:"informatik", klasse:"7", lb:"LB1 - Informationen und Daten", titel:"Binärzahlen", titel_ms:"Tirooyinka labaale", datei:"K7 - LB1 - Binaerzahlen_DaZ_Somali.html", pw:"HalIyoEber", neu:true },
+  
 ];
 
 // >>> TOOLS & LINKS: nur im Lehrermodus über den Reiter "Tools & nützliche Links"
@@ -1050,19 +1080,42 @@ function goKlasse(fach){
 
 /* ---------- Gemeinsame Bausteine für Lernseiten-Listen (Fächer und DaZ) ---------- */
 // Eine Seiten-Karte bauen. extra (optional): { meta:"…", sprache:true } für den DaZ-Bereich
+// Externer Link statt Datei? "https://…", "http://…", "//…" oder "www.…" in "datei"
+// -> wird NICHT mit dem Ordner verbunden und öffnet in einem neuen Tab.
+function externeAdresse(datei){
+  const d = String(datei || "").trim();
+  if (/^(https?:)?\/\//i.test(d)) return d;
+  if (/^www\./i.test(d)) return "https://" + d;
+  return null;
+}
+// Text sicher ins HTML (für kommentar / notiz – \n wird per CSS zum Zeilenumbruch)
+const htmlText = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+// Kurzname der Webseite für das Badge, z. B. "studyflix.de"
+function linkHost(url){
+  try{ return new URL(url, location.href).hostname.replace(/^www\./, ""); }catch(e){ return ""; }
+}
+
 function seiteKarte(s, ordner, extra){
   extra = extra || {};
   const offen = anklickbar(s);             // WIP nur im Lehrermodus anklickbar
+  const extUrl = externeAdresse(s.datei);  // externer Link?
   const el = document.createElement(offen ? "a" : "div");
   el.className = "seite-card" + (s.wip ? (offen ? " wip-lehrer" : " wip") : "")
-               + (s.hidden ? " versteckt" : "");
+               + (s.hidden ? " versteckt" : "") + (extUrl ? " extern" : "");
   if (offen){
-    el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
+    if (extUrl){
+      el.href = extUrl; el.target = "_blank"; el.rel = "noopener noreferrer";   // fremde Seite: neuer Tab
+      el.title = "Öffnet " + (linkHost(extUrl) || "eine externe Webseite") + " in einem neuen Tab";
+    } else {
+      el.href = ordner ? `${ordner}/${s.datei}` : s.datei;
+    }
   } else {
     el.setAttribute("aria-disabled", "true");
   }
   const sp = extra.sprache ? SPRACHEN.find(x => x.id === s.sprache) : null;
+  const host = extUrl ? linkHost(extUrl) : "";
   const badges = (sp ? `<span class="badge-sprache">${sp.flagge} ${sp.name}</span>` : "")
+               + (extUrl ? `<span class="badge-extern">↗ ${host || "Extern"}</span>` : "")
                + (s.hidden ? '<span class="badge-hidden">Versteckt</span>' : "")
                + (s.wip ? '<span class="badge-wip">In Arbeit</span>'
                         : (s.neu ? '<span class="badge-neu">Neu</span>' : ""));
@@ -1072,12 +1125,14 @@ function seiteKarte(s, ordner, extra){
   const pw1Info = (teach && s.pw) ? `<div class="seite-pw">🔑 Passwort: <code>${s.pw}</code>${pwCopyBtn(s.pw)}<small>Lehrermodus – schaltet alles frei, auch Tipps und Musterlösungen</small></div>` : "";
   const pw2Info = (teach && s.pw2) ? `<div class="seite-pw seite-pw2">🔓 Passwort 2: <code>${s.pw2}</code>${pwCopyBtn(s.pw2)}<small>chronologisches Abarbeiten ausschalten</small></div>` : "";
   const pwInfo = (pw1Info || pw2Info) ? `<div class="seite-pws">${pw1Info}${pw2Info}</div>` : "";
+  const kom = s.kommentar ? `<div class="seite-kommentar">${htmlText(s.kommentar)}</div>` : "";
+  const notiz = (teach && s.notiz) ? `<div class="seite-notiz" title="Notiz – nur im Lehrermodus sichtbar">📝 ${htmlText(s.notiz)}</div>` : "";
   el.innerHTML = `<div>
       <div class="seite-titel">${s.titel}${badges}</div>
-      ${ms}${meta}
-      ${pwInfo}
+      ${ms}${meta}${kom}
+      ${notiz}${pwInfo}
     </div>
-    <div class="goto">→</div>`;
+    <div class="goto">${extUrl ? "↗" : "→"}</div>`;
   return el;
 }
 // Dropdown bauen (für Lernbereich und Unterbereich gleich) – standardmäßig zu,

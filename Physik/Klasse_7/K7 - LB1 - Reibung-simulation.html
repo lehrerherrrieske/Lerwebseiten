@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reibungslabor – Haft-, Gleit- und Rollreibung</title>
+<style>
+/* Layout: Karopapier-Heftseite. Links Versuch + Lupe, rechts Regler und Messwerte. */
+:root{
+  --paper:#fbfaf4; --panel:#ffffff; --ink:#1d2733; --muted:#5d6875; --line:#d5dbe3;
+  --grid:#cfe0ee; --accent:#1f5fa8;
+  --fg:#1f5fa8;   /* Gewichtskraft */
+  --fn:#1d8a4a;   /* Normalkraft */
+  --fz:#c9302c;   /* Zugkraft */
+  --fr:#c26a00;   /* Reibungskraft */
+  --font: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.45 var(--font);
+  padding:14px max(16px, env(safe-area-inset-right,0px)) 28px max(16px, env(safe-area-inset-left,0px))}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;margin-bottom:12px}
+h1{font-size:22px;margin:0;letter-spacing:-.01em}
+h1 small{font-weight:400;color:var(--muted);font-size:14px;margin-left:8px}
+.modes{display:flex;border:2px solid var(--accent);border-radius:8px;overflow:hidden}
+.modes button{border:0;background:var(--panel);color:var(--accent);font:600 15px var(--font);padding:8px 16px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+@media (max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.stage{display:flex;flex-direction:column;gap:12px;min-width:0}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;
+  padding:6px 12px;border-bottom:1px solid var(--line);font-weight:600}
+figcaption span.note{font-weight:400;color:var(--muted);font-size:13px}
+canvas{display:block;width:100%;height:auto}
+#scene{aspect-ratio:900/340}
+#micro{aspect-ratio:900/280}
+.zoomrow{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line)}
+.zoomrow input{flex:1;min-width:0}
+.zoomrow output{font:13px var(--mono);min-width:9.5em;text-align:right}
+#microText{margin:0;padding:8px 12px;border-top:1px solid var(--line);min-height:3.4em}
+aside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+.ctl{display:grid;grid-template-columns:1fr auto;gap:0 8px;align-items:baseline;margin-bottom:8px}
+.ctl label{font-weight:600}
+.ctl output{font:14px var(--mono);font-variant-numeric:tabular-nums}
+.ctl input[type=range]{grid-column:1/-1;width:100%;margin:2px 0 0}
+input[type=range]{accent-color:var(--accent)}
+#ctlF input{accent-color:var(--fz)}
+select,button.plain{font:14px var(--font);padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+button.plain{cursor:pointer;font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #f0a500;outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row select{flex:1;min-width:0}
+#state{display:inline-block;font-weight:700;padding:3px 10px;border-radius:99px;color:#fff;background:var(--muted);margin-bottom:8px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td{padding:2px 0}
+td:last-child{text-align:right;font-family:var(--mono);font-size:14px}
+td i{font-style:italic;font-weight:700}
+.cG{color:var(--fg)}.cN{color:var(--fn)}.cZ{color:var(--fz)}.cR{color:var(--fr)}
+#formula{margin:8px 0 0;padding:8px 10px;background:#f3f6fa;border-radius:6px;font-size:14px}
+.hint{color:var(--muted);font-size:13px;margin:4px 0 0}
+details summary{cursor:pointer;font-weight:600}
+details ol{margin:6px 0 0;padding-left:20px}
+details li{margin-bottom:6px}
+.lvl{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<header>
+  <h1>Reibungslabor <small>Physik Klasse 7</small></h1>
+  <div class="modes" role="group" aria-label="Versuch wählen">
+    <button id="mBlock" aria-pressed="true">Klotz ziehen (Haften / Gleiten)</button>
+    <button id="mRoll" aria-pressed="false">Wagen ziehen (Rollen)</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stage">
+    <figure>
+      <figcaption>Versuch <span class="note" id="scaleNote"></span></figcaption>
+      <canvas id="scene" width="900" height="340" aria-label="Versuchsaufbau mit Kraftpfeilen"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Blick durch die Lupe: Berührungsfläche <span class="note">Bewegung in Zeitlupe</span></figcaption>
+      <canvas id="micro" width="900" height="280" aria-label="Vergrößerte Oberflächen"></canvas>
+      <div class="zoomrow">
+        <label for="zoom">Zoom</label>
+        <input id="zoom" type="range" min="0" max="100" value="87" step="1">
+        <output id="zoomOut" for="zoom"></output>
+      </div>
+      <p id="microText"></p>
+    </figure>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h2>Einstellungen</h2>
+      <div class="ctl" id="ctlF"><label for="F">Zugkraft <i>F</i><sub>Zug</sub></label><output id="FOut"></output>
+        <input id="F" type="range" min="0" max="75" step="0.1" value="0"></div>
+      <div class="ctl"><label for="m">Masse <i>m</i></label><output id="mOut"></output>
+        <input id="m" type="range" min="1" max="10" step="0.5" value="5"></div>
+      <div class="ctl"><label for="muH">Haftreibungszahl μ<sub>H</sub></label><output id="muHOut"></output>
+        <input id="muH" type="range" min="0.02" max="1" step="0.01" value="0.6"></div>
+      <div class="ctl"><label for="muG">Gleitreibungszahl μ<sub>G</sub></label><output id="muGOut"></output>
+        <input id="muG" type="range" min="0.01" max="1" step="0.01" value="0.4"></div>
+      <div class="ctl"><label for="muR">Rollreibungszahl μ<sub>R</sub></label><output id="muROut"></output>
+        <input id="muR" type="range" min="0.002" max="0.1" step="0.001" value="0.05"></div>
+      <div class="row">
+        <select id="preset" aria-label="Stoffpaar (Richtwerte)">
+          <option value="">Stoffpaar wählen (Richtwerte)…</option>
+          <option value="0.6,0.4,0.05">Holz auf Holz</option>
+          <option value="0.15,0.1,0.002">Stahl auf Stahl</option>
+          <option value="0.9,0.7,0.02">Gummi auf Asphalt</option>
+          <option value="0.03,0.015,0.002">Stahl auf Eis</option>
+        </select>
+        <button class="plain" id="reset">Zurück auf Start</button>
+      </div>
+      <p class="hint">μ<sub>G</sub> kann nicht größer als μ<sub>H</sub> werden – die Regler ziehen sich gegenseitig mit.</p>
+    </div>
+
+    <div class="card">
+      <h2>Messwerte</h2>
+      <div id="state">Ruhe</div>
+      <table>
+        <tr><td><i class="cG">F</i><sub>G</sub> Gewichtskraft</td><td id="vFG"></td></tr>
+        <tr><td><i class="cN">F</i><sub>N</sub> Normalkraft</td><td id="vFN"></td></tr>
+        <tr><td><i class="cZ">F</i><sub>Zug</sub> Zugkraft</td><td id="vFZ"></td></tr>
+        <tr><td><i class="cR">F</i><sub>R</sub> Reibungskraft</td><td id="vFR"></td></tr>
+        <tr><td id="lMax">größte Haftreibungskraft</td><td id="vMax"></td></tr>
+        <tr><td>Geschwindigkeit <i>v</i></td><td id="vV"></td></tr>
+      </table>
+      <p id="formula"></p>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Beobachtungsaufträge</summary>
+        <ol>
+          <li><span class="lvl">Einstieg</span><br>Erhöhe die Zugkraft langsam. Bei welcher Kraft setzt sich der Klotz in Bewegung? Was passiert in diesem Moment mit dem Pfeil <i>F</i><sub>R</sub>?</li>
+          <li><span class="lvl">Vertiefung</span><br>Verdopple die Masse. Wie ändern sich <i>F</i><sub>N</sub> und die größte Haftreibungskraft? Formuliere einen Je-desto-Satz.</li>
+          <li><span class="lvl">Profi</span><br>Vergleiche Klotz und Wagen bei gleicher Masse. Erkläre mit der Lupenansicht, warum Rollen so viel weniger Kraft braucht als Gleiten.</li>
+        </ol>
+      </details>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+"use strict";
+const g = 9.81, $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COL = {fg:css('--fg'), fn:css('--fn'), fz:css('--fz'), fr:css('--fr'), ink:css('--ink'), muted:css('--muted'), grid:css('--grid')};
+const de = (v,d=1) => v.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+const S = {mode:'block', m:5, F:0, muH:.6, muG:.4, muR:.05,
+           x:0, v:0,                       // Ort (m), Geschwindigkeit (m/s)
+           dSlide:0, elastic:0, settleTo:null, Ld:0, sink:0};   // Lupenansicht (µm)
+
+/* ---------- Physik ---------- */
+function forces(){
+  const FN = S.m*g, FG = FN;
+  let FR, kind, Fmax;
+  if(S.mode==='block'){
+    Fmax = S.muH*FN;
+    if(S.v===0 && S.F<=Fmax){ FR=S.F; kind = S.F>0?'haft':'ruhe'; }
+    else { FR=S.muG*FN; kind='gleit'; }
+  } else {
+    Fmax = S.muR*FN;
+    if(S.v===0 && S.F<=Fmax){ FR=S.F; kind = S.F>0?'rollsteht':'ruhe'; }
+    else { FR=Fmax; kind='roll'; }
+  }
+  const moving = kind==='gleit'||kind==='roll';
+  return {FN,FG,FR,kind,Fmax,a: moving ? (S.F-FR)/S.m : 0, moving};
+}
+function step(dt){
+  const f = forces();
+  if(f.moving){
+    const wasMoving = S.v>0;
+    S.v += f.a*dt;
+    if(S.v<=0){ S.v=0; if(wasMoving) onStop(); }
+    else S.settleTo=null;
+  }
+  const dx = S.v*dt;
+  S.x += dx;
+  S.dSlide += dx*120/zoom();          // Zeitlupe: gleiche Bildgeschwindigkeit bei jedem Zoom
+  // elastisches "Anlehnen" der Zacken beim Haften
+  const tgt = S.mode==='block' ? (S.v>0 ? 3 : 3*Math.min(1, f.Fmax>0 ? S.F/f.Fmax : 0)) : 0;
+  S.elastic += (tgt-S.elastic)*Math.min(1,dt*14);
+  if(S.settleTo!==null && S.v===0){
+    S.dSlide += (S.settleTo-S.dSlide)*Math.min(1,dt*10);
+  }
+}
+function onStop(){           // Klotz rastet in die nächste "Mulde" ein
+  if(S.mode!=='block'){ S.settleTo=null; return; }
+  let best=S.dSlide, bestL=Infinity;
+  for(let i=-24;i<=24;i++){
+    const d=S.dSlide+i*0.5, L=liftBlock(d);
+    if(L<bestL){bestL=L;best=d;}
+  }
+  S.settleTo=best;
+}
+
+/* ---------- Oberflächenprofile (Einheit µm) ---------- */
+const tri = t => 2*Math.abs(2*(t-Math.floor(t+.5)))-1;
+const amp = () => 2+7*S.muH;
+const hG = X => amp()*(.55*tri(X/23+.1)+.30*tri(X/9.7+.4)+.15*Math.sin(X/3.1));
+const hU = X => amp()*(.55*tri(X/19+.7)+.30*tri(X/8.3+.2)+.15*Math.sin(X/2.7+1));
+const zoom = () => 0.02*Math.pow(200, +$('zoom').value/100);   // px pro µm
+const MW=900, MH=280, Y0=150, NS=300;
+function liftBlock(d){
+  const z=zoom(); let L=-Infinity;
+  for(let i=0;i<=NS;i++){ const X=(i*MW/NS-450)/z; const v=hU(X)+hG(X+d); if(v>L)L=v; }
+  return L;
+}
+
+/* ---------- Zeichnen: Hilfen ---------- */
+function fit(c,W,H){
+  const dpr=window.devicePixelRatio||1, w=Math.max(200,c.clientWidth);
+  const pw=Math.round(w*dpr), ph=Math.round(w*H/W*dpr);
+  if(c.width!==pw||c.height!==ph){c.width=pw;c.height=ph;}
+  const ctx=c.getContext('2d'); ctx.setTransform(pw/W,0,0,pw/W,0,0); return ctx;
+}
+function arrow(ctx,x1,y1,x2,y2,col){
+  const len=Math.hypot(x2-x1,y2-y1); if(len<0.5) return;
+  const ux=(x2-x1)/len, uy=(y2-y1)/len, h=Math.min(14,len), w=Math.min(6,h*.5);
+  ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=4; ctx.lineCap='butt';
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-ux*h,y2-uy*h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-ux*h-uy*w,y2-uy*h+ux*w); ctx.lineTo(x2-ux*h+uy*w,y2-uy*h-ux*w); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.arc(x1,y1,3,0,7); ctx.fill();
+}
+function label(ctx,x,y,sub,val,col,align){
+  const f1='italic 700 17px Arial', f2='700 11px Arial', f3='600 14px Arial', t=' = '+de(val)+' N';
+  ctx.font=f1; const w1=ctx.measureText('F').width;
+  ctx.font=f2; const w2=ctx.measureText(sub).width;
+  ctx.font=f3; const w3=ctx.measureText(t).width;
+  const w=w1+w2+w3; let x0 = align==='right'? x-w : align==='center'? x-w/2 : x;
+  ctx.fillStyle='rgba(255,255,255,.88)'; ctx.fillRect(x0-4,y-15,w+8,21);
+  ctx.fillStyle=col; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.font=f1; ctx.fillText('F',x0,y);
+  ctx.font=f2; ctx.fillText(sub,x0+w1+1,y+4);
+  ctx.font=f3; ctx.fillText(t,x0+w1+w2+1,y);
+}
+
+/* ---------- Versuch (Makro) ---------- */
+const W=900,H=340,GY=200,CX=400,K=20;   // K: Kästchenbreite in px
+function scale(){                        // N pro Kästchen, so dass alles ins Bild passt
+  const Fm=Math.max(S.m*g, +$('F').max);
+  for(const k of [0.5,1,2,5,10,20,50]) if(Fm*K/k<=150) return k;
+  return 100;
+}
+function drawScene(f){
+  const ctx=fit($('scene'),W,H), k=scale(), ppn=K/k;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  // Karopapier
+  ctx.strokeStyle=COL.grid; ctx.lineWidth=1; ctx.beginPath();
+  for(let x=0;x<=W;x+=K){ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);}
+  for(let y=0;y<=H;y+=K){ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);}
+  ctx.stroke();
+  // Unterlage: Schraffur + Meter-Marken laufen mit
+  const off=(S.x*100)%14;
+  ctx.strokeStyle='#8c95a0'; ctx.lineWidth=1.2; ctx.beginPath();
+  for(let x=-14-off;x<W+14;x+=14){ctx.moveTo(x+10,GY);ctx.lineTo(x,GY+11);}
+  ctx.stroke();
+  ctx.strokeStyle=COL.ink; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(0,GY);ctx.lineTo(W,GY);ctx.stroke();
+  ctx.fillStyle=COL.muted; ctx.font='12px Arial'; ctx.textAlign='center';
+  const k0=Math.floor(S.x-CX/100)-1;
+  for(let i=k0;i<k0+12;i++){ const sx=CX+(i-S.x)*100; if(sx<-20||sx>W+20) continue;
+    ctx.fillRect(sx-1,GY+11,2,7); ctx.fillText(i+' m',sx,GY+32); }
+
+  // Körper
+  let comY, frX;
+  if(S.mode==='block'){
+    comY=GY-40; frX=CX-60;
+    ctx.fillStyle='#e2b673'; ctx.strokeStyle='#7d4f1c'; ctx.lineWidth=2;
+    ctx.fillRect(CX-60,GY-80,120,80); ctx.strokeRect(CX-60,GY-80,120,80);
+    ctx.strokeStyle='rgba(125,79,28,.35)'; ctx.lineWidth=1; ctx.beginPath();
+    for(const y of [18,34,52,66]){ctx.moveTo(CX-56,GY-80+y);ctx.bezierCurveTo(CX-20,GY-84+y,CX+20,GY-76+y,CX+56,GY-80+y);}
+    ctx.stroke();
+  } else {
+    comY=GY-60; frX=CX-40;
+    ctx.fillStyle='#9fc0e6'; ctx.strokeStyle='#2c4f7c'; ctx.lineWidth=2;
+    ctx.fillRect(CX-60,GY-100,120,80); ctx.strokeRect(CX-60,GY-100,120,80);
+    const ang=S.x*100/20;
+    for(const wx of [CX-40,CX+40]){
+      ctx.fillStyle='#3d4148'; ctx.beginPath(); ctx.arc(wx,GY-20,20,0,7); ctx.fill();
+      ctx.fillStyle='#d9dde2'; ctx.beginPath(); ctx.arc(wx,GY-20,13,0,7); ctx.fill();
+      ctx.strokeStyle='#3d4148'; ctx.lineWidth=2.5; ctx.beginPath();
+      for(let s=0;s<3;s++){const a=ang+s*Math.PI/3; ctx.moveTo(wx-13*Math.cos(a),GY-20-13*Math.sin(a)); ctx.lineTo(wx+13*Math.cos(a),GY-20+13*Math.sin(a));}
+      ctx.stroke();
+    }
+  }
+  ctx.fillStyle=COL.ink; ctx.font='600 13px Arial'; ctx.textAlign='center';
+  ctx.fillText('m = '+de(S.m)+' kg',CX+22,(S.mode==='block'?GY-80:GY-100)+17);
+  // Lupe
+  const lx=S.mode==='block'?CX+40:CX+40;
+  ctx.strokeStyle=COL.muted; ctx.lineWidth=2; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.arc(lx,GY,11,0,7); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(lx+8,GY+8); ctx.lineTo(lx+18,GY+18); ctx.stroke();
+
+  // Kraftpfeile – alle im selben Maßstab
+  const LG=f.FG*ppn, LN=f.FN*ppn, LZ=S.F*ppn, LR=f.FR*ppn;
+  arrow(ctx,CX-20,GY,CX-20,GY-LN,COL.fn);
+  arrow(ctx,CX,comY,CX,comY+LG,COL.fg);
+  arrow(ctx,CX+60,comY,CX+60+LZ,comY,COL.fz);
+  arrow(ctx,frX,GY,frX-LR,GY,COL.fr);
+  label(ctx,CX-30,GY-LN+12,'N',f.FN,COL.fn,'right');
+  label(ctx,CX+12,Math.min(H-8,comY+LG+2),'G',f.FG,COL.fg,'left');
+  label(ctx,CX+68,comY-12,'Zug',S.F,COL.fz,'left');
+  label(ctx,S.mode==='block'?frX-6:frX-28,GY-12,'R',f.FR,COL.fr,'right');
+
+  // Maßstab
+  ctx.fillStyle='rgba(255,255,255,.9)'; ctx.fillRect(W-200,12,188,36);
+  ctx.strokeStyle=COL.ink; ctx.lineWidth=2; ctx.strokeRect(W-190.5,20.5,K,K);
+  ctx.fillStyle=COL.ink; ctx.font='600 14px Arial'; ctx.textAlign='left';
+  ctx.fillText('1 Kästchen ≙ '+de(k,k<1?1:0)+' N',W-162,35);
+  $('scaleNote').textContent='Maßstab der Kraftpfeile: 1 Kästchen ≙ '+de(k,k<1?1:0)+' N';
+}
+
+/* ---------- Lupe (Mikro) ---------- */
+function drawMicro(f,dt){
+  const ctx=fit($('micro'),MW,MH), z=zoom(), d=S.dSlide+S.elastic;
+  ctx.clearRect(0,0,MW,MH); ctx.fillStyle='#fdfcf7'; ctx.fillRect(0,0,MW,MH);
+  const xs=[], yu=[], gyAt = x => Y0-hG((x-450)/z+d)*z;
+  let L;
+  if(S.mode==='block'){
+    L=-Infinity;
+    const hu=[];
+    for(let i=0;i<=NS;i++){ const x=i*MW/NS, X=(x-450)/z; xs.push(x); hu.push(hU(X)); const v=hu[i]+hG(X+d); if(v>L)L=v; }
+    S.Ld=Math.max(L,S.Ld-(80/z)*dt); if(!isFinite(S.Ld)) S.Ld=L;
+    for(let i=0;i<=NS;i++) yu.push(Y0-S.Ld*z+hu[i]*z);
+  } else {
+    const R=500+500/z, pm=Math.asin(Math.min(1,520/R)); let Lpx=-Infinity; const rr=[], ph=[];
+    for(let i=0;i<=NS;i++){ const p=-pm+2*pm*i/NS, r=R+hU(R*p/z+d)*z, x=450+r*Math.sin(p);
+      ph.push(p); rr.push(r); xs.push(x);
+      const v=r*Math.cos(p)-R+hG((x-450)/z+d)*z; if(v>Lpx)Lpx=v; }
+    L=Lpx/z; S.Ld=Math.max(L,S.Ld-(80/z)*dt); if(!isFinite(S.Ld)) S.Ld=L;
+    const yc=Y0-R-S.Ld*z;
+    for(let i=0;i<=NS;i++) yu.push(yc+rr[i]*Math.cos(ph[i]));
+  }
+  // Spitzen drücken sich ineinander: in Ruhe tief, beim Gleiten kaum
+  const sinkT = amp()*(S.mode==='block' ? (S.v>0 ? .12 : .75) : .35);
+  S.sink += (sinkT-S.sink)*Math.min(1,dt*(S.v>0?12:3));
+  for(let i=0;i<=NS;i++) yu[i]=Math.min(yu[i]+S.sink*z, gyAt(xs[i]));
+  // Unterlage
+  ctx.beginPath(); ctx.moveTo(0,MH);
+  for(let x=0;x<=MW;x+=3) ctx.lineTo(x,gyAt(x));
+  ctx.lineTo(MW,MH); ctx.closePath();
+  ctx.fillStyle='#aeb6bf'; ctx.fill(); ctx.strokeStyle='#4c5560'; ctx.lineWidth=1.5; ctx.stroke();
+  // Körper / Rad
+  ctx.beginPath(); ctx.moveTo(xs[0],-10);
+  for(let i=0;i<=NS;i++) ctx.lineTo(xs[i],yu[i]);
+  ctx.lineTo(xs[NS],-10); ctx.closePath();
+  if(S.mode==='block'){ctx.fillStyle='#e2b673';ctx.strokeStyle='#7d4f1c';} else {ctx.fillStyle='#4a4f57';ctx.strokeStyle='#1c1e22';}
+  ctx.fill(); ctx.stroke();
+  // Berührungsstellen
+  if(z>=0.25){
+    ctx.fillStyle='rgba(255,120,0,.55)';
+    for(let i=0;i<=NS;i++){ const gy=gyAt(xs[i]); if(gy-yu[i]<0.6){ctx.beginPath();ctx.arc(xs[i],gy,5,0,7);ctx.fill();} }
+  }
+  // Beschriftung
+  ctx.font='600 14px Arial'; ctx.textAlign='center';
+  ctx.fillStyle=S.mode==='block'?'#5b3a12':'#fff';
+  ctx.fillText((S.mode==='block'?'Klotz (Unterseite)':'Wagenrad (Lauffläche)')+(S.v>0?(S.mode==='block'?'  –  gleitet →':'  –  rollt →'):''),450,22);
+  ctx.fillStyle='#2b323a'; ctx.textAlign='left'; ctx.fillText('Unterlage',12,MH-12);
+  // Maßstabsbalken
+  const target=110/z, p10=Math.pow(10,Math.floor(Math.log10(target)));
+  const nice=[5,2,1].map(n=>n*p10).find(n=>n<=target), bl=nice*z;
+  const txt = nice>=1000 ? de(nice/1000,0)+' mm' : nice>=1 ? de(nice,0)+' µm' : de(nice,1)+' µm';
+  ctx.fillStyle='rgba(255,255,255,.9)'; ctx.fillRect(MW-bl-30,MH-44,bl+20,34);
+  ctx.strokeStyle='#1d2733'; ctx.lineWidth=2; ctx.beginPath();
+  ctx.moveTo(MW-bl-20,MH-18); ctx.lineTo(MW-20,MH-18);
+  ctx.moveTo(MW-bl-20,MH-23); ctx.lineTo(MW-bl-20,MH-13); ctx.moveTo(MW-20,MH-23); ctx.lineTo(MW-20,MH-13); ctx.stroke();
+  ctx.fillStyle='#1d2733'; ctx.font='600 13px Arial'; ctx.textAlign='center'; ctx.fillText(txt,MW-20-bl/2,MH-27);
+
+  const mag=z*250, magR = mag>=100? Math.round(mag/50)*50 : mag>=10? Math.round(mag/5)*5 : Math.round(mag);
+  $('zoomOut').textContent='ca. '+magR.toLocaleString('de-DE')+'-fach';
+}
+
+/* ---------- Anzeige ---------- */
+const TXT={
+  ruhe:['Ruhe','#5d6875','Auch glatt wirkende Flächen sind unter der Lupe rau. Die Unebenheiten beider Flächen greifen ineinander.'],
+  haft:['Haftreibung','#1d8a4a','Haften: Die Zacken sind ineinander verhakt und stemmen sich gegen die Zugkraft. Die Haftreibungskraft ist genauso groß wie die Zugkraft – der Klotz bleibt liegen.'],
+  gleit:['Gleitreibung','#c26a00','Gleiten: Der Klotz rutscht über die Spitzen hinweg. Die Zacken haben keine Zeit, tief einzurasten – deshalb ist die Gleitreibungskraft kleiner als die größte Haftreibungskraft.'],
+  rollsteht:['Rollreibung (Wagen steht noch)','#1d8a4a','Die Zugkraft reicht noch nicht, um das Rad über die kleinen Unebenheiten zu heben.'],
+  roll:['Rollreibung','#1f5fa8','Rollen: Das Rad setzt seine Unebenheiten von oben auf und hebt sie wieder ab. Nichts muss über Spitzen gezerrt werden – die Rollreibungskraft ist sehr klein.']
+};
+function readout(f){
+  $('vFG').textContent=de(f.FG)+' N'; $('vFN').textContent=de(f.FN)+' N';
+  $('vFZ').textContent=de(S.F)+' N'; $('vFR').textContent=de(f.FR)+' N';
+  $('vMax').textContent=de(f.Fmax)+' N'; $('vV').textContent=de(S.v,2)+' m/s';
+  $('lMax').textContent = S.mode==='block' ? 'größte Haftreibungskraft' : 'Rollreibungskraft beim Rollen';
+  const t=TXT[f.kind]; const st=$('state');
+  if(st.textContent!==t[0]){ st.textContent=t[0]; st.style.background=t[1]; $('microText').textContent=t[2]; }
+  let h;
+  const FNs=de(f.FN)+' N';
+  if(f.kind==='gleit') h='<i>F</i><sub>R</sub> = μ<sub>G</sub> · <i>F</i><sub>N</sub> = '+de(S.muG,2)+' · '+FNs+' = <b>'+de(f.FR)+' N</b>';
+  else if(f.kind==='roll') h='<i>F</i><sub>R</sub> = μ<sub>R</sub> · <i>F</i><sub>N</sub> = '+de(S.muR,3)+' · '+FNs+' = <b>'+de(f.FR)+' N</b>';
+  else if(S.mode==='block') h='<i>F</i><sub>R</sub> = <i>F</i><sub>Zug</sub> = <b>'+de(f.FR)+' N</b><br>höchstens μ<sub>H</sub> · <i>F</i><sub>N</sub> = '+de(S.muH,2)+' · '+FNs+' = '+de(f.Fmax)+' N';
+  else h='<i>F</i><sub>R</sub> = <i>F</i><sub>Zug</sub> = <b>'+de(f.FR)+' N</b><br>höchstens μ<sub>R</sub> · <i>F</i><sub>N</sub> = '+de(S.muR,3)+' · '+FNs+' = '+de(f.Fmax)+' N';
+  if($('formula').innerHTML!==h) $('formula').innerHTML=h;
+}
+
+/* ---------- Regler ---------- */
+function syncOutputs(){
+  $('FOut').textContent=de(S.F)+' N'; $('mOut').textContent=de(S.m)+' kg';
+  $('muHOut').textContent=de(S.muH,2); $('muGOut').textContent=de(S.muG,2); $('muROut').textContent=de(S.muR,3);
+}
+function setMassRange(){
+  const max=Math.ceil(1.2*S.m*g/5)*5; $('F').max=max;
+  if(S.F>max){S.F=max;} $('F').value=S.F;
+}
+$('F').oninput=e=>{S.F=+e.target.value;syncOutputs();};
+$('m').oninput=e=>{S.m=+e.target.value;setMassRange();syncOutputs();};
+$('muH').oninput=e=>{S.muH=+e.target.value; if(S.muG>S.muH){S.muG=S.muH;$('muG').value=S.muG;} syncOutputs();};
+$('muG').oninput=e=>{S.muG=+e.target.value; if(S.muH<S.muG){S.muH=S.muG;$('muH').value=S.muH;} syncOutputs();};
+$('muR').oninput=e=>{S.muR=+e.target.value;syncOutputs();};
+$('preset').onchange=e=>{ if(!e.target.value) return;
+  const [a,b,c]=e.target.value.split(',').map(Number); S.muH=a;S.muG=b;S.muR=c;
+  $('muH').value=a;$('muG').value=b;$('muR').value=c; syncOutputs(); };
+function reset(){ S.F=0;S.v=0;S.x=0;S.dSlide=0;S.elastic=0;S.Ld=-Infinity; $('F').value=0; onStop(); syncOutputs(); }
+$('reset').onclick=reset;
+function setMode(m){ S.mode=m; $('mBlock').setAttribute('aria-pressed',m==='block'); $('mRoll').setAttribute('aria-pressed',m==='roll'); reset(); }
+$('mBlock').onclick=()=>setMode('block'); $('mRoll').onclick=()=>setMode('roll');
+
+/* ---------- Schleife ---------- */
+let last=performance.now();
+function frame(now){
+  let dt=Math.min(0.05,(now-last)/1000); last=now;
+  const n=4; for(let i=0;i<n;i++) step(dt/n);
+  const f=forces();
+  drawScene(f); drawMicro(f,dt); readout(f);
+  requestAnimationFrame(frame);
+}
+setMassRange(); syncOutputs(); S.Ld=-Infinity; onStop();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -31,6 +31,11 @@
     Sprachen stehen in SPRACHEN; aktiv:true = in der index.html schon
     eingetragen. Für eine neue Sprache zeigt der Generator die passende
     SPRACHEN-Zeile für die index.html mit an.
+  - Lernseite / DaZ-Seite als externer Link: Schalter "Externer Link" oben im
+    Formular (oder einfach eine https://-Adresse ins Dateinamen-Feld einfügen).
+    Die Adresse landet im Feld "datei"; das Portal öffnet sie in einem neuen Tab.
+  - Kommentar (kommentar) = kleiner Text unter dem Titel, sehen alle.
+    Notiz (notiz) = nur im Lehrermodus des Portals sichtbar.
   - Tools: "gruppe" = Dropdown, "ugruppe" = Unterordner darin.
   - Linksammlung: Fächer und Kategorien (LINK_FAECHER, LINK_KATEGORIEN) müssen
     zu den gleichnamigen Listen in Tools/Linksammlung.html passen. Liegt der
@@ -171,6 +176,14 @@
   .hinweis-badge{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;color:#7A4B12;
     background:#FDF3E1;border:1px solid #F1D9AE;border-radius:6px;padding:1px 8px;}
 
+  /* Externe Links, Kommentar und Notiz (wie im Portal) */
+  .badge.ext{background:#EEF2F7;color:#33475B;border:1px solid #C9D5E3;font-weight:600;}
+  .seite-kommentar{font-size:var(--fs-sm);color:var(--color-text-secondary);margin-top:4px;white-space:pre-line;
+    border-left:3px solid var(--color-border);padding-left:8px;}
+  .seite-notiz{display:inline-block;margin-top:6px;font-size:var(--fs-sm);color:#5B4A1F;background:#FFF8E1;
+    border:1px dashed #E6CF8B;border-radius:6px;padding:1px 8px;white-space:pre-line;}
+  .seite-notiz small{color:var(--color-text-muted);}
+
   /* DaZ */
   .seite-ms{font-size:var(--fs-base);color:var(--color-text-secondary);margin-top:1px;}
   .badge.sprache{background:var(--color-bg-warm);color:var(--color-text-secondary);border:1px solid var(--color-border);}
@@ -214,8 +227,12 @@
       <!-- Lernseite -->
       <section class="card" id="formSeite">
         <h2>Lernseite eintragen</h2>
+        <div class="radio">
+          <label><input type="radio" name="sArt" value="datei" checked> Lernseite (Datei im Repo)</label>
+          <label><input type="radio" name="sArt" value="url"> Externer Link <span class="hint">(Simulation, Video …)</span></label>
+        </div>
 
-        <div class="field">
+        <div class="field" id="sPickWrap">
           <label class="lbl" for="sDateiPick">HTML-Datei <span class="opt">(optional – füllt Felder automatisch)</span></label>
           <input type="file" id="sDateiPick" accept=".html,.htm">
           <span class="hint">Liest Dateinamen und Lehrermodus-Passwort aus. Es wird nichts hochgeladen.</span>
@@ -239,21 +256,35 @@
           <div class="field full">
             <label class="lbl" for="sUlb">Unterbereich <code style="font-family:var(--font-mono)">ulb</code> <span class="opt">(optional)</span></label>
             <input type="text" id="sUlb" list="ulbListe" placeholder="z. B. Quiz" autocomplete="off">
-            <datalist id="ulbListe"><option value="Quiz"><option value="Übungen"><option value="Zusatzmaterial"></datalist>
+            <datalist id="ulbListe"><option value="Quiz"><option value="Übungen"><option value="Simulation"><option value="Videos"><option value="Zusatzmaterial"></datalist>
           </div>
           <div class="field full">
             <label class="lbl" for="sTitel">Titel auf der Karte</label>
             <textarea id="sTitel" rows="1" placeholder="z. B. Hookesches Gesetz"></textarea>
             <span class="hint">Enter = Zeilenumbruch auf der Karte (wird als <code>\n</code> eingetragen).</span>
           </div>
-          <div class="field full">
+          <div class="field full" id="sDateiWrap">
             <label class="lbl" for="sDatei">Dateiname <code style="font-family:var(--font-mono)">datei</code></label>
             <input type="text" id="sDatei" placeholder="K7 - LB1 - Hookesches_Gesetz.html" autocomplete="off">
             <span class="hint" id="sOrdnerHint"></span>
           </div>
-          <div class="field full">
+          <div class="field full" id="sUrlWrap" hidden>
+            <label class="lbl" for="sUrl">Adresse <code style="font-family:var(--font-mono)">datei</code></label>
+            <input type="text" id="sUrl" placeholder="https://…" autocomplete="off">
+            <span class="hint">Kommt ins Feld <code>datei</code>, öffnet im Portal in einem neuen Tab. Tracking-Anhänge (<code>utm_…</code>, <code>?gclid=…</code>) werden entfernt.</span>
+          </div>
+          <div class="field full" id="sPwWrap">
             <label class="lbl" for="sPw">Passwort der Lernseite <code style="font-family:var(--font-mono)">pw</code> <span class="opt">(optional)</span></label>
             <input type="text" id="sPw" placeholder="wird nur im Lehrermodus des Portals angezeigt" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sKommentar">Kommentar auf der Karte <code style="font-family:var(--font-mono)">kommentar</code> <span class="opt">(optional – sehen alle)</span></label>
+            <textarea id="sKommentar" rows="2" placeholder="z. B. Verändere die Reibungszahl und beobachte, wie schnell die Kiste wird."></textarea>
+            <span class="hint">Kleiner Text unter dem Titel – Arbeitsauftrag, Tipp oder Hinweis für die SuS. Enter = neue Zeile.</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="sNotiz">Notiz für dich <code style="font-family:var(--font-mono)">notiz</code> <span class="opt">(optional – nur im Lehrermodus)</span></label>
+            <textarea id="sNotiz" rows="1" placeholder="z. B. läuft nur am PC, nicht auf dem iPad"></textarea>
           </div>
         </div>
 
@@ -278,8 +309,12 @@
       <!-- DaZ-Seite -->
       <section class="card" id="formDaz" hidden>
         <h2>DaZ-Seite eintragen</h2>
+        <div class="radio">
+          <label><input type="radio" name="dArt" value="datei" checked> Lernseite (Datei im Ordner <code style="font-family:var(--font-mono)">DAZ</code>)</label>
+          <label><input type="radio" name="dArt" value="url"> Externer Link</label>
+        </div>
 
-        <div class="field">
+        <div class="field" id="dPickWrap">
           <label class="lbl" for="dDateiPick">HTML-Datei <span class="opt">(optional – füllt Felder automatisch)</span></label>
           <input type="file" id="dDateiPick" accept=".html,.htm">
           <span class="hint">Liest Dateinamen, Sprache, Fach, beide Titel und das Lehrermodus-Passwort aus – bitte kurz prüfen. Es wird nichts hochgeladen.</span>
@@ -312,14 +347,28 @@
             <label class="lbl" for="dTitelMs">Titel in der Muttersprache <code style="font-family:var(--font-mono)">titel_ms</code> <span class="opt">(optional, empfohlen)</span></label>
             <input type="text" id="dTitelMs" placeholder="z. B. Двоичные числа" autocomplete="off">
           </div>
-          <div class="field full">
+          <div class="field full" id="dDateiWrap">
             <label class="lbl" for="dDatei">Dateiname <code style="font-family:var(--font-mono)">datei</code></label>
             <input type="text" id="dDatei" placeholder="K7 - LB1 - Binaerzahlen_DaZ_Russisch.html" autocomplete="off">
             <span class="hint" id="dOrdnerHint"></span>
           </div>
-          <div class="field full">
+          <div class="field full" id="dUrlWrap" hidden>
+            <label class="lbl" for="dUrl">Adresse <code style="font-family:var(--font-mono)">datei</code></label>
+            <input type="text" id="dUrl" placeholder="https://…" autocomplete="off">
+            <span class="hint">Kommt ins Feld <code>datei</code>, öffnet im Portal in einem neuen Tab.</span>
+          </div>
+          <div class="field full" id="dPwWrap">
             <label class="lbl" for="dPw">Passwort der Lernseite <code style="font-family:var(--font-mono)">pw</code> <span class="opt">(optional)</span></label>
             <input type="text" id="dPw" placeholder="wird nur im Lehrermodus des Portals angezeigt" autocomplete="off">
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dKommentar">Kommentar auf der Karte <code style="font-family:var(--font-mono)">kommentar</code> <span class="opt">(optional – sehen alle)</span></label>
+            <textarea id="dKommentar" rows="2" placeholder="z. B. Hinweis in der Muttersprache oder auf Deutsch"></textarea>
+            <span class="hint">Kleiner Text unter dem Titel. Enter = neue Zeile.</span>
+          </div>
+          <div class="field full">
+            <label class="lbl" for="dNotiz">Notiz für dich <code style="font-family:var(--font-mono)">notiz</code> <span class="opt">(optional – nur im Lehrermodus)</span></label>
+            <textarea id="dNotiz" rows="1" placeholder="z. B. Übersetzung noch von Muttersprachler prüfen lassen"></textarea>
           </div>
         </div>
 
@@ -718,8 +767,13 @@ function teileSeite(){
   ];
   if ($("sUlb").value.trim()) t.push(["ulb", $("sUlb").value.trim(), "Unter-Dropdown im Lernbereich"]);
   t.push(["titel", $("sTitel").value.replace(/\s+$/, ""), "Text auf der Karte"]);
-  t.push(["datei", $("sDatei").value.trim(), "Dateiname im Klassen-Ordner"]);
-  if ($("sPw").value.trim()) t.push(["pw", $("sPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  if (seitenArt() === "url"){
+    t.push(["datei", saubereUrl($("sUrl").value), "Externer Link (neuer Tab, kein Ordner)"]);
+  } else {
+    t.push(["datei", $("sDatei").value.trim(), "Dateiname im Klassen-Ordner"]);
+    if ($("sPw").value.trim()) t.push(["pw", $("sPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  }
+  kommentarTeile(t, "s");
   if ($("fNeu").checked)    t.push(["neu", true, "Badge „Neu“"]);
   if ($("fWip").checked)    t.push(["wip", true, "In Arbeit: grau, nur Lehrer klickbar"]);
   if ($("fHidden").checked) t.push(["hidden", true, "Versteckt: nur im Lehrermodus sichtbar"]);
@@ -734,13 +788,50 @@ function teileDaz(){
   if ($("dLb").value.trim())  t.push(["lb", $("dLb").value.trim(), "Lernbereich (nur Anzeige auf der Karte)"]);
   t.push(["titel", $("dTitel").value.trim(), "Deutscher Titel auf der Karte"]);
   if ($("dTitelMs").value.trim()) t.push(["titel_ms", $("dTitelMs").value.trim(), "Titel in der Muttersprache (zweite Zeile)"]);
-  t.push(["datei", $("dDatei").value.trim(), "Dateiname im Ordner " + DAZ_ORDNER + "/ (keine Klassen-Ordner)"]);
-  if ($("dPw").value.trim()) t.push(["pw", $("dPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  if (dazArt() === "url"){
+    t.push(["datei", saubereUrl($("dUrl").value), "Externer Link (neuer Tab, kein Ordner)"]);
+  } else {
+    t.push(["datei", $("dDatei").value.trim(), "Dateiname im Ordner " + DAZ_ORDNER + "/ (keine Klassen-Ordner)"]);
+    if ($("dPw").value.trim()) t.push(["pw", $("dPw").value.trim(), "Passwort der Lernseite (nur Lehrermodus)"]);
+  }
+  kommentarTeile(t, "d");
   if ($("dNeu").checked)    t.push(["neu", true, "Badge „Neu“"]);
   if ($("dWip").checked)    t.push(["wip", true, "In Arbeit: grau, nur Lehrer klickbar"]);
   if ($("dHidden").checked) t.push(["hidden", true, "Versteckt: nur im Lehrermodus sichtbar"]);
   return t;
 }
+// Lernseite oder externer Link? (Reiter Lernseite = "s", DaZ = "d")
+const seitenArt = () => document.querySelector('input[name="sArt"]:checked').value;
+const dazArt    = () => document.querySelector('input[name="dArt"]:checked').value;
+// Kommentar (sehen alle) und Notiz (nur Lehrermodus) – Zeilenumbrüche bleiben als \n erhalten
+const textMitUmbruch = id => $(id).value.replace(/[ \t]+$/gm, "").replace(/^\s*\n|\n\s*$/g, "").trim();
+function kommentarTeile(t, p){
+  const k = textMitUmbruch(p + "Kommentar"), n = textMitUmbruch(p + "Notiz");
+  if (k) t.push(["kommentar", k, "Text unter dem Titel (sehen alle)"]);
+  if (n) t.push(["notiz", n, "Notiz – nur im Lehrermodus des Portals sichtbar"]);
+}
+// Felder Datei / Link umschalten
+function artUmschalten(p){
+  const url = (p === "s" ? seitenArt() : dazArt()) === "url";
+  [p + "DateiWrap", p + "PickWrap", p + "PwWrap"].forEach(id => $(id).hidden = url);
+  $(p + "UrlWrap").hidden = !url;
+}
+function setArt(p, art){
+  document.querySelector(`input[name="${p}Art"][value="${art}"]`).checked = true;
+  artUmschalten(p);
+}
+// Kommentar/Notiz/Link-Teile der Karten-Vorschau
+function vorschauZusatz(p){
+  const k = textMitUmbruch(p + "Kommentar"), n = textMitUmbruch(p + "Notiz");
+  return (k ? `<div class="seite-kommentar">${esc(k)}</div>` : "")
+       + (n ? `<div class="seite-notiz">📝 ${esc(n)} <small>(nur Lehrermodus)</small></div>` : "");
+}
+function linkBadge(p){
+  if ((p === "s" ? seitenArt() : dazArt()) !== "url") return "";
+  const h = hostVon(saubereUrl($(p + "Url").value));
+  return `<span class="badge ext">↗ ${esc(h || "Extern")}</span>`;
+}
+
 // SPRACHEN-Zeile für die index.html (für noch nicht eingetragene Sprachen)
 function sprachZeile(sp){
   const t = [["id", sp.id], ["name", sp.name], ["de", sp.de], ["flagge", sp.flagge]];
@@ -787,6 +878,16 @@ function teileLink(){
   return t;
 }
 
+// Prüfungen für externe Links bei Lernseiten / DaZ-Seiten
+function linkWarnungen(warns, p){
+  const roh = $(p + "Url").value.trim(), u = saubereUrl(roh);
+  if (roh && !/^(https?:\/\/|www\.)/i.test(roh)) warns.push("Die Adresse sollte mit https:// beginnen.");
+  if (roh && /^www\./i.test(roh)) warns.push("Tipp: besser mit https:// davor eintragen (www. allein geht aber auch).");
+  if (roh && u !== roh) warns.push("Tracking-Anhänge wurden aus der Adresse entfernt.");
+  if (roh && /^http:\/\//i.test(roh)) warns.push("Die Adresse beginnt mit http:// – wenn möglich https:// nehmen.");
+  if (!textMitUmbruch(p + "Kommentar")) warns.push("Tipp: Ein kurzer Kommentar sagt den SuS, was sie auf der fremden Seite tun sollen.");
+}
+
 // Schon vorhandene Links der Linksammlung laden (klappt nur online neben der Linksammlung)
 let bekannteLinks = null;
 fetch("Linksammlung.html", { cache:"no-store" }).then(r => r.ok ? r.text() : "").then(txt => {
@@ -816,16 +917,23 @@ function aktualisieren(){
   // Pflichtfelder / Hinweise
   const warns = [];
   const pflicht = modus === "seite"
-    ? [["sLb","Lernbereich"],["sTitel","Titel"],["sDatei","Dateiname"]]
+    ? [["sLb","Lernbereich"],["sTitel","Titel"], seitenArt() === "url" ? ["sUrl","Adresse"] : ["sDatei","Dateiname"]]
     : modus === "daz"
-    ? [["dTitel","Deutscher Titel"],["dDatei","Dateiname"]]
+    ? [["dTitel","Deutscher Titel"], dazArt() === "url" ? ["dUrl","Adresse"] : ["dDatei","Dateiname"]]
     : modus === "tool"
     ? [["tTitel","Titel"], toolArt() === "datei" ? ["tDatei","Dateiname"] : ["tUrl","Adresse"]]
     : [["lTitel","Titel"],["lUrl","Adresse"]];
-  ["sLb","sTitel","sDatei","dTitel","dDatei","tTitel","tDatei","tUrl","lTitel","lUrl"].forEach(id => $(id).classList.remove("fehlt"));
+  ["sLb","sTitel","sDatei","sUrl","dTitel","dDatei","dUrl","tTitel","tDatei","tUrl","lTitel","lUrl"].forEach(id => $(id).classList.remove("fehlt"));
   pflicht.forEach(([id, name]) => { if (!$(id).value.trim()){ $(id).classList.add("fehlt"); warns.push(name + " fehlt noch."); } });
 
-  if (modus === "seite"){
+  if (modus === "seite" && seitenArt() === "url"){
+    linkWarnungen(warns, "s");
+    if ($("fWip").checked && $("fHidden").checked) warns.push("Hinweis: In Arbeit + Versteckt geht, für SuS ist der Link dann einfach unsichtbar.");
+  } else if (modus === "daz" && dazArt() === "url"){
+    linkWarnungen(warns, "d");
+    const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
+    if (sp && !sp.aktiv) warns.push(`${sp.de} steht noch nicht in der index.html – die SPRACHEN-Zeile unten dort mit eintragen, sonst gibt es keinen Sprachknopf.`);
+  } else if (modus === "seite"){
     const d = $("sDatei").value.trim();
     if (d && !/\.html?$/i.test(d)) warns.push("Der Dateiname endet nicht auf .html.");
     if (d && /[\/\\]/.test(d)) warns.push("Nur den Dateinamen eintragen – der Ordner kommt automatisch.");
@@ -875,12 +983,14 @@ function aktualisieren(){
     $("sOrdnerHint").innerHTML = `Datei gehört im Repo nach <code>${esc(ordner)}/</code>`;
     $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>SEITEN</code>, Abschnitt `
       + `<b>${esc(fach ? fach.name.toUpperCase() : "")}</b> → <b>${esc(abschnittVon($("sKlasse").value))}</b>.<br>`
-      + `<b>Hochladen:</b> die Datei nach <code>${esc(ordner)}/</code>`;
+      + (seitenArt() === "url" ? `<b>Hochladen:</b> nichts – externer Link, öffnet im Portal in einem neuen Tab.`
+                               : `<b>Hochladen:</b> die Datei nach <code>${esc(ordner)}/</code>`);
   } else if (modus === "daz"){
     const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
     $("dOrdnerHint").innerHTML = `Datei gehört im Repo nach <code>${esc(DAZ_ORDNER)}/</code> – ohne Klassen-Ordner`;
     $("wohin").innerHTML = `<b>Einfügen:</b> in der <code>index.html</code> im Array <code>DAZ_SEITEN</code>.<br>`
-      + `<b>Hochladen:</b> die Datei nach <code>${esc(DAZ_ORDNER)}/</code><br>`
+      + (dazArt() === "url" ? `<b>Hochladen:</b> nichts – externer Link.<br>`
+                            : `<b>Hochladen:</b> die Datei nach <code>${esc(DAZ_ORDNER)}/</code><br>`)
       + `<b>Direktlink für die SuS:</b> <code>index.html#daz/${esc(sp ? sp.id : "")}</code>`;
   } else if (modus === "tool"){
     const g = $("tGruppe").value.trim(), u = $("tUgruppe").value.trim();
@@ -898,17 +1008,18 @@ function aktualisieren(){
   // Karten-Vorschau
   if (modus === "seite"){
     const titel = $("sTitel").value.replace(/\s+$/, "") || "Titel der Seite";
-    const badges = ($("fHidden").checked ? '<span class="badge hid">Versteckt</span>' : "")
+    const badges = linkBadge("s") + ($("fHidden").checked ? '<span class="badge hid">Versteckt</span>' : "")
       + ($("fWip").checked ? '<span class="badge wip">In Arbeit</span>' : ($("fNeu").checked ? '<span class="badge neu">Neu</span>' : ""));
     const pfad = [$("sLb").value.trim() || "Lernbereich", $("sUlb").value.trim()].filter(Boolean).join(" › ");
-    $("vorschau").innerHTML = `<div class="seite-card${$("fWip").checked ? " wip" : ""}${$("fHidden").checked ? " versteckt" : ""}">
-        <div><div class="seite-titel">${esc(titel)}${badges}</div><div class="seite-sub">${esc(pfad)}</div></div>
-        <div class="goto">${$("fWip").checked ? "" : "→"}</div></div>`;
+    $("vorschau").innerHTML = `<div class="seite-sub" style="margin-bottom:6px">${esc(pfad)}</div>
+      <div class="seite-card${$("fWip").checked ? " wip" : ""}${$("fHidden").checked ? " versteckt" : ""}">
+        <div><div class="seite-titel">${esc(titel)}${badges}</div>${vorschauZusatz("s")}</div>
+        <div class="goto">${$("fWip").checked ? "" : (seitenArt() === "url" ? "↗" : "→")}</div></div>`;
   } else if (modus === "daz"){
     const sp = SPRACHEN.find(x => x.id === $("dSprache").value);
     const titel = $("dTitel").value.trim() || "Deutscher Titel";
     const ms = $("dTitelMs").value.trim();
-    const badges = (sp ? `<span class="badge sprache">${sp.flagge} ${esc(sp.name)}</span>` : "")
+    const badges = (sp ? `<span class="badge sprache">${sp.flagge} ${esc(sp.name)}</span>` : "") + linkBadge("d")
       + ($("dHidden").checked ? '<span class="badge hid">Versteckt</span>' : "")
       + ($("dWip").checked ? '<span class="badge wip">In Arbeit</span>' : ($("dNeu").checked ? '<span class="badge neu">Neu</span>' : ""));
     const meta = [$("dKlasse").value ? "Klasse " + klasseLabel($("dKlasse").value) : "", $("dLb").value.trim()].filter(Boolean).join(" · ");
@@ -917,8 +1028,8 @@ function aktualisieren(){
       <div class="seite-card${$("dWip").checked ? " wip" : ""}${$("dHidden").checked ? " versteckt" : ""}">
         <div><div class="seite-titel">${esc(titel)}${badges}</div>
         ${ms ? `<div class="seite-ms" lang="${sp ? sp.id : ""}"${sp && sp.rtl ? ' dir="rtl"' : ""}>${esc(ms)}</div>` : ""}
-        ${meta ? `<div class="seite-sub">${esc(meta)}</div>` : ""}</div>
-        <div class="goto">${$("dWip").checked ? "" : "→"}</div></div>`;
+        ${meta ? `<div class="seite-sub">${esc(meta)}</div>` : ""}${vorschauZusatz("d")}</div>
+        <div class="goto">${$("dWip").checked ? "" : (dazArt() === "url" ? "↗" : "→")}</div></div>`;
   } else if (modus === "link"){
     const titel = $("lTitel").value.trim() || "Titel des Links";
     const u = saubereUrl($("lUrl").value);
@@ -977,17 +1088,18 @@ $("sammelLeeren").addEventListener("click", () => {
 
 /* ---------- Formular-Knöpfe ---------- */
 function leereSeitenFelder(alles){
-  ["sTitel","sDatei","sPw"].concat(alles ? ["sLb","sUlb"] : []).forEach(id => $(id).value = "");
+  ["sTitel","sDatei","sUrl","sPw","sKommentar","sNotiz"].concat(alles ? ["sLb","sUlb"] : []).forEach(id => $(id).value = "");
   ["fNeu","fWip","fHidden"].forEach(id => $(id).checked = false);
+  if (alles) setArt("s", "datei");   // bei "Nächste Seite" bleibt Datei/Link stehen
   $("sDateiPick").value = ""; pwHinweis = "";
   aktualisieren();
   (alles ? $("sLb") : $("sTitel")).focus();
 }
 $("sNaechste").addEventListener("click", () => leereSeitenFelder(false));
 function leereDazFelder(alles){
-  ["dTitel","dTitelMs","dDatei","dPw"].concat(alles ? ["dLb"] : []).forEach(id => $(id).value = "");
+  ["dTitel","dTitelMs","dDatei","dUrl","dPw","dKommentar","dNotiz"].concat(alles ? ["dLb"] : []).forEach(id => $(id).value = "");
   ["dNeu","dWip","dHidden"].forEach(id => $(id).checked = false);
-  if (alles){ $("dSprache").selectedIndex = 0; $("dFach").selectedIndex = 0; fuelleDazKlassen(""); }
+  if (alles){ setArt("d", "datei"); $("dSprache").selectedIndex = 0; $("dFach").selectedIndex = 0; fuelleDazKlassen(""); }
   $("dDateiPick").value = ""; dPwHinweis = "";
   aktualisieren(); $("dTitel").focus();
 }
@@ -1029,6 +1141,20 @@ $("tabSeite").addEventListener("click", () => setModus("seite"));
 $("tabDaz").addEventListener("click", () => setModus("daz"));
 $("tabTool").addEventListener("click", () => setModus("tool"));
 $("tabLink").addEventListener("click", () => setModus("link"));
+// Lernseite / DaZ: Datei oder externer Link
+["s", "d"].forEach(p => {
+  document.querySelectorAll(`input[name="${p}Art"]`).forEach(r => r.addEventListener("change", () => { artUmschalten(p); aktualisieren(); }));
+  // Link ins Dateinamen-Feld eingefügt? -> automatisch auf "Externer Link" umschalten
+  $(p + "Datei").addEventListener("input", () => {
+    const v = $(p + "Datei").value.trim();
+    if (/^(https?:\/\/|www\.)/i.test(v)){
+      $(p + "Url").value = saubereUrl(v); $(p + "Datei").value = "";
+      setArt(p, "url"); aktualisieren(); $(p + "Url").focus();
+    }
+  });
+  // Beim Verlassen des Adressfelds Tracking-Anhänge direkt entfernen
+  $(p + "Url").addEventListener("blur", () => { const u = saubereUrl($(p + "Url").value); if (u !== $(p + "Url").value){ $(p + "Url").value = u; aktualisieren(); } });
+});
 document.querySelectorAll('input[name="tArt"]').forEach(r => r.addEventListener("change", () => {
   const datei = toolArt() === "datei";
   $("tDateiWrap").hidden = !datei; $("tPickWrap").hidden = !datei; $("tUrlWrap").hidden = datei;

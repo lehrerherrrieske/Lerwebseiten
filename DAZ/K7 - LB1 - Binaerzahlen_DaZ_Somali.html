@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<!-- © 2026 M. Rieske – Alle Rechte vorbehalten · Kennnummer MR-20261111-7EA975 · Nutzung im eigenen Unterricht; Weitergabe und Veröffentlichung nur mit Erlaubnis des Urhebers -->
+<html lang="de" data-lh="MR-20261111-7EA975" data-lh-j="2026">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="M. Rieske">
+<meta name="copyright" content="© 2026 M. Rieske – Alle Rechte vorbehalten">
+<meta name="lh-id" content="MR-20261111-7EA975">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klasse 7 · LB1 · Tirooyinka labaale · Binärzahlen</title>
+<style>
+/* lh:MR-20261111-7EA975 */
+/* ============================================================
+   Design-Tokens Lern-HTML  ·  warme Palette (Farbschema_LernHTML)
+   Pro Seite NUR --color-accent ändern. Alles andere bleibt.
+   Keine externen Schriften: Bricolage/DM Sans/JetBrains Mono werden
+   genutzt, WENN lokal vorhanden — sonst greift der System-Fallback.
+   ============================================================ */
+:root{
+  /* ── Hintergründe & Flächen ── */
+  --color-bg:#F9F7F2; --color-bg-warm:#F4F0E7; --color-bg-code:#1E1E2E;
+  --color-surface:#FFFFFF; --color-surface-warm:#FDF9F3;
+  --color-border:#E5DFD6; --color-border-light:#EEEBE5;
+
+  /* ── Text ── */
+  --color-text:#111111; --color-text-secondary:#4A4542; --color-text-muted:#7A736E;
+
+  /* ── Akzent — pro Stunde NUR diese Zeile ändern ── */
+  --color-accent:#3F5E8C;
+  --color-accent-hover:color-mix(in srgb, var(--color-accent) 82%, black);
+  --color-accent-light:color-mix(in srgb, var(--color-accent) 13%, white);
+  --color-accent-muted:color-mix(in srgb, var(--color-accent) 55%, white);
+
+  /* ── Semantisch ── */
+  --color-success:#2D8B55; --color-success-light:#E8F5EE;
+  --color-error:#C93B3B;   --color-error-light:#FDE8E8;
+  --color-warn:#C2410C;    --color-warn-light:#FBF1E9;
+  --color-info:#2A7B9B;    --color-info-light:#E4F2F7;
+
+  /* ── Akteur-Farben (Chat, Fluss-/Schaltbilder, Kräftepfeile) ── */
+  --color-actor-1:#D94F30; --color-actor-2:#2D8B55; --color-actor-3:#1B8FBE;
+  --color-actor-4:#D4A843; --color-actor-5:#7B6DAA;
+
+  /* ── Typografie ── */
+  --font-display:'Bricolage Grotesque',Georgia,serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+
+  /* Typo-Skala — die EINZIGEN erlaubten Schriftgrößen (je ~1,2×) */
+  --fs-sm:.85rem;   /* Sekundärtext: Labels, Chips, Captions — nie Kerninhalt */
+  --fs-base:1rem;   /* Fließtext */
+  --fs-lg:1.2rem;   /* Lead, Formel, h3 */
+  --fs-h2:1.4rem;   /* Abschnittsüberschrift */
+  --fs-h1:1.75rem;  /* Seitentitel */
+
+  /* ── Form ── */
+  --radius:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow:0 1px 3px rgba(44,42,40,.06),0 2px 8px rgba(44,42,40,.05);
+  --shadow-md:0 4px 12px rgba(44,42,40,.08);
+
+  /* ── Kurz-Aliase: von Bausteine-CSS und Seiten-CSS benutzt ── */
+  --font:var(--font-body); --mono:var(--font-mono);
+  --bg:var(--color-bg); --surface:var(--color-surface); --surface-2:var(--color-bg-warm);
+  --border:var(--color-border); --border-light:var(--color-border-light);
+  --text:var(--color-text); --text-2:var(--color-text-secondary); --text-3:var(--color-text-muted);
+  --accent:var(--color-accent); --accent-hover:var(--color-accent-hover);
+  --accent-light:var(--color-accent-light); --accent-muted:var(--color-accent-muted);
+  --ok:var(--color-success); --ok-bg:var(--color-success-light); --ok-b:#93d8ac;
+  --warn:var(--color-warn); --warn-bg:var(--color-warn-light); --warn-b:#F0C39A;
+  --err:var(--color-error); --err-bg:var(--color-error-light); --err-b:#EBA6A6;
+  --info:var(--color-info); --info-bg:var(--color-info-light); --info-b:#A7D3E4;
+}
+
+/* ── Basis ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:112.5%;}          /* 18px-Basis, zoombar */
+body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);
+  line-height:1.6;padding:24px 0 80px;}
+.wrap{width:min(1080px,100% - 32px);margin:0 auto;}
+h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:800;line-height:1.15;}
+h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:700;color:var(--accent-hover);margin:18px 0 6px;}
+h3{font-family:var(--font-display);font-size:var(--fs-lg);font-weight:600;margin:14px 0 6px;}
+body,p,li{font-size:var(--fs-base);}
+p{color:var(--color-text-secondary);margin-bottom:8px;}
+small,.caption,figcaption{font-size:var(--fs-sm);color:var(--color-text-muted);}
+a{color:var(--accent);font-weight:600;}
+img{max-width:100%;height:auto;}
+
+/* ============================================================
+   Seiten-Mechanik Lern-HTML — Kopf, Phasen, Aufdecken, Quiz,
+   Akkordeon, Heftereintrag, Callouts, Tooltip, Druck.
+   Setzt design-tokens.css voraus.
+   ============================================================ */
+
+/* ── Kopf & Grundbausteine ── */
+.pagehead{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);
+  border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.goal{margin-top:10px;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);
+  color:var(--text-2);font-size:var(--fs-base);}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}   /* Rahmen um eine Aufgabe */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+.badge{display:inline-block;background:var(--accent-light);color:var(--accent-hover);
+  border:1px solid var(--accent-muted);border-radius:var(--radius-full);
+  font-size:var(--fs-sm);font-weight:700;padding:1px 10px;margin-left:6px;}
+.connector-text{margin:16px 0;padding-left:14px;border-left:3px solid var(--accent-muted);
+  color:var(--text-2);font-style:italic;}
+
+/* ── Fachnotation ── */
+.math{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border-light);
+  padding:1px 6px;border-radius:4px;font-size:.95em;color:#1e293b;white-space:nowrap;}
+.formula{background:var(--accent-light);border:2px solid var(--accent-muted);border-radius:var(--radius);
+  padding:14px 20px;margin:12px 0;font-family:var(--mono);font-size:var(--fs-lg);
+  font-weight:700;text-align:center;color:var(--accent-hover);}
+.formula i,.math i{font-style:italic;}      /* Formelzeichen kursiv */
+.unit{font-style:normal;font-family:var(--font);}  /* Einheiten aufrecht */
+
+/* ── Callouts (Inhalt IMMER in EIN <span> wickeln!) ── */
+.callout{display:flex;gap:10px;align-items:flex-start;padding:12px 15px;margin:12px 0;
+  border-radius:var(--radius);border-left:4px solid var(--accent);background:var(--accent-light);
+  color:var(--text-2);font-size:var(--fs-base);}
+.callout-warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.callout-info{border-left-color:var(--info);background:var(--info-bg);}
+.callout-success{border-left-color:var(--ok);background:var(--ok-bg);color:#166534;}
+
+/* ── Tooltip für Fachbegriffe ── */
+.tt{border-bottom:1.5px dotted var(--accent-muted);cursor:help;position:relative;}
+.tt:hover::after,.tt:focus::after{content:attr(data-tip);position:absolute;left:0;top:130%;z-index:20;
+  width:max-content;max-width:280px;background:var(--color-text);color:#fff;font-size:var(--fs-sm);
+  font-weight:400;line-height:1.45;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow-md);}
+
+/* ── Phasen-Navigation ── */
+.phase-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.pnav{display:flex;flex-direction:column;gap:2px;align-items:flex-start;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;color:var(--text-2);}
+.pnav:hover{border-color:var(--accent-muted);}
+.pnav.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pnum{font-size:var(--fs-sm);font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;}
+.phase{display:none;} .phase.on{display:block;}
+
+/* ── Additives Aufdecken je Phase ── */
+.subphase{display:none;} .subphase.on{display:block;}
+.substep-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 14px;}
+.substep-label{font-size:var(--fs-sm);color:var(--text-3);font-weight:600;}
+.substep-chip{padding:5px 11px;border-radius:var(--radius-full);border:2px solid var(--border);
+  background:var(--surface);font-size:var(--fs-sm);font-weight:600;color:var(--text-2);cursor:pointer;}
+.substep-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.substep-chip.done{border-color:var(--accent);color:var(--accent);}
+.substep-chip.locked{opacity:.5;}
+.substep-all{margin-left:auto;border:1.5px dashed var(--border);background:transparent;
+  border-radius:var(--radius-full);padding:5px 11px;font-size:var(--fs-sm);color:var(--text-3);cursor:pointer;}
+.subphase-next{text-align:center;margin:18px 0 2px;}
+
+/* ── Zweistufiges Quiz ── */
+.quiz-item{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  margin:12px 0;background:var(--surface-warm,var(--surface));}
+.quiz-q{font-weight:600;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;}
+.quiz-btn{text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:var(--font);font-size:var(--fs-base);color:var(--text);cursor:pointer;}
+.quiz-btn:hover:not(:disabled){border-color:var(--accent-muted);background:var(--accent-light);}
+.quiz-btn:disabled{cursor:default;}
+.quiz-btn.correct{border-color:var(--ok);background:var(--ok-bg);color:#166534;font-weight:600;}
+.quiz-btn.wrong{border-color:var(--err);background:var(--err-bg);color:#991b1b;}
+.quiz-btn.tryagain{border-color:var(--warn);background:var(--warn-bg);}
+.quiz-fb{margin-top:10px;font-size:var(--fs-base);min-height:1.1em;padding:0 2px;}
+.quiz-fb.ok{color:#166534;} .quiz-fb.ng{color:#991b1b;} .quiz-fb.hint{color:#9a3412;}
+
+/* ── Eingabefelder für geführte Rechnungen ── */
+.inp{font-family:var(--mono);font-size:var(--fs-base);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:9ch;background:var(--surface);}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg);}
+.inp.err{border-color:var(--err);background:var(--err-bg);}
+.sol{display:none;margin-top:10px;padding:12px 15px;background:var(--surface-2);
+  border-left:4px solid var(--accent-muted);border-radius:0 var(--radius) var(--radius) 0;}
+
+/* ── Vorhersage-Kasten (Physik: erst raten, dann messen) ── */
+.poe-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;margin:12px 0;background:var(--accent-light);}
+.poe-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:8px;}
+.poe-box textarea{width:100%;font-family:var(--font);font-size:var(--fs-base);padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;background:var(--surface);}
+.poe-locked{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:var(--fs-base);color:var(--text-2);}
+
+/* ── Akkordeon „Das hast du gelernt" ── */
+.acc{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:14px 0;}
+.acc-item{border-bottom:1px solid var(--border);} .acc-item:last-child{border-bottom:none;}
+.acc-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  background:var(--surface);border:none;cursor:pointer;font:600 var(--fs-base) var(--font);
+  color:var(--text);text-align:left;}
+.acc-head:hover{background:var(--surface-2);}
+.acc-icon{transition:transform .25s ease;color:var(--text-3);}
+.acc-head.open .acc-icon{transform:rotate(180deg);}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;background:var(--surface-2);}
+.acc-head.open + .acc-body{grid-template-rows:1fr;}
+.acc-body-inner{overflow:hidden;padding:0 16px;font-size:var(--fs-base);color:var(--text-2);
+  line-height:1.7;transition:padding .28s ease;}
+.acc-head.open + .acc-body .acc-body-inner{padding:12px 16px;}
+
+/* ── Lehrermodus-Leiste: fester Look, unabhängig vom Stunden-Akzent,
+   damit sie auf jeder Seite exakt gleich aussieht ── */
+.teachbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--color-bg-warm);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:9px 16px;margin-bottom:16px;font-size:var(--fs-sm);}
+.teachbar.active{background:var(--ok-bg);border-color:var(--ok-b);}
+.teachbar-label{font-weight:700;color:var(--text);}
+.teachbar-pw{font-family:var(--font);font-size:var(--fs-sm);border:1.5px solid var(--border);
+  border-radius:6px;padding:5px 9px;width:12ch;background:var(--surface);}
+.teachbar-pw:focus{outline:none;border-color:#33475B;box-shadow:0 0 0 3px rgba(51,71,91,.18);}
+.teachbar-pw.err{border-color:var(--err);background:var(--err-bg);}
+.teachbar-on{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:#33475B;
+  color:#fff;border:1.5px solid #33475B;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-on:hover{background:#283A4B;}
+.teachbar-off{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;background:transparent;
+  color:#33475B;border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;}
+.teachbar-off:hover{background:var(--surface-2);}
+.teachbar-status{font-weight:700;margin-left:auto;}
+.teachbar-status.on{color:#166534;} .teachbar-status.off{color:var(--text-3);}
+
+/* ── Gestufte Hilfe: Tipps erscheinen zeitverzögert nach dem Anfordern ── */
+.hilfe-box{margin:12px 0;}
+.hilfe-box .hilfe-stufe{margin-top:8px;}
+.hilfe-status{display:block;margin-top:6px;}
+
+/* ── Brüche: Zähler über Nenner (Markup über frac()/fracify() oder scripts/brueche.py) ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.2;margin:0 .15em;text-align:center;white-space:nowrap;}
+.frac>.fn{border-bottom:1.5px solid currentColor;padding:0 .25em .08em;}
+.frac>.fd{padding:.08em .25em 0;}
+.formula .frac{margin:0 .25em;}
+
+/* ── Hilfestellungen je Aufgabe: Button → Feld klappt auf → Tipp 1/2/3 nach 2/4/6 Min.,
+   Musterlösung nach 10 Min.; freigeschaltete Einträge öffnen sich erst auf Klick ── */
+.hs{margin:14px 0 4px;}
+.hs-btn.open{background:var(--surface-2);}
+.hs-panel{margin-top:8px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px 14px;}
+.hs-title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+.hs-item{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-top:8px;overflow:hidden;}
+.hs-head{width:100%;display:flex;align-items:baseline;gap:8px;background:transparent;border:none;padding:9px 14px;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:700;color:var(--text);cursor:pointer;text-align:left;}
+.hs-head:hover:not(:disabled){background:var(--accent-light);}
+.hs-head:disabled{cursor:default;color:var(--text-3);}
+.hs-time{font-weight:400;font-size:var(--fs-sm);color:var(--text-3);}
+.hs-icon{margin-left:auto;color:var(--text-3);transition:transform .2s ease;}
+.hs-head.open .hs-icon{transform:rotate(180deg);}
+.hs-body{padding:10px 14px 12px;color:var(--text-2);border-top:1px solid var(--border-light);}
+.hs-body p{margin-bottom:6px;}
+.hs-muster .hs-name{color:var(--accent-hover);}
+.hs-head:disabled .hs-name{color:var(--text-3);}
+.hs > [data-tipp],.hs > [data-muster]{display:none;}   /* Autorenform bis zum Aufbau verbergen */
+
+/* ── Heftereintrag ── */
+.hefter-box{border:2px dashed var(--accent-muted);border-radius:var(--radius);
+  padding:14px 16px;background:var(--accent-light);margin:12px 0;}
+.hefter-label{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;}
+.hefter-btn{margin-top:10px;}
+.hefter-fb{font-size:var(--fs-sm);color:var(--text-3);margin-left:8px;}
+
+/* ── Druck: alles aufdecken, Bedienelemente ausblenden ── */
+/* ---------- Urheber-Fußzeile ---------- */
+.lh-warn{margin:0 0 14px;padding:10px 14px;border:1.5px solid var(--warn);border-radius:var(--radius);background:var(--warn-bg);color:var(--text);font-size:var(--fs-base);}
+.lh-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--border-light);text-align:center;font-size:var(--fs-sm);color:var(--text-3);}
+
+@media print{
+  .lh-foot{display:block !important;}
+  body{background:#fff;padding:0;}
+  .phase{display:block !important;} .subphase{display:block !important;}
+  .phase-nav,.substep-nav,.subphase-next,.hefter-btn,.copy-btn,.btn{display:none !important;}
+  .sol{display:block !important;}
+  .teachbar,.hilfe-request,.hilfe-status{display:none !important;}
+  .lehrer-only{display:block !important;}
+  .hs-panel,.hs-body{display:block !important;} .hs-time,.hs-icon{display:none !important;}
+  .card,.pagehead{box-shadow:none;break-inside:avoid;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+.btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border-radius:8px;padding:8px 16px;cursor:pointer;border:1.5px solid var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:var(--accent-hover);}
+.btn-ghost{background:transparent;color:var(--accent-hover);border-color:var(--border);} .btn-ghost:hover{background:var(--surface-2);}
+.btn-sm{font-size:var(--fs-sm);padding:5px 11px;}
+.grp-fb{margin-top:10px;font-size:var(--fs-sm);min-height:1.1em;font-weight:600;}
+.grp-fb.ok{color:#166534;} .grp-fb.err{color:var(--err);}
+
+/* Lückentext / Wörter ziehen */
+.dtw-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.dtw-word{padding:6px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-weight:600;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.dtw-word.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.dtw-word.used{opacity:.3;pointer-events:none;}
+.dtw-text{font-size:var(--fs-base);line-height:2.1;}
+.dtw-gap{display:inline-block;min-width:78px;text-align:center;border-bottom:2px solid var(--accent-muted);padding:2px 8px;margin:0 2px;cursor:pointer;color:var(--accent-hover);font-weight:600;border-radius:6px 6px 0 0;transition:background .15s ease,box-shadow .15s ease;}
+.dtw-gap.dragover{background:var(--accent-light);box-shadow:0 0 0 2px var(--accent);}
+.dtw-gap.filled{background:var(--accent-light);border-radius:6px 6px 0 0;}
+.dtw-gap.gap-ok{background:var(--ok-bg);border-color:var(--ok);color:#166534;}
+.dtw-gap.gap-err{background:var(--err-bg);border-color:var(--err);color:#991b1b;}
+
+/* Zuordnung Begriff ↔ Definition */
+.m-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--surface-2);border:1.5px dashed var(--accent-muted);border-radius:var(--radius);margin:10px 0;}
+.m-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:opacity .2s ease;}
+.m-chip.sel{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(62,99,200,.2);}
+.m-chip.used{opacity:.3;pointer-events:none;}
+.drag-src{opacity:.3;}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;margin:0;cursor:grabbing;box-shadow:var(--shadow-md);border-color:var(--accent) !important;background:var(--accent-light) !important;}
+.m-zone{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--surface);transition:background .15s ease,border-color .15s ease;}
+.m-zone.dragover{border-color:var(--accent);background:var(--accent-light);}
+.m-drop{min-width:110px;min-height:34px;border:2px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-3);flex-shrink:0;}
+.m-zone.filled .m-drop{border-style:solid;color:var(--accent-hover);}
+.m-def{font-size:var(--fs-sm);color:var(--text-2);}
+.m-zone.z-ok{border-color:var(--ok-b);background:var(--ok-bg);} .m-zone.z-err{border-color:var(--err-b);background:var(--err-bg);}
+
+/* Reihenfolge sortieren */
+.sort-list{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.sort-item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-weight:600;cursor:grab;user-select:none;touch-action:none;}
+.sort-item::before{content:'⠿';color:var(--text-3);margin-right:2px;}
+.sort-item > span:first-child{flex:1;}
+.sort-item.s-ok{border-color:var(--ok-b);background:var(--ok-bg);}
+.sort-item.dragging{z-index:5;cursor:grabbing;border-color:var(--accent);background:var(--accent-light);box-shadow:var(--shadow-md);}
+.sort-btns{cursor:auto;}
+.sort-btns button{border:1px solid var(--border);background:var(--surface-2);border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:var(--fs-base);}
+
+/* Wörter markieren */
+.mark-text{font-size:var(--fs-lg);line-height:2;}
+.mw{cursor:pointer;padding:1px 6px;border-radius:5px;border:1.5px solid transparent;font-family:var(--font-mono);}
+.mw:hover{background:var(--surface-2);}
+.mw.sel{background:var(--accent-light);border-color:var(--accent-muted);}
+.mw.m-ok{background:var(--ok-bg);border-color:var(--ok);}
+.mw.m-err{background:var(--err-bg);border-color:var(--err);text-decoration:line-through;}
+.mw.m-miss{border-color:var(--warn);border-style:dashed;}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:76px;gap:8px;margin:10px 0;max-width:640px;}
+.memcard{position:relative;width:100%;height:100%;min-width:0;padding:4px 6px;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;
+  font-family:var(--font);font-size:var(--fs-base);font-weight:600;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto;
+  display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease;}
+.memcard .val{visibility:hidden;color:var(--accent-hover);}
+.memcard.open .val,.memcard.done .val{visibility:visible;}
+.memcard .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:var(--fs-h2);}
+.memcard.open .cover,.memcard.done .cover{display:none;}
+.memcard.done{background:var(--ok-bg);border-color:var(--ok-b);}
+
+/* Flashcards */
+.fc-card{width:220px;height:130px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:2rem;color:var(--accent-hover);cursor:pointer;box-shadow:var(--shadow);margin:10px 0;}
+.fc-controls{display:flex;align-items:center;gap:10px;}
+
+/* Kreuzworträtsel */
+.cw-grid{display:grid;gap:2px;width:max-content;margin:10px 0;}
+.cw-cell{width:36px;height:36px;position:relative;}
+.cw-cell.block{background:var(--surface-2);border-radius:3px;}
+.cw-cell input{width:36px;height:36px;text-align:center;font-family:var(--font-mono);font-size:var(--fs-lg);text-transform:uppercase;
+  border:1.5px solid var(--border);border-radius:3px;background:var(--surface);padding:0;}
+.cw-cell input.c-ok{border-color:var(--ok);background:var(--ok-bg);}
+.cw-cell input.c-err{border-color:var(--err);background:var(--err-bg);}
+.cw-num{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--text-3);font-family:var(--font);z-index:1;}
+.cw-clues{font-size:var(--fs-sm);color:var(--text-2);}
+
+/* Wortsuche */
+.ws-grid{display:grid;gap:2px;width:max-content;margin:10px 0;touch-action:none;user-select:none;}
+.ws-cell{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);border-radius:3px;
+  font-family:var(--font-mono);font-weight:600;cursor:pointer;padding:0;}
+.ws-cell.ws-start{background:var(--accent-light);border-color:var(--accent);}
+.ws-cell.ws-found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;}
+.ws-cell.ws-sel{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ws-cell.ws-miss{animation:ws-shake .4s ease;background:var(--err-bg);border-color:var(--err);}
+@keyframes ws-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+.ws-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.ws-w{font-family:var(--font-mono);font-weight:700;padding:2px 10px;border:1px solid var(--border);border-radius:20px;}
+.ws-w.found{background:var(--ok-bg);border-color:var(--ok-b);color:#166534;text-decoration:line-through;}
+
+/* Kurze Rückmeldung beim Füllen (Lücke, Zone, gefundenes Wort) */
+.bs-pop{animation:bs-pop .35s ease;}
+@keyframes bs-pop{0%{transform:scale(1);}40%{transform:scale(1.12);}100%{transform:scale(1);}}
+
+/* >>> RESET-KNOPF-CSS */
+/* Lehrkraft-Werkzeuge in der Lehrermodus-Leiste (nur bei aktivem Lehrermodus sichtbar) */
+.teachbar-tool{font-family:var(--font);font-size:var(--fs-sm);font-weight:700;background:var(--surface);color:#33475B;
+  border:1.5px solid #33475B;border-radius:var(--radius-full);padding:5px 14px;cursor:pointer;}
+.teachbar-tool:hover{background:var(--surface-2);}
+.teachbar-danger{color:var(--err);border-color:var(--err-b);}
+.teachbar-danger:hover{background:var(--err-bg);}
+.reset-info{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;max-width:min(560px,92vw);
+  background:var(--ok-bg);border:1.5px solid var(--ok-b);color:#166534;border-radius:var(--radius);
+  padding:10px 16px;box-shadow:var(--shadow-md);font-weight:600;text-align:center;}
+@media print{ .teachbar-tool,.reset-info{display:none !important;} }
+
+.bitswitch{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+  margin:16px 0 6px;padding:14px 10px;background:var(--surface-2);
+  border:1.5px solid var(--border);border-radius:var(--radius);}
+.bit-col{display:flex;flex-direction:column;align-items:center;gap:6px;width:56px;}
+.bit-place{font-family:var(--mono);font-size:var(--fs-sm);color:var(--text-3);}
+.bit-btn{width:48px;height:48px;border-radius:10px;border:2px solid var(--border);
+  background:var(--surface);font-family:var(--mono);font-size:var(--fs-h2);font-weight:700;
+  color:var(--text-3);cursor:pointer;transition:all .15s ease;}
+.bit-btn:hover{border-color:var(--accent-muted);}
+.bit-btn.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-light);}
+.bit-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+.bit-calc{font-family:var(--mono);font-size:var(--fs-lg);text-align:center;margin:10px 0 4px;
+  padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);}
+.bit-calc strong{color:var(--accent-hover);font-size:var(--fs-h2);}
+.bit-toolbar{display:flex;justify-content:center;gap:8px;margin-top:8px;}
+.hand-wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:center;
+  margin:14px 0;padding:16px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);}
+.hand-svg{width:min(320px,90vw);height:auto;}
+.hand-finger{cursor:pointer;transition:transform .2s ease,fill .2s ease;transform-origin:bottom center;}
+.hand-finger .fbase{fill:#E8C9A8;stroke:#B8895A;stroke-width:2;}
+.hand-finger.up .fbase{fill:var(--accent);stroke:var(--accent-hover);}
+.hand-finger.down{transform:scaleY(.42) translateY(58%);}
+.hand-finger .fbit{font-family:var(--mono);font-size:var(--fs-sm);fill:#fff;font-weight:700;}
+.hand-palm{fill:#F2D9BC;stroke:#B8895A;stroke-width:2;}
+.hand-readout{display:flex;flex-direction:column;gap:8px;min-width:200px;}
+.hand-readout .hr-row{display:flex;justify-content:space-between;gap:10px;
+  font-family:var(--mono);font-size:var(--fs-lg);padding:6px 10px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:8px;}
+.hand-readout .hr-label{font-family:var(--font);font-size:var(--fs-sm);color:var(--text-3);}
+.hand-controls{display:flex;gap:8px;flex-wrap:wrap;}
+.ex{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;
+  background:var(--surface);box-shadow:var(--shadow);}
+.inp[placeholder="00000000"]{width:12ch;}
+
+/* ============================================================
+   DaZ-Fassung: Sprachumschalter RU / beide / DE
+   ============================================================ */
+html.m-ms .de{display:none !important;}
+html.m-de .ms{display:none !important;}
+html.m-both span.ms + span.de::before{content:" / ";color:var(--text-3);font-weight:400;}
+html.m-both span.de{color:var(--text-3);}
+html.m-both .btn span.de,html.m-both .quiz-btn span.de,html.m-both .pnav.active span.de{color:inherit;opacity:.8;}
+html.m-both p.de,html.m-both div.de{color:var(--text-3);border-left:3px solid var(--accent-muted);padding-left:10px;}
+html.m-both .dtw-text .de,html.m-both .pnav span.de{border:none;padding:0;}
+.langbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 14px;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.langbar-label{font-weight:700;color:var(--text-2);margin-right:4px;}
+.lang-btn{font-family:var(--font);font-size:var(--fs-base);font-weight:600;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text-2);border-radius:var(--radius-full);padding:6px 14px;cursor:pointer;}
+.lang-btn:hover{border-color:var(--accent-muted);}
+.lang-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.lang-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+
+/* Vokabel-Abzeichen: deutsches Fachwort im somalischen Text (Klick = Aussprache) */
+.vok{display:inline-block;font-family:var(--font);font-size:inherit;font-weight:700;line-height:1.3;
+  color:var(--accent-hover);background:#FFF6D9;border:1.5px solid #E5C76B;border-radius:6px;
+  padding:0 6px;margin:0 1px;cursor:pointer;white-space:nowrap;}
+.vok::after{content:" 🔊";font-weight:400;opacity:.55;}
+.vok:hover{background:#FDECB5;} .vok:focus-visible{outline:3px solid var(--accent);outline-offset:1px;}
+
+/* Einführungskarte */
+.intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0;}
+@media (max-width:800px){.intro-grid{grid-template-columns:1fr;}}
+.intro-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:12px 14px;color:var(--text-2);}
+.intro-ico{font-size:var(--fs-h2);line-height:1.2;}
+
+/* Heftereintrag zum Abschreiben (kein Kopieren) */
+.hefter-copy{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;
+  font-family:var(--font);user-select:none;-webkit-user-select:none;
+  background-image:repeating-linear-gradient(transparent 0 1.55em, var(--border-light) 1.55em calc(1.55em + 1px));}
+.hefter-copy p{color:var(--text);margin-bottom:6px;font-size:var(--fs-lg);line-height:1.55;}
+.hefter-copy .h-titel{font-weight:800;color:var(--accent-hover);}
+.hefter-gloss{margin-top:8px;color:var(--text-2);}
+.gloss-label{font-weight:700;color:var(--text-3);}
+html.m-both .hefter-gloss{border-left:none;padding-left:0;}
+.hefter-woerter{margin-top:10px;line-height:2;}
+.hefter-done{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border:1.5px dashed var(--accent-muted);
+  border-radius:8px;background:var(--surface);cursor:pointer;font-weight:600;color:var(--text-2);}
+.hefter-done input,.wb-check input{width:20px;height:20px;accent-color:var(--ok);}
+.hefter-box.erledigt{border-color:var(--ok);background:var(--ok-bg);}
+.hefter-box.erledigt .hefter-done{border-style:solid;border-color:var(--ok);color:#166534;}
+.copy-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:50;background:var(--color-text);color:#fff;
+  padding:10px 18px;border-radius:var(--radius);box-shadow:var(--shadow-md);font-weight:600;max-width:90vw;}
+
+/* Wörterbuch */
+.art{font-weight:800;} .art-der{color:#1B5FAD;} .art-die{color:#B42318;} .art-das{color:#2D7A3E;}
+.wb-anleitung{margin:8px 0 12px 22px;color:var(--text-2);} .wb-anleitung li{margin-bottom:8px;}
+.wb-muster{border:2px dashed var(--accent-muted);border-radius:var(--radius);padding:12px 14px;background:var(--accent-light);margin:12px 0;}
+.wb-muster-title{font-weight:700;color:var(--accent-hover);margin-bottom:8px;}
+.wb-table{width:100%;border-collapse:collapse;background:var(--surface);table-layout:fixed;}
+.wb-table th,.wb-table td{overflow-wrap:anywhere;hyphens:auto;}
+.wb-table th,.wb-table td{border:1.5px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top;}
+.wb-table th{background:var(--surface-2);}
+.wb-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 16px;}
+.wb-row{display:grid;grid-template-columns:44px minmax(180px,1.3fr) minmax(150px,1fr) minmax(180px,1.3fr) auto;gap:10px;align-items:center;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;}
+.wb-row.notiert{background:var(--ok-bg);border-color:var(--ok-b);}
+@media (max-width:820px){.wb-row{grid-template-columns:44px 1fr;}.wb-ms,.wb-bsp,.wb-check{grid-column:2;}}
+.wb-say{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;font-size:var(--fs-base);}
+.wb-say:hover{border-color:var(--accent-muted);background:var(--accent-light);}
+.wb-wort{font-weight:700;color:var(--text);user-select:none;-webkit-user-select:none;}
+.wb-pl{display:block;font-size:var(--fs-sm);color:var(--text-3);}
+.wb-ms{color:var(--text-2);}
+.wb-bsp{color:var(--text-2);font-style:italic;user-select:none;-webkit-user-select:none;}
+.wb-check{display:flex;align-items:center;gap:6px;font-size:var(--fs-sm);font-weight:600;color:var(--text-3);cursor:pointer;white-space:nowrap;}
+.wb-stand,.checkliste div[id]{font-weight:700;color:var(--text-2);margin:6px 0;}
+.stand-ok{color:#166534 !important;}
+.checkliste{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:14px 0;background:var(--surface-2);}
+.checkliste-title{font-weight:800;margin-bottom:4px;}
+.no-tts .vok::after{content:"";} .no-tts .wb-say,.no-tts .fc-say{display:none;}
+
+/* Rechenweg in Schritten */
+.step-nav{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
+.step-btn{font-family:var(--font);font-size:var(--fs-sm);font-weight:600;padding:6px 12px;border-radius:var(--radius-full);
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;}
+.step-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.step-content{display:none;} .step-content.on{display:block;}
+
+/* Karteikarten: Platz für ganze Wörter */
+#fc-vokabeln .fc-card{width:min(420px,100%);height:150px;padding:10px 16px;text-align:center;font-family:var(--font);font-size:var(--fs-h2);font-weight:700;}
+
+/* Finger-Tabelle */
+.finger-table{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.finger-table>div{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:110px;padding:8px 10px;
+  background:var(--accent-light);border:1.5px solid var(--accent-muted);border-radius:8px;color:var(--text-2);text-align:center;}
+.finger-table .fv{font-family:var(--mono);font-size:var(--fs-h2);font-weight:800;color:var(--accent-hover);}
+
+/* Anweisung vor jedem Heftereintrag: Deutsch abschreiben + Stichpunkte in der Muttersprache farbig */
+.hefter-anweisung{display:flex;flex-direction:column;gap:6px;margin:0 0 10px;padding:10px 12px;background:var(--surface);
+  border:1.5px solid var(--accent-muted);border-radius:8px;}
+.ha-schritt{display:flex;gap:10px;align-items:flex-start;color:var(--text-2);}
+.ha-nr{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);}
+.ha-farbe{color:#6B4A7A;}
+html.m-both .hefter-anweisung span.de{display:block;}
+html.m-both .hefter-anweisung span.ms + span.de::before{content:"";}
+
+@media print{
+  .langbar,.wb-say,.wb-check,.hefter-done,.copy-toast{display:none !important;}
+  .step-content{display:block !important;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="teachbar" id="teachbar" data-pw="HalIyoEber">
+    <span class="teachbar-label">Lehrermodus</span>
+    <input type="password" class="teachbar-pw" id="teachbar-pw" placeholder="Passwort" aria-label="Passwort für den Lehrermodus"
+           onkeydown="if(event.key==='Enter'){teachActivate();}">
+    <button class="teachbar-on" onclick="teachActivate()">Aktivieren</button>
+    <button class="teachbar-off" id="teachbar-off-btn" onclick="teachDeactivate()" hidden>Deaktivieren</button>
+    <button class="teachbar-tool teachbar-danger" id="teach-reset-btn" onclick="teachResetAll()" hidden title="Alle Fortschritte dieser Seite in diesem Browser löschen">🗑️ Fortschritt zurücksetzen</button>
+    <span class="teachbar-status" id="teachbar-status">inaktiv</span>
+  </div>
+  <div class="lehrer-only" hidden>
+    <div class="callout callout-success">🧑‍🏫 <span><strong>Lehrermodus aktiv:</strong> Alle Hilfestellungen und Musterlösungen sind ohne Wartezeit freigeschaltet.</span></div>
+  </div>
+
+
+  <div class="langbar" role="group" aria-label="Sprache / Luqadda">
+    <span class="langbar-label">🌐 Luqadda · Sprache</span>
+    <button type="button" class="lang-btn" data-m="ms" onclick="setSprache('ms')">🇸🇴 Soomaali</button>
+    <button type="button" class="lang-btn" data-m="both" onclick="setSprache('both')">🇸🇴 + 🇩🇪 Labadaba · Beide</button>
+    <button type="button" class="lang-btn" data-m="de" onclick="setSprache('de')">🇩🇪 Deutsch</button>
+  </div>
+
+  <header class="pagehead">
+    <div class="eyebrow"><span class="ms" lang="so">Fasalka 7aad · Informaatiko · DaZ</span><span class="de" lang="de">Klasse 7 · LB1 · DaZ</span></div>
+    <h1>Tirooyinka labaale · Binärzahlen⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​‌​​‌​‌‌​‌​​‌‌​‌‌‌​‌​​​‌​‌​‌​​​​​‌​​‌‌‌​​‌​​‌‌​‌‌‌​​‌‌​‌​‌⁠</h1>
+    <div class="goal">🎯 <span class="ms" lang="so">Waxaad u beddeshaa tirooyinka labaale tirooyin tobanle iyo dhinaca kale — waxaad shiddaa bits-ka furaha 8-bit oo isku dartaa qiimayaasha booska. Waxaadna bilaabaysaa qaamuuskaaga informaatikada.</span><span class="de" lang="de">Die Lernenden wandeln Dualzahlen in Dezimalzahlen um und umgekehrt und legen sich dabei ein zweisprachiges Informatik-Wörterbuch an.</span>⁠​‌​​‌‌​‌​‌​‌​​‌​​​‌​‌‌​‌​​‌‌​​‌​​​‌‌​​​​​​‌‌​​‌​​​‌‌​‌‌​​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​‌​​‌‌​​​‌​​‌​‌‌​‌​​‌‌​‌‌‌​‌​​​‌​‌​‌​​​​​‌​​‌‌‌​​‌​​‌‌​‌‌‌​​‌‌​‌​‌⁠</div>
+  </header>
+
+  <div class="card intro">
+    <h2><span class="ms" lang="so">Sida loogu shaqeeyo boggan</span><span class="de" lang="de">So arbeitest du mit dieser Seite</span></h2>
+    <p class="ms" lang="so">Boggan wuxuu ku qoran yahay af Soomaali. Badhamada sare waxaad ku beddeli kartaa af Jarmal, ama waxaad tusi kartaa labada luqadood mar keliya. Mararka qaarkood isku day inaad af Jarmal ku akhrido — sidaas ayaad casharka fasalka si fiican ugu fahmi doontaa.</p>
+<p class="de" lang="de">Diese Seite ist auf Somali. Mit den Knöpfen oben kannst du auf Deutsch umschalten oder beide Sprachen gleichzeitig anzeigen. Lies ab und zu auf Deutsch – so verstehst du den Unterricht in der Klasse besser.</p>
+    <div class="intro-grid">
+      <div class="intro-item"><div class="intro-ico">✍️</div><div><span class="ms" lang="so"><strong>Buugga.</strong> Qoraallada ku jira sanduuqa <u>gacanta</u> ku qor buuggaaga — <strong>af Jarmal</strong>. Dhinaca ku qor qoraallo gaaban <strong class="ha-farbe">af Soomaali, midab kale</strong>. Ha koobiyeyn! Kadib calaamadee sanduuqa yar.</span><span class="de" lang="de"><strong>Hefter.</strong> Einträge im Rahmen schreibst du <u>von Hand</u> in deinen Hefter ab – <strong>auf Deutsch</strong>. Daneben machst du kurze Stichpunkte <strong class="ha-farbe">auf Somali in einer anderen Farbe</strong>. Nicht kopieren! Danach Häkchen setzen.</span></div></div>
+      <div class="intro-item"><div class="intro-ico">📖</div><div><span class="ms" lang="so"><strong>Qaamuuska.</strong> Ereyada Jarmalka ah ee sanduuqa ku jira (tusaale ahaan <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Bit</button>) waa ereyo qaamuuskaaga informaatikada. Riix ereyga — waxaad maqli doontaa sida loogu dhawaaqo.</span><span class="de" lang="de"><strong>Wörterbuch.</strong> Deutsche Wörter im Kästchen (z. B. <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Bit</button>) gehören in dein Informatik-Wörterbuch. Klick darauf – dann hörst du, wie man es ausspricht.</span></div></div>
+      <div class="intro-item"><div class="intro-ico">🆘</div><div><span class="ms" lang="so"><strong>Caawimo.</strong> Haddii aadan sii socon karin, riix «Caawimo». 2, 4 iyo 6 daqiiqo kadib tilmaamo ayaa furma, 10 daqiiqo kadib xalka.</span><span class="de" lang="de"><strong>Hilfe.</strong> Wenn du nicht weiterkommst, klick auf „Hilfestellungen“. Nach 2, 4 und 6 Minuten kommen Tipps, nach 10 Minuten die Musterlösung.</span></div></div>
+    </div>
+    <div class="callout callout-info">📓 <span><span class="ms" lang="so">Sida loo sameeyo qaamuuska waxaad ka helaysaa tabka «Qaamuus». Ugu fiican waa inaad hadda bilowdo — bogagga ugu dambeeya ee buuggaaga.</span><span class="de" lang="de">Wie du dein Wörterbuch anlegst, steht im Reiter „Wörterbuch“. Leg es am besten gleich an – auf den letzten Seiten deines Hefters.</span></span></div>
+  </div>
+
+  <nav class="phase-nav" id="phase-nav">
+  <button class="pnav active" id="pn0" onclick="showPhase(0)"><span class="pnum"><span class="ms" lang="so">Bilow</span><span class="de" lang="de">Einstieg</span></span><span class="ms" lang="so">Kaliya shidan ama demisan?</span><span class="de" lang="de">Nur An oder Aus?</span></button>
+  <button class="pnav" id="pn1" onclick="showPhase(1)"><span class="pnum"><span class="ms" lang="so">Wajiga 1</span><span class="de" lang="de">Phase 1</span></span><span class="ms" lang="so">Furaha 8-bit</span><span class="de" lang="de">Der 8-Bit-Schalter</span></button>
+  <button class="pnav" id="pn2" onclick="showPhase(2)"><span class="pnum"><span class="ms" lang="so">Wajiga 2</span><span class="de" lang="de">Phase 2</span></span><span class="ms" lang="so">Hawlo</span><span class="de" lang="de">Übungsaufgaben</span></button>
+  <button class="pnav" id="pn3" onclick="showPhase(3)"><span class="pnum"><span class="ms" lang="so">Ku celin</span><span class="de" lang="de">Sicherung</span></span><span class="ms" lang="so">Gacanta tirinaysa</span><span class="de" lang="de">Die zählende Hand</span></button>
+  <button class="pnav" id="pn4" onclick="showPhase(4)"><span class="pnum">📖 <span class="ms" lang="so">Qaamuus</span><span class="de" lang="de">Wörterbuch</span></span><span class="ms" lang="so">Qaamuuskayga</span><span class="de" lang="de">Mein Wörterbuch</span></button>
+  </nav>
+
+<!-- ============================ EINSTIEG ============================ -->
+<section class="phase on" id="ph0">
+  <div class="card">
+    <h2><span class="ms" lang="so">Kaliya shidan ama demisan?</span><span class="de" lang="de">Nur An oder Aus?</span></h2>
+    <p class="ms" lang="so">🎯 Taleefankaaga, laptop-kaaga iyo xitaa nalka taraafikada waxaa ku jira kombiyuutar <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Computer</button>. Laakiin gudaha wuxuu kaliya yaqaan <strong>laba</strong> xaaladood <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Zustand</button>: korontadu <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Strom</button> <span class="tt" tabindex="0" data-tip="Koronto ayaa mareysa qaybta.">way socotaa</span> ama <span class="tt" tabindex="0" data-tip="Koronto ma mareyso.">ma socoto</span>. Hadana wuxuu kaydiyaa <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">speichern</button> tirooyin, sawirro, muusig iyo filimo dhan. Sidee taasi ku suurtagashaa?</p>
+<p class="de" lang="de">🎯 In deinem Handy, deinem Laptop und jeder Ampelsteuerung steckt ein Computer. Tief im Inneren kennt er aber nur <strong>zwei</strong> Zustände: Strom <span class="tt" tabindex="0" data-tip="Es fließt Strom durch das Bauteil.">an</span> oder <span class="tt" tabindex="0" data-tip="Es fließt kein Strom.">aus</span>. Trotzdem kann er Zahlen, Fotos, Musik und ganze Filme speichern. Wie soll das gehen?</p>
+
+    <div class="poe-box" id="poe-strom">
+      <div class="poe-label"><span class="ms" lang="so">🤔 Maxaad u malaynaysaa?</span><span class="de" lang="de">🤔 Was denkst du?</span></div>
+      <textarea id="poe-strom-in" rows="2" data-ph-ms="Sidee kombiyuutar leh kaliya laba xaaladood (shidan/demisan) u kaydin karaa waxyaabo badan oo kala duwan? Waxaad ku qori kartaa af Soomaali ama af Jarmal." data-ph-de="Wie könnte ein Computer mit nur zwei Zuständen (an/aus) so viele verschiedene Dinge speichern?" placeholder="Sidee kombiyuutar leh kaliya laba xaaladood (shidan/demisan) u kaydin karaa waxyaabo badan oo kala duwan? Waxaad ku qori kartaa af Soomaali ama af Jarmal."></textarea>
+      <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-strom')"><span class="ms" lang="so">Kaydi fikradayda</span><span class="de" lang="de">Vermutung festhalten</span></button>
+      <div class="poe-locked" id="poe-strom-out" hidden></div>
+    </div>
+
+    <div class="substep-nav" id="ph0-stepper" data-phase="0" data-total="2">
+      <span class="substep-label"><span class="ms" lang="so">Qaybaha:</span><span class="de" lang="de">Teile:</span></span>
+      <button class="substep-chip active" onclick="revealSub(0,1)">1 · <span class="ms" lang="so">Laba xaaladood</span><span class="de" lang="de">Zwei Zustände</span></button>
+      <button class="substep-chip locked" onclick="revealSub(0,2)">2 · <span class="ms" lang="so">Maxay ugu filan tahay?</span><span class="de" lang="de">Warum reicht das?</span></button>
+      <button class="substep-all" onclick="revealSub(0,2)"><span class="ms" lang="so">Muuji dhammaan</span><span class="de" lang="de">Alle Teile anzeigen</span></button>
+    </div>
+
+    <div class="subphase on" id="ph0-sub-1">
+      <p class="ms" lang="so">Hal furaha korontada <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Schalter</button> ee kombiyuutarka wuxuu yaqaan kaliya laba xaaladood: <strong>0</strong> (koronto ma socoto) ama <strong>1</strong> (koronto way socotaa). Meeshan hal lambar loogu talagalay waxaa la yiraahdaa <span class="tt" tabindex="0" data-tip="Halbeegga ugu yar ee xusuusta kombiyuutarka; wuxuu noqon karaa kaliya 0 ama 1. Waxay ka timid Ingiriisiga «binary digit» — lambar labaale.">bit</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Bit</button>. Hal bit wuxuu kala saari karaa kaliya laba shay — tusaale ahaan «nalka waa shidan yahay» ama «nalka waa demisan yahay».</p>
+<p class="de" lang="de">Ein einzelner Schalter im Computer kennt nur zwei Zustände: <strong>0</strong> (kein Strom) oder <strong>1</strong> (Strom fließt). Man nennt eine solche Stelle ein <span class="tt" tabindex="0" data-tip="Kleinste Speichereinheit eines Computers; kann nur 0 oder 1 sein. Kurzform von ‚binary digit‘.">Bit</span>. Ein Bit allein kann also nur zwei Dinge unterscheiden — zum Beispiel „Licht an“ oder „Licht aus“.</p>
+      <div class="callout">💡 <span><span class="ms" lang="so">Sidaas darteed nidaamka tirada ee leh kaliya lambarrada <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Ziffer</button> 0 iyo 1 waxaa la yiraahdaa <strong>nidaamka labaale</strong> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Dualsystem</button> (Jarmalka sidoo kale: Binärsystem). «Dual» iyo «binär» macnahoodu waa «ka kooban laba qaybood».</span><span class="de" lang="de">Genau deshalb heißt das Zahlensystem, das nur 0 und 1 kennt, <span class="tt" tabindex="0" data-tip="Zahlensystem mit genau zwei Ziffern: 0 und 1.">Dualsystem</span> oder Binärsystem — „dual“ bzw. „binär“ bedeutet „aus zwei Teilen bestehend“.</span></span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(0,2)"><span class="ms" lang="so">U gudub qaybta 2 ↓</span><span class="de" lang="de">Weiter zu Teil 2 ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph0-sub-2">
+      <p class="ms" lang="so">Hal bit wuxuu ku filan yahay laba fursadood. Laakiin kombiyuutarku <strong>wuxuu isku xigxigiyaa bits badan</strong>. Xitaa 8 bit oo isku xiga — taas waxaa la yiraahdaa <span class="tt" tabindex="0" data-tip="Halbeeg ka kooban 8 bit; wuxuu yeelan karaa 256 qiime oo kala duwan (0 ilaa 255).">bayt</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Byte</button> — waxay bixiyaan 256 qiime oo kala duwan <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Wert</button>. Taasi waxay ku filan tahay in lagu qoro dhammaan xarfaha, lambarrada iyo calaamadaha kiiboodhka.</p>
+<p class="de" lang="de">Ein Bit reicht für zwei Möglichkeiten. Aber ein Computer <strong>reiht viele Bits hintereinander</strong>. Schon mit 8 Bit hintereinander — das nennt man ein <span class="tt" tabindex="0" data-tip="Einheit aus 8 Bit; kann 256 verschiedene Werte darstellen (0 bis 255).">Byte</span> — lassen sich 256 verschiedene Werte unterscheiden. Damit können schon alle Buchstaben, Ziffern und Satzzeichen einer Tastatur codiert werden.</p>
+
+      <div class="quiz-item">
+        <div class="quiz-q"><span class="ms" lang="so">Arday la fasal ah ayaa leh: «0 iyo 1 waa laba lambar oo keliya. Markaa kombiyuutarku wuxuu kaydin karaa ugu badnaan laba tiro oo kala duwan.» Ma run baa?</span><span class="de" lang="de">Ein Mitschüler sagt: „0 und 1 sind ja nur zwei Ziffern — damit kann ein Computer höchstens zwei verschiedene Zahlen speichern.“ Stimmt das?</span></div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('gl0', this, 'w')"><span class="ms" lang="so">Haa, 0 iyo 1 waxaa lagu qori karaa kaliya tirooyinka 0 iyo 1.</span><span class="de" lang="de">Ja, mit 0 und 1 gehen nur die Zahlen 0 und 1.</span></button>
+          <button class="quiz-btn" onclick="quizCheck('gl0', this, 'c')"><span class="ms" lang="so">Maya, dhowr bit oo isku xiga waxay bixiyaan isku-dhafyo badan oo kala duwan.</span><span class="de" lang="de">Nein, mehrere Bits hintereinander ergeben viele verschiedene Kombinationen.</span></button>
+          <button class="quiz-btn" onclick="quizCheck('gl0', this, 'w')"><span class="ms" lang="so">Maya, sababtoo ah kombiyuutarradu si qarsoodi ah ayay u isticmaalaan lambarro kale.</span><span class="de" lang="de">Nein, weil Computer heimlich auch andere Ziffern nutzen.</span></button>
+        </div>
+        <div class="quiz-fb" id="qfb-gl0"></div>
+      </div>
+
+      <div class="callout callout-info">🖥️ <span><span class="ms" lang="so">Maxaa loo isticmaalaa kaliya laba xaaladood? Waa arrin farsamo: wareegga korontada si fudud oo la isku halleyn karo ayaa loo dhisi karaa «shidan» ama «demisan». Toban heer koronto oo kala duwan (nidaam tobanle ah oo kombiyuutarka ku jira) aad bay uga yaraan lahayd in la isku halleeyo.</span><span class="de" lang="de">Warum überhaupt nur zwei Zustände? Das ist eine Frage der Technik: Ein Stromkreis lässt sich zuverlässig als „an“ oder „aus“ bauen. Zehn unterscheidbare Spannungsstufen (für ein Dezimalsystem im Computer) wären technisch viel störanfälliger.</span></span></div>
+
+      <div class="hefter-box" id="hb-bit">
+        <div class="hefter-label"><span class="ms" lang="so">✍️ Qoraalka buugga</span><span class="de" lang="de">✍️ Heftereintrag</span></div>
+        <div class="hefter-anweisung">
+          <div class="ha-schritt"><span class="ha-nr">1</span><span><span class="ms" lang="so">U guuri qoraalka <strong>af Jarmal</strong> buuggaaga — gacanta ku qor, si nadiif ah, cinwaan leh.</span><span class="de" lang="de">Schreib den Eintrag <strong>auf Deutsch</strong> in deinen Hefter ab – von Hand, ordentlich, mit Überschrift.</span></span></div>
+          <div class="ha-schritt"><span class="ha-nr">2</span><span><span class="ms" lang="so">Dhinaca ama hoosta ku qor qoraallo gaaban <strong class="ha-farbe">af Soomaali — midab kale</strong> (tusaale ahaan qalin midab basali ah). Ereyadaada, kaliya waxa ugu muhiimsan.</span><span class="de" lang="de">Daneben oder darunter machst du kurze Stichpunkte <strong class="ha-farbe">auf Somali – in einer anderen Farbe</strong> (z. B. mit lila Stift). In eigenen Worten, nur das Wichtigste.</span></span></div>
+        </div>
+        <div class="hefter-copy" lang="de">
+          <p class="h-titel">Bit und Byte</p>
+          <p><u>Bit</u>: kleinste Speichereinheit, kann nur 0 oder 1 sein.</p>
+<p><u>Byte</u>: 8 Bit hintereinander; damit lassen sich 256 verschiedene Werte (0 bis 255) darstellen.</p>
+<p><u>Dualsystem</u> (Binärsystem): Zahlensystem, das nur die Ziffern 0 und 1 verwendet.</p>
+        </div>
+        <div class="hefter-gloss ms" lang="so"><span class="gloss-label">Caawimo qoraalladaada (ha u guurin erey erey):</span> Bit — halbeegga ugu yar ee xusuusta, wuxuu noqon karaa kaliya 0 ama 1. Bayt — 8 bit oo isku xiga; waxaa lagu qori karaa 256 qiime oo kala duwan (0 ilaa 255). Nidaamka labaale (Dualsystem) — nidaam tiro oo isticmaala kaliya lambarrada 0 iyo 1.</div>
+        <div class="hefter-woerter"><span class="ms" lang="so">📖 Qaamuuska:</span><span class="de" lang="de">📖 Ins Wörterbuch:</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Bit</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Byte</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Dualsystem</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Ziffer</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Zustand</button></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(1)"><span class="ms" lang="so">U gudub wajiga 1: sidee loo tiriyaa nidaamka labaale? →</span><span class="de" lang="de">Weiter zu Phase 1: Wie zählt man in Binär? →</span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PHASE 1 ============================ -->
+<section class="phase" id="ph1">
+  <div class="card">
+    <h2><span class="ms" lang="so">Furaha 8-bit</span><span class="de" lang="de">Der 8-Bit-Schalter</span></h2>
+    <p class="ms" lang="so">🔎 Qiimaha booska waxaad horey uga taqaannay nidaamka tobanle <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">das Dezimalsystem</button>: tirada <span class="math">253</span> waxay leedahay kow, toban iyo boqol. Nidaamka labaale sidoo kale wuxuu leeyahay qiimayaal boos — laakiin saldhig&nbsp;2, ma aha&nbsp;10.</p>
+<p class="de" lang="de">🔎 Du kennst Stellenwerte schon aus dem Dezimalsystem: Bei der Zahl <span class="math">253</span> nutzen wir Einer, Zehner und Hunderter. Im Dualsystem gibt es Stellenwerte auch — nur eben zur Basis&nbsp;2 statt zur Basis&nbsp;10.</p>
+
+    <div class="substep-nav" id="ph1-stepper" data-phase="1" data-total="3">
+      <span class="substep-label"><span class="ms" lang="so">Qaybaha:</span><span class="de" lang="de">Teile:</span></span>
+      <button class="substep-chip active" onclick="revealSub(1,1)">1 · <span class="ms" lang="so">Qiimaha booska</span><span class="de" lang="de">Stellenwerte</span></button>
+      <button class="substep-chip locked" onclick="revealSub(1,2)">2 · <span class="ms" lang="so">Sida loo xisaabiyo</span><span class="de" lang="de">Rechenweg</span></button>
+      <button class="substep-chip locked" onclick="revealSub(1,3)">3 · <span class="ms" lang="so">Adigu isku day</span><span class="de" lang="de">Selbst schalten</span></button>
+      <button class="substep-all" onclick="revealSub(1,3)"><span class="ms" lang="so">Muuji dhammaan</span><span class="de" lang="de">Alle Teile anzeigen</span></button>
+    </div>
+
+    <div class="subphase on" id="ph1-sub-1">
+      <p class="ms" lang="so">Tirada tobanlaha ah <span class="math">253</span> lambarka 2 macnihiisu waa <span class="math">2&nbsp;·&nbsp;100</span>, lambarka 5 waa <span class="math">5&nbsp;·&nbsp;10</span>, lambarka 3-na waa <span class="math">3&nbsp;·&nbsp;1</span>. Boos kasta <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Stelle</button> wuxuu toban jeer ka qiimo badan yahay booska midigta ka xiga — taasi waa nidaamka tobanle.</p>
+<p class="de" lang="de">Bei der Dezimalzahl <span class="math">253</span> steht die 2 für <span class="math">2&nbsp;·&nbsp;100</span>, die 5 für <span class="math">5&nbsp;·&nbsp;10</span> und die 3 für <span class="math">3&nbsp;·&nbsp;1</span>. Jede Stelle ist zehnmal so viel wert wie die rechts daneben — das ist das Zehnersystem.</p>
+      <p class="ms" lang="so">Gudaha <span class="tt" tabindex="0" data-tip="Nidaam tiro oo leh lambarrada 0 iyo 1, saldhig 2.">nidaamka labaale</span> boos kasta wuxuu kaliya <strong>laba jeer</strong> ka qiimo badan yahay booska midigta ka xiga. Bayt (8 bit) waxaa u soo baxa qiimayaashan boos <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Stellenwert</button>:</p>
+<p class="de" lang="de">Im <span class="tt" tabindex="0" data-tip="Zahlensystem mit den Ziffern 0 und 1, Basis 2.">Dualsystem</span> ist jede Stelle nur <strong>zweimal</strong> so viel wert wie die rechts daneben. Für ein Byte (8 Bit) ergeben sich diese Stellenwerte:</p>
+      <div class="formula">128 &nbsp; 64 &nbsp; 32 &nbsp; 16 &nbsp; 8 &nbsp; 4 &nbsp; 2 &nbsp; 1</div>
+      <div class="callout">💡 <span><span class="ms" lang="so">Xasuuso: qiimaha boos kasta waa laba jeer kii ka horreeyay — <span class="math">1, 2, 4, 8, 16, 32, 64, 128</span>. Kuwani waa jibbaarada labada <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Zweierpotenz</button> laga bilaabo <span class="math">2⁰</span> ilaa <span class="math">2⁷</span>.</span><span class="de" lang="de">Merke: Jeder Stellenwert ist das Doppelte des vorherigen — <span class="math">1, 2, 4, 8, 16, 32, 64, 128</span>. Das sind die Zweierpotenzen <span class="math">2⁰</span> bis <span class="math">2⁷</span>.</span></span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,2)"><span class="ms" lang="so">U gudub qaybta 2 ↓</span><span class="de" lang="de">Weiter zu Teil 2 ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-2">
+      <p class="ms" lang="so">Sida loo beddelo <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">umwandeln</button> tiro labaale <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Dualzahl</button> oo looga dhigo tiro tobanle <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Dezimalzahl</button>: lambar kasta hoostiisa ku qor qiimaha booskiisa, kadib isku dar <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">addieren</button> kaliya qiimayaasha ay 1 ku taal.</p>
+<p class="de" lang="de">So wandelst du eine Dualzahl in eine Dezimalzahl um: Du schreibst unter jede Ziffer ihren Stellenwert und addierst nur die Stellenwerte, an denen eine 1 steht.</p>
+      <div class="step-nav">
+        <button class="step-btn active" onclick="showStep('bsp',1,this)">1 · <span class="ms" lang="so">Qor tirada</span><span class="de" lang="de">Zahl notieren</span></button>
+        <button class="step-btn" onclick="showStep('bsp',2,this)">2 · <span class="ms" lang="so">Qiimayaasha hoosta</span><span class="de" lang="de">Stellenwerte darunter</span></button>
+        <button class="step-btn" onclick="showStep('bsp',3,this)">3 · <span class="ms" lang="so">Isku dar kowyada</span><span class="de" lang="de">Einsen addieren</span></button>
+      </div>
+      <div class="step-content on" id="bsp-step-1">
+        <div class="formula">0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;1</div>
+        <p class="ms" lang="so">Tani waa tiradeena labaale ee 8 bit ah.</p>
+<p class="de" lang="de">Das ist unsere Dualzahl mit 8 Bit.</p>
+      </div>
+      <div class="step-content" id="bsp-step-2">
+        <div class="formula">0·128 &nbsp; 0·64 &nbsp; 1·32 &nbsp; 0·16 &nbsp; 0·8 &nbsp; 1·4 &nbsp; 0·2 &nbsp; 1·1</div>
+        <p class="ms" lang="so">Lambar kasta waxaan ku dhufanaynaa qiimaha booskiisa.</p>
+<p class="de" lang="de">Jede Ziffer wird mit ihrem Stellenwert multipliziert.</p>
+      </div>
+      <div class="step-content" id="bsp-step-3">
+        <div class="formula">32 + 4 + 1 = <strong>37</strong></div>
+        <p class="ms" lang="so">Kaliya boosaska leh 1 ayaa la tiriyaa — inta kale waa la iska dhaafaa, sababtoo ah «ku dhufo 0» mar walba waa 0. Tirada labaale <span class="math">00100101</span> waxay la mid tahay tirada tobanle <strong>37</strong>. Natiijada isku-darka waxaa la yiraahdaa wadar <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Summe</button>.</p>
+<p class="de" lang="de">Nur die Stellen mit einer 1 zählen mit — der Rest fällt weg, weil „mal 0“ immer 0 ergibt. Die Dualzahl <span class="math">00100101</span> entspricht also der Dezimalzahl <strong>37</strong>.</p>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(1,3)"><span class="ms" lang="so">U gudub qaybta 3 ↓</span><span class="de" lang="de">Weiter zu Teil 3 ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph1-sub-3">
+      <p class="ms" lang="so">Hadda adiga: riix sanduuqyada si aad u shido ama u damiso bits gaar ah. Furaha hoostiisa isla markiiba waxaad ku arki doontaa tirada tobanle ee soo baxday iyo sida loo xisaabiyay.</p>
+<p class="de" lang="de">Jetzt bist du dran: Klicke die Kästchen an, um einzelne Bits ein- und auszuschalten. Unter dem Schalter siehst du sofort, welche Dezimalzahl deine Bit-Kombination ergibt und wie sie berechnet wird.</p>
+      <div class="bitswitch" id="bitswitch1">
+        <div class="bit-col"><span class="bit-place">128</span>
+          <button class="bit-btn" data-value="128" onclick="bitToggle(this)" aria-label="Bit 128">0</button></div>
+        <div class="bit-col"><span class="bit-place">64</span>
+          <button class="bit-btn" data-value="64" onclick="bitToggle(this)" aria-label="Bit 64">0</button></div>
+        <div class="bit-col"><span class="bit-place">32</span>
+          <button class="bit-btn" data-value="32" onclick="bitToggle(this)" aria-label="Bit 32">0</button></div>
+        <div class="bit-col"><span class="bit-place">16</span>
+          <button class="bit-btn" data-value="16" onclick="bitToggle(this)" aria-label="Bit 16">0</button></div>
+        <div class="bit-col"><span class="bit-place">8</span>
+          <button class="bit-btn" data-value="8" onclick="bitToggle(this)" aria-label="Bit 8">0</button></div>
+        <div class="bit-col"><span class="bit-place">4</span>
+          <button class="bit-btn" data-value="4" onclick="bitToggle(this)" aria-label="Bit 4">0</button></div>
+        <div class="bit-col"><span class="bit-place">2</span>
+          <button class="bit-btn" data-value="2" onclick="bitToggle(this)" aria-label="Bit 2">0</button></div>
+        <div class="bit-col"><span class="bit-place">1</span>
+          <button class="bit-btn" data-value="1" onclick="bitToggle(this)" aria-label="Bit 1">0</button></div>
+      </div>
+      <div class="bit-calc" id="bitswitch1-calc">0 = <strong>0</strong></div>
+      <div class="bit-toolbar">
+        <button class="btn btn-ghost btn-sm" onclick="bitResetById('bitswitch1')"><span class="ms" lang="so">↺ Dhammaan 0</span><span class="de" lang="de">↺ Alles auf 0</span></button>
+        <button class="btn btn-ghost btn-sm" onclick="bitRandomById('bitswitch1')"><span class="ms" lang="so">🎲 Tiro aan kala sooc lahayn</span><span class="de" lang="de">🎲 Zufällige Zahl</span></button>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q"><span class="ms" lang="so">Furaha ku dhig tirada 100. Bits-kee ayaad shidaysaa?</span><span class="de" lang="de">Stelle mit dem Schalter die Zahl 100 ein. Welche Bits musst du anschalten?</span></div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('bs100', this, 'w')">128 · 32 · 4</button>
+          <button class="quiz-btn" onclick="quizCheck('bs100', this, 'c')">64 · 32 · 4</button>
+          <button class="quiz-btn" onclick="quizCheck('bs100', this, 'w')">64 · 16 · 8 · 4</button>
+        </div>
+        <div class="quiz-fb" id="qfb-bs100"></div>
+      </div>
+
+      <div class="callout callout-info">🌍 <span><span class="ms" lang="so">Isticmaal: sidan ayuu kombiyuutarku u kaydiyaa midabada. Qaybta cas ee midab shaashadda badanaa waxaa lagu bixiyaa hal bayt (0–255) — isla xisaabta furahaaga 8-bit.</span><span class="de" lang="de">Anwendung: Genau so speichert ein Computer auch Farbwerte. Der Rotanteil einer Bildschirmfarbe wird oft mit einem Byte (0–255) angegeben — dieselbe Rechnung wie bei deinem 8-Bit-Schalter.</span></span></div>
+
+      <div class="hefter-box" id="hb-umwandeln">
+        <div class="hefter-label"><span class="ms" lang="so">✍️ Qoraalka buugga</span><span class="de" lang="de">✍️ Heftereintrag</span></div>
+        <div class="hefter-anweisung">
+          <div class="ha-schritt"><span class="ha-nr">1</span><span><span class="ms" lang="so">U guuri qoraalka <strong>af Jarmal</strong> buuggaaga — gacanta ku qor, si nadiif ah, cinwaan leh.</span><span class="de" lang="de">Schreib den Eintrag <strong>auf Deutsch</strong> in deinen Hefter ab – von Hand, ordentlich, mit Überschrift.</span></span></div>
+          <div class="ha-schritt"><span class="ha-nr">2</span><span><span class="ms" lang="so">Dhinaca ama hoosta ku qor qoraallo gaaban <strong class="ha-farbe">af Soomaali — midab kale</strong> (tusaale ahaan qalin midab basali ah). Ereyadaada, kaliya waxa ugu muhiimsan.</span><span class="de" lang="de">Daneben oder darunter machst du kurze Stichpunkte <strong class="ha-farbe">auf Somali – in einer anderen Farbe</strong> (z. B. mit lila Stift). In eigenen Worten, nur das Wichtigste.</span></span></div>
+        </div>
+        <div class="hefter-copy" lang="de">
+          <p class="h-titel">Dualzahl in Dezimalzahl umwandeln</p>
+          <p><u>Stellenwerte</u> (8 Bit): 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</p>
+<p><u>Regel</u>: Jede Ziffer mit ihrem Stellenwert multiplizieren und alle Ergebnisse addieren.</p>
+<p><u>Beispiel</u>: 0010 0101 = 32 + 4 + 1 = 37</p>
+        </div>
+        <div class="hefter-gloss ms" lang="so"><span class="gloss-label">Caawimo qoraalladaada (ha u guurin erey erey):</span> Qiimaha booska (8 bit): 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1. Xeerka: lambar kasta ku dhufo qiimaha booskiisa, kadib isku dar dhammaan natiijooyinka. Tusaale: 0010 0101 = 32 + 4 + 1 = 37.</div>
+        <div class="hefter-woerter"><span class="ms" lang="so">📖 Qaamuuska:</span><span class="de" lang="de">📖 Ins Wörterbuch:</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Stellenwert</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Dualzahl</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Dezimalzahl</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">umwandeln</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">addieren</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Summe</button></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(2)"><span class="ms" lang="so">U gudub wajiga 2: hadda adiga! →</span><span class="de" lang="de">Weiter zu Phase 2: Jetzt du! →</span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PHASE 2 ============================ -->
+<section class="phase" id="ph2">
+  <div class="card">
+    <h2><span class="ms" lang="so">Hawlo</span><span class="de" lang="de">Übungsaufgaben</span></h2>
+    <p class="ms" lang="so">💪 Hadda ku tababaro beddelidda labada dhinac. Marka hore adigu xisaabi — warqad ama buuggaaga — kadibna riix «Hubi». Ereyada hawlaha sidoo kale waxay ku jiraan qaamuuska: <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Aufgabe</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">prüfen</button>.</p>
+<p class="de" lang="de">💪 Jetzt übst du das Umwandeln in beide Richtungen. Rechne die Lösung zuerst selbst aus – auf einem Zettel oder im Hefter – und prüfe erst dann.</p>
+
+    <div class="substep-nav" id="ph2-stepper" data-phase="2" data-total="2">
+      <span class="substep-label"><span class="ms" lang="so">Qaybaha:</span><span class="de" lang="de">Teile:</span></span>
+      <button class="substep-chip active" onclick="revealSub(2,1)">1 · <span class="ms" lang="so">Hawlaha 1–7</span><span class="de" lang="de">Aufgaben 1–7</span></button>
+      <button class="substep-chip locked" onclick="revealSub(2,2)">2 · <span class="ms" lang="so">Khubarada: hawlaha 8–10</span><span class="de" lang="de">Für Profis: Aufgaben 8–10</span></button>
+      <button class="substep-all" onclick="revealSub(2,2)"><span class="ms" lang="so">Muuji dhammaan</span><span class="de" lang="de">Alle Teile anzeigen</span></button>
+    </div>
+
+    <div class="subphase on" id="ph2-sub-1">
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 1</strong> — <span class="ms" lang="so">U beddel tirada labaale tiro tobanle.</span><span class="de" lang="de">Wandle die Dualzahl in eine Dezimalzahl um.</span></p>
+        <p><span class="math">0000&nbsp;0101</span> = <input class="inp" id="a1" size="4" inputmode="numeric"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a1', 5, 0]])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a1')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a1"><span class="ms" lang="so">Kaliya boosaska 4 iyo 1 ayaa shidan: 4 + 1 = 5.</span><span class="de" lang="de">Nur die 1er- und 4er-Stelle sind gesetzt: 4 + 1 = 5.</span></div>
+        <div class="hs" id="hs-a1"><div data-tipp><span class="ms" lang="so">Lambar kasta hoostiisa ku qor qiimaha booskiisa: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</span><span class="de" lang="de">Schreib unter jede Ziffer ihren Stellenwert: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</span></div><div data-tipp><span class="ms" lang="so">Isku dar kaliya qiimayaasha ka hooseeya 1.</span><span class="de" lang="de">Addiere nur die Stellenwerte, unter denen eine 1 steht.</span></div><div data-tipp><span class="ms" lang="so">Labada 1 waxay ku jiraan boosaska 4 iyo 1.</span><span class="de" lang="de">Die beiden Einsen stehen an der 4er- und an der 1er-Stelle.</span></div><div data-muster><p class="heft">0000&nbsp;0101 → 4 + 1 = <u>5</u></p></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 2</strong> — <span class="ms" lang="so">U beddel tirada labaale tiro tobanle.</span><span class="de" lang="de">Wandle die Dualzahl in eine Dezimalzahl um.</span></p>
+        <p><span class="math">0001&nbsp;0000</span> = <input class="inp" id="a2" size="4" inputmode="numeric"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a2', 16, 0]])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a2')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a2"><span class="ms" lang="so">Kaliya booska 16 ayaa shidan: waa 16.</span><span class="de" lang="de">Nur die 16er-Stelle ist gesetzt: 16.</span></div>
+        <div class="hs" id="hs-a2"><div data-tipp><span class="ms" lang="so">Lambar kasta hoostiisa ku qor qiimaha booskiisa: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</span><span class="de" lang="de">Schreib unter jede Ziffer ihren Stellenwert: 128 · 64 · 32 · 16 · 8 · 4 · 2 · 1.</span></div><div data-tipp><span class="ms" lang="so">Halkan waxaa ku jira hal 1 oo keliya. Midigta ka tiri: boos kee buu ku jiraa?</span><span class="de" lang="de">Hier gibt es nur eine einzige 1. Zähle von rechts, an welcher Stelle sie steht.</span></div><div data-tipp><span class="ms" lang="so">Midigta: 1, 2, 4, 8, 16 — 1-da waxay ku jirtaa booska shanaad.</span><span class="de" lang="de">Von rechts: 1, 2, 4, 8, 16 – die 1 steht an der fünften Stelle.</span></div><div data-muster><p class="heft">0001&nbsp;0000 = <u>16</u></p></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 3</strong> — <span class="ms" lang="so">U beddel tirada labaale tiro tobanle.</span><span class="de" lang="de">Wandle die Dualzahl in eine Dezimalzahl um.</span></p>
+        <p><span class="math">0000&nbsp;0000</span> = <input class="inp" id="a3" size="4" inputmode="numeric"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a3', 0, 0]])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a3')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a3"><span class="ms" lang="so">Ma jiro bit shidan — wax la isku daro ma jiraan, markaa waa 0. «Waxba» sidoo kale waa qiime sax ah oo nidaamka labaale ah.</span><span class="de" lang="de">Kein einziges Bit ist gesetzt — es gibt nichts zu addieren, also 0. Auch „nichts“ ist ein gültiger, eindeutiger Wert im Dualsystem.</span></div>
+        <div class="hs" id="hs-a3"><div data-tipp><span class="ms" lang="so">Immisa 1 ayaad ku aragtaa tiradan?</span><span class="de" lang="de">Wie viele Einsen siehst du in dieser Dualzahl?</span></div><div data-tipp><span class="ms" lang="so">Haddii aysan jirin bit shidan, wax la isku daro ma jiraan.</span><span class="de" lang="de">Ohne gesetztes Bit gibt es nichts zu addieren.</span></div><div data-tipp><span class="ms" lang="so">Waa maxay wadarta haddii aadan waxba ku darin?</span><span class="de" lang="de">Was ergibt eine Summe, in der nichts dazukommt?</span></div><div data-muster><p class="heft">0000&nbsp;0000 = <u>0</u></p><div class="ms" lang="so"><p>«Waxba» sidoo kale waa qiime sax ah oo cad.</p></div><div class="de" lang="de"><p>Auch „nichts“ ist ein gültiger, eindeutiger Wert.</p></div></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 4</strong> — <span class="ms" lang="so">U beddel tirada tobanle tiro labaale oo 8-bit ah. Tilmaan: ku tijaabi furaha wajiga 1.</span><span class="de" lang="de">Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um. Tipp: Probiere es mit dem Schalter aus Phase 1 aus.</span></p>
+        <p>12 = <input class="inp" id="a4" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a4','00001100']])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a4')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a4"><span class="ms" lang="so">12 = 8 + 4 → shid bits 8 iyo 4: 0000 1100.</span><span class="de" lang="de">12 = 8 + 4 → Bits an den Stellen 8 und 4 setzen: 0000 1100.</span></div>
+        <div class="hs" id="hs-a4"><div data-tipp><span class="ms" lang="so">Raadi qiimaha booska ugu weyn ee weli gali kara 12.</span><span class="de" lang="de">Suche den größten Stellenwert, der noch in 12 hineinpasst.</span></div><div data-tipp><span class="ms" lang="so">8 wuu galaa 12, laakiin 16 waa ka badan yahay. Immisa ayaa hara haddii aad ka jarto 8?</span><span class="de" lang="de">8 passt in 12, 16 ist zu groß. Was bleibt übrig, wenn du 8 abziehst?</span></div><div data-tipp><span class="ms" lang="so">12 − 8 = 4, 4-na sidoo kale waa qiime boos. Shid bits 8 iyo 4.</span><span class="de" lang="de">12 − 8 = 4 – und 4 ist selbst ein Stellenwert. Setze also die Bits bei 8 und bei 4.</span></div><div data-muster><p class="heft">12 = 8 + 4 → <u>0000&nbsp;1100</u></p></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 5</strong> — <span class="ms" lang="so">U beddel tirada tobanle tiro labaale oo 8-bit ah.</span><span class="de" lang="de">Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</span></p>
+        <p>41 = <input class="inp" id="a5" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a5','00101001']])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a5')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a5"><span class="ms" lang="so">41 = 32 + 8 + 1 → shid bits 32, 8 iyo 1: 0010 1001.</span><span class="de" lang="de">41 = 32 + 8 + 1 → Bits an den Stellen 32, 8 und 1 setzen: 0010 1001.</span></div>
+        <div class="hs" id="hs-a5"><div data-tipp><span class="ms" lang="so">Raadi qiimaha booska ugu weyn ee weli gali kara 41.</span><span class="de" lang="de">Suche den größten Stellenwert, der noch in 41 hineinpasst.</span></div><div data-tipp><span class="ms" lang="so">32 wuu galaa 41, laakiin 64 waa ka badan yahay. Hadhaaga: 41 − 32 = 9. Sidee u kala qaybinaysaa 9?</span><span class="de" lang="de">32 passt in 41, 64 ist zu groß. Rest: 41 − 32 = 9. Wie zerlegst du 9?</span></div><div data-tipp><span class="ms" lang="so">9 = 8 + 1. Shid bits 32, 8 iyo 1.</span><span class="de" lang="de">9 = 8 + 1. Setze also die Bits bei 32, 8 und 1.</span></div><div data-muster><p class="heft">41 = 32 + 8 + 1 → <u>0010&nbsp;1001</u></p></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 6</strong> — <span class="ms" lang="so">U beddel tirada tobanle tiro labaale oo 8-bit ah.</span><span class="de" lang="de">Wandle die Dezimalzahl in eine 8-Bit-Dualzahl um.</span></p>
+        <p>100 = <input class="inp" id="a6" placeholder="00000000" size="10"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkBinGroup(this, [['a6','01100100']])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a6')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a6"><span class="ms" lang="so">100 = 64 + 32 + 4 → shid bits 64, 32 iyo 4: 0110 0100.</span><span class="de" lang="de">100 = 64 + 32 + 4 → Bits an den Stellen 64, 32 und 4 setzen: 0110 0100.</span></div>
+        <div class="hs" id="hs-a6"><div data-tipp><span class="ms" lang="so">Raadi qiimaha booska ugu weyn ee weli gali kara 100.</span><span class="de" lang="de">Suche den größten Stellenwert, der noch in 100 hineinpasst.</span></div><div data-tipp><span class="ms" lang="so">64 wuu galaa 100, laakiin 128 waa ka badan yahay. Hadhaaga: 100 − 64 = 36. Qiimee kee ayaa gala 36?</span><span class="de" lang="de">64 passt in 100, 128 ist zu groß. Rest: 100 − 64 = 36. Welcher Stellenwert passt in 36?</span></div><div data-tipp><span class="ms" lang="so">36 = 32 + 4. Shid bits 64, 32 iyo 4.</span><span class="de" lang="de">36 = 32 + 4. Setze also die Bits bei 64, 32 und 4.</span></div><div data-muster><p class="heft">100 = 64 + 32 + 4 → <u>0110&nbsp;0100</u></p></div></div>
+      </div>
+
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 7</strong> — <span class="ms" lang="so">Immisa tiro oo kala duwan ayaa lagu qori karaa 8 bit, midkee baana ugu weyn?</span><span class="de" lang="de">Wie viele verschiedene Zahlen lassen sich mit 8 Bit insgesamt darstellen, und welches ist die größte davon?</span></p>
+        <p><span class="ms" lang="so">Tirada tirooyinka:</span><span class="de" lang="de">Anzahl der Zahlen:</span> <input class="inp" id="a7a" size="5" inputmode="numeric"> &nbsp; <span class="ms" lang="so">Tirada ugu weyn:</span><span class="de" lang="de">Größte Zahl:</span> <input class="inp" id="a7b" size="5" inputmode="numeric"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a7a', 256, 0],['a7b', 255, 0]])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a7')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a7"><span class="ms" lang="so">Mid kasta oo ka mid ah 8-da bit wuxuu noqon karaa 0 ama 1: 2·2·2·2·2·2·2·2 = 2⁸ = 256 isku-dhaf. Tirinta waxay ka bilaabataa 0, markaa tirooyinku waa 0 ilaa 255 — tan ugu weyn waa 255 (dhammaan bits = 1: 1111 1111 = 128+64+32+16+8+4+2+1 = 255).</span><span class="de" lang="de">Jedes der 8 Bit kann 0 oder 1 sein, das ergibt 2·2·2·2·2·2·2·2 = 2⁸ = 256 Kombinationen. Da man bei 0 zu zählen beginnt, reichen sie von 0 bis 255 — die größte darstellbare Zahl ist also 255 (alle Bits auf 1: 1111 1111 = 128+64+32+16+8+4+2+1 = 255).</span></div>
+        <div class="hs" id="hs-a7"><div data-tipp><span class="ms" lang="so">Bit kasta wuxuu leeyahay laba fursadood. Immisa fursadood ayay wada leeyihiin 2 bit? 3 bit-na?</span><span class="de" lang="de">Jedes Bit hat zwei Möglichkeiten. Wie viele Möglichkeiten haben 2 Bit zusammen, wie viele 3 Bit?</span></div><div data-tipp><span class="ms" lang="so">Bit kasta oo cusub tirada waa labanlaabmaysaa: 2, 4, 8, 16 … Sii wad ilaa 8 bit.</span><span class="de" lang="de">Mit jedem weiteren Bit verdoppelt sich die Anzahl: 2, 4, 8, 16 … Rechne so weiter bis 8 Bit.</span></div><div data-tipp><span class="ms" lang="so">Waxaa soo baxaya 256 isku-dhaf. Ha ilaawin in 0-da sidoo kale la tiriyo. Tirada ugu weyn markaa waa maxay?</span><span class="de" lang="de">Es gibt 256 Kombinationen. Denk daran, dass die 0 mitzählt – welche Zahl ist dann die größte?</span></div><div data-muster><p class="heft">2 · 2 · 2 · 2 · 2 · 2 · 2 · 2 = 2⁸ = <u>256</u> (0 … 255)<br>1111&nbsp;1111 = 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = <u>255</u></p></div></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(2,2)"><span class="ms" lang="so">U gudub hawlaha khubarada ↓</span><span class="de" lang="de">Weiter zu den Profi-Aufgaben ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph2-sub-2">
+      <p class="ms" lang="so">🌟 Saddexdan hawlood waxay u baahan yihiin fikir yar oo dheeraad ah — waxay ku habboon yihiin kuwa horey si hubaal ah u beddela tirooyinka.</p>
+<p class="de" lang="de">🌟 Diese drei Aufgaben verlangen etwas mehr Kopfarbeit — genau richtig für alle, die schon sicher umwandeln können.</p>
+
+      <div class="ex">
+        <p><strong>★ <span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 8</strong> — <span class="ms" lang="so">Dareeme iftiin oo fudud iftiinka kuma kaydiyo 8 bit, balse kaliya <strong>4 bit</strong>. Immisa heer iftiin oo kala duwan ayuu kala saari karaa?</span><span class="de" lang="de">Ein einfacher Lichtsensor speichert die Helligkeit nicht mit 8 Bit, sondern nur mit <strong>4 Bit</strong>. Wie viele unterschiedliche Helligkeitsstufen kann er dann höchstens unterscheiden?</span></p>
+        <p><span class="ms" lang="so">Tirada heerarka:</span><span class="de" lang="de">Anzahl der Stufen:</span> <input class="inp" id="a8" size="5" inputmode="numeric"></p>
+        <button class="btn btn-primary btn-sm" onclick="checkNumGroup(this, [['a8', 16, 0]])"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+        <div class="fb grp-fb"></div>
+        <button class="btn btn-ghost btn-sm solbtn" hidden onclick="showSol('sol-a8')"><span class="ms" lang="so">Muuji xalka</span><span class="de" lang="de">Lösungsweg zeigen</span></button>
+        <div class="sol" id="sol-a8"><span class="ms" lang="so">4 bit waxaa ku jira 2⁴ = 16 isku-dhaf, taas oo ah 16 heer iftiin (0 ilaa 15). Bits yar macnaheedu waa heerar yar.</span><span class="de" lang="de">Mit 4 Bit gibt es 2⁴ = 16 mögliche Kombinationen, also 16 Helligkeitsstufen (0 bis 15). Weniger Bit bedeuten weniger mögliche Abstufungen.</span></div>
+        <div class="hs" id="hs-a8"><div data-tipp><span class="ms" lang="so">Waxay u shaqaysaa sida hawsha 7 — laakiin bits ka yar.</span><span class="de" lang="de">Das funktioniert wie bei Aufgabe 7 – nur mit weniger Bit.</span></div><div data-tipp><span class="ms" lang="so">Bit kasta tirada wuu labanlaabaa: 1 bit → 2, 2 bit → 4, 3 bit → …</span><span class="de" lang="de">Jedes Bit verdoppelt die Anzahl: 1 Bit → 2, 2 Bit → 4, 3 Bit → …</span></div><div data-tipp><span class="ms" lang="so">Xisaabi 2 · 2 · 2 · 2.</span><span class="de" lang="de">Rechne 2 · 2 · 2 · 2.</span></div><div data-muster><p class="heft">2⁴ = 2 · 2 · 2 · 2 = <u>16</u> (0 … 15)</p></div></div>
+      </div>
+
+      <div class="ex">
+        <div class="quiz-item">
+          <div class="quiz-q">★ <span class="ms" lang="so">Hawl</span><span class="de" lang="de">Aufgabe</span> 9 — <span class="ms" lang="so">Lina ayaa leh: «0011 wuxuu leeyahay afar lambar, 111-na kaliya saddex. Markaa 0011 waa inuu noqdaa tirada ka weyn.» Ma sax baa?</span><span class="de" lang="de">Lina behauptet: „0011 hat vier Ziffern, 111 nur drei. Also muss 0011 die größere Zahl sein.“ Hat sie recht?</span></div>
+          <div class="quiz-opts">
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')"><span class="ms" lang="so">Haa, lambarro badan mar walba macnaheedu waa tiro ka weyn.</span><span class="de" lang="de">Ja, mehr Ziffern bedeuten immer eine größere Zahl.</span></button>
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'c')"><span class="ms" lang="so">Maya — 0011 waa 3, laakiin 111 waa 7. Eberrada hore qiimaha ma beddelaan.</span><span class="de" lang="de">Nein — 0011 ist 3, aber 111 ist 7. Führende Nullen zählen nicht als eigener Wert.</span></button>
+            <button class="quiz-btn" onclick="quizCheck('lina', this, 'w')"><span class="ms" lang="so">Lama ogaan karo iyadoo aan la beddelin.</span><span class="de" lang="de">Man kann es ohne Umrechnen nicht wissen.</span></button>
+          </div>
+          <div class="quiz-fb" id="qfb-lina"></div>
+        </div>
+        <div class="hs" id="hs-a9"><div data-tipp><span class="ms" lang="so">Marka hore u beddel labada tiro labaale tirooyin tobanle, kadibna dooro.</span><span class="de" lang="de">Rechne beide Dualzahlen in Dezimalzahlen um, bevor du entscheidest.</span></div><div data-tipp><span class="ms" lang="so">0011: qiimayaasha 8 · 4 · 2 · 1, kowyada waxay ku jiraan boosaska 2 iyo 1. 111: qiimayaasha 4 · 2 · 1.</span><span class="de" lang="de">0011: Stellenwerte 8 · 4 · 2 · 1, Einsen bei 2 und 1. 111: Stellenwerte 4 · 2 · 1.</span></div><div data-tipp><span class="ms" lang="so">Is barbar dhig 3 iyo 7. Maxay sameeyaan eberrada hore ee 0011?</span><span class="de" lang="de">Vergleiche 3 und 7. Was bewirken die Nullen vorne bei 0011?</span></div><div data-muster><p class="heft">0011 = 2 + 1 = 3 · 111 = 4 + 2 + 1 = 7</p><div class="ms" lang="so"><p>Lina sax ma aha: eberrada hore qiimaha ma beddelaan — sida 007 = 7 nidaamka tobanle.</p></div><div class="de" lang="de"><p>Lina hat nicht recht: Führende Nullen ändern den Wert nicht – genau wie 007 = 7 im Dezimalsystem.</p></div></div></div>
+      </div>
+
+      <div class="ex">
+        <div class="poe-box" id="poe-warum">
+          <div class="poe-label">🤔 ★ <span class="ms" lang="so">Hawsha 10 — si kooban u sharax</span><span class="de" lang="de">Aufgabe 10 — Kurz begründen</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">begründen</button></div>
+          <textarea id="poe-warum-in" rows="3" data-ph-ms="Maxay kombiyuutarradu gudahooda u isticmaalaan nidaamka labaale, halkii ay ka isticmaali lahaayeen nidaamka tobanle ee caadiga ah? Waxaad ku qori kartaa af Soomaali ama af Jarmal." data-ph-de="Warum benutzen Computer intern das Dualsystem und nicht gleich unser gewohntes Dezimalsystem?" placeholder="Maxay kombiyuutarradu gudahooda u isticmaalaan nidaamka labaale, halkii ay ka isticmaali lahaayeen nidaamka tobanle ee caadiga ah? Waxaad ku qori kartaa af Soomaali ama af Jarmal."></textarea>
+          <button class="btn btn-primary btn-sm" onclick="lockPredict('poe-warum'); var sb=document.getElementById('solbtn-a10'); if(sb && document.getElementById('poe-warum-out').hidden===false) sb.hidden=false;"><span class="ms" lang="so">Kaydi jawaabta</span><span class="de" lang="de">Antwort festhalten</span></button>
+          <div class="poe-locked" id="poe-warum-out" hidden></div>
+        </div>
+        <button class="btn btn-ghost btn-sm solbtn" id="solbtn-a10" hidden onclick="showSol('sol-a10')"><span class="ms" lang="so">Muuji jawaab tusaale ah</span><span class="de" lang="de">Musterantwort zeigen</span></button>
+        <div class="sol" id="sol-a10"><span class="ms" lang="so">Wareegga korontada si aad la isugu halleyn karo ayaa loo dhisi karaa laba xaaladood: koronto way socotaa (1) ama ma socoto (0). Toban heer koronto oo kala duwan oo nidaam tobanle ah aad bay uga yaraan lahayd in la isku halleeyo — isbeddel yar ayaa khaladaad keeni lahaa.</span><span class="de" lang="de">Ein Stromkreis lässt sich technisch sehr zuverlässig in genau zwei Zuständen bauen: Strom fließt (1) oder fließt nicht (0). Zehn unterscheidbare Spannungsstufen für ein Dezimalsystem wären viel störanfälliger — schon kleine Schwankungen könnten dann zu Fehlern führen.</span></div>
+        <div class="hs" id="hs-a10"><div data-tipp><span class="ms" lang="so">Xasuuso bilowga: immisa xaaladood ayuu yaqaan hal furaha korontada ee kombiyuutarka?</span><span class="de" lang="de">Denk an den Einstieg: Wie viele Zustände kennt ein einzelner Schalter im Computer?</span></div><div data-tipp><span class="ms" lang="so">Immisa heer koronto oo kala duwan ayaa loo baahan lahaa lambarrada 0 ilaa 9?</span><span class="de" lang="de">Wie viele unterscheidbare Spannungsstufen bräuchte ein Computer für die Ziffern 0 bis 9?</span></div><div data-tipp><span class="ms" lang="so">Maxaa dhacaya haddii korontadu wax yar isbeddesho — marka ay jiraan 2 heer iyo marka ay jiraan 10 heer?</span><span class="de" lang="de">Was passiert, wenn die Spannung ein wenig schwankt – bei nur 2 Stufen und bei 10 Stufen?</span></div><div data-muster><div class="ms" lang="so"><p>Wareegga korontada si aad la isugu halleyn karo ayaa loo dhisi karaa laba xaaladood: koronto way socotaa (1) ama ma socoto (0). Toban heer koronto aad bay uga yaraan lahayd in la isku halleeyo — isbeddel yar ayaa khaladaad keeni lahaa.</p></div><div class="de" lang="de"><p>Ein Stromkreis lässt sich technisch sehr zuverlässig in genau zwei Zuständen bauen: Strom fließt (1) oder fließt nicht (0). Zehn unterscheidbare Spannungsstufen wären viel störanfälliger — schon kleine Schwankungen könnten zu Fehlern führen.</p></div></div></div>
+      </div>
+
+      <div class="hefter-box" id="hb-regeln">
+        <div class="hefter-label"><span class="ms" lang="so">✍️ Qoraalka buugga</span><span class="de" lang="de">✍️ Heftereintrag</span></div>
+        <div class="hefter-anweisung">
+          <div class="ha-schritt"><span class="ha-nr">1</span><span><span class="ms" lang="so">U guuri qoraalka <strong>af Jarmal</strong> buuggaaga — gacanta ku qor, si nadiif ah, cinwaan leh.</span><span class="de" lang="de">Schreib den Eintrag <strong>auf Deutsch</strong> in deinen Hefter ab – von Hand, ordentlich, mit Überschrift.</span></span></div>
+          <div class="ha-schritt"><span class="ha-nr">2</span><span><span class="ms" lang="so">Dhinaca ama hoosta ku qor qoraallo gaaban <strong class="ha-farbe">af Soomaali — midab kale</strong> (tusaale ahaan qalin midab basali ah). Ereyadaada, kaliya waxa ugu muhiimsan.</span><span class="de" lang="de">Daneben oder darunter machst du kurze Stichpunkte <strong class="ha-farbe">auf Somali – in einer anderen Farbe</strong> (z. B. mit lila Stift). In eigenen Worten, nur das Wichtigste.</span></span></div>
+        </div>
+        <div class="hefter-copy" lang="de">
+          <p class="h-titel">Wichtige Regeln</p>
+          <p>Mit <i>n</i> Bit lassen sich 2<sup><i>n</i></sup> verschiedene Zahlen <u>darstellen</u>, von 0 bis 2<sup><i>n</i></sup> − 1.</p>
+<p>Beispiel: 8 Bit → 2<sup>8</sup> = 256 Zahlen (0 bis 255).</p>
+<p><u>Führende Nullen</u> ändern den Wert einer Dualzahl nicht — genau wie bei Dezimalzahlen (007 = 7).</p>
+        </div>
+        <div class="hefter-gloss ms" lang="so"><span class="gloss-label">Caawimo qoraalladaada (ha u guurin erey erey):</span> n bit waxaa lagu qori karaa 2ⁿ tiro oo kala duwan — 0 ilaa 2ⁿ − 1. Tusaale: 8 bit → 256 tiro (0 ilaa 255). Eberrada hore ma beddelaan qiimaha tirada labaale — sida nidaamka tobanle (007 = 7).</div>
+        <div class="hefter-woerter"><span class="ms" lang="so">📖 Qaamuuska:</span><span class="de" lang="de">📖 Ins Wörterbuch:</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">darstellen</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die führende Null</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Kombination</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">die Zahl</button></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(3)"><span class="ms" lang="so">Xiga: gacanta tirinaysa →</span><span class="de" lang="de">Weiter zu: Die zählende Hand →</span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SICHERUNG ============================ -->
+<section class="phase" id="ph3">
+  <div class="card">
+    <h2><span class="ms" lang="so">Gacanta tirinaysa</span><span class="de" lang="de">Die zählende Hand</span></h2>
+    <p class="ms" lang="so">🖐️ Hal gacan oo keliya waxaad nidaamka labaale ku tirin kartaa wax aad uga badan 5-ta caadiga ah. Far kasta waa bit: kor u taagan (fidsan) = 1, laalaaban = 0.</p>
+<p class="de" lang="de">🖐️ Mit nur einer Hand kannst du im Dualsystem viel weiter zählen als mit den gewohnten fünf Fingern von 0 bis 5. Jeder Finger ist ein Bit: oben (gestreckt) bedeutet 1, unten (eingeklappt) bedeutet 0.</p>
+
+    <div class="substep-nav" id="ph3-stepper" data-phase="3" data-total="2">
+      <span class="substep-label"><span class="ms" lang="so">Qaybaha:</span><span class="de" lang="de">Teile:</span></span>
+      <button class="substep-chip active" onclick="revealSub(3,1)">1 · <span class="ms" lang="so">Faraha sida bits</span><span class="de" lang="de">Finger als Bits</span></button>
+      <button class="substep-chip locked" onclick="revealSub(3,2)">2 · <span class="ms" lang="so">Muuji tirada</span><span class="de" lang="de">Zeig die Zahl</span></button>
+      <button class="substep-all" onclick="revealSub(3,2)"><span class="ms" lang="so">Muuji dhammaan</span><span class="de" lang="de">Alle Teile anzeigen</span></button>
+    </div>
+
+    <div class="subphase on" id="ph3-sub-1">
+      <p class="ms" lang="so">Far kasta waxay leedahay qiimaha booskeeda — sida furaha 8-bit, laakiin 5 bit halkii 8:</p>
+<p class="de" lang="de">Jedem Finger ist ein Stellenwert zugeordnet — genauso wie beim 8-Bit-Schalter, nur mit 5 Bit statt 8:</p>
+      <div class="finger-table">
+        <div><span class="fv">1</span><span class="ms" lang="so">suulka</span><span class="de" lang="de">Daumen</span></div>
+        <div><span class="fv">2</span><span class="ms" lang="so">farta tilmaanta</span><span class="de" lang="de">Zeigefinger</span></div>
+        <div><span class="fv">4</span><span class="ms" lang="so">farta dhexe</span><span class="de" lang="de">Mittelfinger</span></div>
+        <div><span class="fv">8</span><span class="ms" lang="so">farta faraantiga</span><span class="de" lang="de">Ringfinger</span></div>
+        <div><span class="fv">16</span><span class="ms" lang="so">farta yar</span><span class="de" lang="de">kleiner Finger</span></div>
+      </div>
+      <p class="ms" lang="so">Riix faraha si aad kor ugu qaaddo ama u laabto, ama isticmaal badhamada. Midigta waxaad ku arkaysaa tirada tobanle iyo tan labaale.</p>
+<p class="de" lang="de">Klicke auf einzelne Finger, um sie hoch- oder runterzuklappen, oder benutze die Zähl-Buttons. Rechts liest du die Dezimalzahl und die Dualzahl direkt ab.</p>
+
+      <div class="hand-wrap">
+        <svg class="hand-svg" viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hand, die in Binärzahlen mitzählt / Gacan ku tirinaysa nidaamka labaale">
+          <path class="hand-palm" d="M55 210 Q40 140 55 110 L205 110 Q220 140 205 210 Z"></path>
+          <g class="hand-finger up" data-bit="16" onclick="handToggleFinger(this)" tabindex="0" role="button" aria-label="Kleiner Finger / farta yar, 16">
+            <rect class="fbase" x="58" y="20" width="26" height="95" rx="12"></rect>
+            <text class="fbit" x="71" y="45" text-anchor="middle">16</text>
+          </g>
+          <g class="hand-finger up" data-bit="8" onclick="handToggleFinger(this)" tabindex="0" role="button" aria-label="Ringfinger / farta faraantiga, 8">
+            <rect class="fbase" x="90" y="5" width="26" height="112" rx="12"></rect>
+            <text class="fbit" x="103" y="32" text-anchor="middle">8</text>
+          </g>
+          <g class="hand-finger up" data-bit="4" onclick="handToggleFinger(this)" tabindex="0" role="button" aria-label="Mittelfinger / farta dhexe, 4">
+            <rect class="fbase" x="122" y="0" width="26" height="118" rx="12"></rect>
+            <text class="fbit" x="135" y="28" text-anchor="middle">4</text>
+          </g>
+          <g class="hand-finger up" data-bit="2" onclick="handToggleFinger(this)" tabindex="0" role="button" aria-label="Zeigefinger / farta tilmaanta, 2">
+            <rect class="fbase" x="154" y="10" width="26" height="108" rx="12"></rect>
+            <text class="fbit" x="167" y="35" text-anchor="middle">2</text>
+          </g>
+          <g class="hand-finger up" data-bit="1" onclick="handToggleFinger(this)" tabindex="0" role="button" aria-label="Daumen / suulka, 1">
+            <rect class="fbase" x="190" y="55" width="24" height="80" rx="12" transform="rotate(28 202 95)"></rect>
+            <text class="fbit" x="202" y="90" text-anchor="middle" transform="rotate(28 202 95)">1</text>
+          </g>
+        </svg>
+        <div class="hand-readout">
+          <div class="hr-row"><span class="hr-label"><span class="ms" lang="so">Tobanle</span><span class="de" lang="de">Dezimal</span></span><span id="hand-dec">31</span></div>
+          <div class="hr-row"><span class="hr-label"><span class="ms" lang="so">Labaale (5 bit)</span><span class="de" lang="de">Dual (5&nbsp;Bit)</span></span><span id="hand-bin">11111</span></div>
+          <div class="hand-controls">
+            <button class="btn btn-ghost btn-sm" onclick="handStep(-1)">− 1</button>
+            <button class="btn btn-ghost btn-sm" onclick="handStep(1)">+ 1</button>
+            <button class="btn btn-ghost btn-sm" id="hand-play" onclick="handPlay()"><span class="ms" lang="so">▶ Si toos ah u tiri</span><span class="de" lang="de">▶ Automatisch zählen</span></button>
+            <button class="btn btn-ghost btn-sm" onclick="handReset()"><span class="ms" lang="so">↺ Dib u bilow</span><span class="de" lang="de">↺ Reset</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">💡 <span><span class="ms" lang="so">Shan far (5 bit) waxaad ku gaari kartaa <span class="math">2⁵ − 1 = 31</span>. Tirooyin ka weyn waxaad u baahan tahay gacanta labaad — sida furaha 8-bit ayay u sii socotaa.</span><span class="de" lang="de">Mit 5 Fingern (5 Bit) kommst du bis <span class="math">2⁵ − 1 = 31</span>. Für höhere Zahlen bräuchtest du die zweite Hand dazu — dann geht es genauso weiter wie beim 8-Bit-Schalter.</span></span></div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(3,2)"><span class="ms" lang="so">U gudub qaybta 2 ↓</span><span class="de" lang="de">Weiter zu Teil 2 ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph3-sub-2">
+      <div class="quiz-item">
+        <div class="quiz-q"><span class="ms" lang="so">Gacanta ku muuji tirada 13 (sawirka sare waad ku tijaabin kartaa). Farahee ayaa kor u taagan?</span><span class="de" lang="de">Zeig mit der Hand die Zahl 13 (du kannst es oben an der Hand ausprobieren). Welche Finger sind oben?</span></div>
+        <div class="quiz-opts">
+          <button class="quiz-btn" onclick="quizCheck('hand13', this, 'w')"><span class="ms" lang="so">farta yar iyo farta dhexe</span><span class="de" lang="de">kleiner Finger und Mittelfinger</span></button>
+          <button class="quiz-btn" onclick="quizCheck('hand13', this, 'c')"><span class="ms" lang="so">farta faraantiga, farta dhexe iyo suulka</span><span class="de" lang="de">Ringfinger, Mittelfinger und Daumen</span></button>
+          <button class="quiz-btn" onclick="quizCheck('hand13', this, 'w')"><span class="ms" lang="so">farta faraantiga, farta tilmaanta iyo suulka</span><span class="de" lang="de">Ringfinger, Zeigefinger und Daumen</span></button>
+        </div>
+        <div class="quiz-fb" id="qfb-hand13"></div>
+      </div>
+
+      <div class="hefter-box" id="hb-hand">
+        <div class="hefter-label"><span class="ms" lang="so">✍️ Qoraalka buugga</span><span class="de" lang="de">✍️ Heftereintrag</span></div>
+        <div class="hefter-anweisung">
+          <div class="ha-schritt"><span class="ha-nr">1</span><span><span class="ms" lang="so">U guuri qoraalka <strong>af Jarmal</strong> buuggaaga — gacanta ku qor, si nadiif ah, cinwaan leh.</span><span class="de" lang="de">Schreib den Eintrag <strong>auf Deutsch</strong> in deinen Hefter ab – von Hand, ordentlich, mit Überschrift.</span></span></div>
+          <div class="ha-schritt"><span class="ha-nr">2</span><span><span class="ms" lang="so">Dhinaca ama hoosta ku qor qoraallo gaaban <strong class="ha-farbe">af Soomaali — midab kale</strong> (tusaale ahaan qalin midab basali ah). Ereyadaada, kaliya waxa ugu muhiimsan.</span><span class="de" lang="de">Daneben oder darunter machst du kurze Stichpunkte <strong class="ha-farbe">auf Somali – in einer anderen Farbe</strong> (z. B. mit lila Stift). In eigenen Worten, nur das Wichtigste.</span></span></div>
+        </div>
+        <div class="hefter-copy" lang="de">
+          <p class="h-titel">Mit der Hand binär zählen</p>
+          <p>Jeder Finger steht für ein Bit: Daumen = 1, Zeigefinger = 2, Mittelfinger = 4, Ringfinger = 8, kleiner Finger = 16.</p>
+<p>Ausgestreckt = 1, eingeklappt = 0. Mit 5 Fingern zählst du von 0 bis 31.</p>
+        </div>
+        <div class="hefter-gloss ms" lang="so"><span class="gloss-label">Caawimo qoraalladaada (ha u guurin erey erey):</span> Far kasta waa bit: suulka = 1, farta tilmaanta = 2, farta dhexe = 4, farta faraantiga = 8, farta yar = 16. Fidsan = 1, laalaaban = 0. Shan far waxaad ku tirin kartaa 0 ilaa 31.</div>
+        <div class="hefter-woerter"><span class="ms" lang="so">📖 Qaamuuska:</span><span class="de" lang="de">📖 Ins Wörterbuch:</span> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">an / aus</button> <button type="button" class="vok" onclick="sag(this.textContent)" title="🔊 / 📖">der Wert</button></div>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="showPhase(4)"><span class="ms" lang="so">Xiga: qaamuuskayga →</span><span class="de" lang="de">Weiter zu: Mein Wörterbuch →</span></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WÖRTERBUCH ============================ -->
+<section class="phase" id="ph4">
+  <div class="card">
+    <h2>📖 <span class="ms" lang="so">Qaamuuskayga informaatikada</span><span class="de" lang="de">Mein Informatik-Wörterbuch</span></h2>
+    <p class="ms" lang="so">Ku ururi ereyada Jarmalka ah ee muhiimka ah qaamuuskaaga gaarka ah. Markasta oo aad ereyo badan taqaanno, ayaad casharka fasalka si fiican u fahmaysaa — oo way kuu fududaanaysaa inaad af Jarmal ku jawaabto.</p>
+<p class="de" lang="de">Sammle die wichtigen deutschen Wörter der Stunde in deinem eigenen Wörterbuch. Je mehr Wörter du kennst, desto besser verstehst du den Unterricht – und desto leichter kannst du auf Deutsch antworten.</p>
+
+    <div class="substep-nav" id="ph4-stepper" data-phase="4" data-total="3">
+      <span class="substep-label"><span class="ms" lang="so">Qaybaha:</span><span class="de" lang="de">Teile:</span></span>
+      <button class="substep-chip active" onclick="revealSub(4,1)">1 · <span class="ms" lang="so">Sida loo sameeyo qaamuuska</span><span class="de" lang="de">So legst du es an</span></button>
+      <button class="substep-chip locked" onclick="revealSub(4,2)">2 · <span class="ms" lang="so">Ereyada casharka</span><span class="de" lang="de">Wörter der Stunde</span></button>
+      <button class="substep-chip locked" onclick="revealSub(4,3)">3 · <span class="ms" lang="so">Tababar</span><span class="de" lang="de">Üben</span></button>
+      <button class="substep-all" onclick="revealSub(4,3)"><span class="ms" lang="so">Muuji dhammaan</span><span class="de" lang="de">Alle Teile anzeigen</span></button>
+    </div>
+
+    <div class="subphase on" id="ph4-sub-1">
+      <ol class="wb-anleitung">
+        <li><span class="ms" lang="so">Fur bogagga ugu dambeeya ee buuggaaga oo qor cinwaanka: <strong>Informatik-Wörterbuch</strong>.</span><span class="de" lang="de">Schlag die letzten Seiten deines Hefters auf und schreib als Überschrift: <strong>Informatik-Wörterbuch</strong>.</span></li>
+        <li><span class="ms" lang="so">Sawir shax leh saddex tiir: <strong>Deutsch · Soomaali · Beispiel</strong>.</span><span class="de" lang="de">Zeichne eine Tabelle mit drei Spalten: <strong>Deutsch · Soomaali · Beispiel</strong>.</span></li>
+        <li><span class="ms" lang="so">Magacyada mar walba ku qor <strong>qodobka iyo jamaca</strong>: <em>der Stellenwert, die Stellenwerte</em>. Talo: qodobka hoosta ka xariiq midab — <span class="art art-der">der</span> buluug, <span class="art art-die">die</span> cas, <span class="art art-das">das</span> cagaar.</span><span class="de" lang="de">Schreib Nomen immer <strong>mit Artikel und Plural</strong>: <em>der Stellenwert, die Stellenwerte</em>. Tipp: Artikel farbig unterstreichen — <span class="art art-der">der</span> blau, <span class="art art-die">die</span> rot, <span class="art art-das">das</span> grün.</span></li>
+        <li><span class="ms" lang="so">Tiirka «Beispiel» ku qor tusaale gaaban oo Jarmal ah, ama sawir yar.</span><span class="de" lang="de">In die Spalte „Beispiel“ schreibst du einen kurzen deutschen Beispielsatz ab oder zeichnest ein kleines Bild.</span></li>
+        <li><span class="ms" lang="so">Riix 🔊, dhageyso ereyga oo kor ugu dhawaaq. Kadib calaamadee «waan qoray».</span><span class="de" lang="de">Klick auf 🔊, hör dir das Wort an und sprich es laut nach. Dann setz das Häkchen „notiert“.</span></li>
+      </ol>
+      <div class="wb-muster" aria-label="Muster / Tusaale">
+        <div class="wb-muster-title"><span class="ms" lang="so">Sidan ayay ugu ekaan kartaa buuggaaga:</span><span class="de" lang="de">So kann es in deinem Hefter aussehen:</span></div>
+        <table class="wb-table">
+          <thead><tr><th>Deutsch</th><th>Soomaali</th><th>Beispiel</th></tr></thead>
+          <tbody>
+            <tr><td><span class="art art-das">das</span> Bit, <span class="art art-die">die</span> Bits</td><td lang="so">bit</td><td>Ein Bit ist 0 oder 1.</td></tr>
+            <tr><td><span class="art art-der">der</span> Stellenwert, <span class="art art-die">die</span> Stellenwerte</td><td lang="so">qiimaha booska</td><td>128 · 64 · 32 · … · 2 · 1</td></tr>
+            <tr><td>umwandeln</td><td lang="so">beddel (tiro)</td><td>Wandle 12 in eine Dualzahl um.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,2)"><span class="ms" lang="so">U gudub ereyada casharka ↓</span><span class="de" lang="de">Weiter zu den Wörtern der Stunde ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-2">
+      <p class="ms" lang="so">Dhammaan ereyada ku qor qaamuuskaaga. Ka bilow kooxda koowaad — waa ereyada ugu muhiimsan.</p>
+<p class="de" lang="de">Schreib alle Wörter in dein Wörterbuch ab. Fang mit der ersten Gruppe an – das sind die wichtigsten Wörter.</p>
+      <div class="wb-stand" id="wb-stand" aria-live="polite"></div>
+<h3><span class="ms" lang="so">Fikradaha aasaasiga ah</span><span class="de" lang="de">Grundbegriffe</span></h3>
+<div class="wb-list">
+  <div class="wb-row" id="wb-1">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Computer&quot;)" aria-label="Aussprache: der Computer" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Computer</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Computer</span></div>
+    <div class="wb-ms" lang="so">kombiyuutar</div>
+    <div class="wb-bsp" lang="de">Der Computer speichert Zahlen.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="1"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-2">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Strom&quot;)" aria-label="Aussprache: der Strom" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Strom</span> </div>
+    <div class="wb-ms" lang="so">koronto (socota)</div>
+    <div class="wb-bsp" lang="de">Der Strom fließt.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="2"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-3">
+    <button type="button" class="wb-say" onclick="sag(&quot;an, aus&quot;)" aria-label="Aussprache: an / aus" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">an / aus</span> </div>
+    <div class="wb-ms" lang="so">shidan / demisan</div>
+    <div class="wb-bsp" lang="de">Das Licht ist an.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="3"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-4">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Zustand&quot;)" aria-label="Aussprache: der Zustand" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Zustand</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Zustände</span></div>
+    <div class="wb-ms" lang="so">xaalad</div>
+    <div class="wb-bsp" lang="de">Ein Bit hat zwei Zustände.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="4"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-5">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Schalter&quot;)" aria-label="Aussprache: der Schalter" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Schalter</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Schalter</span></div>
+    <div class="wb-ms" lang="so">furaha korontada (swiij)</div>
+    <div class="wb-bsp" lang="de">Der Schalter ist aus.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="5"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-6">
+    <button type="button" class="wb-say" onclick="sag(&quot;das Bit&quot;)" aria-label="Aussprache: das Bit" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-das">das</span> Bit</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Bits</span></div>
+    <div class="wb-ms" lang="so">bit</div>
+    <div class="wb-bsp" lang="de">Ein Bit ist 0 oder 1.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="6"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-7">
+    <button type="button" class="wb-say" onclick="sag(&quot;das Byte&quot;)" aria-label="Aussprache: das Byte" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-das">das</span> Byte</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Bytes</span></div>
+    <div class="wb-ms" lang="so">bayt</div>
+    <div class="wb-bsp" lang="de">Ein Byte hat 8 Bit.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="7"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-8">
+    <button type="button" class="wb-say" onclick="sag(&quot;speichern&quot;)" aria-label="Aussprache: speichern" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">speichern</span> </div>
+    <div class="wb-ms" lang="so">kaydin</div>
+    <div class="wb-bsp" lang="de">Der Computer speichert Fotos.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="8"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+</div>
+<h3><span class="ms" lang="so">Tirooyin iyo nidaamyada tirada</span><span class="de" lang="de">Zahlen und Zahlensysteme</span></h3>
+<div class="wb-list">
+  <div class="wb-row" id="wb-9">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Ziffer&quot;)" aria-label="Aussprache: die Ziffer" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Ziffer</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Ziffern</span></div>
+    <div class="wb-ms" lang="so">lambar (0–9)</div>
+    <div class="wb-bsp" lang="de">0 und 1 sind Ziffern.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="9"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-10">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Zahl&quot;)" aria-label="Aussprache: die Zahl" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Zahl</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Zahlen</span></div>
+    <div class="wb-ms" lang="so">tiro</div>
+    <div class="wb-bsp" lang="de">37 ist eine Zahl.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="10"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-11">
+    <button type="button" class="wb-say" onclick="sag(&quot;das Dualsystem&quot;)" aria-label="Aussprache: das Dualsystem" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-das">das</span> Dualsystem</span> <span class="wb-pl">(auch: das Binärsystem)</span></div>
+    <div class="wb-ms" lang="so">nidaamka labaale</div>
+    <div class="wb-bsp" lang="de">Im Dualsystem gibt es nur 0 und 1.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="11"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-12">
+    <button type="button" class="wb-say" onclick="sag(&quot;das Dezimalsystem&quot;)" aria-label="Aussprache: das Dezimalsystem" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-das">das</span> Dezimalsystem</span> </div>
+    <div class="wb-ms" lang="so">nidaamka tobanle</div>
+    <div class="wb-bsp" lang="de">Im Dezimalsystem gibt es zehn Ziffern.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="12"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-13">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Dualzahl&quot;)" aria-label="Aussprache: die Dualzahl" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Dualzahl</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Dualzahlen</span></div>
+    <div class="wb-ms" lang="so">tiro labaale</div>
+    <div class="wb-bsp" lang="de">0010 0101 ist eine Dualzahl.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="13"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-14">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Dezimalzahl&quot;)" aria-label="Aussprache: die Dezimalzahl" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Dezimalzahl</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Dezimalzahlen</span></div>
+    <div class="wb-ms" lang="so">tiro tobanle</div>
+    <div class="wb-bsp" lang="de">37 ist eine Dezimalzahl.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="14"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-15">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Stelle&quot;)" aria-label="Aussprache: die Stelle" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Stelle</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Stellen</span></div>
+    <div class="wb-ms" lang="so">boos (meesha lambarka)</div>
+    <div class="wb-bsp" lang="de">Die Zahl 253 hat drei Stellen.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="15"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-16">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Stellenwert&quot;)" aria-label="Aussprache: der Stellenwert" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Stellenwert</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Stellenwerte</span></div>
+    <div class="wb-ms" lang="so">qiimaha booska</div>
+    <div class="wb-bsp" lang="de">Der Stellenwert verdoppelt sich.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="16"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-17">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Zweierpotenz&quot;)" aria-label="Aussprache: die Zweierpotenz" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Zweierpotenz</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Zweierpotenzen</span></div>
+    <div class="wb-ms" lang="so">jibbaarka labada</div>
+    <div class="wb-bsp" lang="de">8 ist eine Zweierpotenz.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="17"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-18">
+    <button type="button" class="wb-say" onclick="sag(&quot;die f\u00fchrende Null&quot;)" aria-label="Aussprache: die führende Null" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> führende Null</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> führenden Nullen</span></div>
+    <div class="wb-ms" lang="so">eberka hore</div>
+    <div class="wb-bsp" lang="de">007 hat zwei führende Nullen.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="18"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-19">
+    <button type="button" class="wb-say" onclick="sag(&quot;der Wert&quot;)" aria-label="Aussprache: der Wert" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-der">der</span> Wert</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Werte</span></div>
+    <div class="wb-ms" lang="so">qiime</div>
+    <div class="wb-bsp" lang="de">Ein Byte hat 256 Werte.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="19"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-20">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Kombination&quot;)" aria-label="Aussprache: die Kombination" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Kombination</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Kombinationen</span></div>
+    <div class="wb-ms" lang="so">isku-dhaf</div>
+    <div class="wb-bsp" lang="de">8 Bit ergeben 256 Kombinationen.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="20"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+</div>
+<h3><span class="ms" lang="so">Xisaabin iyo hawlo</span><span class="de" lang="de">Rechnen und Arbeitsaufträge</span></h3>
+<div class="wb-list">
+  <div class="wb-row" id="wb-21">
+    <button type="button" class="wb-say" onclick="sag(&quot;umwandeln&quot;)" aria-label="Aussprache: umwandeln" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">umwandeln</span> </div>
+    <div class="wb-ms" lang="so">beddel (tiro u beddel nidaam kale)</div>
+    <div class="wb-bsp" lang="de">Wandle 12 in eine Dualzahl um.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="21"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-22">
+    <button type="button" class="wb-say" onclick="sag(&quot;addieren&quot;)" aria-label="Aussprache: addieren" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">addieren</span> </div>
+    <div class="wb-ms" lang="so">isku dar</div>
+    <div class="wb-bsp" lang="de">Addiere die Stellenwerte.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="22"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-23">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Summe&quot;)" aria-label="Aussprache: die Summe" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Summe</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Summen</span></div>
+    <div class="wb-ms" lang="so">wadar</div>
+    <div class="wb-bsp" lang="de">Die Summe von 4 und 1 ist 5.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="23"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-24">
+    <button type="button" class="wb-say" onclick="sag(&quot;darstellen&quot;)" aria-label="Aussprache: darstellen" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">darstellen</span> </div>
+    <div class="wb-ms" lang="so">muujin, qorid</div>
+    <div class="wb-bsp" lang="de">Mit 8 Bit kann man 256 Zahlen darstellen.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="24"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-25">
+    <button type="button" class="wb-say" onclick="sag(&quot;die Aufgabe&quot;)" aria-label="Aussprache: die Aufgabe" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort"><span class="art art-die">die</span> Aufgabe</span> <span class="wb-pl">Pl. <span class="art art-die">die</span> Aufgaben</span></div>
+    <div class="wb-ms" lang="so">hawl, layli</div>
+    <div class="wb-bsp" lang="de">Löse die Aufgabe.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="25"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-26">
+    <button type="button" class="wb-say" onclick="sag(&quot;pr\u00fcfen&quot;)" aria-label="Aussprache: prüfen" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">prüfen</span> </div>
+    <div class="wb-ms" lang="so">hubin</div>
+    <div class="wb-bsp" lang="de">Prüfe deine Lösung.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="26"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+  <div class="wb-row" id="wb-27">
+    <button type="button" class="wb-say" onclick="sag(&quot;begr\u00fcnden&quot;)" aria-label="Aussprache: begründen" title="🔊">🔊</button>
+    <div class="wb-de"><span class="wb-wort">begründen</span> </div>
+    <div class="wb-ms" lang="so">sababee, sharax sababta</div>
+    <div class="wb-bsp" lang="de">Begründe deine Antwort.</div>
+    <label class="wb-check"><input type="checkbox" data-wb="27"> <span class="ms" lang="so">waan qoray</span><span class="de" lang="de">notiert</span></label>
+  </div>
+</div>
+      <div class="subphase-next"><button class="btn btn-primary" onclick="revealSub(4,3)"><span class="ms" lang="so">Ereyada ma qortay? Markaa ku tababar ↓</span><span class="de" lang="de">Alle Wörter notiert? Dann übe sie ↓</span></button></div>
+    </div>
+
+    <div class="subphase" id="ph4-sub-3">
+      <div class="ex">
+        <p><strong><span class="ms" lang="so">Hawsha 11</span><span class="de" lang="de">Aufgabe 11</span></strong> — <span class="ms" lang="so">Erey kasta oo Jarmal ah ku xir tarjumaadda Soomaaliga ah. Marka hore riix ereyga, kadib tarjumaadda saxda ah (ama jiid ereyga).</span><span class="de" lang="de">Ordne jedem deutschen Wort die somalische Übersetzung zu. Klick zuerst auf das Wort, dann auf die passende Übersetzung (oder zieh das Wort hinüber).</span></p>
+        <div class="baustein" data-type="match" id="match-vokabeln">
+          <div class="m-pool" lang="de">
+    <span class="m-chip" data-id="stw" onclick="matchSelect(this)">der Stellenwert</span>
+    <span class="m-chip" data-id="dual" onclick="matchSelect(this)">das Dualsystem</span>
+    <span class="m-chip" data-id="bit" onclick="matchSelect(this)">das Bit</span>
+    <span class="m-chip" data-id="add" onclick="matchSelect(this)">addieren</span>
+    <span class="m-chip" data-id="zust" onclick="matchSelect(this)">der Zustand</span>
+    <span class="m-chip" data-id="byte" onclick="matchSelect(this)">das Byte</span>
+    <span class="m-chip" data-id="umw" onclick="matchSelect(this)">umwandeln</span>
+    <span class="m-chip" data-id="ziffer" onclick="matchSelect(this)">die Ziffer</span>
+          </div>
+  <div class="m-zone" data-correct="bit" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">bit</span></div>
+  <div class="m-zone" data-correct="byte" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">bayt</span></div>
+  <div class="m-zone" data-correct="ziffer" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">lambar (0–9)</span></div>
+  <div class="m-zone" data-correct="stw" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">qiimaha booska</span></div>
+  <div class="m-zone" data-correct="umw" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">tiro u beddel nidaam kale</span></div>
+  <div class="m-zone" data-correct="add" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">isku dar</span></div>
+  <div class="m-zone" data-correct="dual" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">nidaamka labaale</span></div>
+  <div class="m-zone" data-correct="zust" onclick="matchPlace(this)"><span class="m-drop">?</span><span class="m-def" lang="so">xaalad</span></div>
+          <button class="btn btn-primary btn-sm" onclick="matchCheck(this)"><span class="ms" lang="so">✓ Hubi</span><span class="de" lang="de">✓ Prüfen</span></button>
+          <button class="btn btn-ghost btn-sm" onclick="matchReset(this)"><span class="ms" lang="so">↺ Dib u bilow</span><span class="de" lang="de">↺ Zurücksetzen</span></button>
+          <div class="fb grp-fb"></div>
+        </div>
+        <div class="hs" id="hs-a11"><div data-tipp><span class="ms" lang="so">Ka bilow ereyada labada luqadood ku dhawaad isku si loogu dhawaaqo.</span><span class="de" lang="de">Fang mit den Wörtern an, die in beiden Sprachen fast gleich klingen.</span></div><div data-tipp><span class="ms" lang="so">Eeg qaamuuskaaga ama liiska ereyada ee sare — dhammaan ereyada halkaas ayay ku jiraan.</span><span class="de" lang="de">Schau in dein Wörterbuch oder in die Wortliste oben – dort stehen alle Wörter.</span></div><div data-tipp><span class="ms" lang="so">das Bit = bit, das Byte = bayt. «umwandeln» waa waxa aad samayso marka aad tiro ka beddesho nidaamka labaale una beddesho nidaamka tobanle.</span><span class="de" lang="de">das Bit = bit, das Byte = bayt. „umwandeln“ machst du, wenn du eine Dualzahl in eine Dezimalzahl umrechnest.</span></div><div data-muster><p class="heft">das Bit = bit<br>das Byte = bayt<br>die Ziffer = lambar (0–9)<br>der Stellenwert = qiimaha booska<br>umwandeln = tiro u beddel nidaam kale<br>addieren = isku dar<br>das Dualsystem = nidaamka labaale<br>der Zustand = xaalad</p></div></div>
+      </div>
+
+      <h3><span class="ms" lang="so">Kaararka: Deutsch → Soomaali</span><span class="de" lang="de">Karteikarten: Deutsch → Soomaali</span></h3>
+      <p class="ms" lang="so">Akhri ereyga Jarmalka, kor ugu dhawaaq tarjumaadda — kadib riix kaarka oo is hubi.</p>
+<p class="de" lang="de">Lies das deutsche Wort, sag die Übersetzung laut – dann klick auf die Karte und prüfe dich selbst.</p>
+      <div class="baustein" data-type="flashcards" id="fc-vokabeln" data-cards="[[&quot;der Computer&quot;, &quot;kombiyuutar&quot;], [&quot;der Strom&quot;, &quot;koronto (socota)&quot;], [&quot;an / aus&quot;, &quot;shidan / demisan&quot;], [&quot;der Zustand&quot;, &quot;xaalad&quot;], [&quot;der Schalter&quot;, &quot;furaha korontada (swiij)&quot;], [&quot;das Bit&quot;, &quot;bit&quot;], [&quot;das Byte&quot;, &quot;bayt&quot;], [&quot;speichern&quot;, &quot;kaydin&quot;], [&quot;die Ziffer&quot;, &quot;lambar (0–9)&quot;], [&quot;die Zahl&quot;, &quot;tiro&quot;], [&quot;das Dualsystem&quot;, &quot;nidaamka labaale&quot;], [&quot;das Dezimalsystem&quot;, &quot;nidaamka tobanle&quot;], [&quot;die Dualzahl&quot;, &quot;tiro labaale&quot;], [&quot;die Dezimalzahl&quot;, &quot;tiro tobanle&quot;], [&quot;die Stelle&quot;, &quot;boos (meesha lambarka)&quot;], [&quot;der Stellenwert&quot;, &quot;qiimaha booska&quot;], [&quot;die Zweierpotenz&quot;, &quot;jibbaarka labada&quot;], [&quot;die führende Null&quot;, &quot;eberka hore&quot;], [&quot;der Wert&quot;, &quot;qiime&quot;], [&quot;die Kombination&quot;, &quot;isku-dhaf&quot;], [&quot;umwandeln&quot;, &quot;beddel (tiro u beddel nidaam kale)&quot;], [&quot;addieren&quot;, &quot;isku dar&quot;], [&quot;die Summe&quot;, &quot;wadar&quot;], [&quot;darstellen&quot;, &quot;muujin, qorid&quot;], [&quot;die Aufgabe&quot;, &quot;hawl, layli&quot;], [&quot;prüfen&quot;, &quot;hubin&quot;], [&quot;begründen&quot;, &quot;sababee, sharax sababta&quot;]]">
+        <div class="fc-card" onclick="fcFlip(this)" role="button" tabindex="0"><span class="fc-face"></span></div>
+        <div class="fc-controls">
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,-1)"><span class="ms" lang="so">← dib</span><span class="de" lang="de">← zurück</span></button>
+          <span class="caption fc-count"></span>
+          <button class="btn btn-ghost btn-sm" onclick="fcStep(this,1)"><span class="ms" lang="so">xiga →</span><span class="de" lang="de">weiter →</span></button>
+          <button class="btn btn-ghost btn-sm" onclick="fcSag(this)">🔊</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="card">
+    <h3><span class="ms" lang="so">Waxa aad baratay</span><span class="de" lang="de">Das hast du gelernt</span></h3>
+    <div class="acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span><span class="ms" lang="so">Bit iyo bayt</span><span class="de" lang="de">Bit und Byte</span></span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner"><span class="ms" lang="so">Bit waa 0 ama 1. Siddeed bit oo isku xiga (hal bayt) waxay bixiyaan 256 qiime oo suurtagal ah.</span><span class="de" lang="de">Ein Bit ist 0 oder 1. Acht Bit hintereinander (ein Byte) ergeben 256 mögliche Werte.</span></div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span><span class="ms" lang="so">Qiimaha booska ee nidaamka labaale</span><span class="de" lang="de">Stellenwerte im Dualsystem</span></span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner"><span class="ms" lang="so">Midig ilaa bidix qiimaha booska waa labanlaabmaa: 1, 2, 4, 8, 16, 32, 64, 128 …</span><span class="de" lang="de">Von rechts nach links verdoppelt sich der Stellenwert: 1, 2, 4, 8, 16, 32, 64, 128 …</span></div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false" onclick="toggleAcc(this)">
+          <span><span class="ms" lang="so">Beddelidda tirooyinka</span><span class="de" lang="de">Umwandeln</span></span><span class="acc-icon">▼</span></button>
+        <div class="acc-body"><div class="acc-body-inner"><span class="ms" lang="so">Labaale → tobanle: isku dar qiimayaasha bits-ka shidan. Tobanle → labaale: tirada u kala qaybi jibbaarada labada, kadib shid bits-ka ku habboon.</span><span class="de" lang="de">Dual → Dezimal: Stellenwerte der gesetzten Bits addieren. Dezimal → Dual: die Zahl als Summe von Zweierpotenzen zerlegen und die passenden Bits setzen.</span></div></div>
+      </div>
+    </div>
+
+    <div class="checkliste">
+      <div class="checkliste-title">✅ <span class="ms" lang="so">Is hubi ka hor dhammaadka casharka</span><span class="de" lang="de">Check vor dem Stundenende</span></div>
+      <div id="hefter-stand" aria-live="polite"></div>
+      <div id="wb-stand-2" aria-live="polite"></div>
+    </div>
+
+    <div class="callout callout-success">🎉 <span><span class="ms" lang="so">Hadda waad u beddeli kartaa tirooyinka labaale tirooyin tobanle iyo dhinaca kale — waadna garanaysaa sababta kombiyuutarradu ugu xisaabiyaan kaliya 0 iyo 1.</span><span class="de" lang="de">Du kannst jetzt Dualzahlen in Dezimalzahlen umwandeln und umgekehrt — und weißt, warum Computer nur mit 0 und 1 rechnen.</span></span></div>
+    <p class="ms connector-text" lang="so">🔮 Casharka xiga: sidee xarfo uga samaysmaan silsiladahan bits? Koodka ASCII ayaa kuu sheegi doona.</p>
+<p class="de connector-text" lang="de">🔮 In der nächsten Stunde geht es weiter: Wie werden aus solchen Bit-Ketten eigentlich Buchstaben? Der ASCII-Code verrät es dir.</p>
+  </div>
+
+  <footer class="lh-foot" id="lh-foot" data-k="MR-20261111-7EA975" title="Kennnummer MR-20261111-7EA975">© 2026 M. Rieske – Alle Rechte vorbehalten</footer>
+
+</div>
+<script>
+/* ============================================================
+   DaZ-Fassung: Sprache, Aussprache, Wörterbuch, Abschreib-Stand,
+   8-Bit-Schalter, Binär-Prüfung, zählende Hand
+   ============================================================ */
+
+/* ---------- Rückmeldung bei Zahl-/Bitaufgaben ---------- */
+function fbZahl(ok,n,extra){
+  const alle=(ok===n);
+  let t=alle?L('✅ Dhammaan waa sax!','✅ Alles richtig!')
+            :L('Sax: '+ok+' ka mid ah '+n+'. Mar kale hubi meelaha cas.', ok+' von '+n+' richtig. Prüfe die rot markierten Felder noch einmal.');
+  return t+(extra||'');
+}
+
+/* ---------- Sprache: ms · both · de ---------- */
+function setSprache(m){
+  if(['ms','de','both'].indexOf(m)<0) m='ms';
+  const h=document.documentElement;
+  h.classList.remove('m-ms','m-de','m-both'); h.classList.add('m-'+m);
+  h.setAttribute('lang', m==='de'?'de':'so');
+  document.querySelectorAll('.lang-btn').forEach(b=>{ const on=b.dataset.m===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',String(on)); });
+  document.querySelectorAll('[data-ph-ms]').forEach(el=>{
+    el.placeholder = m==='de'?el.dataset.phDe : (m==='both'? el.dataset.phMs+' / '+el.dataset.phDe : el.dataset.phMs); });
+  try{ localStorage.setItem(LH_NS+'sprache',m); }catch(e){}
+}
+function initSprache(){ let m='ms'; try{ m=localStorage.getItem(LH_NS+'sprache')||'ms'; }catch(e){} setSprache(m); }
+
+/* ---------- Aussprache (Sprachausgabe des Geräts, funktioniert offline, wenn eine deutsche Stimme installiert ist) ---------- */
+const TTS_OK=('speechSynthesis' in window) && (typeof SpeechSynthesisUtterance!=='undefined');
+if(!TTS_OK) document.documentElement.classList.add('no-tts');
+function sag(text){
+  if(!TTS_OK) return;
+  text=String(text).replace(/🔊/g,'').replace(/\s*\/\s*/g,', ').trim(); if(!text) return;
+  try{ const u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=.85;
+    const de=(speechSynthesis.getVoices()||[]).find(v=>/^de/i.test(v.lang)); if(de) u.voice=de;
+    speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){}
+}
+function fcSag(btn){ const s=bs(btn); let c=[]; try{ c=JSON.parse(s.dataset.cards||'[]'); }catch(e){} if(c[s._idx]) sag(c[s._idx][0]); }
+
+/* ---------- Hinweis-Toast ---------- */
+function toast(html){ let t=document.getElementById('copy-toast');
+  if(!t){ t=document.createElement('div'); t.id='copy-toast'; t.className='copy-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.innerHTML=html; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>{ t.hidden=true; },3500); }
+
+/* ---------- Wörterbuch: Häkchen „notiert“ ---------- */
+function initWB(){
+  document.querySelectorAll('.wb-check input').forEach(cb=>{
+    const key=LH_NS+'wb_'+cb.dataset.wb; let on=false; try{ on=localStorage.getItem(key)==='1'; }catch(e){}
+    cb.checked=on; cb.closest('.wb-row').classList.toggle('notiert',on);
+    cb.addEventListener('change',()=>{ try{ localStorage.setItem(key,cb.checked?'1':'0'); }catch(e){}
+      cb.closest('.wb-row').classList.toggle('notiert',cb.checked); standAktualisieren(); });
+  });
+}
+function standAktualisieren(){
+  const hb=[...document.querySelectorAll('.hefter-box')], hok=hb.filter(b=>b.classList.contains('erledigt')).length;
+  const wb=[...document.querySelectorAll('.wb-check input')], wok=wb.filter(c=>c.checked).length;
+  const h=document.getElementById('hefter-stand');
+  if(h){ h.innerHTML='✍️ '+L('Buugga: waxaad qortay '+hok+' ka mid ah '+hb.length+' qoraal.','Hefter: '+hok+' von '+hb.length+' Einträgen abgeschrieben.'); h.classList.toggle('stand-ok',hok===hb.length); }
+  ['wb-stand','wb-stand-2'].forEach(id=>{ const w=document.getElementById(id);
+    if(w){ w.innerHTML='📖 '+L('Qaamuuska: waxaad qortay '+wok+' ka mid ah '+wb.length+' erey.','Wörterbuch: '+wok+' von '+wb.length+' Wörtern notiert.'); w.classList.toggle('stand-ok',wok===wb.length); } });
+}
+
+/* ---------- Rechenweg in Schritten ---------- */
+function showStep(prefix,n,btn){
+  document.querySelectorAll('[id^="'+prefix+'-step-"]').forEach(el=>el.classList.toggle('on', el.id===prefix+'-step-'+n));
+  const nav=btn?btn.parentElement:null; if(nav) nav.querySelectorAll('.step-btn').forEach(b=>b.classList.toggle('active', b===btn));
+}
+
+/* ---------- 8-Bit-Schalter ---------- */
+function bitToggle(btn){ btn.classList.toggle('on'); btn.textContent=btn.classList.contains('on')?'1':'0'; bitRecalc(btn.closest('.bitswitch')); }
+function bitRecalc(c){ if(!c) return; let sum=0; const parts=[];
+  c.querySelectorAll('.bit-btn').forEach(b=>{ const v=parseInt(b.dataset.value,10), on=b.classList.contains('on')?1:0; if(on) sum+=v; parts.push(v+'·'+on); });
+  const calc=document.getElementById(c.id+'-calc'); if(calc) calc.innerHTML=parts.join(' + ')+' = <strong>'+sum+'</strong>'; }
+function bitResetById(id){ const c=document.getElementById(id); if(!c) return; c.querySelectorAll('.bit-btn').forEach(b=>{ b.classList.remove('on'); b.textContent='0'; }); bitRecalc(c); }
+function bitRandomById(id){ const c=document.getElementById(id); if(!c) return; c.querySelectorAll('.bit-btn').forEach(b=>{ const on=Math.random()<0.5; b.classList.toggle('on',on); b.textContent=on?'1':'0'; }); bitRecalc(c); }
+
+/* ---------- Binärzahl-Eingaben prüfen: Eingabe und Soll gleich normalisiert ---------- */
+function binNorm(x){ return String(x||'').replace(/[\s.]/g,''); }
+function checkBin(id, soll){
+  const el=document.getElementById(id); if(!el) return {ok:false};
+  const ist=binNorm(el.value), s=binNorm(soll);
+  const nurBits=/^[01]+$/.test(ist), lenOk=ist.length===s.length;
+  const ok=nurBits && lenOk && ist===s;
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok);
+  return {ok:ok, nurBits:nurBits||ist==='', lenOk:lenOk||ist===''};
+}
+function checkBinGroup(btn, spec){
+  let ok=0, extra=''; spec.forEach(s=>{ const r=checkBin(s[0],s[1]); if(r.ok) ok++;
+    else if(!r.nurBits) extra=' '+L('Tiro labaale waxay leedahay kaliya lambarrada 0 iyo 1.','Eine Dualzahl hat nur die Ziffern 0 und 1.');
+    else if(!r.lenOk && !extra) extra=' '+L('Waa inay jiraan 8 lambar (8 bit).','Jedes Byte braucht genau 8 Stellen.'); });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.innerHTML=fbZahl(ok,spec.length, ok===spec.length?'':extra); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  if(ok===spec.length) solBtnShow(btn);   /* Lösungsweg erst nach richtiger Antwort */
+  return ok===spec.length;
+}
+
+/* ---------- Zählende Hand ---------- */
+let handValue=31, handTimer=null; const handBits=[1,2,4,8,16];
+function handRender(){
+  handBits.forEach(b=>{ const f=document.querySelector('.hand-finger[data-bit="'+b+'"]');
+    if(f){ f.classList.toggle('up',(handValue&b)!==0); f.classList.toggle('down',(handValue&b)===0); } });
+  const d=document.getElementById('hand-dec'), bi=document.getElementById('hand-bin');
+  if(d) d.textContent=handValue; if(bi) bi.textContent=handValue.toString(2).padStart(5,'0');
+}
+function handStep(dl){ handValue=(handValue+dl+32)%32; handRender(); }
+function handToggleFinger(el){ handValue=handValue^parseInt(el.dataset.bit,10); handRender(); }
+function handPlayLabel(on){ const b=document.getElementById('hand-play'); if(b) b.innerHTML=on?L('⏸ Jooji','⏸ Pause'):L('▶ Si toos ah u tiri','▶ Automatisch zählen'); }
+function handReset(){ clearInterval(handTimer); handTimer=null; handPlayLabel(false); handValue=0; handRender(); }
+function handPlay(){ if(handTimer){ clearInterval(handTimer); handTimer=null; handPlayLabel(false); return; }
+  handPlayLabel(true); handTimer=setInterval(()=>handStep(1),900); }
+function initSeitenWidgets(){
+  document.querySelectorAll('.bitswitch').forEach(bitRecalc); handRender();
+  document.querySelectorAll('.hand-finger').forEach(f=>f.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); handToggleFinger(f); } }));
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeitenWidgets); } else { initSeitenWidgets(); }
+</script>
+<script>
+var __LH={i:"MR-20261111-7EA975",j:2026};
+/* ============================================================
+   Seiten-Engine Lern-HTML
+   Phasen · additives Aufdecken · zweistufiges Quiz · Zahlprüfung
+   · Vorhersage · Akkordeon · Heftereintrag-Export
+   ============================================================ */
+
+/* ---------- Phasen ---------- */
+function showPhase(n){
+  document.querySelectorAll('.phase').forEach(s => s.classList.toggle('on', s.id === 'ph'+n));
+  document.querySelectorAll('.pnav').forEach(b => b.classList.toggle('active', b.id === 'pn'+n));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- Speicher-Namensraum (pro Seite, über die Kennnummer) ---------- */
+const LH_NS=(function(){ try{ var K=window.__LH||{}, i=K.i||document.documentElement.getAttribute('data-lh')||''; return i?i+'_':''; }catch(e){ return ''; } })();
+
+/* ---------- Additives Aufdecken (monoton, localStorage) ---------- */
+function getRevealed(p){ try{return parseInt(localStorage.getItem(LH_NS+'subreveal_ph'+p)||'1',10)||1;}catch(e){return 1;} }
+function setRevealed(p,n){ try{localStorage.setItem(LH_NS+'subreveal_ph'+p,String(n));}catch(e){} }
+function revealSub(phase,n){
+  const nav=document.getElementById('ph'+phase+'-stepper'); if(!nav)return;
+  const total=parseInt(nav.dataset.total,10), prev=getRevealed(phase), target=Math.max(prev,n);
+  for(let i=1;i<=total;i++){const el=document.getElementById('ph'+phase+'-sub-'+i); if(el)el.classList.toggle('on',i<=target);}
+  nav.querySelectorAll('.substep-chip').forEach((c,idx)=>{const i=idx+1;
+    c.classList.remove('active','done','locked'); c.classList.add(i<target?'done':(i===target?'active':'locked'));});
+  setRevealed(phase,target);
+  if(n>prev){const t=document.getElementById('ph'+phase+'-sub-'+Math.min(n,total));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'}); t.setAttribute('tabindex','-1'); try{t.focus({preventScroll:true});}catch(e){}}}
+}
+function initSubReveal(){ document.querySelectorAll('.substep-nav').forEach(nav=>{
+  const p=parseInt(nav.dataset.phase,10); revealSub(p,getRevealed(p)); }); }
+
+/* ---------- Zweistufiges Quiz ----------
+   Pro Frage ein Eintrag mit ok / ng / hint in quizFeedback.
+   1. Fehlversuch -> lösungsfreier Tipp, zweiter Versuch offen.
+   2. Fehlversuch oder richtig -> Auflösung, richtige Antwort grün. */
+function L(ms,de){ return '<span class="ms" lang="so">'+ms+'</span><span class="de" lang="de">'+de+'</span>'; }
+const quizFeedback = {
+  'gl0': {
+    ok:  L('✅ <strong>Waa sax!</strong> Xitaa 8 bit oo isku xiga waxay bixiyaan 256 isku-dhaf oo kala duwan — oo ku filan dhammaan calaamadaha kiiboodhka.','✅ <strong>Richtig!</strong> Schon 8 Bit hintereinander ergeben 256 verschiedene Kombinationen — genug für alle Tastaturzeichen.'),
+    ng:  L('❌ <strong>Ma aha gebi ahaan.</strong> Hal bit waa kaliya 0 ama 1, laakiin kombiyuutarku wuxuu isku xiraa bits badan.','❌ <strong>Nicht ganz.</strong> Ein einzelnes Bit kann zwar nur 0 oder 1 sein, aber Computer reihen viele Bits aneinander.'),
+    hint:L('Ka fikir 8 sanduuq oo aad mid mid u shidi karto ama u demin karto. Immisa qaab oo kala duwan ayaa soo baxa?','Stell dir 8 Kästchen vor, die du einzeln an- oder ausschalten kannst. Wie viele verschiedene Muster ergeben sich?')
+  },
+  'bs100': {
+    ok:  L('✅ <strong>Waa sax!</strong> 64 + 32 + 4 = 100.','✅ <strong>Richtig!</strong> 64 + 32 + 4 = 100.'),
+    ng:  L('❌ <strong>Ma aha gebi ahaan.</strong> Bits-ka furaha midba mar shid oo isku dar qiimayaashooda.','❌ <strong>Nicht ganz.</strong> Probiere die Bits im Schalter oben nacheinander aus und addiere ihre Stellenwerte.'),
+    hint:L('Ka bilow qiimaha ugu weyn ee weli gala 100. Immisa ayaa hara?','Starte mit dem größten Stellenwert, der noch in 100 hineinpasst. Was bleibt danach übrig?')
+  },
+  'lina': {
+    ok:  L('✅ <strong>Waa sax!</strong> Eberrada hore qiimaha ma beddelaan — sida 007 = 7 nidaamka tobanle.','✅ <strong>Richtig!</strong> Führende Nullen ändern den Wert nicht — genau wie bei 007 = 7 im Dezimalsystem.'),
+    ng:  L('❌ <strong>Ma aha gebi ahaan.</strong> Xisaabi labada tiro oo is barbar dhig natiijooyinka, ma aha tirada lambarrada.','❌ <strong>Nicht ganz.</strong> Rechne beide Zahlen aus und vergleiche die Ergebnisse, nicht die Anzahl der Ziffern.'),
+    hint:L('U beddel 0011 iyo 111 tirooyin tobanle. Maxaad ka dareentay eberrada bidixda?','Wandle 0011 und 111 jeweils in eine Dezimalzahl um. Was fällt dir an den Nullen ganz links auf?')
+  },
+  'hand13': {
+    ok:  L('✅ <strong>Waa sax!</strong> 8 + 4 + 1 = 13.','✅ <strong>Richtig!</strong> 8 + 4 + 1 = 13.'),
+    ng:  L('❌ <strong>Ma aha gebi ahaan.</strong> Ha tirin faraha — isku dar qiimayaashooda. Ku tijaabi sawirka gacanta.','❌ <strong>Nicht ganz.</strong> Zähl nicht die Finger, sondern addiere ihre Stellenwerte. Probiere es an der Hand oben aus.'),
+    hint:L('Qiimaha farta ugu weyn ee weli gala 13 waa kee? Immisa ayaa hara?','Welcher Finger-Stellenwert passt als größter noch in 13? Was bleibt übrig?')
+  }
+};
+function quizCheck(id, el, verdict){ twoStageQuizCheck(id, el, verdict, quizFeedback); }
+
+function twoStageQuizCheck(id, el, verdict, fbMap){
+  const fb = document.getElementById('qfb-'+id);
+  const opts = el.parentElement, btns = opts.querySelectorAll('.quiz-btn');
+  const data = fbMap ? fbMap[id] : null;
+  const isCorrect = (verdict==='c' || verdict==='correct');
+  if(isCorrect){ el.classList.remove('tryagain'); el.classList.add('correct');
+    btns.forEach(b=>b.disabled=true);
+    fb.innerHTML=(data&&data.ok)?data.ok:L('✅ <strong>Waa sax!</strong>','✅ <strong>Richtig!</strong>'); fb.className='quiz-fb ok'; return; }
+  const wrong=(parseInt(opts.dataset.wrongAttempts||'0',10))+1; opts.dataset.wrongAttempts=wrong;
+  el.disabled=true;
+  if(wrong===1){ el.classList.add('tryagain');
+    const hint=(data&&data.hint)?data.hint:L('Mar kale ka fikir oo ka saar jawaabaha si cad u khaldan.','Überdenke deine Wahl und schließe offensichtlich falsche Optionen aus.');
+    fb.innerHTML='💡 <strong>'+L('Tilmaan:','Tipp:')+'</strong> '+hint+' <em>'+L('Waxaad haysataa hal isku day oo kale.','Du hast noch einen Versuch.')+'</em>'; fb.className='quiz-fb hint';
+  } else { el.classList.remove('tryagain'); el.classList.add('wrong');
+    btns.forEach(b=>{ b.disabled=true; const oc=b.getAttribute('onclick')||'';
+      if(/,\s*this\s*,\s*'(c|correct)'\s*\)/.test(oc)){ b.classList.remove('tryagain'); b.classList.add('correct'); }});
+    fb.innerHTML=(data&&data.ng)?data.ng:L('❌ Ma aha gebi ahaan — mar kale akhri jawaabaha kale.','❌ Nicht ganz — lies die anderen Optionen nochmal durch.'); fb.className='quiz-fb ng';
+  }
+}
+
+/* ---------- Geführte Rechnung ----------
+   Komma und Punkt erlaubt; Toleranz default 2 %. */
+function checkNum(id, soll, tol){
+  const el=document.getElementById(id); if(!el) return false;
+  const ist=parseFloat((el.value||'').replace(',','.').trim());
+  const ok=isFinite(ist) && Math.abs(ist-soll) <= (tol!=null?tol:Math.abs(soll)*0.02);
+  el.classList.toggle('ok',ok); el.classList.toggle('err',!ok); return ok;
+}
+function checkNumGroup(btn, spec){          /* spec: [[id, soll, tol], …] */
+  let ok=0; spec.forEach(s=>{ if(checkNum(s[0],s[1],s[2])) ok++; });
+  const fb=btn.parentElement.querySelector('.grp-fb');
+  if(fb){ fb.innerHTML=fbZahl(ok,spec.length,''); fb.className='fb grp-fb '+(ok===spec.length?'ok':'err'); }
+  if(ok===spec.length) solBtnShow(btn);   /* Lösungsweg erst nach richtiger Antwort */
+  return ok===spec.length;
+}
+function showSol(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
+/* „Lösungsweg zeigen"-Buttons tragen class="solbtn" hidden und erscheinen erst nach dem ersten Prüfen */
+function solBtnShow(btn){ const scope=btn.closest('.ex')||btn.closest('p,div'); const b=scope?scope.querySelector('.solbtn'):null; if(b) b.hidden=false; }
+
+/* ---------- Vorhersage: erst raten, dann auflösen ---------- */
+function lockPredict(id){
+  const box=document.getElementById(id); if(!box) return;
+  const ta=document.getElementById(id+'-in'), out=document.getElementById(id+'-out');
+  const txt=(ta.value||'').trim(); if(!txt) return;
+  try{ localStorage.setItem(LH_NS+'predict_'+id, txt); }catch(e){}
+  out.innerHTML=L('Jawaabtaada: ','Deine Antwort: '); out.appendChild(document.createTextNode(txt)); out.hidden=false;
+  ta.disabled=true; ta.hidden=true;
+  const b=box.querySelector('button'); if(b) b.hidden=true;
+}
+function initPredicts(){ document.querySelectorAll('.poe-box').forEach(b=>{
+  let t=null; try{ t=localStorage.getItem(LH_NS+'predict_'+b.id); }catch(e){}
+  if(t){ const ta=document.getElementById(b.id+'-in'); if(ta){ ta.value=t; lockPredict(b.id); } } }); }
+
+/* ---------- Akkordeon ---------- */
+function toggleAcc(btn){ btn.setAttribute('aria-expanded', btn.classList.toggle('open')); }
+
+/* ---------- Heftereintrag: von Hand ABSCHREIBEN (kein Kopieren) ----------
+   Jeder .hefter-box bekommt ein Häkchen „abgeschrieben“ (localStorage, mit LH_NS).
+   Kopieren aus Hefter und Wörterbuch wird abgefangen und freundlich erinnert. */
+function initHefter(){
+  document.querySelectorAll('.hefter-box').forEach(box=>{
+    if(box.querySelector('.hefter-done')) return;
+    const key=LH_NS+'hefter_'+box.id;
+    const lab=document.createElement('label'); lab.className='hefter-done';
+    lab.innerHTML='<input type="checkbox"> '+L('Af Jarmal ayaan ku qoray, qoraallo af Soomaali ahna waan sameeyay.','Ich habe das auf Deutsch abgeschrieben und Stichpunkte auf Somali gemacht.');
+    const cb=lab.querySelector('input'); let on=false; try{ on=localStorage.getItem(key)==='1'; }catch(e){}
+    cb.checked=on; box.classList.toggle('erledigt',on);
+    cb.addEventListener('change',()=>{ try{ localStorage.setItem(key,cb.checked?'1':'0'); }catch(e){}
+      box.classList.toggle('erledigt',cb.checked); standAktualisieren(); });
+    box.appendChild(lab);
+  });
+  document.addEventListener('copy',function(ev){
+    const sel=window.getSelection(); const n=sel&&sel.anchorNode; const el=n?(n.nodeType===1?n:n.parentElement):null;
+    if(el && el.closest && el.closest('.hefter-box,.wb-list,.wb-muster')){ ev.preventDefault();
+      toast(L('✍️ Halkan lama koobiyeeyo — gacanta ku qor buuggaaga!','✍️ Hier wird nicht kopiert – schreib es von Hand in deinen Hefter!')); }
+  });
+}
+/* ---------- Lehrermodus: Musterlösungen für die Klasse ausblenden,
+   per Passwort gezielt einblenden. Zustand nur für die Sitzung (sessionStorage) —
+   das ist kein Sicherheitsmechanismus, nur ein Schutz vor versehentlichem Zeigen
+   am Beamer. Passwort steht im Klartext in data-pw am #teachbar. ---------- */
+function teachSetUI(active){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  bar.classList.toggle('active',active);
+  const status=document.getElementById('teachbar-status');
+  if(status){ status.textContent=active?'aktiv':'inaktiv'; status.className='teachbar-status '+(active?'on':'off'); }
+  const off=document.getElementById('teachbar-off-btn'); if(off) off.hidden=!active;
+  const pw=document.getElementById('teachbar-pw'); if(pw){ pw.hidden=active; if(!active)pw.value=''; }
+  document.querySelectorAll('.lehrer-only').forEach(el=>{ el.hidden=!active; });
+  document.querySelectorAll('.hs').forEach(hsTick);   /* Lehrermodus: alle Hilfestellungen sofort frei */
+}
+function teachActivate(){
+  const bar=document.getElementById('teachbar'); if(!bar)return;
+  const pw=document.getElementById('teachbar-pw'); if(!pw)return;
+  if((pw.value||'')!==(bar.dataset.pw||'')){
+    pw.classList.add('err'); pw.value=''; setTimeout(()=>pw.classList.remove('err'),900); return;
+  }
+  try{ sessionStorage.setItem(LH_NS+'teachmode','1'); }catch(e){}
+  teachSetUI(true);
+}
+function teachDeactivate(){ try{ sessionStorage.removeItem(LH_NS+'teachmode'); }catch(e){} teachSetUI(false); }
+function initTeachbar(){
+  if(!document.getElementById('teachbar')) return;
+  let on=false; try{ on=sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){}
+  teachSetUI(on);
+}
+
+/* ---------- ALT (nur für ältere Seiten): Gestufte Hilfe mit .hilfe-box.
+   Neue Seiten nutzen die Hilfestellungen (.hs) weiter unten. ----------
+   Button „Hilfe anfordern" startet einen Timer;
+   Tipps erscheinen automatisch 2, 4 und 6 Minuten NACH dem Anfordern (nicht nach
+   einem weiteren Klick). Zeitpunkt liegt in localStorage und übersteht Reload. ---------- */
+function hilfeKey(id){ return LH_NS+'hilfe_'+id; }
+function hilfeFormat(min){
+  const s=Math.max(0,Math.round(min*60)), mm=Math.floor(s/60), ss=s%60;
+  return mm+':'+String(ss).padStart(2,'0');
+}
+function hilfeTick(box, requestedAt){
+  const status=box.querySelector('.hilfe-status');
+  const stufen=[...box.querySelectorAll('.hilfe-stufe')];
+  const elapsedMin=(Date.now()-requestedAt)/60000;
+  let next=null;
+  stufen.forEach(s=>{
+    const min=parseFloat(s.dataset.min);
+    if(elapsedMin>=min){ s.hidden=false; } else if(next===null || min<next){ next=min; }
+  });
+  if(status) status.textContent = (next!==null)
+    ? ('Nächster Tipp in '+hilfeFormat(next-elapsedMin)+' …')
+    : 'Alle Tipps freigeschaltet.';
+  if(next!==null){ clearTimeout(box._hilfeT); box._hilfeT=setTimeout(()=>hilfeTick(box,requestedAt),1000); }
+}
+function hilfeRequest(btn){
+  const box=btn.closest('.hilfe-box'); if(!box || box.dataset.requested) return;
+  box.dataset.requested='1'; btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …';
+  const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+  const now=Date.now();
+  try{ localStorage.setItem(hilfeKey(box.id), String(now)); }catch(e){}
+  hilfeTick(box, now);
+}
+function initHilfe(){
+  document.querySelectorAll('.hilfe-box').forEach(box=>{
+    let t=null; try{ t=localStorage.getItem(hilfeKey(box.id)); }catch(e){}
+    if(!t) return;
+    box.dataset.requested='1';
+    const btn=box.querySelector('.hilfe-request'); if(btn){ btn.disabled=true; btn.textContent='🆘 Hilfe angefordert …'; }
+    const status=box.querySelector('.hilfe-status'); if(status) status.hidden=false;
+    hilfeTick(box, parseInt(t,10));
+  });
+}
+
+/* ---------- Brüche: Zähler über Nenner ----------
+   frac('<i>s</i>','<i>t</i>') liefert den gestapelten Bruch.
+   fracify(html) wandelt „A / B" um, wenn A und B Formelzeichen (<i>…</i>) oder
+   Zahlen mit Einheit sind (z. B. 3000 m geteilt durch 600 s). Einheiten wie m/s
+   (ohne Leerzeichen um den Schrägstrich) bleiben unverändert. */
+function frac(a,b){ return '<span class="frac"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'; }
+const FRAC_OP='(?:<i>[^<]{1,3}</i>(?:<sub>[^<]{1,6}</sub>)?|\\d[\\d,.]*(?:(?:&nbsp;| )\\d{3})*(?:(?:&nbsp;| )[^\\s<&]+)?)';
+const FRAC_RE=new RegExp('('+FRAC_OP+') / ('+FRAC_OP+')','g');
+function fracify(html){ return String(html).replace(FRAC_RE,(m,a,b)=>frac(a,b)); }
+
+/* ---------- Hilfestellungen (Pflicht bei JEDER Aufgabe) ----------
+   Autorenform im HTML (JS baut daraus die Klapp-Struktur):
+     <div class="hs" id="hs-EINDEUTIG">
+       <div data-tipp>Tipp 1 …</div> <div data-tipp>Tipp 2 …</div> <div data-tipp>Tipp 3 …</div>
+       <div data-muster>Musterlösung …</div>
+     </div>
+   Ablauf: Button „🆘 Hilfestellungen" → Feld „Hilfestellung" klappt auf, Countdown startet.
+   Tipp 1/2/3 werden 2/4/6 Minuten nach dem Anfordern freigeschaltet, die Musterlösung
+   nach 10 Minuten. Freigeschaltete Einträge öffnen sich erst auf Klick. Der Zeitpunkt
+   liegt in localStorage (übersteht Reload); im Lehrermodus ist alles sofort frei.
+   Dynamisch eingefügte Hilfestellungen danach mit buildHS(el) aufbauen;
+   hsMarkup(id,[t1,t2,t3],muster) erzeugt die Autorenform als String. */
+const HS_STUFEN=[[L('Tilmaan 1','Tipp 1'),2],[L('Tilmaan 2','Tipp 2'),4],[L('Tilmaan 3','Tipp 3'),6],[L('Xal tusaale ah','Musterlösung'),10]];
+function hsTeach(){ try{ return sessionStorage.getItem(LH_NS+'teachmode')==='1'; }catch(e){ return false; } }
+function hsMarkup(id,tips,muster){
+  return '<div class="hs" id="'+id+'">'+tips.map(t=>'<div data-tipp>'+t+'</div>').join('')+'<div data-muster>'+muster+'</div></div>';
+}
+function buildHS(box){
+  if(!box || box.querySelector('.hs-item')) return;
+  if(!box.id) console.warn('Hilfestellung ohne id – Timer kann nicht gespeichert werden', box);
+  const inhalte=[...box.querySelectorAll(':scope > [data-tipp]')].slice(0,3).map(d=>d.innerHTML);
+  const m=box.querySelector(':scope > [data-muster]'); inhalte.push(m?m.innerHTML:'');
+  box.innerHTML='<button class="btn btn-ghost btn-sm hs-btn" aria-expanded="false" onclick="hsRequest(this)">🆘 '+L('Caawimo','Hilfestellungen')+'</button>'+
+    '<div class="hs-panel" hidden><div class="hs-title">'+L('Caawimo','Hilfestellung')+'</div>'+
+    inhalte.map((t,i)=>{ const st=HS_STUFEN[i]; return '<div class="hs-item'+(i===3?' hs-muster':'')+'" data-min="'+st[1]+'">'+
+      '<button class="hs-head" disabled aria-expanded="false" onclick="hsToggle(this)"><span class="hs-name">'+st[0]+'</span>'+
+      '<span class="hs-time"></span><span class="hs-icon" aria-hidden="true">🔒</span></button>'+
+      '<div class="hs-body" hidden>'+t+'</div></div>'; }).join('')+'</div>';
+  let t0=null; try{ t0=localStorage.getItem(LH_NS+'hs_'+box.id); }catch(e){}
+  if(t0) box._t0=parseInt(t0,10);
+  hsTick(box);
+}
+function hsRequest(btn){
+  const box=btn.closest('.hs'), panel=box.querySelector('.hs-panel');
+  if(!box._t0){ box._t0=Date.now(); try{ localStorage.setItem(LH_NS+'hs_'+box.id,String(box._t0)); }catch(e){} }
+  const open=panel.hidden; panel.hidden=!open;
+  btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open);
+  hsTick(box);
+}
+function hsToggle(head){
+  const body=head.nextElementSibling, open=body.hidden;
+  body.hidden=!open; head.classList.toggle('open',open); head.setAttribute('aria-expanded',String(open));
+}
+function hsTick(box){
+  if(!box || !box.querySelector('.hs-item')) return;
+  const teach=hsTeach(), el=box._t0?(Date.now()-box._t0)/60000:-1; let pending=false;
+  box.querySelectorAll('.hs-item').forEach(it=>{
+    const min=parseFloat(it.dataset.min), head=it.querySelector('.hs-head'),
+          time=it.querySelector('.hs-time'), icon=it.querySelector('.hs-icon');
+    const free=teach || (el>=min);
+    head.disabled=!free;
+    if(free){ time.innerHTML=''; icon.textContent='▼'; }
+    else {
+      icon.textContent='🔒'; head.classList.remove('open'); head.setAttribute('aria-expanded','false');
+      it.querySelector('.hs-body').hidden=true;
+      time.innerHTML=box._t0?'('+L('inta ka hartay '+hilfeFormat(min-el),'in '+hilfeFormat(min-el))+')':'('+L('ka dib '+min+' daqiiqo','nach '+min+' Min.')+')';
+      if(box._t0) pending=true;
+    }
+  });
+  clearTimeout(box._hsT); if(pending) box._hsT=setTimeout(()=>hsTick(box),1000);
+}
+function initHS(){ document.querySelectorAll('.hs').forEach(buildHS); }
+
+/* ---------- Init ---------- */
+function initSeite(){ initSprache(); initSubReveal(); initPredicts(); initHefter(); initHS(); initTeachbar(); initHilfe(); initWB(); standAktualisieren(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initSeite); } else { initSeite(); }
+
+/* ---------- Helfer (instanzfähig: Container = .baustein) ---------- */
+function bs(el){ return el.closest('.baustein'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function setFb(scope,msg,ok){ const f=scope.querySelector('.fb'); if(!f)return; const m=String(msg).match(/^(\d+) von (\d+) (?:Feldern )?richtig\.$/);
+  if(m){ f.innerHTML=fbZahl(+m[1],+m[2],''); } else { f.textContent=msg; } f.className='fb grp-fb '+(ok?'ok':'err'); }
+
+/* 1 Lückentext */
+function dtwSelect(el){ const s=bs(el); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function dtwPlace(gap){ const s=bs(gap), sel=s._sel; if(!sel)return;
+  if(gap.dataset.filled){ const back=s.querySelector('.dtw-word.used[data-w="'+gap.dataset.filled+'"]'); if(back) back.classList.remove('used'); }
+  gap.textContent=sel.textContent; gap.dataset.filled=sel.dataset.w; gap.className='dtw-gap filled'; sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null;
+  bsPop(gap); }
+function dtwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.dtw-gap').forEach(g=>{ total++; const good=(g.dataset.filled||'')===g.dataset.answer; g.classList.remove('gap-ok','gap-err'); g.classList.add(good?'gap-ok':'gap-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function dtwReset(btn){ const s=bs(btn); s.querySelectorAll('.dtw-gap').forEach(g=>{ g.textContent='______'; delete g.dataset.filled; g.className='dtw-gap'; }); s.querySelectorAll('.dtw-word').forEach(w=>w.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 2 Begriff ↔ Definition */
+function matchSelect(el){ const s=bs(el); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('sel')); if(s._sel===el){s._sel=null;return;} s._sel=el; el.classList.add('sel'); }
+function matchPlace(zone){ const s=bs(zone), sel=s._sel; if(!sel)return;
+  if(zone.dataset.filled){ const old=s.querySelector('.m-chip[data-id="'+zone.dataset.filled+'"]'); if(old) old.classList.remove('used'); }
+  zone.querySelector('.m-drop').textContent=sel.textContent; zone.dataset.filled=sel.dataset.id; zone.classList.remove('z-ok','z-err'); zone.classList.add('filled');
+  sel.classList.add('used'); sel.classList.remove('sel'); s._sel=null; bsPop(zone); }
+function matchCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.m-zone').forEach(z=>{ total++; const good=(z.dataset.filled||'')===z.dataset.correct; z.classList.remove('z-ok','z-err'); z.classList.add(good?'z-ok':'z-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' richtig.',ok===total); }
+function matchReset(btn){ const s=bs(btn); s.querySelectorAll('.m-zone').forEach(z=>{ z.className='m-zone'; delete z.dataset.filled; z.querySelector('.m-drop').textContent='?'; }); s.querySelectorAll('.m-chip').forEach(c=>c.classList.remove('used','sel')); s._sel=null; const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 3 Sortieren */
+/* FLIP-Animation: Positionen merken, DOM ändern, Karten von alter an neue Stelle gleiten lassen */
+function sortFlip(list,mutate){
+  const items=[...list.querySelectorAll('.sort-item')];
+  const first=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
+  mutate();
+  items.forEach(el=>{ if(el.classList.contains('dragging')) return;
+    const dy=first.get(el)-el.getBoundingClientRect().top; if(!dy) return;
+    el.style.transition='none'; el.style.transform='translateY('+dy+'px)'; el.getBoundingClientRect();
+    el.style.transition='transform .22s ease'; el.style.transform=''; });
+}
+function sortMove(btn,dir){ const item=btn.closest('.sort-item'), list=item.parentElement;
+  sortFlip(list,()=>{ if(dir<0&&item.previousElementSibling)list.insertBefore(item,item.previousElementSibling); if(dir>0&&item.nextElementSibling)list.insertBefore(item.nextElementSibling,item); });
+  bs(item).querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok')); btn.focus(); }
+function sortCheck(btn){ const s=bs(btn); const items=[...s.querySelectorAll('.sort-item')], vals=items.map(i=>+i.dataset.v); const ok=vals.every((v,i)=>i===0||vals[i-1]<=v); items.forEach(it=>it.classList.toggle('s-ok',ok)); setFb(s,ok?'✓ Richtig aufsteigend sortiert!':'Noch nicht aufsteigend – weiter schieben.',ok); }
+
+/* 4 Wörter markieren */
+function markToggle(el){ el.classList.remove('m-ok','m-err','m-miss'); el.classList.toggle('sel'); }
+function markCheck(btn){ const s=bs(btn); let ok=0,bad=0,miss=0; s.querySelectorAll('.mw').forEach(w=>{ const sel=w.classList.contains('sel'),cor=w.dataset.correct==='1'; w.classList.remove('m-ok','m-err','m-miss'); if(sel&&cor){w.classList.add('m-ok');ok++;}else if(sel&&!cor){w.classList.add('m-err');bad++;}else if(!sel&&cor){w.classList.add('m-miss');miss++;} }); const good=(bad===0&&miss===0); setFb(s,good?'✓ Alle richtig markiert!':('Richtig: '+ok+', falsch markiert: '+bad+', übersehen: '+miss+'.'),good); }
+function markReset(btn){ const s=bs(btn); s.querySelectorAll('.mw').forEach(w=>{ w.classList.remove('sel','m-ok','m-err','m-miss'); }); const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; }
+
+/* 5 Memory */
+function memBuild(s){ let pairs=[]; try{ pairs=JSON.parse(s.dataset.pairs||'[]'); }catch(e){} let cards=[]; pairs.forEach((p,i)=>{ cards.push({pair:'p'+i,val:p[0]}); cards.push({pair:'p'+i,val:p[1]}); }); shuffle(cards);
+  s.querySelector('.mem-grid').innerHTML=cards.map(c=>'<button class="memcard" data-pair="'+c.pair+'"><span class="cover">?</span><span class="val">'+esc(String(c.val))+'</span></button>').join('');
+  s._flip=[]; s._lock=false; s.querySelectorAll('.memcard').forEach(cd=>cd.addEventListener('click',function(){ memClick(cd); })); }
+function memShuffle(btn){ memBuild(bs(btn)); }
+function memClick(card){ const s=bs(card); if(s._lock||card.classList.contains('open')||card.classList.contains('done'))return; card.classList.add('open'); s._flip.push(card);
+  if(s._flip.length===2){ s._lock=true; setTimeout(function(){ if(s._flip[0].dataset.pair===s._flip[1].dataset.pair){ s._flip.forEach(c=>{c.classList.remove('open');c.classList.add('done');}); } else { s._flip.forEach(c=>c.classList.remove('open')); } s._flip=[]; s._lock=false; },750); } }
+
+/* 6 Flashcards */
+function fcBuild(s){ s._idx=0; s._back=false; fcRender(s); }
+function fcRender(s){ let cards=[]; try{ cards=JSON.parse(s.dataset.cards||'[]'); }catch(e){} const i=s._idx; s.querySelector('.fc-face').innerHTML = fracify(s._back?cards[i][1]:cards[i][0]);  /* Karten dürfen <i>, <sub> und Brüche enthalten */ s.querySelector('.fc-count').textContent=(i+1)+' / '+cards.length; }
+function fcFlip(el){ const s=bs(el); s._back=!s._back; fcRender(s); }
+function fcStep(btn,d){ const s=bs(btn); const n=JSON.parse(s.dataset.cards).length; s._idx=(s._idx+d+n)%n; s._back=false; fcRender(s); }
+
+/* 7 Kreuzworträtsel */
+function cwBuild(s){ const rows=(s.dataset.rows||'').split('/'); const W=rows[0].length; const grid=s.querySelector('.cw-grid'); grid.style.gridTemplateColumns='repeat('+W+',36px)';
+  const L=(r,c)=> (r>=0&&r<rows.length&&c>=0&&c<rows[r].length)?rows[r][c]:'.';
+  const nums={}; let n=0;
+  for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ if(L(r,c)==='.')continue; const aStart=(L(r,c-1)==='.'&&L(r,c+1)!=='.'); const dStart=(L(r-1,c)==='.'&&L(r+1,c)!=='.'); if(aStart||dStart){ n++; nums[r+'-'+c]=n; } }
+  let html=''; for(let r=0;r<rows.length;r++)for(let c=0;c<W;c++){ const ch=L(r,c); if(ch==='.'){ html+='<div class="cw-cell block"></div>'; } else { const num=nums[r+'-'+c]; html+='<div class="cw-cell">'+(num?'<span class="cw-num">'+num+'</span>':'')+'<input maxlength="1" data-sol="'+ch+'"></div>'; } }
+  grid.innerHTML=html; }
+function cwCheck(btn){ const s=bs(btn); let ok=0,total=0; s.querySelectorAll('.cw-cell input').forEach(inp=>{ total++; const good=(inp.value||'').toUpperCase()===inp.dataset.sol; inp.classList.remove('c-ok','c-err'); inp.classList.add(good?'c-ok':'c-err'); if(good)ok++; }); setFb(s,ok+' von '+total+' Feldern richtig.',ok===total); }
+function cwReveal(btn){ const s=bs(btn); s.querySelectorAll('.cw-cell input').forEach(inp=>{ inp.value=inp.dataset.sol; inp.classList.remove('c-err'); inp.classList.add('c-ok'); }); }
+
+/* 8 Wortsuche */
+function wsBuild(s){ const words=(s.dataset.words||'').split(',').map(w=>w.trim().toUpperCase()).filter(Boolean); const size=+(s.dataset.size||10);
+  const grid=[]; for(let r=0;r<size;r++){ grid.push(new Array(size).fill(null)); }
+  const place=function(word){ const Lw=word.length; for(let t=0;t<300;t++){ const hor=Math.random()<0.5, dr=hor?0:1, dc=hor?1:0; const r=Math.floor(Math.random()*(size-dr*(Lw-1))), c=Math.floor(Math.random()*(size-dc*(Lw-1))); let fit=true; for(let i=0;i<Lw;i++){ const g=grid[r+dr*i][c+dc*i]; if(g&&g!==word[i]){fit=false;break;} } if(fit){ for(let i=0;i<Lw;i++)grid[r+dr*i][c+dc*i]=word[i]; return true; } } return false; };
+  words.forEach(place); const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=A[Math.floor(Math.random()*26)];
+  s._grid=grid; s._words=words; s._found=[]; s._start=null;
+  const host=s.querySelector('.ws-grid'); host.style.gridTemplateColumns='repeat('+size+',30px)';
+  let html=''; for(let r=0;r<size;r++)for(let c=0;c<size;c++)html+='<button class="ws-cell" data-r="'+r+'" data-c="'+c+'">'+grid[r][c]+'</button>'; host.innerHTML=html;
+  wsWire(s,host);
+  const f=s.querySelector('.fb'); f.textContent=''; f.className='fb grp-fb'; wsWordList(s); }
+function wsWordList(s){ s.querySelector('.ws-words').innerHTML=s._words.map(w=>'<span class="ws-w'+(s._found.includes(w)?' found':'')+'">'+w+'</span>').join(''); }
+function wsShuffle(btn){ wsBuild(bs(btn)); }
+function wsRC(c){ return [+c.dataset.r,+c.dataset.c]; }
+function wsPath(a,b){ const [sr,sc]=a,[er,ec]=b;
+  if(!(sr===er||sc===ec||Math.abs(er-sr)===Math.abs(ec-sc))) return null;
+  const dr=Math.sign(er-sr),dc=Math.sign(ec-sc),n=Math.max(Math.abs(er-sr),Math.abs(ec-sc)), out=[];
+  for(let i=0;i<=n;i++) out.push([sr+dr*i,sc+dc*i]); return out; }
+function wsCellAt(s,rc){ return s.querySelector('.ws-cell[data-r="'+rc[0]+'"][data-c="'+rc[1]+'"]'); }
+function wsMark(s,cells){ s.querySelectorAll('.ws-cell.ws-sel').forEach(c=>c.classList.remove('ws-sel')); (cells||[]).forEach(rc=>{ const el=wsCellAt(s,rc); if(el) el.classList.add('ws-sel'); }); }
+/* Auswahl von Zelle a bis Zelle b auswerten (waagerecht, senkrecht, diagonal, auch rückwärts) */
+function wsFinish(s,a,b){ wsMark(s,null); const cells=wsPath(wsRC(a),wsRC(b)); if(!cells) return;
+  const letters=cells.map(rc=>s._grid[rc[0]][rc[1]]).join(''), rev=letters.split('').reverse().join('');
+  const word=s._words.includes(letters)?letters:(s._words.includes(rev)?rev:null);
+  if(word&&!s._found.includes(word)){ s._found.push(word);
+    cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.add('ws-found'); bsPop(el); } }); wsWordList(s);
+    if(s._found.length===s._words.length) setFb(s,'🎉 Alle Wörter gefunden!',true);
+  } else if(!word){ cells.forEach(rc=>{ const el=wsCellAt(s,rc); if(el){ el.classList.remove('ws-miss'); el.getBoundingClientRect(); el.classList.add('ws-miss'); setTimeout(()=>el.classList.remove('ws-miss'),450); } }); } }
+function wsClick(cell){ const s=bs(cell);   /* Tastatur / Klick-Klick: erstes und letztes Feld */
+  if(!s._start){ s._start=cell; cell.classList.add('ws-start'); return; }
+  const a=s._start; a.classList.remove('ws-start'); s._start=null; if(a!==cell) wsFinish(s,a,cell); }
+function wsWire(s,host){
+  if(host.dataset.wired) return; host.dataset.wired='1';
+  host.addEventListener('pointerdown',e=>{
+    const a=e.target.closest('.ws-cell'); if(!a||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    if(s._start&&s._start!==a){ wsClick(a); return; }          /* zweiter Klick im Klick-Klick-Modus */
+    let b=a; wsMark(s,[wsRC(a)]);
+    const move=ev=>{ const el=document.elementFromPoint(ev.clientX,ev.clientY), c=el&&el.closest('.ws-cell');
+      if(!c||!host.contains(c)||c===b) return; b=c; wsMark(s,wsPath(wsRC(a),wsRC(b))||[wsRC(a)]); };
+    const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(b!==a){ if(s._start){ s._start.classList.remove('ws-start'); s._start=null; } wsFinish(s,a,b); }
+      else { wsMark(s,null); wsClick(a); } };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  host.addEventListener('click',e=>{ if(e.detail!==0) return; const c=e.target.closest('.ws-cell'); if(c) wsClick(c); });  /* Enter/Leertaste */
+}
+
+/* ---------- Kurze „Plopp"-Animation für gefüllte Lücken/Zonen ---------- */
+function bsPop(el){ el.classList.remove('bs-pop'); el.getBoundingClientRect(); el.classList.add('bs-pop'); setTimeout(()=>el.classList.remove('bs-pop'),380); }
+
+/* ---------- Ziehen von Wortkarten (Lückentext) und Begriffen (Zuordnung) ----------
+   Klicken bleibt die barrierearme Grundbedienung. Zusätzlich: Karte mit Maus oder
+   Finger greifen, über die Lücke/Zone ziehen (sie leuchtet auf) und loslassen – die
+   Karte gleitet hinein. Daneben losgelassen gleitet sie zurück. */
+function chipDrag(s,chipSel,targetSel,placeFn){
+  if(s.dataset.chipdrag) return; s.dataset.chipdrag='1';
+  s.addEventListener('pointerdown',e=>{
+    const chip=e.target.closest(chipSel);
+    if(!chip||!s.contains(chip)||chip.classList.contains('used')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    const sx=e.clientX, sy=e.clientY, r=chip.getBoundingClientRect(); let ghost=null, over=null;
+    const move=ev=>{
+      if(!ghost){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6) return;
+        ghost=chip.cloneNode(true); ghost.removeAttribute('onclick'); ghost.classList.remove('sel'); ghost.classList.add('drag-ghost');
+        ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px';
+        document.body.appendChild(ghost); chip.classList.add('drag-src'); }
+      ev.preventDefault();
+      ghost.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px) rotate(-2deg) scale(1.05)';
+      const el=document.elementFromPoint(ev.clientX,ev.clientY), t=el?el.closest(targetSel):null, ok=(t&&s.contains(t))?t:null;
+      if(ok!==over){ if(over) over.classList.remove('dragover'); over=ok; if(over) over.classList.add('dragover'); }
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      if(!ghost) return;                                   /* nur geklickt – onclick übernimmt */
+      s._noClick=true; setTimeout(()=>{ s._noClick=false; },60);
+      chip.classList.remove('drag-src');
+      if(over){ const tr=over.getBoundingClientRect(); over.classList.remove('dragover');
+        s._sel=chip; placeFn(over);
+        ghost.style.transition='transform .18s ease, opacity .18s ease';
+        ghost.style.transform='translate('+(tr.left+tr.width/2-r.left-r.width/2)+'px,'+(tr.top+tr.height/2-r.top-r.height/2)+'px) scale(.85)';
+        ghost.style.opacity='0';
+      } else { ghost.style.transition='transform .25s ease'; ghost.style.transform='translate(0,0)'; }
+      const g=ghost; setTimeout(()=>g.remove(),280);
+    };
+    document.addEventListener('pointermove',move,{passive:false}); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+  /* den Klick unterdrücken, den der Browser nach dem Loslassen noch schickt */
+  s.addEventListener('click',e=>{ if(s._noClick){ e.stopPropagation(); e.preventDefault(); s._noClick=false; } },true);
+}
+function initMatchDnD(s){ chipDrag(s,'.m-chip','.m-zone',matchPlace); }
+function initDtwDnD(s){ chipDrag(s,'.dtw-word','.dtw-gap',dtwPlace); }
+
+/* ---------- Sortieren per Ziehen (Maus und Touch), Nachbarn gleiten animiert zur Seite ---------- */
+function initSortDnD(s){
+  const list=s.querySelector('.sort-list'); if(!list||list.dataset.dnd) return; list.dataset.dnd='1';
+  list.addEventListener('pointerdown',e=>{
+    const item=e.target.closest('.sort-item');
+    if(!item||e.target.closest('button')||(e.pointerType==='mouse'&&e.button!==0)) return;
+    e.preventDefault();
+    const startY=e.clientY, startTop=item.offsetTop;
+    item.classList.add('dragging'); item.style.transition='none';
+    s.querySelectorAll('.sort-item').forEach(i=>i.classList.remove('s-ok'));
+    const move=ev=>{
+      const want=startTop+(ev.clientY-startY);
+      for(let guard=0;guard<20;guard++){
+        const prev=item.previousElementSibling, next=item.nextElementSibling;
+        if(prev && want < prev.offsetTop+prev.offsetHeight/2) sortFlip(list,()=>list.insertBefore(item,prev));
+        else if(next && want+item.offsetHeight > next.offsetTop+next.offsetHeight/2) sortFlip(list,()=>list.insertBefore(next,item));
+        else break;
+      }
+      item.style.transform='translateY('+(want-item.offsetTop)+'px)';
+    };
+    const up=()=>{
+      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
+      item.classList.remove('dragging'); item.style.transition='transform .2s ease'; item.style.transform='';
+    };
+    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+  });
+}
+
+/* ---------- Init: alle Bausteine initialisieren ---------- */
+function initBausteine(){ document.querySelectorAll('.baustein').forEach(function(s){ const t=s.dataset.type;
+  if(t==='memory') memBuild(s); else if(t==='flashcards') fcBuild(s); else if(t==='crossword') cwBuild(s); else if(t==='wordsearch') wsBuild(s);
+  else if(t==='match') initMatchDnD(s); else if(t==='sort') initSortDnD(s); else if(t==='dtw') initDtwDnD(s); }); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initBausteine); } else { initBausteine(); }
+
+/* ---------- Seiten-Kennung ----------
+   1. Prüft beim Laden, ob alle Kennzeichnungen vorhanden sind und dieselbe
+      Kennnummer tragen. Fehlt etwas oder passt es nicht zusammen, läuft die Seite
+      normal weiter, zeigt aber oben einen Hinweis auf das Original.
+   2. Stellt den Fußzeilen-Vermerk wieder her, falls er entfernt oder verändert wurde.
+   Die Texte liegen kodiert vor, damit eine einfache Textsuche sie nicht findet. */
+(function(){
+  function d(b){ try{ return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }catch(e){ return ''; } }
+  var A = d('TS4gUmllc2tl'), R = d('QWxsZSBSZWNodGUgdm9yYmVoYWx0ZW4=');
+  function zw(el){
+    if(!el) return '';
+    var m = (el.textContent || '').match(/⁠([​‌]+)⁠/); if(!m) return '';
+    var bits = m[1].replace(/​/g,'0').replace(/‌/g,'1'), s = '';
+    for(var k = 0; k + 8 <= bits.length; k += 8) s += String.fromCharCode(parseInt(bits.substr(k, 8), 2));
+    return s;
+  }
+  function lauf(){
+    var K = window.__LH || {}, h = document.documentElement;
+    var meta = document.querySelector('meta[name="lh-id"]');
+    var css = ''; document.querySelectorAll('style').forEach(function(s){ var m = s.textContent.match(/\/\* lh:([A-Z0-9-]+) \*\//); if(m && !css) css = m[1]; });
+    var kom = ''; for(var n = document.firstChild; n && n !== h; n = n.nextSibling){
+      if(n.nodeType === 8){ var m = n.nodeValue.match(/Kennnummer (MR-[0-9A-F-]+)/); if(m) kom = m[1]; } }
+    var wz = zw(document.querySelector('h1')) || zw(document.querySelector('.goal'));
+    var f = document.getElementById('lh-foot');
+    var spuren = [K.i || '', h.getAttribute('data-lh') || '', meta ? meta.content : '', css, kom, wz];
+    var i = spuren.filter(Boolean)[0] || '';
+    var fussOk = !!(f && f.textContent.indexOf(A) >= 0);
+    var j = K.j || h.getAttribute('data-lh-j') || ((f && f.textContent.match(/\d{4}/)) || [])[0] || new Date().getFullYear();
+    var veraendert = !fussOk || spuren.some(function(x){ return !x || x !== i; });
+
+    if(!fussOk){
+      if(f) f.remove();
+      f = document.createElement('footer'); f.id = 'lh-foot'; f.className = 'lh-foot';
+      (document.querySelector('.wrap') || document.body).appendChild(f);
+      f.textContent = '© ' + j + ' ' + A + ' – ' + R;
+    }
+    if(i){ f.setAttribute('data-k', i); f.title = 'Kennnummer ' + i; }
+
+    if(veraendert && !document.getElementById('lh-warn')){
+      var w = document.createElement('div'); w.id = 'lh-warn'; w.className = 'lh-warn'; w.setAttribute('role', 'note');
+      w.textContent = '⚠️ Diese Kopie wurde verändert. Original: © ' + j + ' ' + A + (i ? ' · Kennnummer ' + i : '');
+      var ziel = document.querySelector('.pagehead');
+      if(ziel && ziel.parentNode){ ziel.parentNode.insertBefore(w, ziel); }
+      else { (document.querySelector('.wrap') || document.body).prepend(w); }
+    }
+    try{ console.info('© ' + j + ' ' + A + ' – ' + R + (i ? ' · ' + i : '') + (veraendert ? ' · veränderte Kopie' : '')); }catch(e){}
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', lauf); } else { lauf(); }
+})();
+
+/* >>> RESET-KNOPF */
+/* ---------- 🗑️ Fortschritt zurücksetzen (Standard auf jeder Lern-HTML) ----------
+   Nur im Lehrermodus sichtbar. Löscht nach Rückfrage ALLES, was diese Seite in diesem
+   Browser gespeichert hat: Eingaben, Häkchen, Quiz-Ergebnisse, aufgedeckte Teile,
+   freigeschaltete Teile/Kapitel, Vermutungen, Texte, Hilfe-Timer, Lehrermodus.
+   Erkannt wird alles über die Kennnummer im Speicher-Schlüssel (LH_NS) – andere
+   Lernseiten unter derselben Domain bleiben unberührt. Danach wird neu geladen.
+   Die Seite selbst nutzt keine Cookies; vorsorglich werden Cookies mit der
+   Kennnummer im Namen ebenfalls gelöscht. */
+function teachResetAll(){
+  if(!hsTeach()) return;
+  if(!confirm('Alle Fortschritte dieser Lernseite in diesem Browser löschen?\n\n'+
+    'Gelöscht werden Eingaben, Lösungen, Häkchen, aufgedeckte und freigeschaltete Teile, '+
+    'Notizen, Texte und Hilfe-Timer. Der Lehrermodus wird beendet.\n\n'+
+    'Das lässt sich nicht rückgängig machen.')) return;
+  var ns=(typeof LH_NS==='string')?LH_NS:'';
+  var gate=(typeof GATE_NS==='string')?GATE_NS:'';
+  /* ohne Kennnummer nur die bekannten Schlüssel der Engine – nie den ganzen Speicher der Domain */
+  var alt=/^(subreveal_ph|predict_|hs_|hilfe_|teachmode|gate_)/;
+  function trifft(k){ if(!k) return false; if(ns) return k.indexOf(ns)>=0; if(gate && k.indexOf(gate)===0) return true; return alt.test(k); }
+  [window.localStorage, window.sessionStorage].forEach(function(st){
+    try{ var del=[]; for(var i=0;i<st.length;i++){ var k=st.key(i); if(trifft(k)) del.push(k); }
+      del.forEach(function(k){ st.removeItem(k); }); }catch(e){}
+  });
+  try{ if(ns) document.cookie.split(';').forEach(function(c){ var n=c.split('=')[0].trim();
+    if(n && n.indexOf(ns)>=0) document.cookie=n+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'; }); }catch(e){}
+  try{ sessionStorage.setItem(ns+'reset_info','1'); }catch(e){}
+  location.reload();
+}
+function teachResetInfo(){
+  var ns=(typeof LH_NS==='string')?LH_NS:'', f=null;
+  try{ f=sessionStorage.getItem(ns+'reset_info'); sessionStorage.removeItem(ns+'reset_info'); }catch(e){}
+  if(!f) return;
+  var d=document.createElement('div'); d.className='reset-info'; d.setAttribute('role','status');
+  d.textContent='✅ Alle Fortschritte dieser Seite wurden gelöscht.';
+  document.body.appendChild(d); setTimeout(function(){ d.remove(); },5000);
+}
+(function(){
+  var base=teachSetUI;
+  teachSetUI=function(active){ base(active);
+    var b=document.getElementById('teach-reset-btn'); if(b) b.hidden=!active; };
+  function start(){ var b=document.getElementById('teach-reset-btn'); if(b) b.hidden=!hsTeach(); teachResetInfo(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+/* Freischalt-Modus: der alte Teil-Reset wird durch den vollständigen ersetzt */
+if(typeof teachLernappReset==='function'){ teachLernappReset=teachResetAll; }
+/* <<< RESET-KNOPF */
+</script>
+</body>
+</html>
